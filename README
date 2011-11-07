@@ -1,0 +1,6 @@
+This is the repository for the AIG development for the HUBO2 robot. This
+repository contains the following top-level directories:
+* aces: A git submodule containing the Condcutor code hosted on the DASL server.
+* ros: The ROS code which creates the new HUBO2 implementation in ROS.
+* common: The common API which connects ROS to Orocos.
+* orocos: The Orocos code which connects the common API to the CAN bus of HUBO2.
