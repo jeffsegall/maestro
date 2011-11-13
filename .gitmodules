@@ -1,3 +1,6 @@
 [submodule "aces"]
 	path = aces
 	url = git://dasl.mem.drexel.edu/aces.git
+[submodule "conductor"]
+	path = conductor
+	url = https://github.com/bob2827/conductor
