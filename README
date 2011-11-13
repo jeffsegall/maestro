@@ -1,6 +1,9 @@
 This is the repository for the AIG development for the HUBO2 robot. This
 repository contains the following top-level directories:
 * aces: A git submodule containing the Condcutor code hosted on the DASL server.
+* conductor: The Conductor GitHub source maintained by the original ACES author.
+* docs: Documentation on the Hubo++ robot.
 * ros: The ROS code which creates the new HUBO2 implementation in ROS.
 * common: The common API which connects ROS to Orocos.
 * orocos: The Orocos code which connects the common API to the CAN bus of HUBO2.
+* rainbow: The source code from Rainbow to operate Hubo++.
