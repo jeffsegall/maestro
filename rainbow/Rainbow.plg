@@ -1,0 +1,46 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: Rainbow - Win32 RTSS Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\hubo\LOCALS~1\Temp\RSP5.tmp" with contents
+[
+/nologo /ML /W3 /GX /Ox /I "C:\Program Files\Ardence\RTX\\include" /D "WIN32" /D "UNDER_RTSS" /D "NDEBUG" /D "RELEASE" /D "_UNICODE" /D "UNICODE" /Fp"Rainbow___Win32_RTSS_Release/Rainbow.pch" /YX /Fo"Rainbow___Win32_RTSS_Release/" /Fd"Rainbow___Win32_RTSS_Release/" /FD /c 
+"C:\Rainbow\CAN.CPP"
+"C:\Rainbow\Core.cpp"
+"C:\Rainbow\mocap_functions.cpp"
+"C:\Rainbow\nrutil.cpp"
+"C:\Rainbow\RTX.CPP"
+]
+Creating command line "cl.exe @C:\DOCUME~1\hubo\LOCALS~1\Temp\RSP5.tmp" 
+Creating temporary file "C:\DOCUME~1\hubo\LOCALS~1\Temp\RSP6.tmp" with contents
+[
+startupCRT.obj rtxlibc.lib oldnames.lib rtapi_rtss.lib rtx_rtss.lib /nologo /entry:"_RtapiProcessEntryCRT@8" /pdb:none /machine:I386 /nodefaultlib:"libc" /nodefaultlib:"libcd" /nodefaultlib:"libcmt" /nodefaultlib:"libcmtd" /nodefaultlib /out:"Rainbow___Win32_RTSS_Release/Rainbow.rtss" /libpath:"C:\Program Files\Ardence\RTX\\lib" /libpath:"C:\Program Files\Ardence\RTX\\lib\VisualStudio6" /driver /subsystem:native,4.00 /align:0x20 
+.\Rainbow___Win32_RTSS_Release\CAN.OBJ
+.\Rainbow___Win32_RTSS_Release\Core.obj
+.\Rainbow___Win32_RTSS_Release\mocap_functions.obj
+.\Rainbow___Win32_RTSS_Release\nrutil.obj
+.\Rainbow___Win32_RTSS_Release\RTX.OBJ
+]
+Creating command line "link.exe @C:\DOCUME~1\hubo\LOCALS~1\Temp\RSP6.tmp"
+<h3>Output Window</h3>
+Compiling...
+CAN.CPP
+Core.cpp
+mocap_functions.cpp
+nrutil.cpp
+RTX.CPP
+Linking...
+startupCRT.obj : warning LNK4044: unrecognized option "manifestdependency:type='win32' name='Microsoft.VC80.CRT' version='8.0.50608.0' processorArchitecture='x86' publicKeyToken='1fc8b3b9a1e18e3b'"; ignored
+rtapi_rtss.lib(wmain.obj) : warning LNK4044: unrecognized option "manifestdependency:type='win32' name='Microsoft.VC80.CRT' version='8.0.50608.0' processorArchitecture='x86' publicKeyToken='1fc8b3b9a1e18e3b'"; ignored
+
+
+
+<h3>Results</h3>
+Rainbow.rtss - 0 error(s), 2 warning(s)
+</pre>
+</body>
+</html>
