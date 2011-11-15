@@ -1,0 +1,20 @@
+import("hubo_ctrl")
+import("rtt_std_msgs")
+
+# Load a Hubo component
+loadComponent("Hubo","Hubo")
+
+# Give it a periodic activity
+setActivity("Hubo",0.0,HighestPriority,ORO_SCHED_RT)
+
+# Create connections
+stream("Hubo.float_out", ros.topic("float_out"))
+stream("Hubo.float_in", ros.topic("float_in"))
+stream("Hubo.string_out", ros.topic("string_out"))
+stream("Hubo.string_in", ros.topic("string_in"))
+
+# Configure the Hubo component
+Hubo.configure()
+
+# Start it
+Hubo.start()
