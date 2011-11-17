@@ -1,0 +1,42 @@
+program main{
+    addHardware("hw 1 1000","Robotis","/dev/ttyUSB0");
+    addProtocol("pro 2 100", "Robotis", "");
+    linkHP("hw", "pro");
+
+    //Create devices, representing physical nodes on the bus
+    addDevice("dX 3 250", "Robotis", "2 150.0 1.0");
+    addDevice("dY 3 250", "Robotis", "3 150.0 -1.0");
+    addDevice("dZ 3 250", "Robotis", "58 150.0 1.0");
+
+    //Add states, each represents 1 property of the device
+    //addState("X 5 10", "Robotis", "", false);
+    //addState("Y 5 10", "Robotis", "", false);
+    //addState("Z 5 10", "Robotis", "", false);
+    addState("X 10 50", "TestSuite", "-150 150", true, 2827); 
+    addState("Y 10 50", "TestSuite", "-150 150", true, 2828); 
+    addState("Z 10 50", "TestSuite", "-150 150", true, 2829); 
+
+    //Tell the states and devices to pay attention to each other
+    linkDS("dX", "X");
+    linkDS("dY", "Y");
+    linkDS("dZ", "Z");
+
+    //Tell the devices & protocol to pay attention to each other 
+    linkPD("pro", "dX");
+    linkPD("pro", "dY");
+    linkPD("pro", "dZ");
+
+    //Setup Logging
+    addLogger("log1 10 20", "File", "log.txt");
+    linkLS("log1", "X", "value");
+    linkLS("log1", "Y", "value");
+    linkLS("log1", "Z", "value");
+    
+    //Start the threads
+    startHW();
+    startProtocol();
+    startDevice();
+    startState();
+    startController();
+    startLogger();
+}
