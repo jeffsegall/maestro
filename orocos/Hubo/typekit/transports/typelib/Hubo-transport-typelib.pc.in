@@ -1,0 +1,18 @@
+# Generated from orogen/lib/orogen/templates/typekit/typelib/transport-typelib.pc 
+
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/lib/orocos/types
+includedir=${prefix}/include/orocos
+
+project_name=Hubo
+
+type_registry=@TYPEKIT_REGISTRY@
+
+Name: HuboTypelibTransport
+Version: 
+
+Description: Hubo types support for the Orocos type system
+Libs: -L${libdir} -l@libname_typelib@
+Cflags: -I${includedir}
+

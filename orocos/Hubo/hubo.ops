@@ -1,0 +1,8 @@
+require("print")
+import("Hubo")
+
+print.ln("Script imported Hubo package:")
+displayComponentTypes()
+
+loadComponent("Hubo","Hubo")
+print.ln("Script created Hubo Component with period: " + Hubo.getPeriod())

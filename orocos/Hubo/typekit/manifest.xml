@@ -1,0 +1,14 @@
+<package>
+  <description brief="Hubo-typekit">
+
+      Hubo-typekit description
+
+  </description>
+  <author></author>
+  <license></license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/Hubo-typekit</url>
+  <depend package="rtt"/>
+  <depend package="rtt_typelib"/>
+
+</package>

@@ -1,0 +1,109 @@
+0.000 [ Info   ][Logger] No ORO_LOGLEVEL environment variable set.
+0.000 [ Info   ][Logger]  OROCOS version '2.5.0' compiled with GCC 4.5.2. Running in GNU/Linux.
+0.000 [ Info   ][Logger] Orocos Logging Activated at level : [ Warning] ( 4 ) 
+0.000 [ Info   ][Logger] Reference System Time is : 1321467326389736328 ticks ( 1.32147e+09 seconds ).
+0.000 [ Info   ][Logger] Logging is relative to this time.
+0.000 [ Info   ][Logger] Real-time memory: 17232 bytes free of 20480 allocated.
+0.000 [ Info   ][Logger] Setting OCL factory for real-time logging
+0.000 [ Info   ][Logger] No RTT_COMPONENT_PATH set. Using default: /opt/ros/electric/stacks/orocos_toolchain/install/lib/orocos
+0.000 [ Info   ][Logger] plugin 'rtt' not loaded before.
+0.000 [ Info   ][Logger] Loading plugin libraries from directory /opt/ros/electric/stacks/orocos_toolchain/install/lib/orocos/gnulinux/./plugins ...
+0.001 [ Info   ][Logger] Loaded RTT Service 'marshalling' from 'rtt-marshalling'
+0.001 [ Info   ][Logger] Loaded RTT Service 'scripting' from 'rtt-scripting'
+0.001 [ Info   ][Logger] typekit 'rtt' not loaded before.
+0.001 [ Info   ][Logger] Loading typekit libraries from directory /opt/ros/electric/stacks/orocos_toolchain/install/lib/orocos/gnulinux/./types ...
+0.016 [ Info   ][TypekitRepository::Import] Loading Typekit rtt-types.
+0.016 [ Info   ][Logger] Loaded RTT TypeKit/Transport 'rtt-types' from 'rtt-typekit'
+0.032 [ Info   ][TypekitRepository::Import] Loading Transport CORBA://rtt-types.
+0.032 [ Info   ][TypekitRepository::Import] Registered new 'CORBA' transport for ConnPolicy
+0.032 [ Info   ][TypekitRepository::Import] Registered new 'CORBA' transport for TaskContext
+0.032 [ Info   ][TypekitRepository::Import] Registered new 'CORBA' transport for array
+0.032 [ Info   ][TypekitRepository::Import] Registered new 'CORBA' transport for bool
+0.032 [ Info   ][TypekitRepository::Import] Registered new 'CORBA' transport for char
+0.032 [ Info   ][TypekitRepository::Import] Registered new 'CORBA' transport for double
+0.032 [ Info   ][TypekitRepository::Import] Registered new 'CORBA' transport for float
+0.032 [ Info   ][TypekitRepository::Import] Registered new 'CORBA' transport for int
+0.032 [ Info   ][TypekitRepository::Import] Registered new 'CORBA' transport for string
+0.032 [ Info   ][TypekitRepository::Import] Registered new 'CORBA' transport for uint
+0.032 [ Info   ][TypekitRepository::Import] Registered new 'CORBA' transport for void
+0.032 [ Info   ][Logger] Loaded RTT TypeKit/Transport 'rtt-corba-types' from 'rtt-transport-corba'
+0.033 [ Info   ][TypekitRepository::Import] Loading Transport mqueue://rtt-types.
+0.033 [ Info   ][TypekitRepository::Import] Registered new 'mqueue' transport for array
+0.033 [ Info   ][TypekitRepository::Import] Registered new 'mqueue' transport for bool
+0.033 [ Info   ][TypekitRepository::Import] Registered new 'mqueue' transport for char
+0.033 [ Info   ][TypekitRepository::Import] Registered new 'mqueue' transport for double
+0.033 [ Info   ][TypekitRepository::Import] Registered new 'mqueue' transport for float
+0.033 [ Info   ][TypekitRepository::Import] Registered new 'mqueue' transport for int
+0.033 [ Info   ][TypekitRepository::Import] Registered new 'mqueue' transport for uint
+0.034 [ Info   ][Logger] Loaded RTT TypeKit/Transport 'rtt-mqueue-transport' from 'rtt-transport-mqueue'
+0.034 [ Info   ][Thread] Creating Thread for scheduler=0, priority=0, CPU affinity=0, with name='Deployer'
+0.034 [ Info   ][Deployer] Thread created with scheduler type '0', priority 0, cpu affinity 15 and period 0.
+0.034 [ Info   ][Thread] Creating Thread for scheduler=0, priority=0, CPU affinity=0, with name='GlobalEngine'
+0.034 [ Info   ][GlobalEngine] Thread created with scheduler type '0', priority 0, cpu affinity 15 and period 0.
+0.034 [ Info   ][DeploymentComponent::configure] No RTT_COMPONENT_PATH set. Using default.
+0.034 [ Info   ][DeploymentComponent::configure] RTT_COMPONENT_PATH was set to /opt/ros/electric/stacks/orocos_toolchain/install/lib/orocos
+0.034 [ Info   ][DeploymentComponent::configure] Re-scanning for plugins and components...
+0.034 [ Info   ][DeploymentComponent::configure] Importing directory /opt/ros/electric/stacks/orocos_toolchain/install/lib/orocos ...
+0.035 [ Info   ][Logger] No site file was found. Importing 'ocl' by default.
+0.040 [ Warning][DeploymentComponent::import] The ROS package 'ocl' in '/opt/ros/electric/stacks/orocos_toolchain/ocl' nor its dependencies contained a lib/orocos directory. I'll look in the RTT_COMPONENT_PATH next.
+0.040 [ Info   ][DeploymentComponent::import] Importing directory /opt/ros/electric/stacks/orocos_toolchain/install/lib/orocos/gnulinux/ocl ...
+0.041 [ Info   ][DeploymentComponent::import] Loaded component type 'OCL::LuaComponent'
+0.042 [ Info   ][DeploymentComponent::import] Loaded component type 'OCL::LuaTLSFComponent'
+0.044 [ Info   ][DeploymentComponent::import] Loaded multi component library '/opt/ros/electric/stacks/orocos_toolchain/install/lib/orocos/gnulinux/ocl/liborocos-ocl-timer-gnulinux.so'
+0.046 [ Info   ][DeploymentComponent::import] Loaded multi component library '/opt/ros/electric/stacks/orocos_toolchain/install/lib/orocos/gnulinux/ocl/liborocos-ocl-common-gnulinux.so'
+0.047 [ Info   ][DeploymentComponent::import] Loaded multi component library '/opt/ros/electric/stacks/orocos_toolchain/install/lib/orocos/gnulinux/ocl/liborocos-ocl-logging-gnulinux.so'
+0.049 [ Info   ][DeploymentComponent::import] Loaded component type 'OCL::HelloWorld'
+0.050 [ Info   ][DeploymentComponent::import] Loaded multi component library '/opt/ros/electric/stacks/orocos_toolchain/install/lib/orocos/gnulinux/ocl/liborocos-ocl-reporting-gnulinux.so'
+0.050 [ Info   ][DeploymentComponent::import] Loading typekit libraries from directory /opt/ros/electric/stacks/orocos_toolchain/install/lib/orocos/gnulinux/ocl/types ...
+0.055 [ Info   ][TypekitRepository::Import] Loading Typekit OCLTypekit.
+0.055 [ Info   ][DeploymentComponent::import] Loaded RTT TypeKit/Transport 'OCLTypekit' from 'ocl'
+0.055 [ Info   ][DeploymentComponent::import] Loading plugin libraries from directory /opt/ros/electric/stacks/orocos_toolchain/install/lib/orocos/gnulinux/ocl/plugins ...
+0.056 [ Info   ][DeploymentComponent::import] Loaded RTT Service 'print' from 'print'
+0.056 [ Info   ][DeploymentComponent::import] Loaded RTT Service 'Lua' from 'rttlua-plugin'
+0.057 [ Info   ][DeploymentComponent::import] Loaded RTT Service 'LuaTLSF' from 'rttlua-tlsf-plugin'
+0.058 [ Info   ][DeploymentComponent::import] Loaded RTT Service 'os' from 'os'
+0.058 [ Info   ][Logger] Loading Service or Plugin scripting in TaskContext Deployer
+0.059 [ Info   ][Logger] Found complete interface of requested service 'scripting'
+0.059 [ Info   ][Logger] Running Script hubo.ops ...
+0.064 [ Info   ][DeploymentComponent::import] Importing directory /home/ccannon/hubo2/orocos/Hubo/lib/orocos/gnulinux ...
+0.064 [ Info   ][DeploymentComponent::import] Loaded component type 'Hubo'
+0.064 [ Info   ][DeploymentComponent::import] Loading typekit libraries from directory /home/ccannon/hubo2/orocos/Hubo/lib/orocos/gnulinux/types ...
+0.069 [ Info   ][TypekitRepository::Import] Loading Transport CORBA:///orogen/Hubo.
+0.069 [ Info   ][DeploymentComponent::import] Loaded RTT TypeKit/Transport '/orogen/Hubo/CORBA' from 'Hubo-transport-corba'
+0.081 [ Info   ][TypekitRepository::Import] Loading Transport Typelib:///orogen/Hubo.
+0.081 [ Info   ][DeploymentComponent::import] Loaded RTT TypeKit/Transport '/orogen/Hubo/TYPELIB' from 'Hubo-transport-typelib'
+0.084 [ Info   ][TypekitRepository::Import] Loading Transport MQueue:///orogen/Hubo.
+0.084 [ Info   ][DeploymentComponent::import] Loaded RTT TypeKit/Transport '/orogen/Hubo/MQueue' from 'Hubo-transport-mqueue'
+0.084 [ Info   ][TypekitRepository::Import] Loading Typekit /orogen/Hubo.
+0.084 [ Info   ][TypekitRepository::Import] Registered new 'CORBA' transport for /HuboData
+0.084 [ Info   ][TypekitRepository::Import] Registered new 'Typelib' transport for /HuboData
+0.084 [ Info   ][TypekitRepository::Import] Registered new 'MQueue' transport for /HuboData
+0.084 [ Info   ][TypekitRepository::Import] TypeInfo for type '/std/string' already exists as 'string': I'll alias the original and install the new instance.
+0.084 [ ERROR  ][TypekitRepository::Import] A protocol with id 1 was already added for type /std/string
+0.084 [ Info   ][TypekitRepository::Import] Registered new 'CORBA' transport for /std/string
+0.084 [ Info   ][TypekitRepository::Import] Registered new 'Typelib' transport for /std/string
+0.084 [ Info   ][TypekitRepository::Import] Registered new 'MQueue' transport for /std/string
+0.084 [ Info   ][TypekitRepository::Import] TypeInfo for type '/std/vector</double>' already exists as 'array': I'll alias the original and install the new instance.
+0.085 [ ERROR  ][TypekitRepository::Import] A protocol with id 1 was already added for type /std/vector</double>
+0.085 [ Info   ][TypekitRepository::Import] Registered new 'CORBA' transport for /std/vector</double>
+0.085 [ Info   ][TypekitRepository::Import] Registered new 'Typelib' transport for /std/vector</double>
+0.085 [ ERROR  ][TypekitRepository::Import] A protocol with id 2 was already added for type /std/vector</double>
+0.085 [ Info   ][TypekitRepository::Import] Registered new 'MQueue' transport for /std/vector</double>
+0.085 [ Info   ][DeploymentComponent::import] Loaded RTT TypeKit/Transport '/orogen/Hubo' from 'Hubo-typekit'
+0.085 [ Info   ][DeploymentComponent::import] Loading plugin libraries from directory /home/ccannon/hubo2/orocos/Hubo/lib/orocos/gnulinux/plugins ...
+0.085 [ Info   ][DeploymentComponent::import] Loaded RTT Plugin 'Hubo-example-plugin' from 'Hubo-plugin'
+0.085 [ Info   ][DeploymentComponent::import] Loaded RTT Service 'myservice' from 'Hubo-service'
+0.087 [ Info   ][Thread] Creating Thread for scheduler=0, priority=0, CPU affinity=0, with name='Hubo'
+0.087 [ Info   ][Hubo] Thread created with scheduler type '0', priority 0, cpu affinity 15 and period 0.
+0.087 [ Info   ][DeploymentComponent::loadComponent] Adding Hubo as new peer:  OK.
+0.101 [ Info   ][Thread] Creating Thread for scheduler=0, priority=0, CPU affinity=0, with name='TaskBrowser'
+0.101 [ Info   ][TaskBrowser] Thread created with scheduler type '0', priority 0, cpu affinity 15 and period 0.
+0.101 [ Info   ][Logger] Entering Task Deployer
+56.772 [ Info   ][DeploymentComponent::stopComponentsGroup] Stopping group 0
+56.772 [ Info   ][DeploymentComponent::stopComponentsGroup] Stopped Hubo
+56.773 [ Info   ][DeploymentComponent::cleanupComponentsGroup] Cleaning up group 0
+56.773 [ Info   ][DeploymentComponent::cleanupComponentsGroup] Cleaned up Hubo
+56.773 [ Info   ][Logger] Unloading group 0
+56.773 [ Info   ][Logger] Disconnected and destroyed Hubo
+56.773 [ Info   ][Logger] Kick-out of group 0 successful.
+56.773 [ Info   ][Logger] Orocos Logging Deactivated.
