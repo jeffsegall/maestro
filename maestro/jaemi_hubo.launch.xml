@@ -1,0 +1,4 @@
+<launch>
+    <machine name="hubo2" address="localhost"/>
+    <node machine="hubo2" name="hubo2" pkg="openrave_robot_control" type="simulationserver" respawn="false" output="screen" args="--robotfile openrave/jaemi_hubo/jaemiHubo.robot.xml --jointname leftTorsoDummy --jointname rightTorsoDummy --jointname leftHipYawDummy --jointname rightHipYawDummy --manipname rightArmManip --manipname leftArmManip --manipname leftFootManip"/>
+</launch>
