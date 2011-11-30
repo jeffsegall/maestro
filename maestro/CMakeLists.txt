@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 2.6.3)
 # This creates a standard cmake project. You may extend this file with
 # any cmake macro you see fit.
 #
-project(Maestro)
+project(maestro)
 
 #
 # Do setup in case of ros package, If ROS_ROOT is set, it is
@@ -38,32 +38,32 @@ include(${OROCOS-RTT_USE_FILE_PATH}/UseOROCOS-RTT.cmake)
 # controlled by generated code of 'typegen'.
 #
 
-# Creates a component library libMaestro-<target>.so
-# and installs in the directory lib/orocos/Maestro/
+# Creates a component library libmaestro-<target>.so
+# and installs in the directory lib/orocos/maestro/
 #
-orocos_component(Maestro src/Maestro-component.hpp src/Maestro-component.cpp) # ...you may add multiple source files
+orocos_component(maestro src/maestro-component.hpp src/maestro-component.cpp) # ...you may add multiple source files
 #
 # You may add multiple orocos_component statements.
 
 #
 # Additional headers:
 #
-# Installs in the include/orocos/Maestro/ directory
+# Installs in the include/orocos/maestro/ directory
 #
-orocos_install_headers( src/Maestro-component.hpp ) # ...you may add multiple header files
+orocos_install_headers( src/maestro-component.hpp ) # ...you may add multiple header files
 #
 # You may add multiple orocos_install_headers statements.
 
 #
 # Building a Plugin
 #
-# Creates a plugin library libMaestro-plugin-<target>.so
-# and installs in the directory lib/orocos/Maestro/plugins/
+# Creates a plugin library libmaestro-plugin-<target>.so
+# and installs in the directory lib/orocos/maestro/plugins/
 #
 # Be aware that a plugin may only have the loadRTTPlugin() function once defined in a .cpp file.
 # This function is defined by the plugin and service CPP macros.
 #
-orocos_plugin(Maestro-plugin src/Maestro-plugin.cpp) # ...only one plugin function per library !
+orocos_plugin(maestro-plugin src/maestro-plugin.cpp) # ...only one plugin function per library !
 #
 # You may add multiple orocos_plugin statements.
 
@@ -71,10 +71,10 @@ orocos_plugin(Maestro-plugin src/Maestro-plugin.cpp) # ...only one plugin functi
 #
 # Building a Service:
 #
-# Creates a plugin library libMaestro-service-<target>.so
-# and installs in the directory lib/orocos/Maestro/plugins/
+# Creates a plugin library libmaestro-service-<target>.so
+# and installs in the directory lib/orocos/maestro/plugins/
 #
-orocos_service(Maestro-service src/Maestro-service.cpp) # ...only one service per library !
+orocos_service(maestro-service src/maestro-service.cpp) # ...only one service per library !
 #
 # You may add multiple orocos_service statements.
 
@@ -82,10 +82,10 @@ orocos_service(Maestro-service src/Maestro-service.cpp) # ...only one service pe
 #
 # Building a typekit (recommended):
 #
-# Creates a typekit library libMaestro-types-<target>.so
-# and installs in the directory lib/orocos/Maestro/types/
+# Creates a typekit library libmaestro-types-<target>.so
+# and installs in the directory lib/orocos/maestro/types/
 #
-orocos_typegen_headers(src/Maestro-types.hpp) # ...you may add multiple header files
+orocos_typegen_headers(src/maestro-types.hpp) # ...you may add multiple header files
 #
 # You may only have *ONE* orocos_typegen_headers statement !
 

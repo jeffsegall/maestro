@@ -1,6 +1,6 @@
 <package>
-    <description brief="Orocos Maestro Component package">
-        This package contains the components of the Maestro package
+    <description brief="Orocos maestro Component package">
+        This package contains the components of the maestro package
     </description>
     <!--NOTE: set the license and author before you publish this code-->
     <license></license>
