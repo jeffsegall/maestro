@@ -10,3 +10,5 @@ svn co https://code.ros.org/svn/wg-ros-pkg/stacks/pr2_controllers/branches/pr2_c
 svn co https://code.ros.org/svn/wg-ros-pkg/stacks/pr2_common/trunk/pr2_msgs
 source /opt/ros/diamondback/setup.sh
 rosdep install openrave_planning
+cd /opt/ros/diamondback/stacks/openrave_planning/openrave_robot_control/
+rosmake
