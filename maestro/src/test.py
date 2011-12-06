@@ -4,4 +4,7 @@ from numpy import *
 import time
 env = Environment()
 env.SetViewer('qtcoin')
-env.Load('openrave_robot_control/models/jaemi_hubo/jaemiHubo.robot.xml')
+env.Load('/opt/ros/diamondback/stacks/openrave_planning/openrave_robot_control/models/jaemi_hubo/jaemiHubo.robot.xml')
+
+while True:
+	continue
