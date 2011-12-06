@@ -1,4 +1,7 @@
 <launch>
     <machine name="maestro" address="localhost"/>
     <node machine="maestro" name="maestro" pkg="openrave_robot_control" type="simulationserver" respawn="false" output="screen" args="--robotfile /opt/ros/diamondback/stacks/openrave_planning/openrave_robot_control/models/jaemi_hubo/jaemiHubo.robot.xml --jointname leftTorsoDummy --jointname rightTorsoDummy --jointname leftHipYawDummy --jointname rightHipYawDummy --manipname rightArmManip --manipname leftArmManip --manipname leftFootManip"/>
+    <node machine="maestro" name="openrave" pkg="openrave_robot_control" type="test.py" respawn="false">
+        <env name="OPENRAVE_PLUGINS" value="$(optenv OPENRAVE_PLUGINS):$(find openrave_robot_control/lib"/>
+    </node>
 </launch>
