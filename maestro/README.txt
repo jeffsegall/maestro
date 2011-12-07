@@ -11,4 +11,4 @@ Installation:
 sudo ./install.sh
 
 Run:
-./run.sh
+./run.sh 
