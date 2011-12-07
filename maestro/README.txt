@@ -1,19 +1,14 @@
 This repository contains the MAchine and Environment Software
 Translation to ROs (MAESTRO) software project.
 
-Installation:
-MAESTRO requires the following software:
+Requirements:
 * ROS Diamondback
 * Orocos Toolchain (ROS stack)
 * OpenRAVE (ROS stack)
+* Ubuntu 11.04 LTS
 
-If you are running Ubuntu, you can run install.sh to install all of the
-software and its dependencies.
-
-Setup:
-MAESTRO requires that certain files are linked into the
-openrave_robot_control directory. To do this automatically you can run
-setup.sh which will link the correct files.
+Installation:
+sudo ./install.sh
 
 Run:
-To run MAESTRO you can run run.sh.
+./run.sh
