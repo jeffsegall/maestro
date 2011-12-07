@@ -1,6 +1,8 @@
 #!/bin/bash
 # This script installs ROS Diamondback with the Orocos Toolchain and
 # openRAVE stacks.
+sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu natty main" > /etc/apt/sources.list.d/ros-latest.list'
+wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
 apt-get update
 apt-get install ros-diamondback-desktop-full ros-diamondback-orocos-toolchain-ros
 cd /opt/ros/diamondback/stacks
