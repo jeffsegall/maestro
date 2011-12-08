@@ -11,7 +11,7 @@ hg clone https://kforge.ros.org/armnavigation/armnavigation
 svn co https://code.ros.org/svn/wg-ros-pkg/stacks/pr2_controllers/branches/pr2_controllers-1.4/pr2_controllers_msgs
 svn co https://code.ros.org/svn/wg-ros-pkg/stacks/pr2_common/trunk/pr2_msgs
 source /opt/ros/diamondback/setup.sh
-rosdep install openrave_planning
+rosdep install -y openrave_planning
 cd /opt/ros/diamondback/stacks/openrave_planning/openrave_robot_control/
 rosmake
 ln -sf /opt/ros/diamondback/stacks/openrave_planning/openrave/bin/openrave /usr/bin/openrave
