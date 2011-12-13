@@ -1,0 +1,3 @@
+<launch>
+<node name="HuboCtrl" pkg="ocl" type="deployer-gnulinux" args="-s $(find hubo_ctrl)/hubo_ctrl.xml -linfo --" output="screen"/>
+</launch>

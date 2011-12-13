@@ -1,0 +1,18 @@
+<package>
+  <description brief="hubo_ctrl">
+    The hubo_ctrl package defines an orocos-powered ROS node that communicates
+    to either a ROS-based simulation output node through openRAVE or to a CAN
+    bus for execution on physical hardware.
+  </description>
+  <author>Jeff Segall</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/hubo_ctrl</url>
+  <depend package="rtt_ros_integration"/>
+  <depend package="rtt_ros_integration_std_msgs"/>
+  <depend package="rtt_ros_param"/>
+  <depend package="rtt"/>
+
+</package>
+
+
