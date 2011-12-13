@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "cpf.dtd">
 <properties>
-<simple name="Import" type="string"><value>hubo_ctrl</value></simple>
+<simple name="Import" type="string"><value>maestro</value></simple>
 
 <struct name="ROSConStringOut" type="ConnPolicy">
   <simple name="type" type="short"><value>0</value></simple><!-- type of connection: 0 means Data -->

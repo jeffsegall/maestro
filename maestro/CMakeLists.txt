@@ -1,108 +1,28 @@
-#
-# The find_package macro for Orocos-RTT works best with
-# cmake >= 2.6.3
-#
-cmake_minimum_required(VERSION 2.6.3)
+cmake_minimum_required(VERSION 2.4.6)
+include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 
-#
-# This creates a standard cmake project. You may extend this file with
-# any cmake macro you see fit.
-#
-project(maestro)
+# Set the build type.  Options are:
+#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
+#  Debug          : w/ debug symbols, w/o optimization
+#  Release        : w/o debug symbols, w/ optimization
+#  RelWithDebInfo : w/ debug symbols, w/ optimization
+#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
+set(ROS_BUILD_TYPE RelWithDebInfo)
 
-#
-# Do setup in case of ros package, If ROS_ROOT is set, it is
-# recommended to use RTT/OCL through the ros packages.
-#
-set (ROS_ROOT $ENV{ROS_ROOT} )
-if (ROS_ROOT)
-  include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
-  rosbuild_init()
-  rosbuild_find_ros_package( rtt )
-  set( RTT_HINTS HINTS ${rtt_PACKAGE_PATH}/install )
-endif()
+rosbuild_init()
 
-# Set the CMAKE_PREFIX_PATH in case you're not using Orocos through ROS
-# for helping these find commands find RTT.
-find_package(OROCOS-RTT REQUIRED ${RTT_HINTS})
+rosbuild_find_ros_package(rtt )
+find_package(Orocos-RTT HINTS ${rtt_PACKAGE_PATH}/install )
 
+rosbuild_genmsg()
 # Defines the orocos_* cmake macros. See that file for additional
 # documentation.
 include(${OROCOS-RTT_USE_FILE_PATH}/UseOROCOS-RTT.cmake)
 
-#
-# Components, types and plugins.
-#
-# The CMake 'target' names are identical to the first argument of the
-# macros below, except for orocos_typegen_headers, where the target is fully
-# controlled by generated code of 'typegen'.
-#
-
-# Creates a component library libmaestro-<target>.so
-# and installs in the directory lib/orocos/maestro/
-#
-orocos_component(maestro src/maestro-component.hpp src/maestro-component.cpp) # ...you may add multiple source files
-#
-# You may add multiple orocos_component statements.
-
-#
-# Additional headers:
-#
-# Installs in the include/orocos/maestro/ directory
-#
-orocos_install_headers( src/maestro-component.hpp ) # ...you may add multiple header files
-#
-# You may add multiple orocos_install_headers statements.
-
-#
-# Building a Plugin
-#
-# Creates a plugin library libmaestro-plugin-<target>.so
-# and installs in the directory lib/orocos/maestro/plugins/
-#
-# Be aware that a plugin may only have the loadRTTPlugin() function once defined in a .cpp file.
-# This function is defined by the plugin and service CPP macros.
-#
-orocos_plugin(maestro-plugin src/maestro-plugin.cpp) # ...only one plugin function per library !
-#
-# You may add multiple orocos_plugin statements.
-
-
-#
-# Building a Service:
-#
-# Creates a plugin library libmaestro-service-<target>.so
-# and installs in the directory lib/orocos/maestro/plugins/
-#
-orocos_service(maestro-service src/maestro-service.cpp) # ...only one service per library !
-#
-# You may add multiple orocos_service statements.
-
-
-#
-# Building a typekit (recommended):
-#
-# Creates a typekit library libmaestro-types-<target>.so
-# and installs in the directory lib/orocos/maestro/types/
-#
-orocos_typegen_headers(src/maestro-types.hpp) # ...you may add multiple header files
-#
-# You may only have *ONE* orocos_typegen_headers statement !
-
-
-#
-# Building a normal library (optional):
-#
-# Creates a library libsupport-<target>.so and installs it in
-# lib/
-#
-orocos_library(support src/support.cpp) # ...you may add multiple source files
-#
-# You may add multiple orocos_library statements.
-
-
-#
-# Generates and installs our package. Must be the last statement such
-# that it can pick up all above settings.
-#
-orocos_generate_package()
+#common commands for building c++ executables and libraries
+orocos_component(${PROJECT_NAME} src/HuboCtrl.cpp src/RosGateway.cpp)
+#target_link_libraries(${PROJECT_NAME} another_library)
+#rosbuild_add_boost_directories()
+#rosbuild_link_boost(${PROJECT_NAME} thread)
+#rosbuild_add_executable(example examples/example.cpp)
+#target_link_libraries(example ${PROJECT_NAME})

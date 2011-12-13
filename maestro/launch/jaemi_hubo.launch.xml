@@ -1,8 +1,9 @@
 <launch>
     <machine name="maestro" address="localhost"/>
-    <node machine="maestro" name="maestro" pkg="openrave_robot_control" type="simulationserver" respawn="false" output="screen" args="--robotfile /opt/ros/diamondback/stacks/openrave_planning/openrave_robot_control/models/jaemi_hubo/jaemiHubo.robot.xml --jointname leftTorsoDummy --jointname rightTorsoDummy --jointname leftHipYawDummy --jointname rightHipYawDummy --manipname rightArmManip --manipname leftArmManip --manipname leftFootManip"/>
-    <node machine="maestro" name="openrave" pkg="openrave_robot_control" type="maestro.py" respawn="false">
+    <node machine="maestro" name="openrave" pkg="openrave_robot_control" type="simulationserver" respawn="false" output="screen" args="--robotfile /opt/ros/diamondback/stacks/openrave_planning/openrave_robot_control/models/jaemi_hubo/jaemiHubo.robot.xml --jointname leftTorsoDummy --jointname rightTorsoDummy --jointname leftHipYawDummy --jointname rightHipYawDummy --manipname rightArmManip --manipname leftArmManip --manipname leftFootManip"/>
+    <node machine="maestro" name="maestro" pkg="openrave_robot_control" type="maestro.py" respawn="false">
         <env name="OPENRAVE_PLUGINS" value="$(optenv OPENRAVE_PLUGINS):$(find openrave_robot_control/lib"/>
-        <env name="PYTHONPATH" value="/opt/ros/diamondback/stacks/openrave_planning/openrave/lib/python2.7/site-packages/"/>
+        <env name="PYTHONPATH" value="/opt/ros/diamondback/stacks/openrave_planning/openrave/lib/python2.7/site-packages/:/opt/ros/diamondback/ros/core/roslib/src:/opt/ros/diamondback/stacks/ros_comm/clients/rospy/src:/opt/ros/diamondback/stacks/ros_comm/messages/std_msgs/src"/>
     </node>
+    <node name="HuboCtrl" pkg="ocl" type="deployer-gnulinux" args="-s $(find maestro)/launch/hubo_ctrl.xml -linfo --" output="screen"/>
 </launch>
