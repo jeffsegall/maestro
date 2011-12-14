@@ -65,6 +65,12 @@ class Maestro:
     def set_left_wrist_roll(self,value):
         self.robot.SetJointValues([value],[7])
 
+    def set_left_wrist_pitch(self,value):
+        self.robot.SetJointValues([value],[8])
+
+    def set_left_wrist_yaw(self,value):
+        self.robot.SetJointValues([value],[9])
+
     def set_right_shoulder_roll(self,value):
         self.robot.SetJointValues([value],[11])
 
@@ -79,6 +85,12 @@ class Maestro:
 
     def set_right_wrist_roll(self,value):
         self.robot.SetJointValues([value],[15])
+
+    def set_right_wrist_pitch(self,value):
+        self.robot.SetJointValues([value],[16])
+
+    def set_right_wrist_yaw(self,value):
+        self.robot.SetJointValues([value],[17])
 
     def set_left_hip_yaw(self,value):
         self.robot.SetJointValues([value],[19])
@@ -117,7 +129,7 @@ class Maestro:
         self.robot.SetJointValue([value],[31])
 
     def start(self):
-        while True:
+        while not rospy.is_shutdown():
             continue
 
 
