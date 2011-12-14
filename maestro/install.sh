@@ -16,8 +16,3 @@ cd /opt/ros/diamondback/stacks/openrave_planning/openrave_robot_control/
 rosmake
 ln -sf /opt/ros/diamondback/stacks/openrave_planning/openrave/bin/openrave /usr/bin/openrave
 ln -sf /opt/ros/diamondback/stacks/openrave_planning/openrave/bin/openrave-config /usr/bin/openrave-config
-ln -sf `pwd`/launch/jaemi_hubo.launch.xml /opt/ros/diamondback/stacks/openrave_planning/openrave_robot_control/jaemi_hubo.launch.xml
-ln -sf `pwd`/models /opt/ros/diamondback/stacks/openrave_planning/openrave_robot_control/models
-ln -sf `pwd`/src /opt/ros/diamondback/stacks/openrave_planning/openrave_robot_control/maestro-src
-cp src/test.py /opt/ros/diamondback/stacks/openrave_planning/openrave_robot_control/.
-chmod +x /opt/ros/diamondback/stacks/openrave_planning/openrave_robot_control/test.py

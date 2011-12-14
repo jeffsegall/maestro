@@ -5,12 +5,14 @@ import rospy
 from numpy import *
 from std_msgs.msg import String
 import time
+import sys
 
 __author__="Christopher T. Cannon<cannon@drexel.edu>"
 __date__ ="$Dec 8, 2011 1:22:15 PM$"
 
 class Maestro:
     def __init__(self):
+        print sys.path
         self.env = Environment()
         self.env.SetViewer('qtcoin')
         self.env.Load('/opt/ros/diamondback/stacks/openrave_planning/' +
