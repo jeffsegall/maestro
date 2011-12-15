@@ -11,6 +11,7 @@ bool RosGateway::transmit(int joint, float angle){
     hubomsg::HuboCmd outCommand = hubomsg::HuboCmd();
     outCommand.joint = joint;
     outCommand.angle = angle;
+    outCommand.msg = "cmd";
     this->outPort->write(outCommand);
     return true;
 }

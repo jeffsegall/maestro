@@ -22,7 +22,6 @@ from openravepy import *
 import rospy
 from numpy import *
 from hubomsg.msg import HuboCmd
-from std_msgs.msg import String
 import sys
 import getopt
 
@@ -52,19 +51,19 @@ class Maestro:
         with self.robot:
             self.robot.SetJointValues([data.angle],[data.joint])
             if self.robot.CheckSelfCollision():
-                self.send_error_message(data.joint,data.angle,"Self Collision.")
+                self.send_error_message(data.joint,data.angle,"Self collision.")
                 return None
             elif self.env.CheckCollision(self.robot):
-                send_error_message(data.joint,data.angle,"Environment Collision.")
+                send_error_message(data.joint,data.angle,"Environment collision.")
                 return None
         
         self.robot.SetJointValues([data.angle],[data.joint])
 
     def send_error_message(self,joint,angle,message):
         msg = HuboCmd()
-	msg.joint = joint
-	msg.angle = angle
-	msg.msg = message
+        msg.joint = joint
+        msg.angle = angle
+        msg.msg = message
         self.pub.publish(msg)
 
     def set_torso_yaw(self, value):

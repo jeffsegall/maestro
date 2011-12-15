@@ -8,6 +8,8 @@ Requirements:
 * Ubuntu 11.04 LTS
 
 Installation:
+Append the full maestro path to the /opt/ros/diamondback/setup.sh file
+under the ROS_PACKAGE_PATH variable.
 sudo ./install.sh
 
 Run:
