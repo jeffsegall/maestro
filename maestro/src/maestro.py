@@ -1,32 +1,47 @@
 #!/usr/bin/env python
+"""MAESTRO
+
+A python script that creates a simulation server in openRAVE which
+communicates over ROS.
+
+usage: python maestro.py [options]
+
+Options:
+    -h, --help                  Show this help
+    -r ..., --robot=...         Robot XML (COLLADA format)
+    -s ..., --subscriber=...    ROS topic subscription
+    -p ..., --publisher=...     ROS topic publication
+    -g ..., --gravity=...       OpenRAVE Physics Engine (True/False)
+"""
+__author__="Christopher T. Cannon<cannon@drexel.edu>"
+__date__ ="$Dec 8, 2011 1:22:15 PM$"
+
 import roslib; roslib.load_manifest('openrave_robot_control')
 from openravepy import *
 import rospy
 from numpy import *
 from std_msgs.msg import String
-import time
 import sys
-
-__author__="Christopher T. Cannon<cannon@drexel.edu>"
-__date__ ="$Dec 8, 2011 1:22:15 PM$"
+import getopt
 
 class Maestro:
-    def __init__(self):
-        print sys.path
+    def __init__(self,robot_xml,subscriber,publisher,gravity):
         self.env = Environment()
         self.env.SetViewer('qtcoin')
-        self.env.Load('/opt/ros/diamondback/stacks/openrave_planning/' +
-        'openrave_robot_control/models/jaemi_hubo/jaemiHubo.robot.xml')
-        #physics = RaveCreatePhysicsEngine(self.env,'ode')
-        #physics.SetGravity(numpy.array((0,0,0)))
-        #self.env.SetPhysicsEngine(physics)
+        self.env.Load(robot_xml)
+
+        if gravity:
+            physics = RaveCreatePhysicsEngine(self.env,'ode')
+            physics.SetGravity(numpy.array((0,0,-9.8)))
+            self.env.SetPhysicsEngine(physics)
+
         self.robot = self.env.GetRobots()[0]
         self.robot.GetLinks()[0].SetStatic(True)
         self.env.StopSimulation()
         self.env.StartSimulation(timestep=0.001)
         rospy.init_node('maestro', anonymous=False)
-        rospy.Subscriber('/hubo_cmd', String, self.callback)
-        self.pub = rospy.Publisher('/ros_in', String)
+        rospy.Subscriber(subscriber, String, self.callback)
+        self.pub = rospy.Publisher(publisher, String)
 
     def __del__(self):
         self.env.Destroy()
@@ -134,7 +149,37 @@ class Maestro:
         while not rospy.is_shutdown():
             continue
 
+def usage():
+    """Prints the usage."""
+    print __doc__
+
+def main(argv):
+    """Parses the command line arguements and starts the program."""
+    global robotXml,subscriber,publisher,gravity
+
+    try:
+        opts,args = getopt.getopt(argv, "hr:s:p:g:", ["help","robot=","subscriber=",
+        "publisher=","gravity="])
+    except getopt.GetoptError:
+        usage()
+        sys.exit(2)
+    for opt,arg in opts:
+        if opt in ("-h","--help"):
+            usage()
+            sys.exit()
+        elif opt in ("-r","--robot"):
+            robotXml = arg
+        elif opt in ("-s","--subscriber"):
+            subscriber = arg
+        elif opt in ("-p","--publisher"):
+            publisher = arg
+        elif opt in ("-g","--gravity"):
+            if arg.lower() == "true":
+                gravity = True
+            else:
+                gravity = False
+
+    Maestro(robotXml,subscriber,publisher,gravity).start()
 
 if __name__ == "__main__":
-    m = Maestro()
-    m.start()
+    main(sys.argv[1:])
