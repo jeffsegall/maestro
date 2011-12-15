@@ -12,6 +12,7 @@
 #include <rtt/Port.hpp>
 #include <rtt/Component.hpp>
 #include <std_msgs/String.h>
+#include <hubomsg/typekit/HuboCmd.h>
 
 using namespace RTT;
 
@@ -20,14 +21,14 @@ class RosGateway {
 public:
     RosGateway(std::string inPortName, std::string outPortName);
     ~RosGateway();
-    bool transmit(void* message);
+    bool transmit(int joint, float angle);
     bool recv();
-    InputPort<std_msgs::String>* getInputPort();
-    OutputPort<std_msgs::String>* getOutputPort();
+    InputPort<hubomsg::HuboCmd>* getInputPort();
+    OutputPort<hubomsg::HuboCmd>* getOutputPort();
 
 protected:
-    InputPort<std_msgs::String> *inPort;
-    OutputPort<std_msgs::String> *outPort;
+    InputPort<hubomsg::HuboCmd> *inPort;
+    OutputPort<hubomsg::HuboCmd> *outPort;
 
 };
 

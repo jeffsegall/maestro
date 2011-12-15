@@ -12,15 +12,14 @@
 
 #include <rtt/Port.hpp>
 #include <rtt/Component.hpp>
-#include <std_msgs/String.h>
 
 class CommsGateway{
 
 public:
     virtual ~CommsGateway();
-    virtual void transmit(void* message) = 0;
-    virtual void recv(void* data);
-  
+    virtual bool transmit(void* message) = 0;
+    virtual bool recv(void* data);
+    
 private:
 
 };

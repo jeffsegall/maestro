@@ -26,8 +26,11 @@ public:
   ~HuboCtrl(){}
 private:
   void updateHook(){
-    std_msgs::String sdata;
-    gateway->recv();  
+
+    //Check for incoming data and respond if necessary.
+    if(gateway->recv()){
+
+    }  
   }
 };
 ORO_CREATE_COMPONENT(HuboCtrl)

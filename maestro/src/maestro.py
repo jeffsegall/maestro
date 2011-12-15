@@ -1,8 +1,10 @@
 #!/usr/bin/python
 import roslib; roslib.load_manifest('openrave_robot_control')
+roslib.load_manifest('maestro')
 from openravepy import *
 import rospy
 from numpy import *
+from hubomsg.msg import HuboCmd
 from std_msgs.msg import String
 import sys
 
@@ -24,14 +26,16 @@ class Maestro:
         self.env.StopSimulation()
         self.env.StartSimulation(timestep=0.001)
         rospy.init_node('maestro', anonymous=False)
-        rospy.Subscriber('/hubo_cmd', String, self.callback)
+        rospy.Subscriber('/hubo_cmd', HuboCmd, self.callback)
         rospy.spin()
 
     def callback(self,data):
-        print "Got callback."
-        message = data.data.split(',')
-        if message[0] == "head_yaw":
-            self.set_head_yaw(int(message[1]))
+        print "Got callback. Joint, Angle = ", data.joint,  ", ",  data.angle
+        #message = data.data.split(',')
+        #if message[0] == "head_yaw":
+        #    self.set_head_yaw(int(message[1]))
+	self.robot.SetJointValues([data.angle],[data.joint])	
+
 
     def set_head_yaw(self, value):
         self.robot.SetJointValues([value],[1])
