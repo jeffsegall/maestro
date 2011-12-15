@@ -1,0 +1,14 @@
+<package>
+  <description brief="hubomsg">
+
+     hubomsg
+
+  </description>
+  <author>Jeff Segall</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/hubomsg</url>
+
+</package>
+
+

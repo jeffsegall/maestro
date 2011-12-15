@@ -7,7 +7,7 @@ RosGateway::RosGateway(std::string inPortName, std::string outPortName){
     this->outPort = new OutputPort<hubomsg::HuboCmd>(outPortName);
 }
 
-bool transmit(int joint, float angle){
+bool RosGateway::transmit(int joint, float angle){
     hubomsg::HuboCmd outCommand = hubomsg::HuboCmd();
     outCommand.joint = joint;
     outCommand.angle = angle;
@@ -18,7 +18,8 @@ bool transmit(int joint, float angle){
 bool RosGateway::recv(){
     hubomsg::HuboCmd inCommand = hubomsg::HuboCmd();
     if(NewData==this->inPort->read(inCommand)){
-        transmit(inCommand.joint, inCommand.angle);
+        if (inCommand.msg == "cmd")
+	    transmit(inCommand.joint, inCommand.angle);
         return true;
     }
     return false;
