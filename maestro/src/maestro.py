@@ -27,6 +27,7 @@ import getopt
 
 class Maestro:
     def __init__(self,robot_xml,subscriber,publisher,gravity):
+        """Initialize the OpenRAVE environment"""
         self.env = Environment()
         self.env.SetViewer('qtcoin')
         self.env.Load(robot_xml)
@@ -45,9 +46,11 @@ class Maestro:
         self.pub = rospy.Publisher(publisher, HuboCmd)
 
     def __del__(self):
+        """Clean up the OpenRAVE environment"""
         self.env.Destroy()
 
     def callback(self,data):
+        """Received a message from Orocos"""
         with self.robot:
             self.robot.SetJointValues([data.angle],[data.joint])
             if self.robot.CheckSelfCollision():
@@ -60,97 +63,16 @@ class Maestro:
         self.robot.SetJointValues([data.angle],[data.joint])
 
     def send_error_message(self,joint,angle,message):
+        """Send an error message back to OROCOS"""
         msg = HuboCmd()
         msg.joint = joint
         msg.angle = angle
         msg.msg = message
         self.pub.publish(msg)
 
-    def set_torso_yaw(self, value):
-        self.robot.SetJointValues([value],[0])
-
-    def set_head_yaw(self, value):
-        self.robot.SetJointValues([value],[1])
-
-    def set_left_shoulder_roll(self,value):
-        self.robot.SetJointValues([value],[3])
-
-    def set_left_shoulder_pitch(self,value):
-        self.robot.SetJointValues([value],[4])
-
-    def set_left_elbow_roll(self,value):
-        self.robot.SetJointValues([value],[5])
-
-    def set_left_elbow_yaw(self,value):
-        self.robot.SetJointValues([value],[6])
-
-    def set_left_wrist_roll(self,value):
-        self.robot.SetJointValues([value],[7])
-
-    def set_left_wrist_pitch(self,value):
-        self.robot.SetJointValues([value],[8])
-
-    def set_left_wrist_yaw(self,value):
-        self.robot.SetJointValues([value],[9])
-
-    def set_right_shoulder_roll(self,value):
-        self.robot.SetJointValues([value],[11])
-
-    def set_right_shoulder_pitch(self,value):
-        self.robot.SetJointValues([value][12])
-
-    def set_right_elbow_roll(self,value):
-        self.robot.SetJointValues([value],[13])
-
-    def set_right_elbow_yaw(self,value):
-        self.robot.SetJointValues([value],[14])
-
-    def set_right_wrist_roll(self,value):
-        self.robot.SetJointValues([value],[15])
-
-    def set_right_wrist_pitch(self,value):
-        self.robot.SetJointValues([value],[16])
-
-    def set_right_wrist_yaw(self,value):
-        self.robot.SetJointValues([value],[17])
-
-    def set_left_hip_yaw(self,value):
-        self.robot.SetJointValues([value],[19])
-
-    def set_left_hip_roll(self,value):
-        self.robot.SetJointValues([value],[20])
-
-    def set_left_hip_pitch(self,value):
-        self.robot.SetJointValues([value],[21])
-
-    def set_letf_knee_pitch(self,value):
-        self.robot.SetJointValues([value],[22])
-
-    def set_left_foot_pitch(self,value):
-        self.robot.SetJointValues([value],[23])
-
-    def set_left_foot_roll(self,value):
-        self.robot.SetJointValues([value],[24])
-
-    def set_right_hip_yaw(self,value):
-        self.robot.SetJointValues([value],[26])
-
-    def set_right_hip_roll(self,value):
-        self.robot.SetJointValues([value],[27])
-
-    def set_right_hip_pitch(self,value):
-        self.robot.SetJointValues([value],[28])
-
-    def set_right_knee_pitch(self,value):
-        self.robot.SetJointValues([value],[29])
-
-    def set_right_foot_pitch(self,value):
-        self.robot.SetJointValues([value],[30])
-
-    def set_right_foot_roll(self,value):
-        self.robot.SetJointValue([value],[31])
-
     def start(self):
+        """Start the main loop which only quits when terminated by the
+        user"""
         while not rospy.is_shutdown():
             continue
 

@@ -17,7 +17,7 @@
 </struct>
 
 
-<struct name="HuboCtrl" type="HuboCtrl">
+<struct name="RobotControl" type="RobotControl">
   <struct name="Activity" type="PeriodicActivity">
     <simple name="Period" type="double"><value>1</value></simple>
     <simple name="Priority" type="short"><value>0</value></simple>

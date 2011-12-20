@@ -5,5 +5,5 @@
         <env name="OPENRAVE_PLUGINS" value="$(optenv OPENRAVE_PLUGINS):$(find openrave_robot_control/lib"/>
         <env name="PYTHONPATH" value="/opt/ros/diamondback/stacks/openrave_planning/openrave/lib/python2.7/site-packages/:/home/jeff/hubo/hubo2/maestro/src:/home/jeff/hubo/hubo2/hubomsg/src:/opt/ros/diamondback/ros/core/roslib/src:/opt/ros/diamondback/stacks/ros_comm/clients/rospy/src:/opt/ros/diamondback/stacks/ros_comm/messages/std_msgs/src"/>
     </node>
-    <node name="HuboCtrl" pkg="ocl" type="deployer-gnulinux" args="-s $(find maestro)/launch/hubo_ctrl.xml -linfo --" output="screen"/>
+    <node name="RobotControl" pkg="ocl" type="deployer-gnulinux" args="-s $(find maestro)/launch/robot_control.xml -linfo --" output="screen"/>
 </launch>
