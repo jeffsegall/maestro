@@ -18,6 +18,8 @@ bool RosGateway::transmit(int joint, float angle){
 
 bool RosGateway::recv(){
     hubomsg::HuboCmd inCommand = hubomsg::HuboCmd();
+
+    //If a command message comes in from an external source, rebroadcast it.
     if(NewData==this->inPort->read(inCommand)){
         if (inCommand.msg == "cmd")
 	    transmit(inCommand.joint, inCommand.angle);

@@ -22,7 +22,9 @@ public:
     virtual OutputPort getOutputPort();
 
 private:
-
+    void getHuboTx(unsigned char motorNum, double deg, unsigned char* tx);
+    InputPort<unsigned char*> *inPort;
+    OutputPort<unsigned char*> *outPort;
 };
 
 #endif

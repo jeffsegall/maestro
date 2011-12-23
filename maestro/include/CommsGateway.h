@@ -17,7 +17,7 @@ class CommsGateway{
 
 public:
     virtual ~CommsGateway();
-    virtual bool transmit(void* message) = 0;
+    virtual bool transmit(int joint, float angle) = 0;
     virtual bool recv(void* data);
     
 private:
