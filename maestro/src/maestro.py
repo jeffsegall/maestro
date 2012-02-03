@@ -41,7 +41,7 @@ class Maestro:
         self.robot.GetLinks()[0].SetStatic(True)
         self.env.StopSimulation()
         self.env.StartSimulation(timestep=0.001)
-        rospy.init_node('maestro', anonymous=False)
+        rospy.init_node('maestro_openrave', anonymous=False)
         rospy.Subscriber(subscriber, HuboCmd, self.callback)
         self.pub = rospy.Publisher(publisher, HuboCmd)
 

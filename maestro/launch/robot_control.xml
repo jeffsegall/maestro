@@ -7,13 +7,13 @@
   <simple name="type" type="short"><value>0</value></simple><!-- type of connection: 0 means Data -->
   <simple name="size" type="short"><value>1</value></simple><!-- buffer size -->
   <simple name="transport" type="short"><value>3</value></simple><!--3 means ROS-->
-  <simple name="name_id" type="string"><value>hubo_cmd</value></simple>
+  <simple name="name_id" type="string"><value>ros_cmd</value></simple>
 </struct>
 <struct name="ROSConStringIn" type="ConnPolicy">
   <simple name="type" type="short"><value>0</value></simple><!-- type of connection: 0 means Data -->
   <simple name="size" type="short"><value>1</value></simple><!-- buffer size -->
   <simple name="transport" type="short"><value>3</value></simple><!--3 means ROS-->
-  <simple name="name_id" type="string"><value>ros_in</value></simple>
+  <simple name="name_id" type="string"><value>ros_error</value></simple>
 </struct>
 
 
@@ -26,8 +26,8 @@
   <simple name="AutoConf" type="boolean"><value>1</value></simple>
   <simple name="AutoStart" type="boolean"><value>1</value></simple>
   <struct name="Ports" type="PropertyBag">
-    <simple name="hubo_cmd" type="string"><value> ROSHuboCmdOut </value></simple>
-    <simple name="ros_in" type="string"><value> ROSConStringIn </value></simple>
+    <simple name="ros_cmd" type="string"><value> ROSHuboCmdOut </value></simple>
+    <simple name="ros_error" type="string"><value> ROSConStringIn </value></simple>
   </struct>
   <simple name="Service" type="string"><value>rosparam</value></simple>
 </struct>
