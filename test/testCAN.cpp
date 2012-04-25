@@ -10,9 +10,39 @@
 #include <assert.h>
 #include <errno.h>
 #include "huboCanDS.hpp"
-using std::cout;
-using std::endl;
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <vector>
+
 using namespace Hubo;
+using namespace std;
+
+char* strToSerial(string packet){
+    char* data = new char[packet.length() + 1];
+
+    strcpy(data, packet.c_str());
+
+    data[packet.length()] = (char) 0x0D;
+    
+    return data;
+}
+
+vector<float> trajectoryValues(){
+    vector<float> val;
+
+    float f;
+
+    ifstream is;
+    is.open("./trajfile");
+
+    while (!is.eof()){
+        is >> f;
+        val.push_back(f); 
+    } 
+
+    return val;
+}
 
 int main(){
 
@@ -37,32 +67,7 @@ int main(){
     char* open_packet = new char[3];
     char* close_packet = new char[3];
 
-    open_packet[0] = 'O';
-    open_packet[1] = (char)0x0D;
-
-    close_packet[0] = 'C';
-    close_packet[1] = (char)0x0D;
-
-    speed_packet[0] = 's';
-    speed_packet[1] = '8';
-    speed_packet[2] = (char)0x0D;
-
-    echo_packet[0] = 'E';
-    echo_packet[1] = (char)0x0D;
-
-    char* name_info = new char[12];
-    name_info[0] = 't';
-    name_info[1] = '0';
-    name_info[2] = '0';
-    name_info[3] = '1';
-    name_info[4] = '3';
-    name_info[5] = '0';
-    name_info[6] = '0';
-    name_info[7] = '0';
-    name_info[8] = '1';
-    name_info[9] = '0';
-    name_info[10] = '5';
-    name_info[11] = (char)0x0D;
+    string name_info_str = "t0013000105";
 
     char* req_enc = new char[12];
     req_enc[0] = 't';
@@ -78,34 +83,8 @@ int main(){
     req_enc[10] = '0';
     req_enc[11] = (char)0x0D;
 
-    char* hip_off = new char[12];
-    hip_off[0] = 't';
-    hip_off[1] = '0';
-    hip_off[2] = '0';
-    hip_off[3] = '1';
-    hip_off[4] = '3';
-    hip_off[5] = '0';
-    hip_off[6] = '0';
-    hip_off[7] = '0';
-    hip_off[8] = 'B';
-    hip_off[9] = '0';
-    hip_off[10] = '0';
-    hip_off[11] = (char)0x0D;
-
-    char* hip = new char[12];
-    hip[0] = 't';
-    hip[1] = '0';
-    hip[2] = '0';
-    hip[3] = '1';
-    hip[4] = '3';
-    hip[5] = '0';
-    hip[6] = '0';
-    hip[7] = '0';
-    hip[8] = 'B';
-    hip[9] = '0';
-    hip[10] = '1';
-    hip[11] = (char)0x0D;
-
+    string hip_off_str = "t0013000B00";
+    string hip_str = "t0013000B01";
 
     char* pos_gain = new char[22];
     pos_gain[0] = 't';
@@ -131,29 +110,11 @@ int main(){
     pos_gain[20] = '4';
     pos_gain[21] = (char)0x0D;
 
-    char* run = new char[10];
-    run[0] = 't';
-    run[1] = '0';
-    run[2] = '0';
-    run[3] = '1';
-    run[4] = '2';
-    run[5] = '0';
-    run[6] = '0';
-    run[7] = '0';
-    run[8] = 'E';
-    run[9] = (char)0x0D;    
+    string run_str = "t0012000E";
+    string stop_str = "t0012000F";
 
-    char* stop = new char[10];
-    stop[0] = 't';
-    stop[1] = '0';
-    stop[2] = '0';
-    stop[3] = '1';
-    stop[4] = '2';
-    stop[5] = '0';
-    stop[6] = '0';
-    stop[7] = '0';
-    stop[8] = 'F';
-    stop[9] = (char)0x0D;
+    string enc_zero = "t001300060F";
+
 
     int dir = -1;
     int ppr = 25 * 100 * 4000;
@@ -163,111 +124,85 @@ int main(){
     long data = (long)((setPoint * RAD2DEG) * dir * (ppr/360.));
     //long finalData = canMsg::bitStuff3byte(data);
 
-    char* set = new char[22];
-    set[0] = 't';
-    set[1] = '0';
-    set[2] = '1';
-    set[3] = '0';
-    set[4] = '8';
-    set[5] = '0';
-    set[6] = '1';
-    set[7] = 'A';
-    set[8] = '2';
-    set[9] = '6';
-    set[10] = '5';
-    set[11] = '2';
-    set[12] = '3';
-    set[13] = '0';
-    set[14] = '8';
-    set[15] = 'B';
-    set[16] = '2';
-    set[17] = '3';
-    set[18] = 'C';
-    set[19] = '0';
-    set[20] = '1';
-    set[21] = (char)0x0D;
+    string set_str = "t0108CCCCCCCC88888888";
+    string set2_str = "t01080000000000000000";
+    string fbc_str = "t0013001000";
  
-    char* set2 = new char[22];
-    set2[0] = 't';
-    set2[1] = '0';
-    set2[2] = '1';
-    set2[3] = '0';
-    set2[4] = '8';
-    set2[5] = '0';
-    set2[6] = 'A';
-    set2[7] = '2';
-    set2[8] = 'B';
-    set2[9] = '2';
-    set2[10] = '6';
-    set2[11] = 'B';
-    set2[12] = '1';
-    set2[13] = '0';
-    set2[14] = '8';
-    set2[15] = 'D';
-    set2[16] = '2';
-    set2[17] = 'E';
-    set2[18] = '1';
-    set2[19] = 'A';
-    set2[20] = 'A';
-    set2[21] = (char)0x0D;
+    write(channel, strToSerial("s8"), 3);
+    write(channel, strToSerial("O"), 2);
+//    write(channel, strToSerial("E"), 2);
 
-    char* fbc = new char[12];
-    fbc[0] = 't';
-    fbc[1] = '0';
-    fbc[2] = '0';
-    fbc[3] = '1';
-    fbc[4] = '3';
-    fbc[5] = '0';
-    fbc[6] = '0';
-    fbc[7] = '1';
-    fbc[8] = '0';
-    fbc[9] = '0';
-    fbc[10] = '0';
-    fbc[11] = (char)0x0D; 
- 
-    write(channel, speed_packet, 3);
-    write(channel, open_packet, 2);
-//    write(channel, echo_packet, 2);
+
     sleep(2);
 
     cout << "writing name info, fbc packet" << endl;
  
-    write(channel, name_info, 12);
-    write(channel, fbc, 12);
+    write(channel, strToSerial(name_info_str), 12);
+    //write(channel, strToSerial(fbc_str), 12);
 
     sleep(2);
 
     cout << "writing gains, hip, run packets" << endl;
 
-//    write(channel, pos_gain, 22);
-    write(channel, hip, 12);
-    write(channel, run, 10);
+    write(channel, pos_gain, 22);
+
+    write(channel, strToSerial(hip_str), 12);
+    write(channel, strToSerial(run_str), 10);
 
     sleep(5);
+
+    string set_start = "t0108";
+
+    int ticks = 0;
+    char* hexbuf = new char[8];
+    string hexstr = "";
+
+    vector<float> trajVal = trajectoryValues();
+
+    for (int i = 0; i < trajVal.size(); i++){
+
+        ticks = (int)trajVal.at(i);
+        sprintf(hexbuf, "%08X", ticks);
+        hexstr = set_start + hexbuf + hexbuf;
+        cout << hexstr << endl;
+        if (write(channel, strToSerial(hexstr), 22) < 22)
+            cout << "write error" << endl;
 /*
-    cout << "writing set packet" << endl;
+    for (int i = 0; i < 100; i++){
 
-    for (int i = 0; i < 10; i++){
-        if ((i % 2) == 0)
-            if (write(channel, set, 22) < 0)
-                cout << "write error" << endl;
-        else
-            if (write(channel, set2, 22) < 0)
-                cout << "write error 2" << endl;
-        sleep(2);
+       ticks += 20000;
+       if (ticks >= 2147483647)
+           ticks = 0;
 
+       sprintf(hexbuf, "%08X", ticks);
+        
+       hexstr = set_start + hexbuf + hexbuf; 
+       //cout << "hexstr = " << hexstr << endl;
+       if (write(channel, strToSerial(hexstr), 22) < 22)
+           cout << "write error" << endl;
+/*
+
+       if ((i % 2) == 0)
+           if (write(channel, strToSerial(set_str), 22) < 0)
+               cout << "write error" << endl;
+       else
+           if (write(channel, strToSerial(set2_str), 22) < 0)
+               cout << "write 2 error" << endl;
+*/       usleep(20 * 1000);
     }
-*/
+    
     cout << "Writing hip off, stop packets" << endl;
 
-    write(channel, hip_off, 12);
-    write(channel, stop, 10);
+    write(channel, strToSerial(hip_off_str), 12);
+    write(channel, strToSerial(stop_str), 10);
 
     cout << "writing close packet" << endl;
 
-    sleep(2);
+    usleep(20 * 1000);
 
-    write(channel, close_packet, 2);
+    write(channel, strToSerial(enc_zero), 12);
+
+    write(channel, strToSerial("C"), 2);
 
  /* 
     char* rx_buffer = new char[100];
