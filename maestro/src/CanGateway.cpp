@@ -2,16 +2,90 @@
 
 using namespace RTT;
 
+#define SERIALTEST 0
+
 CanGateway::CanGateway(std::string inPortName, std::string outPortName){
     this->inPort = new InputPort<unsigned char*>(inPortName);
     this->outPort = new OutputPort<unsigned char*>(outPortName);
 }
 
-bool CanGateway::transmit(int joint, float angle){
-    unsigned char* message;
+canmsg_t buildCanPacket(int joint, float angle){
+
+}
+
+string buildSerialPacket(int joint, float, angle){
+
+}
+
+void CanGateway::transmit(int joint, float angle){
+
+    if (SERIALTEST){
+        //Make serial message and transmit. 
+        unsigned char* message;    
+        message = strToSerial( buildSerialPacket(joint, angle) );
+
+        transmit(message);
+    }
+    else{
+        //Make CAN message and transmit.
+        canmsg_t message;
+        message = buildCanPacket(joint, angle);
+
+        transmit(message);
+    }
+}
+
+char* CanGateway::strToSerial(string packet){
+    char* data = new char[packet.length() + 1];
+
+    strcpy(data, packet.c_str());
+
+    data[packet.length()] = (char) 0x0D;
     
+    return data;
+}
+
+bool CanGateway::transmit(canmsg_t packet){
+    int sent = 0;
+
+    //Make sure there's an outbound channel
+    if (this.channel > 0){
+        sent = write(this.channel, &packet, 1);
+    }
+
+    if (sent < 1){
+        //Not all the data was sent
+        return false;
+    }
 
     return true;
+}
+
+bool CanGateway::transmit(char* packet){
+    int sent = 0;
+
+    //Make sure there's an outbound channel
+    if (this.channel > 0){
+        sent = write(this.channel, packet, strlen(packet));
+    }
+
+    if (sent < strlen(packet)){
+        //Not all the data was sent
+        return false;
+    }
+
+    return true;
+}
+
+int CanGateway::openCanConnection(char* path){
+    //Read/Write and non-blocking.  Should be the same for
+    //serial or CAN hardware.
+    int channel = open(path, O_RDWR | O_NONBLOCK);
+    return channel;
+}
+
+void CanGateway::closeCanConnection(int channel){
+    close(channel);
 }
 
 bool CanGateway::recv(){

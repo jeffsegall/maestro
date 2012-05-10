@@ -10,21 +10,44 @@
 #define CANGATEWAY_H
 
 #include "CommsGateway.h"
+#include "can4linux.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <string>
+
+using namespace std;
 
 class CanGateway : public CommsGateway{
 
 public:
     CanGateway();
     virtual ~CanGateway();
-    virtual void transmit(void* message);
+    virtual void transmit(int joint, float angle);
     virtual void recv(void* data);
     virtual InputPort getInputPort();
     virtual OutputPort getOutputPort();
+
+    int openCanConnection(char* path);
+    void closeCanConnection(int channel);
 
 private:
     void getHuboTx(unsigned char motorNum, double deg, unsigned char* tx);
     InputPort<unsigned char*> *inPort;
     OutputPort<unsigned char*> *outPort;
+
+    char* strToSerial(string packet);
+
+    int channel;
+
+    bool transmit(canmsg_t packet);
+    bool transmit(char* packet);
+
+    canmsg_t buildCanPacket();
+    string buildSerialPacket();
+
 };
 
 #endif
