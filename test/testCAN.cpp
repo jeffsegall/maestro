@@ -14,9 +14,55 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
+#include <algorithm>
 
 using namespace Hubo;
 using namespace std;
+
+string ticksToString(int ticks){
+    string hexstr;
+    string revstr;
+
+    int b0i = 255;
+    int b1i = 65280;
+    int b2i = 16711680;
+
+    int a = abs(ticks);
+
+    unsigned char b0 = a & b0i;
+    unsigned char b1 = (a & b1i) >> 8;
+    unsigned char b2 = (a & b2i) >> 16;
+
+    unsigned char t = 0;
+    if (ticks < 0)
+        t = 128;
+
+    char* hexbuf = new char[2];
+    char* hexbuf2 = new char[2];
+    char* hexbuf3 = new char[2];
+    b2 = (b2 & 127) | t;
+    sprintf(hexbuf, "%02X", b0);
+    hexstr = hexbuf;
+       
+    sprintf(hexbuf2, "%02X", b1);
+    hexstr += hexbuf2;
+    
+    sprintf(hexbuf3, "%02X", b2);
+    hexstr += hexbuf3;
+
+    revstr = hexbuf3;
+    revstr += hexbuf2;
+    revstr += hexbuf;
+
+    revstr = revstr.substr(1);
+
+    int hexToInt = 0;
+    stringstream ss;
+    ss << std::hex << revstr; 
+    ss >> hexToInt;
+
+    return hexstr; 
+}
 
 char* strToSerial(string packet){
     char* data = new char[packet.length() + 1];
@@ -38,7 +84,7 @@ vector<float> trajectoryValues(){
 
     while (!is.eof()){
         is >> f;
-        val.push_back(f); 
+        val.push_back(f/5.0); 
     } 
 
     return val;
@@ -130,7 +176,6 @@ int main(){
  
     write(channel, strToSerial("s8"), 3);
     write(channel, strToSerial("O"), 2);
-//    write(channel, strToSerial("E"), 2);
 
 
     sleep(2);
@@ -151,21 +196,24 @@ int main(){
 
     sleep(5);
 
-    string set_start = "t0108";
+    string set_start = "t0106";
 
     int ticks = 0;
     char* hexbuf = new char[8];
     string hexstr = "";
-
+    string tickstring = "";
     vector<float> trajVal = trajectoryValues();
 
     for (int i = 0; i < trajVal.size(); i++){
 
         ticks = (int)trajVal.at(i);
-        sprintf(hexbuf, "%08X", ticks);
-        hexstr = set_start + hexbuf + hexbuf;
+
+ //       sprintf(hexbuf, "%06X", ticks);
+        tickstring = ticksToString(ticks);
+        hexstr = set_start + tickstring + tickstring;
         cout << hexstr << endl;
-        if (write(channel, strToSerial(hexstr), 22) < 22)
+    
+        if (write(channel, strToSerial(hexstr), 18) < 18)
             cout << "write error" << endl;
 /*
     for (int i = 0; i < 100; i++){
@@ -200,8 +248,9 @@ int main(){
 
     usleep(20 * 1000);
 
-    write(channel, strToSerial(enc_zero), 12);
+    //write(channel, strToSerial(enc_zero), 12);
 
+//    write(channel, strToSerial("E"), 2);
     write(channel, strToSerial("C"), 2);
 
  /* 
