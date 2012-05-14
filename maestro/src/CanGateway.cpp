@@ -7,14 +7,23 @@ using namespace RTT;
 CanGateway::CanGateway(std::string inPortName, std::string outPortName){
     this->inPort = new InputPort<unsigned char*>(inPortName);
     this->outPort = new OutputPort<unsigned char*>(outPortName);
+
+    if (SERIALTEST){
+        inQueue = new queue<unsigned char*>();
+        outQueue = new queue<unsigned char*>();
+    }
+    else{
+        inQueue = new queue<canmsg_t*>();
+        outQueue = new queue<canmsg_t*>();
+    }
 }
 
 canmsg_t buildCanPacket(int joint, float angle){
 
 }
 
-string buildSerialPacket(int joint, float, angle){
-
+string buildSerialPacket(int joint, float angle){
+    return canMsg.buildSetTicksPacket(boardNum(joint), angle).toSerial();
 }
 
 void CanGateway::transmit(int joint, float angle){
@@ -23,16 +32,14 @@ void CanGateway::transmit(int joint, float angle){
         //Make serial message and transmit. 
         unsigned char* message;    
         message = strToSerial( buildSerialPacket(joint, angle) );
-
-        transmit(message);
     }
     else{
         //Make CAN message and transmit.
         canmsg_t message;
         message = buildCanPacket(joint, angle);
-
-        transmit(message);
     }
+    
+    transmit(message);
 }
 
 char* CanGateway::strToSerial(string packet){
@@ -84,12 +91,23 @@ int CanGateway::openCanConnection(char* path){
     return channel;
 }
 
+int CanGateway::initConnection(int channel){
+    if (SERIALTEST){
+        //Send speed and open packet
+        transmit(stringToSerial("s8"));
+	transmit(stringToSerial("O"));
+    } 
+}
+
 void CanGateway::closeCanConnection(int channel){
+    if (SERIALTEST){
+        //Send close packet
+        transmit(stringToSerial("C")); 
+    }
     close(channel);
 }
 
 bool CanGateway::recv(){
-
   
 }
 

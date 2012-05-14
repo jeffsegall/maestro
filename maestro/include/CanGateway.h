@@ -17,6 +17,8 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <string>
+#include "huboCan.h"
+#include <queue>
 
 using namespace std;
 
@@ -31,6 +33,7 @@ public:
     virtual OutputPort getOutputPort();
 
     int openCanConnection(char* path);
+    int initConnection(int channel);
     void closeCanConnection(int channel);
 
 private:
@@ -47,6 +50,9 @@ private:
 
     canmsg_t buildCanPacket();
     string buildSerialPacket();
+
+    queue outQueue;
+    queue inQueue;
 
 };
 
