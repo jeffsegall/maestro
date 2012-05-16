@@ -5,22 +5,25 @@
 #include <rtt/Component.hpp>
 #include <vector>
 #include "RosGateway.h"
+#include "CanGateway.h"
 
 using namespace RTT;
 
 class RobotControl : public RTT::TaskContext{
 private:  
-  RosGateway *gateway;
-  
+  RosGateway *ros_gateway;
+  CanGateway *can_gateway;
+
 public:
   RobotControl(const std::string& name):
     TaskContext(name)
   {
-    this->gateway = new RosGateway("ros_error", "ros_cmd");
+    this->ros_gateway = new RosGateway("ros_error", "ros_cmd");
+    this->can_gateway = new CanGateway();
      
     //Initialize input and output ports
-    this->addEventPort(*gateway->getInputPort());
-    this->addPort(*gateway->getOutputPort());
+    this->addEventPort(*ros_gateway->getInputPort());
+    this->addPort(*ros_gateway->getOutputPort());
 
     this->addOperation("setTorsoYaw", &RobotControl::setTorsoYaw, this, RTT::OwnThread)
             .doc("Set Torso Yaw")
@@ -140,121 +143,122 @@ public:
   void updateHook(){
 
     //Check for incoming data and respond if necessary.
-    if(gateway->recv()){
+    if(ros_gateway->recv()){
 
     }  
   }
 
   void setTorsoYaw(double value){
-      gateway->transmit(0,value);
+      ros_gateway->transmit(0,value);
+      can_gateway->transmit(0,value);
   }
 
   void setHeadYaw(double value){
-      gateway->transmit(1,value);
+      ros_gateway->transmit(1,value);
   }
 
   void setLeftShoulderRoll(double value){
-      gateway->transmit(3,value);
+      ros_gateway->transmit(3,value);
   }
 
   void setLeftShoulderPitch(double value){
-      gateway->transmit(4,value);
+      ros_gateway->transmit(4,value);
   }
 
   void setLeftElbowRoll(double value){
-      gateway->transmit(5,value);
+      ros_gateway->transmit(5,value);
   }
 
   void setLeftElbowYaw(double value){
-      gateway->transmit(6,value);
+      ros_gateway->transmit(6,value);
   }
 
   void setLeftWristRoll(double value){
-      gateway->transmit(7,value);
+      ros_gateway->transmit(7,value);
   }
 
   void setLeftWristPitch(double value){
-      gateway->transmit(8,value);
+      ros_gateway->transmit(8,value);
   }
 
   void setLeftWristYaw(double value){
-      gateway->transmit(9,value);
+      ros_gateway->transmit(9,value);
   }
 
   void setRightShoulderRoll(double value){
-      gateway->transmit(11,value);
+      ros_gateway->transmit(11,value);
   }
 
   void setRightShoulderPitch(double value){
-      gateway->transmit(12,value);
+      ros_gateway->transmit(12,value);
   }
 
   void setRightElbowRoll(double value){
-      gateway->transmit(13,value);
+      ros_gateway->transmit(13,value);
   }
 
   void setRightElbowYaw(double value){
-      gateway->transmit(14,value);
+      ros_gateway->transmit(14,value);
   }
 
   void setRightWristRoll(double value){
-      gateway->transmit(15,value);
+      ros_gateway->transmit(15,value);
   }
 
   void setRightWristPitch(double value){
-      gateway->transmit(16,value);
+      ros_gateway->transmit(16,value);
   }
 
   void setRightWristYaw(double value){
-      gateway->transmit(17,value);
+      ros_gateway->transmit(17,value);
   }
 
   void setLeftHipYaw(double value){
-      gateway->transmit(19,value);
+      ros_gateway->transmit(19,value);
   }
 
   void setLeftHipRoll(double value){
-      gateway->transmit(20,value);
+      ros_gateway->transmit(20,value);
   }
 
   void setLeftHipPitch(double value){
-      gateway->transmit(21,value);
+      ros_gateway->transmit(21,value);
   }
 
   void setLeftKneePitch(double value){
-      gateway->transmit(22,value);
+      ros_gateway->transmit(22,value);
   }
 
   void setLeftFootPitch(double value){
-      gateway->transmit(23,value);
+      ros_gateway->transmit(23,value);
   }
 
   void setLeftFootRoll(double value){
-      gateway->transmit(24,value);
+      ros_gateway->transmit(24,value);
   }
 
   void setRightHipYaw(double value){
-      gateway->transmit(26,value);
+      ros_gateway->transmit(26,value);
   }
 
   void setRightHipRoll(double value){
-      gateway->transmit(27,value);
+      ros_gateway->transmit(27,value);
   }
 
   void setRightHipPitch(double value){
-      gateway->transmit(28,value);
+      ros_gateway->transmit(28,value);
   }
 
   void setRightKneePitch(double value){
-      gateway->transmit(29,value);
+      ros_gateway->transmit(29,value);
   }
 
   void setRightFootPitch(double value){
-      gateway->transmit(30,value);
+      ros_gateway->transmit(30,value);
   }
 
   void setRightFootRoll(double value){
-      gateway->transmit(31,value);
+      ros_gateway->transmit(31,value);
   }
 
 };

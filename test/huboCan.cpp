@@ -28,29 +28,27 @@
     Systems (IROS), 2011 IEEE/RSJ International Conference on. 
 */
 
-#include "huboCanDS.hpp"
+#include "huboCan.h"
 
-namespace Hubo{
-
-    canMsg::canMsg(): id(0), type(CAN_NONE), subType(CMD_NONE), r1(0), r2(0),
+    canMsg::canMsg(): BNO(boardNum(0)), type(CAN_NONE), subType(CMD_NONE), r1(0), r2(0),
                       r3(0), r4(0), r5(0)
     {}
 
-    canMsg::canMsg(unsigned long ID, huboCanType Type, cmdType st) :
-        id(ID), type(Type), subType(st), r1(0), r2(0), r3(0), r4(0), r5(0){}
+    canMsg::canMsg(boardNum BNO, messageType Type, cmdType st) :
+        BNO(BNO), type(Type), subType(st), r1(0), r2(0), r3(0), r4(0), r5(0){}
 
-    canMsg::canMsg(unsigned long ID, huboCanType Type, cmdType st,
+    canMsg::canMsg(boardNum BNO, messageType Type, cmdType st,
                    unsigned long R1, unsigned long R2,
                    unsigned long R3, unsigned long R4,
                    unsigned long R5)
-            : id(ID), type(Type), subType(st), r1(R1), r2(R2), r3(R3), r4(R4),
+            : BNO(BNO), type(Type), subType(st), r1(R1), r2(R2), r3(R3), r4(R4),
               r5(R5){}
 
-    unsigned long canMsg::getID(){
-        return id;
+    boardNum canMsg::getBNO(){
+        return BNO;
     }
 
-    huboCanType canMsg::getType(){
+    messageType canMsg::getType(){
         return type;
     }
 
@@ -81,7 +79,7 @@ namespace Hubo{
     void canMsg::printme(){
         std::ostringstream s(std::ostringstream::out);
 
-        s << "[" << std::setbase(16) << id << "]{"
+        s << "[" << std::setbase(16) << BNO << "]{"
                  << std::setbase(16) << type << "/"
                  << std::setbase(16) << subType
                  << "} "; 
@@ -90,7 +88,7 @@ namespace Hubo{
         s << "R3 = 0x" << std::hex << r3 << ", ";
         s << "R4 = 0x" << std::hex << r4 << ", ";
         s << "R5 = 0x" << std::hex << r5;
-        RTT::Logger::log() << s.str() << RTT::endlog();
+        cout << s.str() << endl;
     }
 
     /* The bitStuffing algorithems are pulled directly from the original hubo
@@ -116,6 +114,27 @@ namespace Hubo{
         return (unsigned char)( (src >> (8*byteNum)) & 0x000000FFu );
     }
 
+
+    canmsg_t* canMsg::toCAN(){
+        return toLineType();
+    }
+
+    string canMsg::toSerial(){
+        canmsg_t* cm = toLineType();
+        char* buf = new char[3];
+        string output = "t";
+        sprintf(buf, "%03X", (unsigned int)cm->id);
+        output += buf;
+        sprintf(buf, "%d", cm->length);
+        output += buf;
+        buf = new char[2];
+        for (int i = 0; i < cm->length; i++){
+            sprintf(buf, "%02X", cm->data[i]);
+            output += buf;
+        }
+        return output;
+    }
+
     canmsg_t* canMsg::toLineType(){
         canmsg_t* cm = new canmsg_t;
         cm->flags = 0;
@@ -124,7 +143,7 @@ namespace Hubo{
         
         switch(type){
             //How to construct the outbound packets
-            case TX_CMD:
+            case TX_MOTOR_CMD:
 		cm->id = (unsigned char) type;
                 processCMD(cm);
                 break;
@@ -134,11 +153,11 @@ namespace Hubo{
                 cm->data[0] = 0;
                 break;
             case TX_REF:
-		cm->id = id + (unsigned char) type;
+		cm->id = BNO + (unsigned char) type;
                 processREF(cm);
                 break;
             //Inbound packet types are not allowed here, and represent an error
-            case SENSOR_FT_RXDF:
+        /*    case SENSOR_FT_RXDF:
             case SENSOR_AD_RXDF:
             case ENC_RXDF:
             case CUR_RXDF:
@@ -148,14 +167,14 @@ namespace Hubo{
             case DAOFFSET_RXDF:
             case ADOFFSET_RXDF:
             case OFFSET_RXDF:
-            default:
+          */  default:
                 assert(false);
         }
         return cm;
     }
 
     canmsg_t* canMsg::processCMD(canmsg_t* cm){
-        cm->data[0] = (unsigned char)id;
+        cm->data[0] = (unsigned char)BNO;
         cm->data[1] = (unsigned char)subType;
         switch(subType){
             /*  Command messages are split into various register to byte combinations.  See
@@ -183,7 +202,7 @@ namespace Hubo{
                 cm->data[6] = bitStrip(r3, 0);
                 cm->data[7] = bitStrip(r3, 1);
                 cm->length = 8;
-                break;
+            break;
 
             /*******************************************************************
                |  B0  |  B1  |  B2  |  B3  |  B4  |  B5  |  B6  |  B7  |
@@ -198,13 +217,12 @@ namespace Hubo{
             case CMD_SET_CTRL_MODE:
             case CMD_SET_DEAD_ZONE:
             case CMD_REQ_BOARD_PARAM:
-            case CMD_NULL:
-            case CMD_SET_SWITCH:
+            case CMD_NULL:                //ALSO CMD_SET_SWITCH
             case CMD_REQ_ALARM:
             case CMD_REQ_BEEP:
                 cm->data[2] = r1;
                 cm->length = 3; 
-                break;
+            break;
           
             /*******************************************************************
                |  B0  |  B1  |  B2  |  B3  |  B4  |  B5  |  B6  |  B7  |
@@ -219,9 +237,9 @@ namespace Hubo{
             case CMD_INIT_BOARD:
             case CMD_REQ_VOLT_CUR:
             case CMD_REQ_TIME_STATUS:
-            case CMD_CALIBRATE: 
+            //case CMD_CALIBRATE: 
                 cm->length = 2;
-                break;
+            break;
 
 
         }
@@ -252,4 +270,10 @@ namespace Hubo{
         }
         return cm;
     }
-} 
+
+int main(){
+    
+    canMsg test = canMsg(BNO_R_HIP_YAW_ROLL, TX_REF, cmdType(2), 1000, 2000, 0, 0, 0);
+    cout << test.toSerial() << endl;
+    return 0;
+}

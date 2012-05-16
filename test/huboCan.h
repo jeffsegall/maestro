@@ -34,10 +34,13 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <stdio.h>
 #include <sys/time.h>
 #include <assert.h>
-#include <rtt/Logger.hpp>
+#include <string>
 #include "can4linux.h"  //Include the can4linux data structures
+
+using namespace std;
 
 //For reference, the canmsg_t data structure from can4linux
 /*
@@ -58,7 +61,6 @@ typedef struct {
     Low ID -> High Priority
 */
 
-namespace Hubo{
     enum messageType { CAN_NONE = 0x0, 
                        TX_MOTOR_CMD = 0x1, TX_SENSOR_CMD = 0x2, TX_REF = 0x10, 
                        RX_FT_SENSOR = 0x40, RX_TILT_SENSOR = 0x50,
@@ -72,7 +74,7 @@ namespace Hubo{
                    //Motor Control Board Commands
                    CMD_NONE = 0x0, CMD_REQ_BOARD_STATUS = 0x02,
                    CMD_REQ_ENC_POS, CMD_REQ_CURR, CMD_RESET_ENC_ZERO = 0x6, 
-                   CMD_SET_POS_GAIN_O, CMD_SET_POS_GAIN_1, CMD_SET_CUR_GAIN_0,
+                   CMD_SET_POS_GAIN_0, CMD_SET_POS_GAIN_1, CMD_SET_CUR_GAIN_0,
                    CMD_SET_CUR_GAIN_1, CMD_HIP_ENABLE, CMD_OPEN_LOOP = 0xD, 
                    CMD_CONTROLLER_ON, CMD_CONTROLLER_OFF, CMD_SET_CTRL_MODE, 
                    CMD_GO_HOME_OFFSET, CMD_SET_DEAD_ZONE = 0x20, 
@@ -81,7 +83,7 @@ namespace Hubo{
                    CMD_SET_UPPER_POS_LIMIT = 0x56, CMD_SET_HOME_ACC_VEL = 0x60, 
                    CMD_SET_GAIN_OVR = 0x6F, CMD_NEW_BOARD_NUM = 0xF0, 
                    CMD_SET_JAM_PWM_SAT_LIMIT = 0xF2, CMD_SET_ERR_BOUND = 0xF3, 
-                   CMD_INIT_BOARD = 0xFA };
+                   CMD_INIT_BOARD = 0xFA, 
                    //FT Sensor Board Commands
                    CMD_SET_FT_0 = 0xA0, CMD_SET_FT_1,
                    CMD_SET_FT_2, CMD_SET_INCLINO_SCALE = 0xA5,
@@ -91,18 +93,27 @@ namespace Hubo{
                    //IMU Board Commands
                    CMD_CALIBRATE = 0x82 }; 
 
+    enum boardNum { BNO_R_HIP_YAW_ROLL = 0x0, BNO_R_HIP_PITCH, BNO_R_KNEE, BNO_R_ANKLE_PITCH_ROLL,
+                    BNO_L_HIP_YAW_ROLL, BNO_L_HIP_PITCH, BNO_L_KNEE, BNO_L_ANKLE_PITCH_ROLL,
+                    BNO_R_SHOULDER_PITCH_ROLL, BNO_R_SHOULDER_YAW_ELBOW,
+                    BNO_L_SHOULDER_PITCH_ROLL, BNO_L_SHOULDER_YAW_ELBOW, BNO_EXTRA_JMC12,
+                    BNO_EXTRA_JMC13, BNO_SMART_POWER, BNO_EXTRA_JMC15, BNO_R_WRIST_YAW_PITCH = 0x20,
+                    BNO_L_WRIST_YAW_PITCH, BNO_NECK_YAW_1_2, BNO_WAIST, BNO_R_HAND, BNO_L_HAND,
+                    BNO_EXTRA_EJMC6, BNO_R_FOOT_FT = 0x30, BNO_L_FOOT_FT, BNO_IMU_0, BNO_IMU_1,
+                    BNO_IMU_2, BNO_R_WRIST_FT, BNO_L_WRIST_FT };
+
     class canMsg {
         public:
 
             //@TODO: Finish restructuring this class to better represent CAN,
             //       including output to serial.
             canMsg();
-            canMsg(unsigned long BNO, huboCanType type, cmdType subType);
-            canMsg(unsigned long BNO, huboCanType type, cmdType subType,
+            canMsg(boardNum BNO, messageType type, cmdType subType);
+            canMsg(boardNum BNO, messageType type, cmdType subType,
                    unsigned long r1, unsigned long r2,
                    unsigned long r3, unsigned long r4,
                    unsigned long r5);
-            unsigned long getBNO();
+            boardNum getBNO();
             messageType getType();
             cmdType getCmd();
 
@@ -120,12 +131,13 @@ namespace Hubo{
             static unsigned long unpack4byte();
             static unsigned char bitStrip(unsigned long src, int byteNum);
             canmsg_t* toCAN();
-            char* toSerial();
+            string toSerial();
+            canmsg_t* toLineType();
         private:                       //   [bits] Meaning
             canmsg_t* processCMD(canmsg_t*);
             canmsg_t* processREF(canmsg_t*);
 
-            unsigned long BNO;
+            boardNum BNO;
             messageType type;
             cmdType subType;
 
@@ -135,5 +147,4 @@ namespace Hubo{
             unsigned long r4;
             unsigned long r5;
     };
-}
 #endif

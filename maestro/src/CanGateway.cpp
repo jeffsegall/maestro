@@ -1,21 +1,21 @@
-#include "../include/CanGateway.h"
+#include "CanGateway.h"
 
 #define SERIALTEST 1
 
 CanGateway::CanGateway(){
 
     if (SERIALTEST){
-        inQueue = new queue<unsigned char*>();
-        outQueue = new queue<unsigned char*>();
+        inQueue = queue<unsigned char*>();
+        outQueue = queue<unsigned char*>();
     }
-    else{
-        inQueue = new queue<canmsg_t*>();
-        outQueue = new queue<canmsg_t*>();
-    }
+//    else{
+//        inQueue = new queue<canmsg_t*>();
+//        outQueue = new queue<canmsg_t*>();
+//    }
 }
 
 canmsg_t buildCanPacket(int joint, float angle){
-
+    return canmsg_t();
 }
 
 string buildSerialPacket(int joint, float angle){

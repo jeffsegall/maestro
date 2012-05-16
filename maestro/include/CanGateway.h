@@ -20,7 +20,7 @@
 #include <queue>
 
 using namespace std;
-using namespace RTT;
+//using namespace RTT;
 
 class CanGateway{
 
@@ -43,11 +43,11 @@ private:
     bool transmit(canmsg_t packet);
     bool transmit(char* packet);
 
-    canmsg_t buildCanPacket();
-    string buildSerialPacket();
+    canmsg_t buildCanPacket(int joint, float angle);
+    string buildSerialPacket(int joint, float angle);
 
-    queue outQueue;
-    queue inQueue;
+    queue<unsigned char*> outQueue;
+    queue<unsigned char*> inQueue;
 
 };
 
