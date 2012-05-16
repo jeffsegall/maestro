@@ -11,7 +11,7 @@ using namespace RTT;
 class RobotControl : public RTT::TaskContext{
 private:  
   RosGateway *gateway;
-
+  
 public:
   RobotControl(const std::string& name):
     TaskContext(name)

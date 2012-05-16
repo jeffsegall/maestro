@@ -16,7 +16,9 @@ using namespace RTT;
 
 class HuboCtrl : public RTT::TaskContext{
 private:  
-  RosGateway *gateway;
+  RosGateway *ros_gateway;
+  CanGateway *can_gateway;  
+
   int i;
   int joints[10];// = {1,4,12,21,28,1,4,12,21,28};
   double values[10];// = {0.0,1.0,-1.0,1.0,1.0,1.0,0.0,0.0,0.0,0.0};
@@ -25,12 +27,12 @@ public:
   HuboCtrl(const std::string& name):
     TaskContext(name)
   {
-    this->gateway = new RosGateway("ros_in", "hubo_cmd");
+    this->ros_gateway = new RosGateway("ros_in", "hubo_cmd");
      
     //Initialize input and output ports
 
-    this->addEventPort(*gateway->getInputPort());
-    this->addPort(*gateway->getOutputPort());
+    this->addEventPort(*ros_gateway->getInputPort());
+    this->addPort(*ros_gateway->getOutputPort());
     this->i = 0;
     this->joints[0]=1;
     this->joints[1]=4;
@@ -58,17 +60,17 @@ public:
 private:
   void updateHook(){
     if(i == 0){
-        gateway->transmit(joints[i],values[i]);
+        ros_gateway->transmit(joints[i],values[i]);
         i++;
     }else if(i == 10){
         i = 0;
     }else{
-        gateway->transmit(joints[i],values[i]);
+        ros_gateway->transmit(joints[i],values[i]);
         i++;
     }
 
         //Check for incoming data and respond if necessary.
-    if(gateway->recv()){
+    if(ros_gateway->recv()){
 
     }  
   }

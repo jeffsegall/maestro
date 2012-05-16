@@ -9,7 +9,6 @@
 #ifndef CANGATEWAY_H
 #define CANGATEWAY_H
 
-#include "CommsGateway.h"
 #include "can4linux.h"
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -21,25 +20,21 @@
 #include <queue>
 
 using namespace std;
+using namespace RTT;
 
-class CanGateway : public CommsGateway{
+class CanGateway{
 
 public:
     CanGateway();
-    virtual ~CanGateway();
-    virtual void transmit(int joint, float angle);
-    virtual void recv(void* data);
-    virtual InputPort getInputPort();
-    virtual OutputPort getOutputPort();
+    ~CanGateway();
+    void transmit(int joint, float angle);
+    void recv(void* data);
 
     int openCanConnection(char* path);
     int initConnection(int channel);
     void closeCanConnection(int channel);
 
 private:
-    void getHuboTx(unsigned char motorNum, double deg, unsigned char* tx);
-    InputPort<unsigned char*> *inPort;
-    OutputPort<unsigned char*> *outPort;
 
     char* strToSerial(string packet);
 
