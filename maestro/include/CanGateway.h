@@ -1,9 +1,9 @@
 /*cangateway.h
 
-  Acts as an interface between the Orocos Hubo ROS node and a CAN bus.
+  Acts as an interface between the ROS and a CAN bus.
 
   Author: Jeff Segall <js572@drexel.edu>
-  Copyright 2011 Drexel University
+  Copyright 2011-2012 Drexel University
 */
 
 #ifndef CANGATEWAY_H
@@ -19,20 +19,31 @@
 #include "huboCan.h"
 #include <queue>
 
+#include <rtt/Port.hpp>
+#include <rtt/Component.hpp>
+
 using namespace std;
-//using namespace RTT;
+using namespace RTT;
 
 class CanGateway{
 
 public:
     CanGateway();
     ~CanGateway();
-    void transmit(int joint, float angle);
-    void recv(void* data);
 
+    //ROS COMMUNICATION
+    void recvFromRos();
+    void transmitToRos();
+    InputPort<hubomsg::CanMessage> getInputPort();
+    OutputPort<hubomsg::CanMessage> getOutputPort();
+
+    //HARDWARE COMMUNICATION
     int openCanConnection(char* path);
-    int initConnection(int channel);
+    void initConnection(int channel);
     void closeCanConnection(int channel);
+
+    //RUN LOOP
+    void runTick();
 
 private:
 
@@ -43,11 +54,11 @@ private:
     bool transmit(canmsg_t packet);
     bool transmit(char* packet);
 
-    canmsg_t buildCanPacket(int joint, float angle);
-    string buildSerialPacket(int joint, float angle);
+    InputPort<hubomsg::CanMessage> *inPort;
+    OutputPort<hubomsg::CanMessage> *outPort;
 
-    queue<unsigned char*> outQueue;
-    queue<unsigned char*> inQueue;
+    queue<canMsg>* upQueue;
+    queue<canMsg>* downQueue;
 
 };
 
