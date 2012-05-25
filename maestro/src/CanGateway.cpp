@@ -26,7 +26,8 @@ CanGateway::CanGateway(){
 * Converts a std::string formatted CAN packet into a character
 * array for communication over USB.  Adds a 0x0D (carriage return)
 * onto the end of the array as per the protocol.
-* @TODO: What protocol?  Link?  Model number of adapter?
+* 
+* Protocol is tested for the EasySync USB2-F-7x01 adapter
 *
 * Paramters:
 *    packet - a string representation of a CAN packet
