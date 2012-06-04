@@ -20,7 +20,7 @@ rosbuild_genmsg()
 include(${OROCOS-RTT_USE_FILE_PATH}/UseOROCOS-RTT.cmake)
 
 #common commands for building c++ executables and libraries
-orocos_component(${PROJECT_NAME} src/RobotControl.cpp src/RosGateway.cpp src/CanGateway.cpp src/huboCan.cpp)
+orocos_component(${PROJECT_NAME} src/RobotControl.cpp src/RosGateway.cpp src/CanGateway.cpp src/huboCan.cpp src/HuboMotor.cpp)
 #target_link_libraries(${PROJECT_NAME} another_library)
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)

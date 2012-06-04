@@ -18,7 +18,7 @@
 #include <string>
 #include "huboCan.h"
 #include <queue>
-
+#include <hubomsg/typekit/CanMessage.h>
 #include <rtt/Port.hpp>
 #include <rtt/Component.hpp>
 
@@ -34,8 +34,8 @@ public:
     //ROS COMMUNICATION
     void recvFromRos();
     void transmitToRos();
-    InputPort<hubomsg::CanMessage> getInputPort();
-    OutputPort<hubomsg::CanMessage> getOutputPort();
+    InputPort<hubomsg::CanMessage>* getInputPort();
+    OutputPort<hubomsg::CanMessage>* getOutputPort();
 
     //HARDWARE COMMUNICATION
     int openCanConnection(char* path);
@@ -51,7 +51,7 @@ private:
 
     int channel;
 
-    bool transmit(canmsg_t packet);
+    bool transmit(canmsg_t* packet);
     bool transmit(char* packet);
 
     InputPort<hubomsg::CanMessage> *inPort;

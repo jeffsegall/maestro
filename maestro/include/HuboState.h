@@ -14,12 +14,12 @@ using namespace std;
 
 // Motor names from the HUBO+ protocol
 
-enum {
+enum MOTOR_NAME {
     RHY, RHR, RHP1, RHP2, RKN1, RKN2, RAP, RAR, LHY, LHR, LHP1, LHP2,
 	LKN1, LKN2, LAP, LAR, SRP, SRS, SRY, REB, LSP, LSR, LSY, LEB, RWY,
 	RWP, LWY, LWP, NKY, NK1, NK2, WST, RH0, RH1, RH2, RH3, RH4, RH5,
-	LH0, LH1, LH2, LH3, LH4, LH5;
-} MOTOR_NAME;
+	LH0, LH1, LH2, LH3, LH4, LH5
+} ;
 
 class HuboState{
 
@@ -31,13 +31,13 @@ class HuboState{
 
 	HuboState(){
 	    //Initialize all of the motors to an empty device
-	    for (int i = MOTOR_NAME.RHY, i <= MOTOR_NAME.LH5, i++){
+	    for (int i = RHY; i <= LH5; i++){
 		    motors[static_cast<MOTOR_NAME>(i)] = new HuboMotor();
-		}
+	    }
 	}
 	
-	HuboMotor* getMotorByName(MOTOR_NAME name) {
-	    return motors[name];
-	}
-
+	HuboMotor* getMotorByName(MOTOR_NAME name){
+            return this->motors[name];
+        }
+};
 #endif

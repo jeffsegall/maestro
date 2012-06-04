@@ -3,18 +3,32 @@
 <properties>
 <simple name="Import" type="string"><value>maestro</value></simple>
 
-<struct name="ROSHuboCmdOut" type="ConnPolicy">
+<struct name="OpenRaveIn" type="ConnPolicy">
   <simple name="type" type="short"><value>0</value></simple><!-- type of connection: 0 means Data -->
   <simple name="size" type="short"><value>1</value></simple><!-- buffer size -->
   <simple name="transport" type="short"><value>3</value></simple><!--3 means ROS-->
-  <simple name="name_id" type="string"><value>ros_cmd</value></simple>
+  <simple name="name_id" type="string"><value>or_in</value></simple>
 </struct>
-<struct name="ROSConStringIn" type="ConnPolicy">
+<struct name="OpenRaveOut" type="ConnPolicy">
   <simple name="type" type="short"><value>0</value></simple><!-- type of connection: 0 means Data -->
   <simple name="size" type="short"><value>1</value></simple><!-- buffer size -->
   <simple name="transport" type="short"><value>3</value></simple><!--3 means ROS-->
-  <simple name="name_id" type="string"><value>ros_error</value></simple>
+  <simple name="name_id" type="string"><value>or_out</value></simple>
 </struct>
+<struct name="CANDown" type="ConnPolicy">
+  <simple name="type" type="short"><value>0</value></simple><!-- type of connection: 0 means Data -->
+  <simple name="size" type="short"><value>1</value></simple><!-- buffer size -->
+  <simple name="transport" type="short"><value>3</value></simple><!--3 means ROS-->
+  <simple name="name_id" type="string"><value>can_down</value></simple>
+</struct>
+<struct name="CANUp" type="ConnPolicy">
+  <simple name="type" type="short"><value>0</value></simple><!-- type of connection: 0 means Data -->
+  <simple name="size" type="short"><value>1</value></simple><!-- buffer size -->
+  <simple name="transport" type="short"><value>3</value></simple><!--3 means ROS-->
+  <simple name="name_id" type="string"><value>can_up</value></simple>
+</struct>
+
+
 
 
 <struct name="RobotControl" type="RobotControl">
@@ -26,8 +40,10 @@
   <simple name="AutoConf" type="boolean"><value>1</value></simple>
   <simple name="AutoStart" type="boolean"><value>1</value></simple>
   <struct name="Ports" type="PropertyBag">
-    <simple name="ros_cmd" type="string"><value> ROSHuboCmdOut </value></simple>
-    <simple name="ros_error" type="string"><value> ROSConStringIn </value></simple>
+    <simple name="or_in" type="string"><value> OpenRaveIn </value></simple>
+    <simple name="or_out" type="string"><value> OpenRaveOut </value></simple>
+    <simple name="can_down" type="string"><value> CANDown </value></simple>
+    <simple name="can_up" type="string"><value> CANUp </value></simple>
   </struct>
   <simple name="Service" type="string"><value>rosparam</value></simple>
 </struct>

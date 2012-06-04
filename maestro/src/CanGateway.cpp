@@ -55,13 +55,13 @@ char* CanGateway::strToSerial(string packet){
 *
 * Returns true if data was sent successfully, false otherwise.
 ******************************************************************/
-bool CanGateway::transmit(canmsg_t packet){
+bool CanGateway::transmit(canmsg_t* packet){
     int sent = 0;
 
     //Make sure there's an outbound channel
-    if (this.channel > 0){
+    if (this->channel > 0){
         //Amount to send is always 1 for canmsg_t (see can4linux.h)
-        sent = write(this.channel, &packet, 1);
+        sent = write(this->channel, &packet, 1);
     }
 
     if (sent < 1){
@@ -86,8 +86,8 @@ bool CanGateway::transmit(char* packet){
     int sent = 0;
 
     //Make sure there's an outbound channel
-    if (this.channel > 0){
-        sent = write(this.channel, packet, strlen(packet));
+    if (this->channel > 0){
+        sent = write(this->channel, packet, strlen(packet));
     }
 
     if (sent < strlen(packet)){
@@ -128,8 +128,8 @@ int CanGateway::openCanConnection(char* path){
 void CanGateway::initConnection(int channel){
     if (SERIALTEST){
         //Send speed and open packet
-        transmit(stringToSerial("s8"));
-	transmit(stringToSerial("O"));
+        transmit(strToSerial("s8"));
+	transmit(strToSerial("O"));
     } 
 }
 
@@ -146,7 +146,7 @@ void CanGateway::initConnection(int channel){
 void CanGateway::closeCanConnection(int channel){
     if (SERIALTEST){
         //Send close packet
-        transmit(stringToSerial("C")); 
+        transmit(strToSerial("C")); 
     }
     close(channel);
 }
@@ -158,13 +158,13 @@ void CanGateway::closeCanConnection(int channel){
 * new data (if available) to the hardware send queue.
 ******************************************************************/
 void CanGateway::recvFromRos(){
-    hubomsg::CanMessage isMsg = hubomsg::CanMessage();
-    HuboCan can_message;
+    hubomsg::CanMessage inMsg = hubomsg::CanMessage();
+    canMsg can_message;
 
     //If a new message has come in from ROS, grab the CAN information
 
     if (NewData==this->inPort->read(inMsg)){
-        can_message = inMsg.can;
+        //can_message = inMsg.can;
     }
 
     //Add message to queue
@@ -180,10 +180,10 @@ void CanGateway::transmitToRos(){
 
     //Flush our upstream queue out to the ROS bus
 
-    for (int i = 0; i < outQueue.size(); i++){
+    for (int i = 0; i < upQueue->size(); i++){
         hubomsg::CanMessage upstream = hubomsg::CanMessage();
-        upstream.can = outQueue.front();
-        outQueue.pop();
+        //upstream.can = upQueue->front();
+        upQueue->pop();
         this->outPort->write(upstream);
     }
 }
@@ -215,7 +215,7 @@ OutputPort<hubomsg::CanMessage>* CanGateway::getOutputPort(){
 void CanGateway::runTick(){
    
     //At each clock interval (50 ms?) send a message out to the hardware.
-    CanMsg out_message = this->downQueue->front();
+    canMsg out_message = this->downQueue->front();
     this->downQueue->pop();
 
     if (SERIALTEST){
