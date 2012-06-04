@@ -112,111 +112,145 @@ RobotControl::RobotControl(const std::string& name):
   RobotControl::~RobotControl(){}
 
   void RobotControl::updateHook(){
-
-    //Check for incoming data and respond if necessary.
+    hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
+    hubomsg::CanMessage canMessage = hubomsg::CanMessage();
+    if (NewData == this->canUpPort->read(canMessage)){
+        //Received update from CanGateway
+    }
+    if (NewData == this->orOutPort->read(huboCmd)){
+        //Recieved update from openRAVE
+    }
   }
 
-  void RobotControl::setWaist(double ticks){
+  hubomsg::CanMessage RobotControl::buildCanMessage(canMsg* msg){
+      hubomsg::CanMessage canMessage;
+
+      canMessage.bno = msg->getBNO();
+      canMessage.mType = msg->getType();
+      canMessage.cmdType = msg->getCmd();
+      canMessage.r1 = msg->getR1();
+      canMessage.r2 = msg->getR2();
+      canMessage.r3 = msg->getR3();
+      canMessage.r4 = msg->getR4();
+      canMessage.r5 = msg->getR5();
+
+      return canMessage;
+  }
+
+  void RobotControl::setWaist(long ticks){
       //ros_gateway->transmit(0,ticks);
+      canMsg* out = new canMsg(BNO_WAIST, TX_REF, CMD_NONE,
+                               ticks, 0, 0, 0, 0);
+      this->canDownPort->write(buildCanMessage(out));
   }
 
-  void RobotControl::setNeck(double ticks, double one, double two){
-      //ros_gateway->transmit(1,ticks);
+  void RobotControl::setNeck(long ticks, long one, long two){
+
+      canMsg* out = new canMsg(BNO_NECK_YAW_1_2, TX_REF, CMD_NONE,
+                               ticks, one, two, 0, 0);
+      this->canDownPort->write(buildCanMessage(out));
+     //ros_gateway->transmit(1,ticks);
   }
 
-  void RobotControl::setLeftShoulderRoll(double ticks){
-      //ros_gateway->transmit(3,ticks);
+  void RobotControl::setLeftShoulderRoll(long ticks){
+      canMsg* out = new canMsg(BNO_L_SHOULDER_PITCH_ROLL, TX_REF, CMD_NONE,
+                               state.getMotorByName(LSR).getTicksPosition(), ticks, 0, 0, 0);
+      this->canDownPort->write(buildCanMessage(out));
+     //ros_gateway->transmit(3,ticks);
   }
 
-  void RobotControl::setLeftShoulderPitch(double ticks){
-      //ros_gateway->transmit(4,ticks);
+  void RobotControl::setLeftShoulderPitch(long ticks){
+      canMsg* out = new canMsg(BNO_L_SHOULDER_PITCH_ROLL, TX_REF, CMD_NONE,
+                               ticks, state.getMotorByName(LSP).getTicksPosition(), 0, 0, 0);
+      this->canDownPort->write(buildCanMessage(out));
+     //ros_gateway->transmit(4,ticks);
   }
 
-  void RobotControl::setLeftElbow(double ticks){
+  void RobotControl::setLeftElbow(long ticks){
       //ros_gateway->transmit(6,ticks);
   }
 
-  void RobotControl::setLeftWristPitch(double ticks){
+  void RobotControl::setLeftWristPitch(long ticks){
       //ros_gateway->transmit(8,ticks);
   }
 
-  void RobotControl::setLeftWristYaw(double ticks){
+  void RobotControl::setLeftWristYaw(long ticks){
       //ros_gateway->transmit(9,ticks);
   }
 
-  void RobotControl::setRightShoulderRoll(double ticks){
+  void RobotControl::setRightShoulderRoll(long ticks){
       //ros_gateway->transmit(11,ticks);
   }
 
-  void RobotControl::setRightShoulderPitch(double ticks){
+  void RobotControl::setRightShoulderPitch(long ticks){
       //ros_gateway->transmit(12,ticks);
   }
 
-  void RobotControl::setRightElbow(double ticks){
+  void RobotControl::setRightElbow(long ticks){
       //ros_gateway->transmit(14,ticks);
   }
 
-  void RobotControl::setRightWristPitch(double ticks){
+  void RobotControl::setRightWristPitch(long ticks){
       //ros_gateway->transmit(16,ticks);
   }
 
-  void RobotControl::setRightWristYaw(double ticks){
+  void RobotControl::setRightWristYaw(long ticks){
       //ros_gateway->transmit(17,ticks);
   }
 
-  void RobotControl::setLeftHipYaw(double ticks){
+  void RobotControl::setLeftHipYaw(long ticks){
       //ros_gateway->transmit(19,ticks);
   }
 
-  void RobotControl::setLeftHipRoll(double ticks){
+  void RobotControl::setLeftHipRoll(long ticks){
       //ros_gateway->transmit(20,ticks);
   }
 
-  void RobotControl::setLeftHipPitch(double ticks){
+  void RobotControl::setLeftHipPitch(long ticks){
       //ros_gateway->transmit(21,ticks);
   }
 
-  void RobotControl::setLeftKnee(double ticks){
+  void RobotControl::setLeftKnee(long ticks){
       //ros_gateway->transmit(22,ticks);
   }
 
-  void RobotControl::setLeftAnklePitch(double ticks){
+  void RobotControl::setLeftAnklePitch(long ticks){
       //ros_gateway->transmit(23,ticks);
   }
 
-  void RobotControl::setLeftAnkleRoll(double ticks){
+  void RobotControl::setLeftAnkleRoll(long ticks){
       //ros_gateway->transmit(24,ticks);
   }
 
-  void RobotControl::setRightHipYaw(double ticks){
+  void RobotControl::setRightHipYaw(long ticks){
       //ros_gateway->transmit(26,ticks);
   }
 
-  void RobotControl::setRightHipRoll(double ticks){
+  void RobotControl::setRightHipRoll(long ticks){
       //ros_gateway->transmit(27,ticks);
   }
 
-  void RobotControl::setRightHipPitch(double ticks){
+  void RobotControl::setRightHipPitch(long ticks){
       //ros_gateway->transmit(28,ticks);
   }
 
-  void RobotControl::setRightKnee(double ticks){
+  void RobotControl::setRightKnee(long ticks){
       //ros_gateway->transmit(29,ticks);
   }
 
-  void RobotControl::setRightAnklePitch(double ticks){
+  void RobotControl::setRightAnklePitch(long ticks){
       //ros_gateway->transmit(30,ticks);
   }
 
-  void RobotControl::setRightAnkleRoll(double ticks){
+  void RobotControl::setRightAnkleRoll(long ticks){
       //ros_gateway->transmit(31,ticks);
   }
 
-  void RobotControl::setRightHand(double f0, double f1, double f2, double f3, double f4){
+  void RobotControl::setRightHand(long f0, long f1, long f2, long f3, long f4){
 
   }
 
-  void RobotControl::setLeftHand(double f0, double f1, double f2, double f3, double f4){
+  void RobotControl::setLeftHand(long f0, long f1, long f2, long f3, long f4){
 
   }
 

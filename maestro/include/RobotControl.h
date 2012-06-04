@@ -21,36 +21,37 @@ public:
     ~RobotControl();
 
     void updateHook(); 
+    hubomsg::CanMessage buildCanMessage(canMsg msg);
 
     //JOINT MOVEMENT API
-    void setRightHipYaw(double ticks);
-    void setRightHipRoll(double ticks);
-    void setRightHipPitch(double ticks);
-    void setRightKnee(double ticks);
-    void setRightAnklePitch(double ticks);
-    void setRightAnkleRoll(double ticks);
-    void setLeftHipYaw(double ticks);
-    void setLeftHipRoll(double ticks);
-    void setLeftHipPitch(double ticks);
-    void setLeftKnee(double ticks);
-    void setLeftAnklePitch(double ticks);
-    void setLeftAnkleRoll(double ticks);
-    void setRightShoulderPitch(double ticks);
-    void setRightShoulderRoll(double ticks);
-    void setRightShoulder(double ticks);
-    void setRightElbow(double ticks);
-    void setLeftShoulderPitch(double ticks);
-    void setLeftShoulderRoll(double ticks);
-    void setLeftShoulderYaw(double ticks);
-    void setLeftElbow(double ticks);
-    void setRightWristYaw(double ticks);
-    void setRightWristPitch(double ticks);
-    void setLeftWristYaw(double ticks);
-    void setLeftWristPitch(double ticks);
-    void setNeck(double yaw, double one, double two);
-    void setWaist(double ticks);
-    void setRightHand(double f0, double f1, double f2, double f3, double f4);
-    void setLeftHand(double f0, double f1, double f2, double f3, double f4); 
+    void setRightHipYaw(long ticks);
+    void setRightHipRoll(long ticks);
+    void setRightHipPitch(long ticks);
+    void setRightKnee(long ticks);
+    void setRightAnklePitch(long ticks);
+    void setRightAnkleRoll(long ticks);
+    void setLeftHipYaw(long ticks);
+    void setLeftHipRoll(long ticks);
+    void setLeftHipPitch(long ticks);
+    void setLeftKnee(long ticks);
+    void setLeftAnklePitch(long ticks);
+    void setLeftAnkleRoll(long ticks);
+    void setRightShoulderPitch(long ticks);
+    void setRightShoulderRoll(long ticks);
+    void setRightShoulder(long ticks);
+    void setRightElbow(long ticks);
+    void setLeftShoulderPitch(long ticks);
+    void setLeftShoulderRoll(long ticks);
+    void setLeftShoulderYaw(long ticks);
+    void setLeftElbow(long ticks);
+    void setRightWristYaw(long ticks);
+    void setRightWristPitch(long ticks);
+    void setLeftWristYaw(long ticks);
+    void setLeftWristPitch(long ticks);
+    void setNeck(long yaw, long one, long two);
+    void setWaist(long ticks);
+    void setRightHand(long f0, long f1, long f2, long f3, long f4);
+    void setLeftHand(long f0, long f1, long f2, long f3, long f4); 
  
 private:
 
@@ -62,6 +63,7 @@ private:
     OutputPort<hubomsg::CanMessage>* canDownPort;
     OutputPort<hubomsg::HuboCmd>* orInPort;
 
+    HuboState state;
 };
 
 #endif

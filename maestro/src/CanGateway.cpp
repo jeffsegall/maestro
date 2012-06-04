@@ -164,7 +164,8 @@ void CanGateway::recvFromRos(){
     //If a new message has come in from ROS, grab the CAN information
 
     if (NewData==this->inPort->read(inMsg)){
-        //can_message = inMsg.can;
+        can_message = canMsg((boardNum)inMsg.bno, (messageType)inMsg.mType, (cmdType)inMsg.cmdType,
+                             inMsg.r1, inMsg.r2, inMsg.r3, inMsg.r4, inMsg.r5);
     }
 
     //Add message to queue
@@ -180,10 +181,23 @@ void CanGateway::transmitToRos(){
 
     //Flush our upstream queue out to the ROS bus
 
+    canMsg out;
+
     for (int i = 0; i < upQueue->size(); i++){
         hubomsg::CanMessage upstream = hubomsg::CanMessage();
-        //upstream.can = upQueue->front();
+        out = upQueue->front();
         upQueue->pop();
+     
+        //Set up ROS message parameters
+        upstream.bno = out.getBNO();
+        upstream.mType = out.getType();
+        upstream.cmdType = out.getCmd();
+        upstream.r1 = out.getR1();
+        upstream.r2 = out.getR2();
+        upstream.r3 = out.getR3();
+        upstream.r4 = out.getR4();
+        upstream.r5 = out.getR5();
+
         this->outPort->write(upstream);
     }
 }

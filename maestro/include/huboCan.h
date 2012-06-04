@@ -69,6 +69,7 @@ typedef struct {
                        RX_BOARD_PARA_CUR = 0x1C0 };
                        
     enum cmdType { //Common Commands
+                   CMD_NONE = 0x00,
                    CMD_SETREQ_BOARD_INFO = 0x1, CMD_REQ_BOARD_PARAM = 0x24, 
                    CMD_NULL = 0x81, CMD_SET_BNO_FREQ = 0xA8,
                    //Motor Control Board Commands
