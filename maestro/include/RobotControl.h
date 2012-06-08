@@ -38,7 +38,7 @@ public:
     void setLeftAnkleRoll(long ticks);
     void setRightShoulderPitch(long ticks);
     void setRightShoulderRoll(long ticks);
-    void setRightShoulder(long ticks);
+    void setRightShoulderYaw(long ticks);
     void setRightElbow(long ticks);
     void setLeftShoulderPitch(long ticks);
     void setLeftShoulderRoll(long ticks);
