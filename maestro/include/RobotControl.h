@@ -11,6 +11,7 @@
 #include <vector>
 #include "huboCan.h"
 #include "HuboState.h"
+#include "HuboMotor.h"
 
 using namespace RTT;
 
@@ -21,7 +22,7 @@ public:
     ~RobotControl();
 
     void updateHook(); 
-    hubomsg::CanMessage buildCanMessage(canMsg msg);
+    hubomsg::CanMessage buildCanMessage(canMsg* msg);
 
     //JOINT MOVEMENT API
     void setRightHipYaw(long ticks);

@@ -162,97 +162,97 @@ RobotControl::RobotControl(const std::string& name):
 
   void RobotControl::setLeftShoulderRoll(long ticks){
       canMsg* out = new canMsg(BNO_L_SHOULDER_PITCH_ROLL, TX_REF, CMD_NONE,
-                               state.getMotorByName(LSP).getTicksPosition(), ticks, 0, 0, 0);
+                               state.getMotorByName(LSP)->getTicksPosition(), ticks, 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
      //ros_gateway->transmit(3,ticks);
   }
 
   void RobotControl::setLeftShoulderPitch(long ticks){
       canMsg* out = new canMsg(BNO_L_SHOULDER_PITCH_ROLL, TX_REF, CMD_NONE,
-                               ticks, state.getMotorByName(LSR).getTicksPosition(), 0, 0, 0);
+                               ticks, state.getMotorByName(LSR)->getTicksPosition(), 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
      //ros_gateway->transmit(4,ticks);
   }
   
   void RobotControl::setLeftShoulderYaw(long ticks){
       canMsg* out = new canMsg(BNO_L_SHOULDER_YAW_ELBOW, TX_REF, CMD_NONE,
-                               ticks, state.getMotorByName(LEB).getTicksPosition(), 0, 0, 0);
+                               ticks, state.getMotorByName(LEB)->getTicksPosition(), 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
      //ros_gateway->transmit(6,ticks);
   }
 
   void RobotControl::setLeftElbow(long ticks){
       canMsg* out = new canMsg(BNO_L_SHOULDER_YAW_ELBOW, TX_REF, CMD_NONE,
-                               state.getMotorByName(LSY).getTicksPosition(), ticks, 0, 0, 0);
+                               state.getMotorByName(LSY)->getTicksPosition(), ticks, 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
      //ros_gateway->transmit(6,ticks);
   }
 
   void RobotControl::setLeftWristPitch(long ticks){
       canMsg* out = new canMsg(BNO_L_WRIST_YAW_PITCH, TX_REF, CMD_NONE,
-                               state.getMotorByName(LWY).getTicksPosition(), ticks, 0, 0, 0);
+                               state.getMotorByName(LWY)->getTicksPosition(), ticks, 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
      //ros_gateway->transmit(8,ticks);
   }
 
   void RobotControl::setLeftWristYaw(long ticks){
       canMsg* out = new canMsg(BNO_L_WRIST_YAW_PITCH, TX_REF, CMD_NONE,
-                               ticks, state.getMotorByName(LWP).getTicksPosition(), 0, 0, 0);
+                               ticks, state.getMotorByName(LWP)->getTicksPosition(), 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
       //ros_gateway->transmit(9,ticks);
   }
 
   void RobotControl::setRightShoulderRoll(long ticks){
       canMsg* out = new canMsg(BNO_R_SHOULDER_PITCH_ROLL, TX_REF, CMD_NONE,
-                               state.getMotorByName(RSP).getTicksPosition(), ticks, 0, 0, 0);
+                               state.getMotorByName(RSP)->getTicksPosition(), ticks, 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
       //ros_gateway->transmit(11,ticks);
   }
 
   void RobotControl::setRightShoulderPitch(long ticks){
       canMsg* out = new canMsg(BNO_R_SHOULDER_PITCH_ROLL, TX_REF, CMD_NONE,
-                               ticks, state.getMotorByName(RSR).getTicksPosition(), 0, 0, 0);
+                               ticks, state.getMotorByName(RSR)->getTicksPosition(), 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
       //ros_gateway->transmit(12,ticks);
   }
 
   void RobotControl::setRightShoulderYaw(long ticks){
       canMsg* out = new canMsg(BNO_R_SHOULDER_YAW_ELBOW, TX_REF, CMD_NONE,
-                               ticks, state.getMotorByName(REB).getTicksPosition(), 0, 0, 0);
+                               ticks, state.getMotorByName(REB)->getTicksPosition(), 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
   }
   
   void RobotControl::setRightElbow(long ticks){
       canMsg* out = new canMsg(BNO_R_SHOULDER_YAW_ELBOW, TX_REF, CMD_NONE,
-                               state.getMotorByName(RSY).getTicksPosition(), ticks, 0, 0, 0);
+                               state.getMotorByName(RSY)->getTicksPosition(), ticks, 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
       //ros_gateway->transmit(14,ticks);
   }
 
   void RobotControl::setRightWristPitch(long ticks){
       canMsg* out = new canMsg(BNO_R_WRIST_YAW_PITCH, TX_REF, CMD_NONE,
-                               state.getMotorByName(RWY).getTicksPosition(), ticks, 0, 0, 0);
+                               state.getMotorByName(RWY)->getTicksPosition(), ticks, 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
       //ros_gateway->transmit(16,ticks);
   }
 
   void RobotControl::setRightWristYaw(long ticks){
       canMsg* out = new canMsg(BNO_R_WRIST_YAW_PITCH, TX_REF, CMD_NONE,
-                               ticks, state.getMotorByName(RWP).getTicksPosition(), 0, 0, 0);
+                               ticks, state.getMotorByName(RWP)->getTicksPosition(), 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
       //ros_gateway->transmit(17,ticks);
   }
 
   void RobotControl::setLeftHipYaw(long ticks){
       canMsg* out = new canMsg(BNO_L_HIP_YAW_ROLL, TX_REF, CMD_NONE,
-                               ticks, state.getMotorByName(LHR).getTicksPosition(), 0, 0, 0);
+                               ticks, state.getMotorByName(LHR)->getTicksPosition(), 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
       //ros_gateway->transmit(19,ticks);
   }
 
   void RobotControl::setLeftHipRoll(long ticks){
       canMsg* out = new canMsg(BNO_L_HIP_YAW_ROLL, TX_REF, CMD_NONE,
-                               state.getMotorByName(LHY).getTicksPosition(), ticks, 0, 0, 0);
+                               state.getMotorByName(LHY)->getTicksPosition(), ticks, 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
       //ros_gateway->transmit(20,ticks);
   }
@@ -273,28 +273,28 @@ RobotControl::RobotControl(const std::string& name):
 
   void RobotControl::setLeftAnklePitch(long ticks){
       canMsg* out = new canMsg(BNO_L_ANKLE_PITCH_ROLL, TX_REF, CMD_NONE,
-                               ticks, state.getMotorByName(LAR).getTicksPosition(), 0, 0, 0);
+                               ticks, state.getMotorByName(LAR)->getTicksPosition(), 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
       //ros_gateway->transmit(23,ticks);
   }
 
   void RobotControl::setLeftAnkleRoll(long ticks){
       canMsg* out = new canMsg(BNO_L_ANKLE_PITCH_ROLL, TX_REF, CMD_NONE,
-                               state.getMotorByName(LAP).getTicksPosition(), ticks, 0, 0, 0);
+                               state.getMotorByName(LAP)->getTicksPosition(), ticks, 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
       //ros_gateway->transmit(24,ticks);
   }
 
   void RobotControl::setRightHipYaw(long ticks){
       canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_REF, CMD_NONE,
-                               ticks, state.getMotorByName(RHR).getTicksPosition(), 0, 0, 0);
+                               ticks, state.getMotorByName(RHR)->getTicksPosition(), 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
       //ros_gateway->transmit(26,ticks);
   }
 
   void RobotControl::setRightHipRoll(long ticks){
       canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_REF, CMD_NONE,
-                               state.getMotorByName(RHY).getTicksPosition(), ticks, 0, 0, 0);
+                               state.getMotorByName(RHY)->getTicksPosition(), ticks, 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
       //ros_gateway->transmit(27,ticks);
   }
@@ -315,14 +315,14 @@ RobotControl::RobotControl(const std::string& name):
 
   void RobotControl::setRightAnklePitch(long ticks){
       canMsg* out = new canMsg(BNO_R_ANKLE_PITCH_ROLL, TX_REF, CMD_NONE,
-                               ticks, state.getMotorByName(RAR).getTicksPosition(), 0, 0, 0);
+                               ticks, state.getMotorByName(RAR)->getTicksPosition(), 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
       //ros_gateway->transmit(30,ticks);
   }
 
   void RobotControl::setRightAnkleRoll(long ticks){
       canMsg* out = new canMsg(BNO_R_ANKLE_PITCH_ROLL, TX_REF, CMD_NONE,
-                               state.getMotorByName(RAP).getTicksPosition(), ticks, 0, 0, 0);
+                               state.getMotorByName(RAP)->getTicksPosition(), ticks, 0, 0, 0);
       this->canDownPort->write(buildCanMessage(out));
       //ros_gateway->transmit(31,ticks);
   }
