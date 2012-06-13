@@ -24,35 +24,37 @@ public:
     void updateHook(); 
     hubomsg::CanMessage buildCanMessage(canMsg* msg);
 
+    void foo(int ticks);
+
     //JOINT MOVEMENT API
-    void setRightHipYaw(long ticks);
-    void setRightHipRoll(long ticks);
-    void setRightHipPitch(long ticks);
-    void setRightKnee(long ticks);
-    void setRightAnklePitch(long ticks);
-    void setRightAnkleRoll(long ticks);
-    void setLeftHipYaw(long ticks);
-    void setLeftHipRoll(long ticks);
-    void setLeftHipPitch(long ticks);
-    void setLeftKnee(long ticks);
-    void setLeftAnklePitch(long ticks);
-    void setLeftAnkleRoll(long ticks);
-    void setRightShoulderPitch(long ticks);
-    void setRightShoulderRoll(long ticks);
-    void setRightShoulderYaw(long ticks);
-    void setRightElbow(long ticks);
-    void setLeftShoulderPitch(long ticks);
-    void setLeftShoulderRoll(long ticks);
-    void setLeftShoulderYaw(long ticks);
-    void setLeftElbow(long ticks);
-    void setRightWristYaw(long ticks);
-    void setRightWristPitch(long ticks);
-    void setLeftWristYaw(long ticks);
-    void setLeftWristPitch(long ticks);
-    void setNeck(long yaw, long one, long two);
-    void setWaist(long ticks);
-    void setRightHand(long f0, long f1, long f2, long f3, long f4);
-    void setLeftHand(long f0, long f1, long f2, long f3, long f4); 
+    void setRightHipYaw(int ticks);
+    void setRightHipRoll(int ticks);
+    void setRightHipPitch(int ticks);
+    void setRightKnee(int ticks);
+    void setRightAnklePitch(int ticks);
+    void setRightAnkleRoll(int ticks);
+    void setLeftHipYaw(int ticks);
+    void setLeftHipRoll(int ticks);
+    void setLeftHipPitch(int ticks);
+    void setLeftKnee(int ticks);
+    void setLeftAnklePitch(int ticks);
+    void setLeftAnkleRoll(int ticks);
+    void setRightShoulderPitch(int ticks);
+    void setRightShoulderRoll(int ticks);
+    void setRightShoulderYaw(int ticks);
+    void setRightElbow(int ticks);
+    void setLeftShoulderPitch(int ticks);
+    void setLeftShoulderRoll(int ticks);
+    void setLeftShoulderYaw(int ticks);
+    void setLeftElbow(int ticks);
+    void setRightWristYaw(int ticks);
+    void setRightWristPitch(int ticks);
+    void setLeftWristYaw(int ticks);
+    void setLeftWristPitch(int ticks);
+    void setNeck(int yaw, int one, int two);
+    void setWaist(int ticks);
+    void setRightHand(int f0, int f1, int f2, int f3, int f4);
+    void setLeftHand(int f0, int f1, int f2, int f3, int f4); 
  
 private:
 

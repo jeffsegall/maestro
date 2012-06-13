@@ -10,15 +10,22 @@
 * Initializes the queues and ports necessary for communication
 * with ROS.  Does not initialize CAN communication.
 ******************************************************************/
-CanGateway::CanGateway(){
+CanGateway::CanGateway(const std::string& name):
+      TaskContext(name){
 
     this->upQueue = new queue<canMsg>();
     this->downQueue = new queue<canMsg>();
 
     this->inPort = new InputPort<hubomsg::CanMessage>("can_down");
     this->outPort = new OutputPort<hubomsg::CanMessage>("can_up");
+
+    this->addEventPort(*inPort);
+    this->addPort(*outPort);
 }
 
+CanGateway::~CanGateway(){
+
+}
 
 /******************************************************************
 * strToSerial()
@@ -168,6 +175,8 @@ void CanGateway::recvFromRos(){
                              inMsg.r1, inMsg.r2, inMsg.r3, inMsg.r4, inMsg.r5);
     }
 
+    cout << can_message.toSerial() << endl;
+
     //Add message to queue
     this->downQueue->push(can_message); 
 }
@@ -244,3 +253,9 @@ void CanGateway::runTick(){
     } 
 
 }
+
+void CanGateway::updateHook(){
+
+}
+
+ORO_LIST_COMPONENT_TYPE(CanGateway)

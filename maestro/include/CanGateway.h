@@ -9,6 +9,9 @@
 #ifndef CANGATEWAY_H
 #define CANGATEWAY_H
 
+#include <rtt/TaskContext.hpp>
+#include <rtt/Port.hpp>
+#include <rtt/Component.hpp>
 #include "can4linux.h"
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -19,16 +22,14 @@
 #include "huboCan.h"
 #include <queue>
 #include <hubomsg/typekit/CanMessage.h>
-#include <rtt/Port.hpp>
-#include <rtt/Component.hpp>
 
 using namespace std;
 using namespace RTT;
 
-class CanGateway{
+class CanGateway : public RTT::TaskContext{
 
 public:
-    CanGateway();
+    CanGateway(const std::string&);
     ~CanGateway();
 
     //ROS COMMUNICATION
@@ -44,6 +45,7 @@ public:
 
     //RUN LOOP
     void runTick();
+    void updateHook();
 
 private:
 
@@ -53,6 +55,7 @@ private:
 
     bool transmit(canmsg_t* packet);
     bool transmit(char* packet);
+
 
     InputPort<hubomsg::CanMessage> *inPort;
     OutputPort<hubomsg::CanMessage> *outPort;

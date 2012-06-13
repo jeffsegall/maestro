@@ -1,7 +1,7 @@
 #include "HuboMotor.h"
 
 HuboMotor::HuboMotor(){
-
+    this->ticks_position = 0;
 }
 
 void HuboMotor::setUpperLimit(long limit){
