@@ -15,6 +15,8 @@
 #include <stdlib.h>
 #include <vector>
 #include <algorithm>
+#include "can4linux.h"
+#include "huboCan.h"
 
 using namespace Hubo;
 using namespace std;
@@ -90,13 +92,63 @@ vector<float> trajectoryValues(){
     return val;
 }
 
+static int set_bitrate(int fd, int bitrate){
+    //From can_send.c in the can4linux examples
+
+    Config_par_t cfg;
+    volatile Command_par_t cmd;
+    int ret;
+
+    cmd.cmd = CMD_STOP;
+    ioctl(fd, CAN_IOCTL_COMMAND, &cmd);
+    
+    cfg.target = CONF_TIMING;
+    cfg.val1 = (unsigned int)baud;
+    ret = ioctl(df, CAN_IOCTL_CONFIG, &cfg);
+    
+    cmd.cmd = CMD_START;
+    ioctl(fd, CAN_IOCTL_COMMAND, &cmd);
+
+    if (ret < 0) {
+        perror("set_bitrate");
+        exit(-1);
+    } else {
+        ret = 0;
+    }
+    return ret;
+}
+
+static int can_reset(int fd) {
+    //From can_send.c
+    volatile Command_par_t cmd;
+    int ret;
+
+    cmd.cmd = CMD_RESET;
+    ret = ioctl(fd, CAN_IOCTL_COMMAND, &cmd);
+    return ret;
+}
+
+static int can_start(int fd) {
+    //From can_send.c
+    volatile Command_par_t cmd;
+    int ret;
+
+    cmd.cmd = CMD_CLEARBUFFERS;
+    ret = ioctl(fd, CAN_IOCTL_COMMAND, &cmd);
+    cmd.cmd = CMD_START;
+    ret = ioctl(fd, CAN_IOCTL_COMMAND, &cmd);
+    return ret;
+}
+
+static canmsg_t message;
+
 int main(){
 
     int channel;
 
-    cout << "Attempting to connect to CAN hardware on /dev/ttyUSB0..." << endl;
+    cout << "Attempting to connect to CAN hardware on /dev/can0..." << endl;
 
-    channel = open("/dev/ttyUSB0", O_RDWR | O_NONBLOCK);
+    channel = open("/dev/can0", O_RDWR | O_NONBLOCK);
 
     //Direction (0, -1)
     //Ratio (0, 10, 25)
@@ -108,91 +160,44 @@ int main(){
     //run
     cout << "Connected! Channel " << channel << endl;
 
-    char* speed_packet = new char[3];
-    char* echo_packet = new char[3];
-    char* open_packet = new char[3];
-    char* close_packet = new char[3];
-
     string name_info_str = "t0013000105";
 
-    char* req_enc = new char[12];
-    req_enc[0] = 't';
-    req_enc[1] = '0';
-    req_enc[2] = '0';
-    req_enc[3] = '1';
-    req_enc[4] = '3';
-    req_enc[5] = '0';
-    req_enc[6] = '0';
-    req_enc[7] = '0';
-    req_enc[8] = '3';
-    req_enc[9] = '0';
-    req_enc[10] = '0';
-    req_enc[11] = (char)0x0D;
+    canMsg name_info = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_COMMAND, CMD_SETREQ_BOARD_INFO,
+                              0x05, 0, 0, 0, 0);
 
     string hip_off_str = "t0013000B00";
     string hip_str = "t0013000B01";
 
-    char* pos_gain = new char[22];
-    pos_gain[0] = 't';
-    pos_gain[1] = '0';
-    pos_gain[2] = '0';
-    pos_gain[3] = '1';
-    pos_gain[4] = '8';
-    pos_gain[5] = '0';
-    pos_gain[6] = '0';
-    pos_gain[7] = '0';
-    pos_gain[8] = '7';
-    pos_gain[9] = '0';
-    pos_gain[10] = '0';
-    pos_gain[11] = 'C';
-    pos_gain[12] = '8';
-    pos_gain[13] = '0';
-    pos_gain[14] = '0';
-    pos_gain[15] = '0';
-    pos_gain[16] = '0';
-    pos_gain[17] = '0';
-    pos_gain[18] = '1';
-    pos_gain[19] = 'F';
-    pos_gain[20] = '4';
-    pos_gain[21] = (char)0x0D;
+    canMsg hip_on = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_COMMAND, CMD_HIP_ENABLE,
+                           0x01, 0, 0, 0, 0);
 
-    string run_str = "t0012000E";
-    string stop_str = "t0012000F";
+    canMsg hip_off = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_COMMAND, CMD_HIP_ENABLE,
+                           0x00, 0, 0, 0, 0);
 
     string enc_zero = "t001300060F";
 
+    canMsg run = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_COMMAND, CMD_CONTROLLER_ON,
+                        0, 0, 0, 0, 0);
 
-    int dir = -1;
-    int ppr = 25 * 100 * 4000;
-    int setPoint = 500;
-    float RAD2DEG = 3.14159 / 180.0;
+    canMsg stop = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_COMMAND, CMD_CONTROLLER_OFF,
+                        0, 0, 0, 0, 0);
 
-    long data = (long)((setPoint * RAD2DEG) * dir * (ppr/360.));
-    //long finalData = canMsg::bitStuff3byte(data);
+    canMsg encoder_zero = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_COMMAND, CMD_RESET_ENC_ZERO,
+                                 0x0F, 0, 0, 0, 0); 
 
-    string set_str = "t0108CCCCCCCC88888888";
-    string set2_str = "t01080000000000000000";
-    string fbc_str = "t0013001000";
- 
-    write(channel, strToSerial("s8"), 3);
-    write(channel, strToSerial("O"), 2);
-
-
-    sleep(2);
 
     cout << "writing name info, fbc packet" << endl;
  
-    write(channel, strToSerial(name_info_str), 12);
-    //write(channel, strToSerial(fbc_str), 12);
+    write(channel, name_info.toCAN(), 1);
 
     sleep(2);
 
     cout << "writing gains, hip, run packets" << endl;
 
-    write(channel, pos_gain, 22);
+    //write(channel, pos_gain, 22);
 
-    write(channel, strToSerial(hip_str), 12);
-    write(channel, strToSerial(run_str), 10);
+    write(channel, hip_on.toCAN(), 1);
+    write(channel, run.toCAN(), 1);
 
     sleep(5);
 
@@ -215,46 +220,13 @@ int main(){
     
         if (write(channel, strToSerial(hexstr), 18) < 18)
             cout << "write error" << endl;
-/*
-    for (int i = 0; i < 100; i++){
-
-       ticks += 20000;
-       if (ticks >= 2147483647)
-           ticks = 0;
-
-       sprintf(hexbuf, "%08X", ticks);
-        
-       hexstr = set_start + hexbuf + hexbuf; 
-       //cout << "hexstr = " << hexstr << endl;
-       if (write(channel, strToSerial(hexstr), 22) < 22)
-           cout << "write error" << endl;
-/*
-
-       if ((i % 2) == 0)
-           if (write(channel, strToSerial(set_str), 22) < 0)
-               cout << "write error" << endl;
-       else
-           if (write(channel, strToSerial(set2_str), 22) < 0)
-               cout << "write 2 error" << endl;
-*/       usleep(20 * 1000);
-    }
-    
+   
     cout << "Writing hip off, stop packets" << endl;
 
-    write(channel, strToSerial(hip_off_str), 12);
-    write(channel, strToSerial(stop_str), 10);
+    write(channel, hip_off.toCAN(), 1);
+    write(channel, stop.toCAN(), 1);
 
-    cout << "writing close packet" << endl;
-
-    usleep(20 * 1000);
-
-    //write(channel, strToSerial(enc_zero), 12);
-
-//    write(channel, strToSerial("E"), 2);
-    write(channel, strToSerial("C"), 2);
-
- /* 
-    char* rx_buffer = new char[100];
+    /*char* rx_buffer = new char[100];
 
     while(1){
         cout << "writing req enc packet" << endl;
@@ -314,8 +286,7 @@ int main(){
 
     close(channel);
 
-
     cout << "Disconnected!" << endl;
 
-
+    return 0;
 }
