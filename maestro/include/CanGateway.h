@@ -47,6 +47,9 @@ public:
     void runTick();
     void updateHook();
 
+    bool startHook();
+    void stopHook();
+
 private:
 
     char* strToSerial(string packet);

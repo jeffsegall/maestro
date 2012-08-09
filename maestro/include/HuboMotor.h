@@ -10,41 +10,66 @@ class HuboMotor {
 	//This is an exhaustive list of parameters supported by the motors and may be overkill
 	//in the initial stages of the system.
 	
-	long limit_upper, limit_lower;  //Limit position
-	long Kp0, Ki0, Kd0;             //Position Gain 0
-	long Kp1, Ki1, Kd1;             //Position Gain 1
-	long Kpt0, Kdt0, Kf0;           //Current Gain 0
-	long Kpt1, Kdt1, Kf1;           //Current Gain 1
+	long mpos1, mpos2;              //Limit positions
+	long Kp, Kd, Ki;                //Position Gain
+	long Kpt, Kdt, Kf;              //Current Gain
 	int dz;                         //Dead zone
 	long off, hlim, hld;            //Homeset 1
 	long hv1, hv2, hma, sm;         //Homeset 2
 	long ers, as, md;               //Encoder Resolution
 	long v_max, a_max;              //Speed and acceleration limits
 	long jam_lim, jamd, pwm_lim;    //Jam and power sat limits
-	long l_err, b_err;              //Error limits
+	long i_err, b_err;              //Error limits
 	
 	long ticks_position;            //Current position in ticks from zero
 	
 	public:
 
-    HuboMotor();
-	
+        HuboMotor();
+        HuboMotor(long mpos1, long mpos2, long kp, long kd, long ki,
+                  long dz, long off, long hlim, long hld, long hv1,
+                  long hv2, long hma, long sm, long ers, long as, long md,
+                  long v_max, long a_max, long jam_lim, long jamd,
+                  long pwm_lim, long i_err, long b_err);	
 	void setUpperLimit(long limit);
 	void setLowerLimit(long limit);
-	void setPositionGain0(long kp0, long kd0, long ki0);
-	void setPositionGain1(long kp1, long kd1, long ki1);
-	void setCurrentGain0(long kpt0, long kdt0, long kf0);
-	void setCurrentGain1(long kpt1, long kdt1, long kf1);
+	void setPositionGain(long kp, long kd, long ki);
+	void setCurrentGain(long kpt, long kdt, long kf);
 	void setDeadZone(int dz);
 	void setHomeset1(long off, long hlim, long hld);
 	void setHomeset2(long hv1, long hv2, long hma, long sm);
 	void setEncoderResolution(long ers, long as, long md);
 	void setSpeedLimit(long vel, long acc);
 	void setJamPowerLimit(long jam_lim, long jamd, long pwm_lim);
-	void setErrorLimit(long l_err, long b_err);
+	void setErrorLimit(long i_err, long b_err);
 	void setTicksPosition(long ticks);
 	
-	//@TODO:  Need getter methods for these variables.  Individual?  Group?
+        long getUpperLimit();
+        long getLowerLimit();
+        long getKp();
+        long getKi();
+        long getKd();
+        long getKpt();
+        long getKdt();
+        long getKf();
+        long getDz();
+        long getOff();
+        long getHlim();
+        long getHld();
+        long getHv1();
+        long getHv2();
+        long getHma();
+        long getSm();
+        long getErs();
+        long getAs();
+        long getMd();
+        long getVmax();
+        long getAmax();
+        long getJamLim();
+        long getJamd();
+        long getPwmLim();
+        long getIerr();
+        long getBerr();
 	
 	long getTicksPosition();
 };

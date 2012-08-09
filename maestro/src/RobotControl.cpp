@@ -1,6 +1,7 @@
 #include "RobotControl.h"
 #include <iostream>
 using namespace std;
+
 RobotControl::RobotControl(const std::string& name):
     TaskContext(name)
   {
@@ -117,9 +118,6 @@ RobotControl::RobotControl(const std::string& name):
             .doc("Set Right Ankle Roll")
             .arg("Value", "New ticks for right ankle roll.");
 
-    this->addOperation("foo", &RobotControl::foo, this, RTT::OwnThread)
-            .doc("foo")
-            .arg("Value", "New value for string");
   }
   
   RobotControl::~RobotControl(){}
@@ -148,14 +146,6 @@ RobotControl::RobotControl(const std::string& name):
       canMessage.r5 = msg->getR5();
 
       return canMessage;
-  }
-
-  void RobotControl::foo(int ticks){
-      cout << "foo" << endl;
-      canMsg* out = new canMsg(BNO_L_SHOULDER_PITCH_ROLL, TX_REF, CMD_NONE,
-                               ticks, state.getMotorByName(LSR)->getTicksPosition(), 0, 0, 0);
-      this->canDownPort->write(buildCanMessage(out));
-      cout << "wrote message" << endl;
   }
 
   void RobotControl::setWaist(int ticks){

@@ -9,6 +9,7 @@
 */
 
 #include "HuboMotor.h"
+#include "huboCan.h"
 #include <map>
 using namespace std;
 
@@ -25,19 +26,18 @@ class HuboState{
 
     private:
     
-	map<MOTOR_NAME, HuboMotor*> motors;
+	map<boardNum, MotorBoard*> boards;
 	
 	public:
 
 	HuboState(){
-	    //Initialize all of the motors to an empty device
-	    for (int i = RHY; i <= LH5; i++){
-		    motors[static_cast<MOTOR_NAME>(i)] = new HuboMotor();
-	    }
 	}
 	
-	HuboMotor* getMotorByName(MOTOR_NAME name){
-            return this->motors[name];
-        }
+        initHuboWithDefaults(); 
+
+        MotorBoard* getBoardByNumber(int number);
+        MotorBoard* getBoardByNumber(boardNum number);
+
+        void addBoard(int num, MotorBoard* board);
 };
 #endif

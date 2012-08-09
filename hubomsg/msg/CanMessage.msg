@@ -1,8 +1,11 @@
 uint16 mType
 uint8 cmdType
 uint8 bno
-uint64 r1
-uint64 r2
-uint64 r3
-uint64 r4
-uint64 r5
+int32 r1
+int32 r2
+int32 r3
+int32 r4
+int32 r5
+int32 r6
+int32 r7
+int32 r8
