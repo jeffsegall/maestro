@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    aint with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     If you are interested in licensing this software for commercial purposes
     please contact the author. The software can be licensed to you under
@@ -38,9 +38,9 @@
         BNO(BNO), type(Type), subType(st), r1(0), r2(0), r3(0), r4(0), r5(0){}
 
     canMsg::canMsg(boardNum BNO, messageType Type, cmdType st,
-                   unsigned long R1, unsigned long R2,
-                   unsigned long R3, unsigned long R4,
-                   unsigned long R5)
+                   int R1, int R2,
+                   int R3, int R4,
+                   int R5)
             : BNO(BNO), type(Type), subType(st), r1(R1), r2(R2), r3(R3), r4(R4),
               r5(R5){}
 
@@ -56,24 +56,44 @@
         return subType;
     }
 
-    unsigned long canMsg::getR1(){
+    int canMsg::getR1(){
         return r1;
     }
 
-    unsigned long canMsg::getR2(){
+    int canMsg::getR2(){
         return r2;
     }
 
-    unsigned long canMsg::getR3(){
+    int canMsg::getR3(){
         return r3;
     }
 
-    unsigned long canMsg::getR4(){
+    int canMsg::getR4(){
         return r4;
     }
 
-    unsigned long canMsg::getR5(){
+    int canMsg::getR5(){
         return r5;
+    }
+
+    void canMsg::setR1(int r1){
+        this->r1 = r1;
+    }
+
+    void canMsg::setR2(int r2){
+        this->r2 = r2;
+    }
+
+    void canMsg::setR3(int r3){
+        this->r3 = r3;
+    }
+
+    void canMsg::setR4(int r4){
+        this->r4 = r4;
+    }
+
+    void canMsg::setR5(int r5){
+        this->r5 = r5;
     }
 
     void canMsg::printme(){
@@ -95,23 +115,55 @@
      * code base. They're wrong in that they use a sign bit instead of a two's
      * complement representation, but I'm maintaing them because they're needed
      * to ensure compatibility with the motor controllers */
-    unsigned long canMsg::bitStuff15byte(long bs){
-        if (bs < 0) return( (unsigned long)(((-bs) & 0x000007FF) | (1<<11)) );
-        else	return( (unsigned long)(bs) );
+    int canMsg::bitStuff15byte(int bs){
+        if (bs < 0) return( (int)(((-bs) & 0x000007FF) | (1<<11)) );
+        else	return( (int)(bs) );
     }
 
-    unsigned long canMsg::bitStuff3byte(long bs){
-        if (bs < 0) return( (unsigned long)(((-bs) & 0x007FFFFF) | (1<<23)) );
-        else	return( (unsigned long)(bs) );
+    int canMsg::bitStuff3byte(int bs){
+        if (bs < 0) return( (int)(((-bs) & 0x007FFFFF) | (1<<23)) );
+        else	return( (int)(bs) );
     }
 
-    unsigned long canMsg::bitStuffCalibratePacket(long bs){
-        if (bs < 0) return( (unsigned long)(((-bs) & 0x0007FFFF) | (1<<19)) );
-        else	return( (unsigned long)(bs) );
+    int canMsg::bitStuffCalibratePacket(int bs){
+        if (bs < 0) return( (int)(((-bs) & 0x0007FFFF) | (1<<19)) );
+        else	return( (int)(bs) );
     }
 
-    unsigned char canMsg::bitStrip(unsigned long src, int byteNum){
-        return (unsigned char)( (src >> (8*byteNum)) & 0x000000FFu );
+    unsigned char canMsg::bitStrip(int src, int byteNum){
+        unsigned char retval;
+//        retval = (unsigned char)( (src >> (8*byteNum)) & 0x000000FFu );
+        int mask = (8 << byteNum) - 1;
+
+        return retval;
+    }
+
+    unsigned char* ticksToArray(int src){
+        unsigned char* retval = new unsigned char[3];
+
+        int b0i = 255;
+        int b1i = 65280;
+        int b2i = 16711680;
+
+        int a = abs(src); 
+
+        unsigned char b0 = a & b0i;
+        unsigned char b1 = (a & b1i) >> 8;
+        unsigned char b2 = (a & b2i) >> 16;
+        unsigned char t = 0;
+
+        if (src < 0)
+            t = 128;
+
+        b2 = (b2 & 127) | t;
+
+        retval[0] = b0;
+        retval[1] = b1;
+        retval[2] = b2;
+
+        //printf("%d = %02X %02X %02X\n", src, b0, b1, b2);
+
+        return retval;
     }
 
 
@@ -248,16 +300,24 @@
 
     canmsg_t* canMsg::processREF(canmsg_t* cm){
         cm->length = 6;
+        unsigned char* first = new unsigned char[3];
+        unsigned char* second = new unsigned char[3];
         switch((int)subType){
             case 2:
-                cm->data[0] = bitStrip(r1, 0);
-                cm->data[1] = bitStrip(r1, 1);
-                cm->data[2] = bitStrip(r1, 2);
-                cm->data[3] = bitStrip(r2, 0);
-                cm->data[4] = bitStrip(r2, 1);
-                cm->data[5] = bitStrip(r2, 2);
+                // Dual motor boards (most joints)
+                first = ticksToArray(r1);
+                second = ticksToArray(r2);
+
+                cm->data[0] = first[0];
+                cm->data[1] = first[1];
+                cm->data[2] = first[2];
+                cm->data[3] = second[0];
+                cm->data[4] = second[1];
+                cm->data[5] = second[2];
+
                 break;
             case 3:
+                // Neck
                 cm->data[0] = bitStrip(r1, 0);
                 cm->data[1] = bitStrip(r1, 1);
                 cm->data[2] = bitStrip(r2, 0);
@@ -265,15 +325,23 @@
                 cm->data[4] = bitStrip(r3, 0);
                 cm->data[5] = bitStrip(r3, 1);
                 break;
+            case 5:
+                // Hands/Fingers
+                cm->data[0] = bitStrip(r1,0);
+                cm->data[1] = bitStrip(r2,0);
+                cm->data[2] = bitStrip(r3,0);
+                cm->data[3] = bitStrip(r4,0);
+                cm->data[4] = bitStrip(r5,0);
             default:
                 assert(false);
         }
         return cm;
     }
-
+/*
 int main(){
     
     canMsg test = canMsg(BNO_R_HIP_YAW_ROLL, TX_REF, cmdType(2), 1000, 2000, 0, 0, 0);
     cout << test.toSerial() << endl;
     return 0;
 }
+*/

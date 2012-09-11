@@ -3,7 +3,9 @@
 #include <iostream>
 #include "pugixml.hpp"
 #include "huboCan.h"
+#include <queue>
 
+using std::queue;
 using std::string;
 
 /******************************************************************************
@@ -13,9 +15,9 @@ using std::string;
 *
 * @param	path		The file path of the XML representation
 ******************************************************************************/
-void HuboState::initHuboWithDefaults(string path){
+void HuboState::initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* outQueue){
     pugi::xml_document doc;
-    if (!doc.load_file(path)) return -1;
+    if (!doc.load_file(path.c_str())) return;
 
     pugi::xml_node robot = doc.child("robot");
 
@@ -25,25 +27,32 @@ void HuboState::initHuboWithDefaults(string path){
     {
         std::cout << "Board: ";
 
-        int BNO = board.attibute("number").as_int();
+        int BNO = board.attribute("number").as_int();
         int channels = board.attribute("channels").as_int();
  
         std::cout << "Number " << BNO << std::endl;
         std::cout << "Channels " << channels << std::endl;
 
-        MotorBoard* mb = new MotorBoard((boardNum)BNO, channels);
+        std::cout << "Before new mb" << std::endl;
+
+        MotorBoard* mb = new MotorBoard((boardNum)BNO, channels, outQueue);
+
+        std::cout << "After new mb" << std::endl;
 
         //Loop through each motor on each board.  Initialize a blank motor and then use
         //the board methods to set values.  This way the values are also sent to the
         //hardware.
 
         for (pugi::xml_node motor = board.first_child(); motor; motor = motor.next_sibling()){
-            std::count << "Motor: ";
+            std::cout << "Motor: " << motor.attribute("name").as_string() << std::endl;
             
             HuboMotor* hm = new HuboMotor();
             int CH = motor.attribute("channel").as_int();
         
             mb->addMotor(hm, CH);
+            std::cout << "Added motor to: " << mb->getMotorByChannel(CH) << std::endl;
+            mb->resetEncoderToZero(CH);
+            mb->initBoard();
             mb->setLowerPosLimit(CH, 3, motor.attribute("mpos1").as_int());
             mb->setUpperPosLimit(CH, 3, motor.attribute("mpos2").as_int());
             if (channels > 2)
@@ -54,7 +63,7 @@ void HuboState::initHuboWithDefaults(string path){
                 mb->setPositionGain(CH, motor.attribute("kp").as_int(),
                                         motor.attribute("ki").as_int(),
                                         motor.attribute("kd").as_int());
-            mb->setDeadZone(CH, motor.attribute("dz"));
+            mb->setDeadZone(CH, motor.attribute("dz").as_int());
             mb->setHomeSearchParams(CH, motor.attribute("hlim").as_int(),
                                         motor.attribute("hld").as_int(),
                                         motor.attribute("off").as_int());
@@ -68,12 +77,15 @@ void HuboState::initHuboWithDefaults(string path){
                                          motor.attribute("md").as_int()); 
             mb->setMaxAccVel(CH, motor.attribute("a_max").as_int(),
                                  motor.attribute("v_max").as_int());
-            mb->setJamPwmSatLim(CH, motor.attribute("jam_lim").as_int(),
+            //Only do this on the last motor of each board.
+            if (CH == (channels - 1)){
+                mb->setJamPwmSatLim(motor.attribute("jam_lim").as_int(),
                                     motor.attribute("pwm_lim").as_int(),
                                     motor.attribute("hld").as_int(),
                                     motor.attribute("jamd").as_int());
+                mb->setRequestBoardInfo(5);
+            }
         }
-
         this->addBoard(BNO, mb);
     }
 }
@@ -88,7 +100,7 @@ void HuboState::initHuboWithDefaults(string path){
 *		not exist with the given number.
 ******************************************************************************/
 MotorBoard* HuboState::getBoardByNumber(int number){
-    this->getBoardByNumber((boardNum)number);
+    return this->getBoardByNumber((boardNum)number);
 }
 
 /******************************************************************************
@@ -101,10 +113,10 @@ MotorBoard* HuboState::getBoardByNumber(int number){
 *		not exist with the given number.
 ******************************************************************************/
 MotorBoard* HuboState::getBoardByNumber(boardNum number){
-    map<boardNum, HuboMotor*>::iterator it;
+    map<boardNum, MotorBoard*>::iterator it;
 
     it = this->boards.find(number);
-    if (it == this->board.end())
+    if (it == this->boards.end())
         return NULL;
 
     return it->second;
@@ -119,5 +131,5 @@ MotorBoard* HuboState::getBoardByNumber(boardNum number){
 * @param	board		The motor board to add
 ******************************************************************************/
 void HuboState::addBoard(int num, MotorBoard* board){
-    this->boards[num] = board;
+    this->boards[(boardNum)num] = board;
 }

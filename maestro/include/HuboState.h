@@ -10,8 +10,14 @@
 
 #include "HuboMotor.h"
 #include "huboCan.h"
+#include "MotorBoard.h"
+#include <rtt/Port.hpp>
 #include <map>
+#include <string>
+#include <queue>
+
 using namespace std;
+using namespace RTT;
 
 // Motor names from the HUBO+ protocol
 
@@ -32,8 +38,8 @@ class HuboState{
 
 	HuboState(){
 	}
-	
-        initHuboWithDefaults(); 
+        HuboState(const HuboState& rhs);	
+        void initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* outQueue); 
 
         MotorBoard* getBoardByNumber(int number);
         MotorBoard* getBoardByNumber(boardNum number);

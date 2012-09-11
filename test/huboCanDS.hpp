@@ -36,7 +36,6 @@
 #include <sstream>
 #include <sys/time.h>
 #include <assert.h>
-#include <rtt/Logger.hpp>
 #include "can4linux.h"  //Include the can4linux data structures
 
 //For reference, the canmsg_t data structure from can4linux

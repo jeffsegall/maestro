@@ -9,7 +9,6 @@
 #include <sys/ioctl.h>
 #include <assert.h>
 #include <errno.h>
-#include "huboCanDS.hpp"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,8 +17,58 @@
 #include "can4linux.h"
 #include "huboCan.h"
 
-using namespace Hubo;
+//using namespace Hubo;
 using namespace std;
+
+void showCANStat(int fd)
+{
+CanStatusPar_t status;
+char *m;
+
+    ioctl(fd, CAN_IOCTL_STATUS, &status);
+    switch(status.type) {
+        case  CAN_TYPE_SJA1000:
+            m = "NXP sja1000";
+            break;
+        case  CAN_TYPE_FlexCAN:
+            m = "Freescale FlexCan";
+            break;
+        case  CAN_TYPE_TouCAN:
+            m = "Freescale TouCAN";
+            break;
+        case  CAN_TYPE_82527:
+            m = "I82527";
+            break;
+        case  CAN_TYPE_TwinCAN:
+            m = "Infineon TwinCAN";
+            break;
+        case  CAN_TYPE_BlackFinCAN:
+            m = "AD BlackFinCAN 537";
+            break;
+        case  CAN_TYPE_AT91SAM9263:
+            m = "ATMEL AT91SAM9263";
+            break;
+    case CAN_TYPE_UNSPEC:
+    default:
+            m = "unknown";
+            break;
+    }
+
+    printf(":: %s %4d %2d %2d %2d %2d %2d tx:%3d/%3d: rx:%3d/%3d:\n",
+        m,
+        status.baud,
+        status.status,
+        status.error_warning_limit,
+        status.rx_errors,
+        status.tx_errors,
+        status.error_code,
+        /* */
+        status.tx_buffer_size,
+        status.tx_buffer_used,
+        status.rx_buffer_size,
+        status.rx_buffer_used
+        );
+}
 
 string ticksToString(int ticks){
     string hexstr;
@@ -103,8 +152,8 @@ static int set_bitrate(int fd, int bitrate){
     ioctl(fd, CAN_IOCTL_COMMAND, &cmd);
     
     cfg.target = CONF_TIMING;
-    cfg.val1 = (unsigned int)baud;
-    ret = ioctl(df, CAN_IOCTL_CONFIG, &cfg);
+    cfg.val1 = (unsigned int)bitrate;
+    ret = ioctl(fd, CAN_IOCTL_CONFIG, &cfg);
     
     cmd.cmd = CMD_START;
     ioctl(fd, CAN_IOCTL_COMMAND, &cmd);
@@ -160,47 +209,54 @@ int main(){
     //run
     cout << "Connected! Channel " << channel << endl;
 
+    set_bitrate(channel, 1000);
+
     string name_info_str = "t0013000105";
 
-    canMsg name_info = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_COMMAND, CMD_SETREQ_BOARD_INFO,
+    canMsg name_info = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_CMD, CMD_SETREQ_BOARD_INFO,
                               0x05, 0, 0, 0, 0);
 
     string hip_off_str = "t0013000B00";
     string hip_str = "t0013000B01";
 
-    canMsg hip_on = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_COMMAND, CMD_HIP_ENABLE,
+    canMsg hip_on = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_CMD, CMD_HIP_ENABLE,
                            0x01, 0, 0, 0, 0);
 
-    canMsg hip_off = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_COMMAND, CMD_HIP_ENABLE,
+    canMsg hip_off = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_CMD, CMD_HIP_ENABLE,
                            0x00, 0, 0, 0, 0);
 
     string enc_zero = "t001300060F";
 
-    canMsg run = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_COMMAND, CMD_CONTROLLER_ON,
+    canMsg run = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_CMD, CMD_CONTROLLER_ON,
                         0, 0, 0, 0, 0);
 
-    canMsg stop = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_COMMAND, CMD_CONTROLLER_OFF,
+    canMsg stop = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_CMD, CMD_CONTROLLER_OFF,
                         0, 0, 0, 0, 0);
 
-    canMsg encoder_zero = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_COMMAND, CMD_RESET_ENC_ZERO,
+    canMsg encoder_zero = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_CMD, CMD_RESET_ENC_ZERO,
                                  0x0F, 0, 0, 0, 0); 
 
 
     cout << "writing name info, fbc packet" << endl;
+    
+    can_start(channel);
  
     write(channel, name_info.toCAN(), 1);
-
-    sleep(2);
+    sleep(5);
 
     cout << "writing gains, hip, run packets" << endl;
 
     //write(channel, pos_gain, 22);
 
-    write(channel, hip_on.toCAN(), 1);
-    write(channel, run.toCAN(), 1);
+    hip_on.printme();
+    run.printme();
+
+    if (write(channel, hip_on.toCAN(), 1) < 1)
+        cout << "hip_on error" << endl;
+    if (write(channel, run.toCAN(), 1) < 1)
+        cout << "run error" << endl;
 
     sleep(5);
-
     string set_start = "t0106";
 
     int ticks = 0;
@@ -209,23 +265,27 @@ int main(){
     string tickstring = "";
     vector<float> trajVal = trajectoryValues();
 
-    for (int i = 0; i < trajVal.size(); i++){
+    canMsg ref_pos = canMsg(BNO_R_HIP_YAW_ROLL, TX_REF, (cmdType)2, 0, 0, 0, 0, 0);
 
+    for (int i = 0; i < trajVal.size(); i++){
+        
         ticks = (int)trajVal.at(i);
 
- //       sprintf(hexbuf, "%06X", ticks);
-        tickstring = ticksToString(ticks);
-        hexstr = set_start + tickstring + tickstring;
-        cout << hexstr << endl;
-    
-        if (write(channel, strToSerial(hexstr), 18) < 18)
-            cout << "write error" << endl;
+        ref_pos.setR1(ticks);
+        ref_pos.setR2(ticks);
    
+        //ref_pos.printme();
+ 
+        if (write(channel, ref_pos.toCAN(), 1) < 1)
+            cout << "write error" << endl;
+  
+        usleep(20000);
+    }
+  
     cout << "Writing hip off, stop packets" << endl;
 
     write(channel, hip_off.toCAN(), 1);
     write(channel, stop.toCAN(), 1);
-
     /*char* rx_buffer = new char[100];
 
     while(1){
@@ -283,6 +343,9 @@ int main(){
     }
   */  
     cout << "Disconnecting..." << endl;
+
+
+    sleep(2);
 
     close(channel);
 

@@ -5,7 +5,7 @@ Requirements:
 * ROS Diamondback
 * Orocos Toolchain (ROS stack)
 * OpenRAVE (ROS stack)
-* Ubuntu 11.04 LTS
+* Ubuntu 10.04 LTS
 
 Installation:
 Append the full maestro path to the /opt/ros/diamondback/setup.sh file

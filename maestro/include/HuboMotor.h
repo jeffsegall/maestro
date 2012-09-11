@@ -31,6 +31,7 @@ class HuboMotor {
                   long hv2, long hma, long sm, long ers, long as, long md,
                   long v_max, long a_max, long jam_lim, long jamd,
                   long pwm_lim, long i_err, long b_err);	
+        HuboMotor(const HuboMotor& rhs);
 	void setUpperLimit(long limit);
 	void setLowerLimit(long limit);
 	void setPositionGain(long kp, long kd, long ki);

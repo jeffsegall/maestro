@@ -5,6 +5,6 @@
         <env name="OPENRAVE_PLUGINS" value="$(optenv OPENRAVE_PLUGINS):$(find openrave_robot_control/lib"/>
         <env name="PYTHONPATH" value="/opt/ros/diamondback/stacks/openrave_planning/openrave/lib/python2.7/site-packages/:/opt/ros/diamondback/ros/core/roslib/src:/opt/ros/diamondback/stacks/ros_comm/clients/rospy/src:/opt/ros/diamondback/stacks/ros_comm/messages/std_msgs/src"/>
     </node>
-   <node name="maestro_api" pkg="ocl" type="deployer-gnulinux" launch-prefix="xterm -e" args="-s $(find maestro)/launch/robot_control.xml --" output="screen"/>
+    <node name="maestro_api" pkg="ocl" type="deployer-gnulinux" launch-prefix="xterm -e" args="-s $(find maestro)/launch/robot_control.xml --" output="screen"/>
     <node name="maestro_can" pkg="ocl" type="deployer-gnulinux" launch-prefix="xterm -e" args="-s $(find maestro)/launch/robot_can.xml --" output="screen"/>
 </launch>
