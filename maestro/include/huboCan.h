@@ -74,12 +74,12 @@ typedef struct {
                    CMD_SETREQ_BOARD_INFO = 0x1, CMD_REQ_BOARD_PARAM = 0x24, 
                    CMD_NULL = 0x81, CMD_SET_BNO_FREQ = 0xA8,
                    //Motor Control Board Commands
-                   CMD_NONE = 0x0, CMD_REQ_BOARD_STATUS = 0x02,
-                   CMD_REQ_ENC_POS, CMD_REQ_CURR, CMD_RESET_ENC_ZERO = 0x6, 
-                   CMD_SET_POS_GAIN_0, CMD_SET_POS_GAIN_1, CMD_SET_CUR_GAIN_0,
-                   CMD_SET_CUR_GAIN_1, CMD_HIP_ENABLE, CMD_OPEN_LOOP = 0xD, 
-                   CMD_CONTROLLER_ON, CMD_CONTROLLER_OFF, CMD_SET_CTRL_MODE, 
-                   CMD_GO_HOME_OFFSET, CMD_SET_DEAD_ZONE = 0x20, 
+                   CMD_NONE = 0x0, CMD_REQ_BOARD_STATUS = 0x2,
+                   CMD_REQ_ENC_POS = 0x3, CMD_REQ_CURR = 0x4, CMD_RESET_ENC_ZERO = 0x6, 
+                   CMD_SET_POS_GAIN_0 = 0x7, CMD_SET_POS_GAIN_1 = 0x8, CMD_SET_CUR_GAIN_0 = 0x9,
+                   CMD_SET_CUR_GAIN_1 = 0xA, CMD_HIP_ENABLE = 0xB, CMD_OPEN_LOOP = 0xD, 
+                   CMD_CONTROLLER_ON = 0xE, CMD_CONTROLLER_OFF = 0xF, CMD_SET_CTRL_MODE = 0x10, 
+                   CMD_GO_HOME_OFFSET = 0x11, CMD_SET_DEAD_ZONE = 0x20, 
                    CMD_SET_HOME_SEARCH = 0x30, CMD_SET_ENC_RESOLUTION = 0x38, 
                    CMD_SET_MAX_ACC_VEL = 0x40, CMD_SET_LOWER_POS_LIMIT = 0x50, 
                    CMD_SET_UPPER_POS_LIMIT = 0x56, CMD_SET_HOME_ACC_VEL = 0x60, 
@@ -87,22 +87,24 @@ typedef struct {
                    CMD_SET_JAM_PWM_SAT_LIMIT = 0xF2, CMD_SET_ERR_BOUND = 0xF3, 
                    CMD_INIT_BOARD = 0xFA, 
                    //FT Sensor Board Commands
-                   CMD_SET_FT_0 = 0xA0, CMD_SET_FT_1,
-                   CMD_SET_FT_2, CMD_SET_INCLINO_SCALE = 0xA5,
+                   CMD_SET_FT_0 = 0xA0, CMD_SET_FT_1 = 0xA1,
+                   CMD_SET_FT_2 = 0xA2, CMD_SET_INCLINO_SCALE = 0xA5,
                    //Power Control Board Commands
-                   CMD_SET_SWITCH = 0x81, CMD_REQ_ALARM, CMD_REQ_BEEP,
-                   CMD_REQ_VOLT_CUR = 0xE0, CMD_REQ_TIME_STATUS,
+                   CMD_SET_SWITCH = 0x81, CMD_REQ_ALARM = 0x82, CMD_REQ_BEEP = 0x83,
+                   CMD_REQ_VOLT_CUR = 0xE0, CMD_REQ_TIME_STATUS = 0xE1,
                    //IMU Board Commands
                    CMD_CALIBRATE = 0x82 }; 
 
-    enum boardNum { BNO_R_HIP_YAW_ROLL = 0x0, BNO_R_HIP_PITCH, BNO_R_KNEE, BNO_R_ANKLE_PITCH_ROLL,
-                    BNO_L_HIP_YAW_ROLL, BNO_L_HIP_PITCH, BNO_L_KNEE, BNO_L_ANKLE_PITCH_ROLL,
-                    BNO_R_SHOULDER_PITCH_ROLL, BNO_R_SHOULDER_YAW_ELBOW,
-                    BNO_L_SHOULDER_PITCH_ROLL, BNO_L_SHOULDER_YAW_ELBOW, BNO_EXTRA_JMC12,
-                    BNO_EXTRA_JMC13, BNO_SMART_POWER, BNO_EXTRA_JMC15, BNO_R_WRIST_YAW_PITCH = 0x20,
-                    BNO_L_WRIST_YAW_PITCH, BNO_NECK_YAW_1_2, BNO_WAIST, BNO_R_HAND, BNO_L_HAND,
-                    BNO_EXTRA_EJMC6, BNO_R_FOOT_FT = 0x30, BNO_L_FOOT_FT, BNO_IMU_0, BNO_IMU_1,
-                    BNO_IMU_2, BNO_R_WRIST_FT, BNO_L_WRIST_FT };
+    enum boardNum { BNO_R_HIP_YAW_ROLL = 0x0, BNO_R_HIP_PITCH = 0x1, BNO_R_KNEE = 0x2, 
+                    BNO_R_ANKLE_PITCH_ROLL = 0x3, BNO_L_HIP_YAW_ROLL = 0x4, BNO_L_HIP_PITCH = 0x5, 
+                    BNO_L_KNEE = 0x6, BNO_L_ANKLE_PITCH_ROLL = 0x7, BNO_R_SHOULDER_PITCH_ROLL = 0x8, 
+                    BNO_R_SHOULDER_YAW_ELBOW = 0x9, BNO_L_SHOULDER_PITCH_ROLL = 0xA, 
+                    BNO_L_SHOULDER_YAW_ELBOW = 0xB, BNO_EXTRA_JMC12 = 0xC, BNO_EXTRA_JMC13 = 0xD, 
+                    BNO_SMART_POWER = 0xE, BNO_EXTRA_JMC15 = 0xF, BNO_R_WRIST_YAW_PITCH = 0x20,
+                    BNO_L_WRIST_YAW_PITCH = 0x21, BNO_NECK_YAW_1_2 = 0x22, BNO_WAIST = 0x23, 
+                    BNO_R_HAND = 0x24, BNO_L_HAND = 0x25, BNO_EXTRA_EJMC6 = 0x26, BNO_R_FOOT_FT = 0x30, 
+                    BNO_L_FOOT_FT = 0x31, BNO_IMU_0 = 0x32, BNO_IMU_1 = 0x33, BNO_IMU_2 = 0x34, 
+                    BNO_R_WRIST_FT = 0x35, BNO_L_WRIST_FT = 0x36 };
 
     class canMsg {
         public:

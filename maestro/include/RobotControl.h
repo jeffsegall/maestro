@@ -29,41 +29,40 @@ public:
     void updateHook(); 
     hubomsg::CanMessage buildCanMessage(canMsg* msg);
 
-    void foo(int ticks);
-    void initRobot();
+    void initRobot(string path);
 
     //JOINT MOVEMENT API
-    void setRightHipYaw(int ticks);
-    void setRightHipRoll(int ticks);
-    void setRightHipPitch(int ticks);
-    void setRightKnee(int ticks);
-    void setRightAnklePitch(int ticks);
-    void setRightAnkleRoll(int ticks);
-    void setLeftHipYaw(int ticks);
-    void setLeftHipRoll(int ticks);
-    void setLeftHipPitch(int ticks);
-    void setLeftKnee(int ticks);
-    void setLeftAnklePitch(int ticks);
-    void setLeftAnkleRoll(int ticks);
-    void setRightShoulderPitch(int ticks);
-    void setRightShoulderRoll(int ticks);
-    void setRightShoulderYaw(int ticks);
-    void setRightElbow(int ticks);
-    void setLeftShoulderPitch(int ticks);
-    void setLeftShoulderRoll(int ticks);
-    void setLeftShoulderYaw(int ticks);
-    void setLeftElbow(int ticks);
-    void setRightWristYaw(int ticks);
-    void setRightWristPitch(int ticks);
-    void setLeftWristYaw(int ticks);
-    void setLeftWristPitch(int ticks);
-    void setNeck(int yaw, int one, int two);
-    void setWaist(int ticks);
-    void setRightHand(int f0, int f1, int f2, int f3, int f4);
-    void setLeftHand(int f0, int f1, int f2, int f3, int f4); 
-    void enable(int board);
-    void disable(int board);
-    void runGesture(int board);
+    void setRightHipYaw(int ticks, int delay);
+    void setRightHipRoll(int ticks, int delay);
+    void setRightHipPitch(int ticks, int delay);
+    void setRightKnee(int ticks, int delay);
+    void setRightAnklePitch(int ticks, int delay);
+    void setRightAnkleRoll(int ticks, int delay);
+    void setLeftHipYaw(int ticks, int delay);
+    void setLeftHipRoll(int ticks, int delay);
+    void setLeftHipPitch(int ticks, int delay);
+    void setLeftKnee(int ticks, int delay);
+    void setLeftAnklePitch(int ticks, int delay);
+    void setLeftAnkleRoll(int ticks, int delay);
+    void setRightShoulderPitch(int ticks, int delay);
+    void setRightShoulderRoll(int ticks, int delay);
+    void setRightShoulderYaw(int ticks, int delay);
+    void setRightElbow(int ticks, int delay);
+    void setLeftShoulderPitch(int ticks, int delay);
+    void setLeftShoulderRoll(int ticks, int delay);
+    void setLeftShoulderYaw(int ticks, int delay);
+    void setLeftElbow(int ticks, int delay);
+    void setRightWristYaw(int ticks, int delay);
+    void setRightWristPitch(int ticks, int delay);
+    void setLeftWristYaw(int ticks, int delay);
+    void setLeftWristPitch(int ticks, int delay);
+    void setNeck(int yaw, int one, int two, int delay);
+    void setWaist(int ticks, int delay);
+    void setRightHand(int f0, int f1, int f2, int f3, int f4, int delay);
+    void setLeftHand(int f0, int f1, int f2, int f3, int f4, int delay); 
+    void enable(int board, int delay);
+    void disable(int board, int delay);
+    void runGesture(string path, int board);
 
 private:
 
@@ -79,6 +78,9 @@ private:
 
     queue<hubomsg::CanMessage>* inputQueue;
     queue<hubomsg::CanMessage>* outputQueue;
+
+    //@TODO: Check the syntax for STL maps.  This probably isn't right.
+    map<string, vector<float>> gestures;
    
     int written;
 };
