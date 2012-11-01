@@ -1,4 +1,5 @@
 #include "HuboMotor.h"
+#include <iostream>
 
 HuboMotor::HuboMotor(){
     this->ticks_position = 0;
@@ -33,6 +34,33 @@ HuboMotor::HuboMotor(long mpos1, long mpos2, long kp, long kd, long ki,
     this->i_err = i_err;
     this->b_err = b_err;
     this->ticks_position = 0;
+}
+
+HuboMotor::HuboMotor(const HuboMotor& rhs){
+    this->mpos1 = rhs.mpos1;
+    this->mpos2 = rhs.mpos2;
+    this->Kp = rhs.Kp;
+    this->Kd = rhs.Kd;
+    this->Ki = rhs.Ki;
+    this->dz = rhs.dz;
+    this->off = rhs.off;
+    this->hlim = rhs.hlim;
+    this->hld = rhs.hld;
+    this->hv1 = rhs.hv1;
+    this->hv2 = rhs.hv2;
+    this->hma = rhs.hma;
+    this->sm = rhs.sm;
+    this->ers = rhs.ers;
+    this->as = rhs.as;
+    this->md = rhs.md;
+    this->v_max = rhs.v_max;
+    this->a_max = rhs.a_max;
+    this->jam_lim = rhs.jam_lim;
+    this->jamd = rhs.jamd;
+    this->pwm_lim = rhs.pwm_lim;
+    this->i_err = rhs.i_err;
+    this->b_err = rhs.b_err;
+    this->ticks_position = rhs.ticks_position;
 }
 
 void HuboMotor::setUpperLimit(long limit){

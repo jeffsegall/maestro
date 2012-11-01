@@ -218,7 +218,7 @@
         return output;
     }
 
-    static canMsg canMsg::fromLineType(canmsg_t* msg){
+    canMsg canMsg::fromLineType(canmsg_t* msg){
         boardNum bno;
         messageType mType;
         cmdType cType; 
@@ -227,7 +227,7 @@
         if (msg->id >= RX_BOARD_PARA_CUR && msg->id < RX_BOARD_INFO + 0xA0){
             //RX_BOARD_PARA_CUR
             mType = RX_BOARD_PARA_CUR;
-            bno = msg->id - RX_BOARD_PARA_CUR; 
+            bno = (boardNum)(msg->id - RX_BOARD_PARA_CUR); 
             rebuild = canMsg(bno, mType, cType, msg->data[0],
                                  msg->data[1], msg->data[2], msg->data[3],
                                  msg->data[4], msg->data[5], msg->data[6], msg->data[7]);
@@ -235,9 +235,10 @@
         else if (msg->id >= 0x190){
             //RX_BOARD_INFO
             mType = RX_BOARD_INFO;
-            bno = msg->id - RX_BOARD_INFO;
-            if (bno >= 0xA0)
-                bno -= BOFF;  
+            if (msg->id - RX_BOARD_INFO >= 0xA0)
+                bno = (boardNum)(msg->id - RX_BOARD_INFO - BOFF);
+            else
+                bno = (boardNum)(msg->id - RX_BOARD_INFO);
             rebuild = canMsg(bno, mType, cType, msg->data[0],
                              msg->data[1], msg->data[2], msg->data[3],
                              msg->data[4], msg->data[5], msg->data[6], 0); 
@@ -245,7 +246,7 @@
         else if (msg->id >= 0x150){
             //RX_STATUS
             mType = RX_STATUS;
-            bno = msg->id - RX_STATUS;
+            bno = (boardNum)(msg->id - RX_STATUS);
             //Data format will change based on BNO channels
             if (bno == BNO_NECK_YAW_1_2 || bno == BNO_R_HAND || bno == BNO_L_HAND){
                 //3 or 5 channel
@@ -263,7 +264,7 @@
         else if (msg->id >= 0x60){
             //RX_ENC_VAL
             mType = RX_ENC_VAL;
-            bno = msg->id - RX_ENC_VAL;
+            bno = (boardNum)(msg->id - RX_ENC_VAL);
             //Data format will change based on BNO channels
             if (bno == BNO_NECK_YAW_1_2){
                 //3 channel
@@ -300,12 +301,12 @@
         else if (msg->id >= 0x50){
             //RX_TILT_SENSOR
             mType = RX_TILT_SENSOR;
-            bno = msg->id - RX_TILT_SENSOR + 0x2F;
+            bno = (boardNum)(msg->id - RX_TILT_SENSOR + 0x2F);
         }
         else if (msg->id >= 0x40){
             //RX_FT_SENSOR
             mType = RX_FT_SENSOR;
-            bno = msg->id - RX_FT_SENSOR + 0x2F;
+            bno = (boardNum)(msg->id - RX_FT_SENSOR + 0x2F);
         }
         else{
             //Don't handle outgoing messages yet...
@@ -356,6 +357,7 @@
     canmsg_t* canMsg::processCMD(canmsg_t* cm){
         cm->data[0] = (unsigned char)BNO;
         cm->data[1] = (unsigned char)subType;
+        unsigned char* h_offset = ticksToArray(r3);
         switch(subType){
             /*  Command messages are split into various register to byte combinations.  See
                 comment above each block for mapping diagram. */
@@ -455,8 +457,8 @@
             case CMD_SET_GAIN_OVR:
                 cm->data[2] = r1;
                 cm->data[3] = r2;
-                cm->data[4] = bitstrip(r3, 0);
-                cm->data[5] = bitstrip(r3, 1);
+                cm->data[4] = bitStrip(r3, 0);
+                cm->data[5] = bitStrip(r3, 1);
                 cm->length = 6;
                 break;   
 
@@ -479,10 +481,10 @@
             *******************************************************************/
  
             case CMD_SET_JAM_PWM_SAT_LIMIT:
-                cm->data[2] = bitstrip(r1, 0);
-                cm->data[3] = bitstrip(r1, 1);
-                cm->data[4] = bitstrip(r2, 0);
-                cm->data[5] = bitstrip(r2, 1);
+                cm->data[2] = bitStrip(r1, 0);
+                cm->data[3] = bitStrip(r1, 1);
+                cm->data[4] = bitStrip(r2, 0);
+                cm->data[5] = bitStrip(r2, 1);
                 cm->data[6] = r3;
                 cm->data[7] = r4;
                 cm->length = 8;
@@ -495,7 +497,6 @@
             *******************************************************************/
 
             case CMD_GO_HOME_OFFSET:
-                unsigned char* h_offset = ticksToArray(r3);
                 cm->data[2] = r1;
                 cm->data[3] = r2;
                 cm->data[4] = h_offset[0];
@@ -539,8 +540,8 @@
                                                                    
                        |  BNO |  sub |      r1     |  --  |  --  |  --  |  --  |
                     *******************************************************************/
-                    cm->data[2] = bitstrip(r1, 0); 
-                    cm->data[3] = bitstrip(r1, 1);
+                    cm->data[2] = bitStrip(r1, 0); 
+                    cm->data[3] = bitStrip(r1, 1);
                     cm->length = 4;
                 }
                 else if (subType >= CMD_SET_MAX_ACC_VEL && subType < CMD_SET_LOWER_POS_LIMIT){
@@ -549,10 +550,10 @@
                                                                    
                        |  BNO |  sub |      r1     |      r2     |  --  |  --  |
                     *******************************************************************/
-                    cm->data[2] = bitstrip(r1, 0);
-                    cm->data[3] = bitstrip(r1, 1);
-                    cm->data[4] = bitstrip(r2, 0);
-                    cm->data[5] = bitstrip(r2, 1);
+                    cm->data[2] = bitStrip(r1, 0);
+                    cm->data[3] = bitStrip(r1, 1);
+                    cm->data[4] = bitStrip(r2, 0);
+                    cm->data[5] = bitStrip(r2, 1);
                     cm->length = 6;
                 }
                 else if (subType >= CMD_SET_LOWER_POS_LIMIT && subType < CMD_SET_HOME_ACC_VEL){

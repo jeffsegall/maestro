@@ -4,6 +4,7 @@
 #define SERIALTEST 0
 #define DEBUG 0
 
+
 /******************************************************************
 * CanGateway()
 * Constructor
@@ -69,11 +70,12 @@ bool CanGateway::transmit(canmsg_t* packet){
     //Make sure there's an outbound channel
     if (this->channel > 0){
         //Amount to send is always 1 for canmsg_t (see can4linux.h)
-        sent = write(this->channel, &packet, 1);
+        sent = write(this->channel, packet, 1);
     }
 
     if (sent < 1){
         //Not all the data was sent
+        std::cout << "Data transmission error" << std::endl;
         return false;
     }
 
@@ -133,7 +135,7 @@ int CanGateway::openCanConnection(char* path){
 *    channel - the channel to initialize.  obtained by a successful
 *              call to openCanConnection()
 ******************************************************************/
-void CanGateway::initConnection(int channel){
+void CanGateway::initConnection(int channel, int bitrate){
     if (SERIALTEST){
         //Send speed and open packet
         transmit(strToSerial("s8"));
@@ -144,14 +146,14 @@ void CanGateway::initConnection(int channel){
         volatile Command_par_t cmd;
         
         cmd.cmd = CMD_STOP;
-        ioctl(fd, CAN_IOCTL_COMMAND, &cmd);
+        ioctl(channel, CAN_IOCTL_COMMAND, &cmd);
     
         cfg.target = CONF_TIMING;
         cfg.val1 = (unsigned int)bitrate;
-        ret = ioctl(fd, CAN_IOCTL_CONFIG, &cfg);
+        ioctl(channel, CAN_IOCTL_CONFIG, &cfg);
     
         cmd.cmd = CMD_START;
-        ioctl(fd, CAN_IOCTL_COMMAND, &cmd);
+        ioctl(channel, CAN_IOCTL_COMMAND, &cmd);
     } 
 }
 
@@ -172,8 +174,8 @@ void CanGateway::closeCanConnection(int channel){
     }
     else{
         volatile Command_par_t cmd;
-        cmd.cmd = cmd.STOP;
-        ioctl(fd, CAN_IOCTL_COMMAND, &cmd);
+        cmd.cmd = CMD_STOP;
+        ioctl(channel, CAN_IOCTL_COMMAND, &cmd);
     }
     close(channel);
 }
@@ -190,13 +192,15 @@ void CanGateway::recvFromRos(){
 
     //If a new message has come in from ROS, grab the CAN information
 
-    if (NewData==this->inPort->read(inMsg)){
+    while (NewData==this->inPort->read(inMsg)){
         can_message = canMsg((boardNum)inMsg.bno, (messageType)inMsg.mType, (cmdType)inMsg.cmdType,
                              inMsg.r1, inMsg.r2, inMsg.r3, inMsg.r4, inMsg.r5, inMsg.r6, inMsg.r7, inMsg.r8);
+        
+        //Add message to queue
+        this->downQueue->push(can_message); 
+        //std::cout << this->downQueue->size() << std::endl;
     }
 
-    //Add message to queue
-    this->downQueue->push(can_message); 
 }
 
 /******************************************************************
@@ -257,7 +261,7 @@ OutputPort<hubomsg::CanMessage>* CanGateway::getOutputPort(){
 * to the hardware.
 ******************************************************************/
 void CanGateway::runTick(){
-   
+    canmsg_t** rx = new canmsg_t*[5]; 
     //At each clock interval (50 ms?) send a message out to the hardware.
     canMsg out_message = this->downQueue->front();
     this->downQueue->pop();
@@ -283,7 +287,8 @@ void CanGateway::runTick(){
         if (messages_read > 0){
             for (int i = 0; i < messages_read; i++){
                 //Rebuild a canMsg and add it to the upstream buffer
-                this->upQueue->push(canMsg.fromLineType(rx[i]));
+                this->upQueue->push(canMsg::fromLineType(rx[i]));
+                //std::cout << "read in a message from CAN" << std::endl;
             }
         } 
     }
@@ -298,10 +303,29 @@ void CanGateway::runTick(){
 bool CanGateway::startHook(){
     //@TODO: This should be some sort of parameter...not hardcoded
     this->channel = openCanConnection("/dev/can0");
+    std::cout << "Opened CAN connection on channel " << channel << std::endl;
     if (this->channel > -1){
-        initConnection(this->channel);
+        initConnection(this->channel, 1000);
+    canMsg name_info = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_CMD, CMD_SETREQ_BOARD_INFO,
+                              0x05, 0, 0, 0, 0, 0, 0, 0);
+
+    canMsg hip_on = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_CMD, CMD_HIP_ENABLE,
+                           0x01, 0, 0, 0, 0, 0, 0, 0);
+    canMsg run = canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_CMD, CMD_CONTROLLER_ON,
+                        0, 0, 0, 0, 0, 0, 0, 0);
+
+        name_info.printme();
+        hip_on.printme();
+        run.printme();
+//        transmit(name_info.toCAN());
+//        transmit(hip_on.toCAN());
+//        transmit(run.toCAN());      
+//        write(channel, name_info.toCAN(), 1);
+//        write(channel, hip_on.toCAN(), 1);
+//        write(channel, run.toCAN(), 1);
         return 1;
     }
+    
     return 0;
 }
 
@@ -311,7 +335,29 @@ bool CanGateway::startHook(){
 * Called each iteration.
 ******************************************************************/
 void CanGateway::updateHook(){
-    runTick();
+    //runTick();
+    recvFromRos();
+
+    canmsg_t rx[5];
+
+    if (!this->downQueue->empty()){
+        transmit(this->downQueue->front().toCAN());
+        this->downQueue->pop();
+    }
+    
+    if (this->channel > 0){
+        int messages_read = read(this->channel, &rx, 5);
+        if (messages_read > 0){
+            //std::cout << "read in a message from CAN" << std::endl;
+            for (int i = 0; i < messages_read; i++){
+                //Rebuild a canMsg and add it to the upstream buffer
+                this->upQueue->push(canMsg::fromLineType(&rx[i]));
+                //std::cout << "read in a message from CAN" << std::endl;
+            }
+        }
+    } 
+
+    transmitToRos();
 }
 
 /******************************************************************

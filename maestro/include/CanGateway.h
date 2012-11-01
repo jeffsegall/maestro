@@ -22,6 +22,7 @@
 #include "huboCan.h"
 #include <queue>
 #include <hubomsg/typekit/CanMessage.h>
+#include <iostream>
 
 using namespace std;
 using namespace RTT;
@@ -40,7 +41,7 @@ public:
 
     //HARDWARE COMMUNICATION
     int openCanConnection(char* path);
-    void initConnection(int channel);
+    void initConnection(int channel, int bitrate);
     void closeCanConnection(int channel);
 
     //RUN LOOP

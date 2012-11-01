@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    aint with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     If you are interested in licensing this software for commercial purposes
     please contact the author. The software can be licensed to you under
@@ -38,6 +38,7 @@
 #include <sys/time.h>
 #include <assert.h>
 #include <string>
+#include <algorithm>
 #include "can4linux.h"  //Include the can4linux data structures
 
 using namespace std;
@@ -48,7 +49,7 @@ typedef struct {
     // flags, indicating or controlling special message properties 
     int             flags;
     int             cob;	     // < CAN object number, used in Full CAN  
-    unsigned   long id;		     // < CAN message ID, 4 bytes  
+    unsigned   int id;		     // < CAN message ID, 4 bytes  
     struct timeval  timestamp;	 // < time stamp for received messages 
     short      int  length;	     // < number of bytes in the CAN message 
     unsigned   char data[CAN_MSG_LENGTH]; // < data, 0...8 bytes 
@@ -110,26 +111,32 @@ typedef struct {
             canMsg();
             canMsg(boardNum BNO, messageType type, cmdType subType);
             canMsg(boardNum BNO, messageType type, cmdType subType,
-                   unsigned long r1, unsigned long r2,
-                   unsigned long r3, unsigned long r4,
-                   unsigned long r5);
+                   int r1, int r2,
+                   int r3, int r4,
+                   int r5);
             boardNum getBNO();
             messageType getType();
             cmdType getCmd();
 
-            unsigned long getR1();
-            unsigned long getR2();
-            unsigned long getR3();
-            unsigned long getR4();
-            unsigned long getR5();
+            int getR1();
+            int getR2();
+            int getR3();
+            int getR4();
+            int getR5();
+
+            void setR1(int r1);
+            void setR2(int r2);
+            void setR3(int r3);
+            void setR4(int r4);
+            void setR5(int r5);
 
             void printme();
-            static unsigned long bitStuff15byte(long bs);
-            static unsigned long bitStuff3byte(long bs);
-            static unsigned long bitStuffCalibratePacket(long bs);
-            static unsigned long unpack2byte();
-            static unsigned long unpack4byte();
-            static unsigned char bitStrip(unsigned long src, int byteNum);
+            static int bitStuff15byte(int bs);
+            static int bitStuff3byte(int bs);
+            static int bitStuffCalibratePacket(int bs);
+            static int unpack2byte();
+            static int unpack4byte();
+            static unsigned char bitStrip(int src, int byteNum);
             canmsg_t* toCAN();
             string toSerial();
             canmsg_t* toLineType();
@@ -141,10 +148,10 @@ typedef struct {
             messageType type;
             cmdType subType;
 
-            unsigned long r1;  //multi-purpose configuration registers
-            unsigned long r2;
-            unsigned long r3;
-            unsigned long r4;
-            unsigned long r5;
+            int r1;  //multi-purpose configuration registers
+            int r2;
+            int r3;
+            int r4;
+            int r5;
     };
 #endif

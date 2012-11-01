@@ -5,20 +5,20 @@
 
 <struct name="CANDown" type="ConnPolicy">
   <simple name="type" type="short"><value>0</value></simple><!-- type of connection: 0 means Data -->
-  <simple name="size" type="short"><value>1</value></simple><!-- buffer size -->
+  <simple name="size" type="short"><value>1000</value></simple><!-- buffer size -->
   <simple name="transport" type="short"><value>3</value></simple><!--3 means ROS-->
   <simple name="name_id" type="string"><value>can_down</value></simple>
 </struct>
 <struct name="CANUp" type="ConnPolicy">
   <simple name="type" type="short"><value>0</value></simple><!-- type of connection: 0 means Data -->
-  <simple name="size" type="short"><value>1</value></simple><!-- buffer size -->
+  <simple name="size" type="short"><value>1000</value></simple><!-- buffer size -->
   <simple name="transport" type="short"><value>3</value></simple><!--3 means ROS-->
   <simple name="name_id" type="string"><value>can_up</value></simple>
 </struct>
 
 <struct name="CanGateway" type="CanGateway">
   <struct name="Activity" type="PeriodicActivity">
-    <simple name="Period" type="double"><value>1</value></simple>
+    <simple name="Period" type="double"><value>0.002</value></simple>
     <simple name="Priority" type="short"><value>0</value></simple>
     <simple name="Scheduler" type="string"><value>ORO_SCHED_RT</value></simple>
   </struct>

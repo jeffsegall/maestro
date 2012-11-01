@@ -9,10 +9,15 @@
 #include <hubomsg/typekit/HuboCmd.h>
 #include <hubomsg/typekit/CanMessage.h>
 #include <vector>
+#include <queue>
 #include "huboCan.h"
 #include "HuboState.h"
 #include "HuboMotor.h"
+#include "MotorBoard.h"
+#include <fstream>
 
+using std::queue;
+using std::vector;
 using namespace RTT;
 
 class RobotControl : public RTT::TaskContext{
@@ -25,6 +30,7 @@ public:
     hubomsg::CanMessage buildCanMessage(canMsg* msg);
 
     void foo(int ticks);
+    void initRobot();
 
     //JOINT MOVEMENT API
     void setRightHipYaw(int ticks);
@@ -55,7 +61,10 @@ public:
     void setWaist(int ticks);
     void setRightHand(int f0, int f1, int f2, int f3, int f4);
     void setLeftHand(int f0, int f1, int f2, int f3, int f4); 
- 
+    void enable(int board);
+    void disable(int board);
+    void runGesture(int board);
+
 private:
 
     //SUBSCRIBE
@@ -66,7 +75,12 @@ private:
     OutputPort<hubomsg::CanMessage>* canDownPort;
     OutputPort<hubomsg::HuboCmd>* orInPort;
 
-    HuboState state;
+    HuboState* state;
+
+    queue<hubomsg::CanMessage>* inputQueue;
+    queue<hubomsg::CanMessage>* outputQueue;
+   
+    int written;
 };
 
 #endif

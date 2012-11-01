@@ -10,6 +10,8 @@
 #include <hubomsg/typekit/HuboCmd.h>
 #include <hubomsg/typekit/CanMessage.h>
 
+using namespace RTT;
+
 class IMUBoard {
 
     private:
