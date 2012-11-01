@@ -79,7 +79,7 @@ private:
     queue<hubomsg::CanMessage>* inputQueue;
     queue<hubomsg::CanMessage>* outputQueue;
 
-    map<string, vector<float>> gestures;
+    map< string, vector<float> > gestures;
    
     int written;
 };

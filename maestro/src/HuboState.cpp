@@ -17,8 +17,10 @@ using std::string;
 ******************************************************************************/
 void HuboState::initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* outQueue){
     pugi::xml_document doc;
-    if (!doc.load_file(path.c_str())) return;
-
+    if (!doc.load_file(path.c_str())){
+        std::cout << "No such file, " << path.c_str() << std::endl;
+        return;
+    }
     pugi::xml_node robot = doc.child("robot");
 
     //Loop through each board

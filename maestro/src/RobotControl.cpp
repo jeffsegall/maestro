@@ -160,11 +160,11 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Path", "The path to the XML robot representation");
 
     this->addOperation("enable", &RobotControl::enable, this, RTT::OwnThread)
-            .arg("Board", "The board to enable");
+            .arg("Board", "The board to enable")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("disable", &RobotControl::disable, this, RTT::OwnThread)
-            .arg("Board", "The board to disable");
+            .arg("Board", "The board to disable")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
@@ -412,14 +412,13 @@ vector<float> trajectoryValues(string path){
   void RobotControl::runGesture(string path, int board){
       int val = 0;
       vector<float> trajVal;
-      //@TODO: Check the syntax for STL maps.  This probably isn't right.
-      if (this->gestures.contains(path))
-          trajVal = this->gestures.get(path);
+      if (this->gestures.find(path) != this->gestures.end())
+          trajVal = this->gestures[path];
       else{
           trajVal = trajectoryValues(path);
-          this->gestures.put(path, trajVal);
+          this->gestures[path] = trajVal;
       }
-      for (int i = 0; i < trajVal.size(); i++){
+      for (int i = 0; i < (int)trajVal.size(); i++){
           val = (int)trajVal.at(i);
           this->state->getBoardByNumber(board)->sendPositionReference(val, val);     
       }
