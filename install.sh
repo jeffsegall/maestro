@@ -2,7 +2,6 @@
 # This script installs ROS Diamondback with the Orocos Toolchain and
 # openRAVE stacks.
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu lucid main" > /etc/apt/sources.list.d/ros-latest.list'
-chmod +x maestro/src/maestro.py
 wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
 apt-get update
 apt-get install -y mercurial

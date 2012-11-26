@@ -172,6 +172,8 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Board", "The board on which to run the gesture");
 
     this->written = 0;
+    initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
+
   }
   
   RobotControl::~RobotControl(){}
@@ -205,11 +207,27 @@ vector<float> trajectoryValues(string path){
     }
    
     //Write out a message if we have one
- 
+
+    //TODO: as per dan's suggestion, try to send all positions every time  
+
+    MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
+/*    if (mb != NULL)
+        outputQueue->push(buildCanMessage(mb->sendPositionReference(mb->getMotorByChannel(0)->getTicksPosition(), mb->getMotorByChannel(1)->getTicksPosition())));
+ */
     if (!outputQueue->empty()){
         this->canDownPort->write(outputQueue->front());
         //std::cout << ++written << std::endl;
         outputQueue->pop();
+    }
+    else{
+        if (mb != NULL){
+            canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_REF, (cmdType)2,
+                                 mb->getMotorByChannel(0)->getTicksPosition(), 
+                                 mb->getMotorByChannel(1)->getTicksPosition(), 0, 0, 0, 0, 0, 0);
+ 
+            outputQueue->push(buildCanMessage(out));
+            this->canDownPort->write(outputQueue->front());
+        }
     }
   }
 

@@ -700,15 +700,43 @@ canMsg* MotorBoard::initBoard(){
 ******************************************************************************/
 canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
     assert(this->channels <= 2);
-   
-    this->motors[0]->setTicksPosition(REF0);
-    this->motors[1]->setTicksPosition(REF1);
 
-    canMsg* out = new canMsg(this->BNO, TX_REF, (cmdType)2,
-                             this->motors[0]->getTicksPosition(), 
-                             this->motors[1]->getTicksPosition(), 0, 0, 0, 0, 0, 0);
+    int delta0 = abs(this->motors[0]->getTicksPosition() - REF0);
+    int delta1 = abs(this->motors[1]->getTicksPosition() - REF1);
 
-    this->outQueue->push(buildCanMessage(out));
+    std::cout << "deltas: " << delta0 << ", " << delta1 << std::endl;
+
+    canMsg* out;
+
+    if (delta0 > 500 || delta1 > 500){
+        //Lots of motion, try to interpolate?
+        int step0 = ((delta0 / 10) * ((REF0 < this->motors[0]->getTicksPosition()) ? -1 : 1));
+        int step1 = ((delta1 / 10) * ((REF1 < this->motors[1]->getTicksPosition()) ? -1 : 1));
+        std::cout << "steps: " << step0 << ", " << step1 << std::endl;
+        for (int i = 1; i <= 10; i++){
+            this->motors[0]->setTicksPosition(this->motors[0]->getTicksPosition() + (step0));
+            this->motors[1]->setTicksPosition(this->motors[1]->getTicksPosition() + (step1));
+            std::cout << "positions: " << this->motors[0]->getTicksPosition() << ", " <<
+                                          this->motors[1]->getTicksPosition() << std::endl;
+            out = new canMsg(this->BNO, TX_REF, (cmdType)2,
+                                     this->motors[0]->getTicksPosition(), 
+                                     this->motors[1]->getTicksPosition(), 0, 0, 0, 0, 0, 0);
+            this->outQueue->push(buildCanMessage(out));
+        }
+
+    }
+    else{
+        
+        this->motors[0]->setTicksPosition(REF0);
+        this->motors[1]->setTicksPosition(REF1);
+
+        out = new canMsg(this->BNO, TX_REF, (cmdType)2,
+                                 this->motors[0]->getTicksPosition(), 
+                                 this->motors[1]->getTicksPosition(), 0, 0, 0, 0, 0, 0);
+    
+        this->outQueue->push(buildCanMessage(out));
+    }
+
     return out;
 }
 

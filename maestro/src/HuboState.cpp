@@ -135,3 +135,7 @@ MotorBoard* HuboState::getBoardByNumber(boardNum number){
 void HuboState::addBoard(int num, MotorBoard* board){
     this->boards[(boardNum)num] = board;
 }
+
+map<boardNum, MotorBoard*> HuboState::getBoards(){
+    return this->boards;
+}

@@ -197,6 +197,8 @@ void CanGateway::recvFromRos(){
                              inMsg.r1, inMsg.r2, inMsg.r3, inMsg.r4, inMsg.r5, inMsg.r6, inMsg.r7, inMsg.r8);
         
         //Add message to queue
+        if (!this->downQueue->empty())
+            this->downQueue->pop();      
         this->downQueue->push(can_message); 
         //std::cout << this->downQueue->size() << std::endl;
     }

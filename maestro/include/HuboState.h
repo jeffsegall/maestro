@@ -45,5 +45,7 @@ class HuboState{
         MotorBoard* getBoardByNumber(boardNum number);
 
         void addBoard(int num, MotorBoard* board);
+
+        map<boardNum, MotorBoard*> getBoards();
 };
 #endif

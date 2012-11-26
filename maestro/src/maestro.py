@@ -29,7 +29,7 @@ class Maestro:
     def __init__(self,robot_xml,subscriber,publisher,gravity):
         """Initialize the OpenRAVE environment"""
         self.env = Environment()
-        self.env.SetViewer('qtcoin')
+        #self.env.SetViewer('qtcoin')
         self.env.Load(robot_xml)
 
         if gravity:
