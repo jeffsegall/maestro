@@ -30,7 +30,6 @@ public:
     this->ros_gateway = new RosGateway("ros_in", "hubo_cmd");
      
     //Initialize input and output ports
-    //Test Comment for Commit Test
 
     this->addEventPort(*ros_gateway->getInputPort());
     this->addPort(*ros_gateway->getOutputPort());
