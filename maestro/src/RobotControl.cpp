@@ -432,7 +432,7 @@ vector<float> trajectoryValues(string path){
   void RobotControl::enable(int board, int delay){
       this->state->getBoardByNumber(board)->setHIP(1);
       this->state->getBoardByNumber(board)->enableController();
-      this->state->getBoardByNumber(board)->requestEncoderPostition(0);
+      this->state->getBoardByNumber(board)->requestEncoderPosition(0);
   }
 
   void RobotControl::disable(int board, int delay){
