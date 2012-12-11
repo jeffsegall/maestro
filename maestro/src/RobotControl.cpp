@@ -198,8 +198,21 @@ vector<float> trajectoryValues(string path){
     
     hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
     hubomsg::CanMessage canMessage = hubomsg::CanMessage();
+
+    MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
+
     if (NewData == this->canUpPort->read(canMessage)){
         //Received update from CanGateway
+    	if (canMessage.mType == RX_ENC_VAL+BNO_R_HIP_YAW_ROLL){
+    		//Update is an encoder return from our motor board, so let's grab those values.
+    		// 4 Byte Int = (byte1) | (byte2 << 8) | (byte3 << 16) | (byte4 << 24)
+    		int yaw_ticks = (canMessage.r1) | (canMessage.r2 << 8) | (canMessage.r3 << 16) | (canMessage.r4 << 24);
+    		int roll_ticks = (canMessage.r5) | (canMessage.r6 << 8) | (canMessage.r7 << 16) | (canMessage.r8 << 24);
+
+    		if (mb->getMotorByChannel(0)->getTicksPosition() != yaw_ticks || mb->getMotorByChannel(1)->getTicksPosition() != roll_ticks){
+    			mb->sendPositionReference(mb->getMotorByChannel(0)->getTicksPosition(), mb->getMotorByChannel(0)->getTicksPosition());
+    		}
+    	}
         
     }
     if (NewData == this->orOutPort->read(huboCmd)){
@@ -210,7 +223,7 @@ vector<float> trajectoryValues(string path){
 
     //TODO: as per dan's suggestion, try to send all positions every time  
 
-    MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
+
 /*    if (mb != NULL)
         outputQueue->push(buildCanMessage(mb->sendPositionReference(mb->getMotorByChannel(0)->getTicksPosition(), mb->getMotorByChannel(1)->getTicksPosition())));
  */
