@@ -4,7 +4,7 @@
 
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/nvp.hpp>
-#include <hubomsg/boost/CanMessage.h>
+#include <hubomsg/CanMessage.h>
 
 namespace boost
 {

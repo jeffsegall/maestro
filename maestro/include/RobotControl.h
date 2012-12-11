@@ -3,8 +3,8 @@
 
 #include <rtt/TaskContext.hpp>
 #include <rtt/Port.hpp>
-#include <std_msgs/boost/Float64.h>
-#include <std_msgs/boost/String.h>
+#include <std_msgs/Float64.h>
+#include <std_msgs/String.h>
 #include <rtt/Component.hpp>
 #include <hubomsg/typekit/HuboCmd.h>
 #include <hubomsg/typekit/CanMessage.h>

@@ -11,7 +11,7 @@
 
 #include <rtt/Port.hpp>
 #include <rtt/Component.hpp>
-#include <std_msgs/boost/String.h>
+#include <std_msgs/String.h>
 #include <hubomsg/typekit/HuboCmd.h>
 
 using namespace RTT;
