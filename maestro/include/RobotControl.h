@@ -62,6 +62,7 @@ public:
     void setLeftHand(int f0, int f1, int f2, int f3, int f4, int delay); 
     void enable(int board, int delay);
     void disable(int board, int delay);
+    void requestEncoderPosition(int board, int delay);
     void runGesture(string path, int board);
 
 private:

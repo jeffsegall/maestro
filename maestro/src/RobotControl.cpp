@@ -167,6 +167,10 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Board", "The board to disable")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+    this->addOperation("requestEncoderPosition", &RobotControl::disable, this, RTT::OwnThread)
+                .arg("Board", "The board to request encoder data from")
+                .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
             .arg("Path", "The path to the file that contains the gesture.")
             .arg("Board", "The board on which to run the gesture");
@@ -444,6 +448,10 @@ vector<float> trajectoryValues(string path){
       this->state->getBoardByNumber(board)->setHIP(0);
       this->state->getBoardByNumber(board)->disableController();
       this->state->getBoardByNumber(board)->requestEncoderPosition(0);
+  }
+
+  void RobotControl::requestEncoderPosition(int board, int delay){
+	  this->state->getBoardByNumber(board)->requestEncoderPosition(0);
   }
 
   void RobotControl::runGesture(string path, int board){
