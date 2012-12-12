@@ -214,8 +214,8 @@ vector<float> trajectoryValues(string path){
     		int yaw_ticks = (canMessage.r1) | (canMessage.r2 << 8) | (canMessage.r3 << 16) | (canMessage.r4 << 24);
     		int roll_ticks = (canMessage.r5) | (canMessage.r6 << 8) | (canMessage.r7 << 16) | (canMessage.r8 << 24);
     		vector<int> ticks(2);
-    		ticks[1] = yaw_ticks;
-    		ticks[2] = roll_ticks;
+    		ticks[0] = yaw_ticks;
+    		ticks[1] = roll_ticks;
     		//if (mb->getMotorByChannel(0)->getTicksPosition() != yaw_ticks || mb->getMotorByChannel(1)->getTicksPosition() != roll_ticks){
     			//mb->sendPositionReference(mb->getMotorByChannel(0)->getTicksPosition(), mb->getMotorByChannel(0)->getTicksPosition());
 
