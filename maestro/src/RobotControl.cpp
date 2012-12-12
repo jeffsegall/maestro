@@ -203,17 +203,20 @@ vector<float> trajectoryValues(string path){
 
     if (NewData == this->canUpPort->read(canMessage)){
         //Received update from CanGateway
+
     	if (canMessage.mType == RX_ENC_VAL+BNO_R_HIP_YAW_ROLL){
     		//Update is an encoder return from our motor board, so let's grab those values.
     		// 4 Byte Int = (byte1) | (byte2 << 8) | (byte3 << 16) | (byte4 << 24)
     		int yaw_ticks = (canMessage.r1) | (canMessage.r2 << 8) | (canMessage.r3 << 16) | (canMessage.r4 << 24);
     		int roll_ticks = (canMessage.r5) | (canMessage.r6 << 8) | (canMessage.r7 << 16) | (canMessage.r8 << 24);
+    		vector<int> ticks = {yaw_ticks, roll_ticks };
+    		//if (mb->getMotorByChannel(0)->getTicksPosition() != yaw_ticks || mb->getMotorByChannel(1)->getTicksPosition() != roll_ticks){
+    			//mb->sendPositionReference(mb->getMotorByChannel(0)->getTicksPosition(), mb->getMotorByChannel(0)->getTicksPosition());
 
-    		if (mb->getMotorByChannel(0)->getTicksPosition() != yaw_ticks || mb->getMotorByChannel(1)->getTicksPosition() != roll_ticks){
-    			mb->sendPositionReference(mb->getMotorByChannel(0)->getTicksPosition(), mb->getMotorByChannel(0)->getTicksPosition());
-    		}
+    		//}
+    		mb->setTicksPosition(ticks);
     	}
-        
+
     }
     if (NewData == this->orOutPort->read(huboCmd)){
         //Recieved update from openRAVE
@@ -432,7 +435,7 @@ vector<float> trajectoryValues(string path){
   void RobotControl::enable(int board, int delay){
       this->state->getBoardByNumber(board)->setHIP(1);
       this->state->getBoardByNumber(board)->enableController();
-      this->state->getBoardByNumber(board)->requestEncoderPosition(0);
+      //this->state->getBoardByNumber(board)->requestEncoderPosition(0);
   }
 
   void RobotControl::disable(int board, int delay){

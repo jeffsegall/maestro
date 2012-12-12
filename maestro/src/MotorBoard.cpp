@@ -134,6 +134,20 @@ HuboMotor* MotorBoard::getMotorByChannel(int channel){
     return this->motors[channel];
 }
 
+/******************************************************************************
+* setTicksPosition
+*
+* Sets the current position of both both motors to the given values.
+*
+* @param	ticks0		position of motor 1
+* @param	ticks1		position of motor 2
+* @return	The motor in the given channel
+******************************************************************************/
+void MotorBoard::setTicksPosition(vector<int> ticks){
+	if (ticks.size() <= channels)
+		for (int i = 0; i < ticks.size(); i++)
+			this->motors[i]->setTicksPosition(ticks[i]);
+}
 
 
 /******************************************************************************
@@ -708,6 +722,8 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 
     canMsg* out;
 
+    /** Standard 10 Step Interpolation */
+
     if (delta0 > 500 || delta1 > 500){
         //Lots of motion, try to interpolate?
         int step0 = ((delta0 / 10) * ((REF0 < this->motors[0]->getTicksPosition()) ? -1 : 1));
@@ -736,6 +752,41 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
     
         this->outQueue->push(buildCanMessage(out));
     }
+
+
+
+    /** Constant Decay Interpolation /
+    const int MAX_STEP = 500;
+    const int MIN_STEP = 50;
+    const float LEAP_PERCENTAGE = .6;
+    vector<int> error = { REF0 - this->motors[0]->getTicksPosition(),
+							REF1 - this->motors[1]->getTicksPosition()};
+    vector<int> output = { 0, 0 };
+
+    while(error[0] != 0 && error[1] != 0){
+		for (int i = 0; i < 1; i++){
+
+			if((abs(error[i]) > MIN_STEP)){
+				output[i] = (int)(LEAP_PERCENTAGE * error);
+
+				if(abs(output[i] > MAX_STEP))
+					output[i] = output[i] < 0 ? -MAX_STEP : MAX_STEP;
+
+			} else
+				output[i] = error[i];
+
+			error[i] -= output[i];
+			output[i] += this->motors[i]->getTicksPosition();
+			std::cout << "output[" << i << "]: " << output[i] << std::endl;
+
+		}
+		out = new canMsg(this->BNO, TX_REF, (cmdType)2, output[0], output[1], 0, 0, 0, 0, 0, 0);
+		this->outQueue->push(buildCanMessage(out));
+    }
+    this->motors[0]->setTicksPosition(this->motors[0]->getTicksPosition() + REF0);
+	this->motors[1]->setTicksPosition(this->motors[1]->getTicksPosition() + REF1);
+	*/
+
 
     return out;
 }
