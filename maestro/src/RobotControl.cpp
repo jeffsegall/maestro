@@ -167,9 +167,13 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Board", "The board to disable")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
-    this->addOperation("requestEncoderPosition", &RobotControl::disable, this, RTT::OwnThread)
+    this->addOperation("requestEncoderPosition", &RobotControl::requestEncoderPosition, this, RTT::OwnThread)
                 .arg("Board", "The board to request encoder data from")
                 .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+    this->addOperation("debugControl", &RobotControl::debugControl, this, RTT::OwnThread)
+                    .arg("Board", "The board to send commands to")
+                    .arg("Operation", "Operation to perform. Use a value of 0 for a list of commands.");
 
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
             .arg("Path", "The path to the file that contains the gesture.")
@@ -211,8 +215,8 @@ vector<float> trajectoryValues(string path){
     	if (canMessage.mType == RX_ENC_VAL+BNO_R_HIP_YAW_ROLL){
     		//Update is an encoder return from our motor board, so let's grab those values.
     		// 4 Byte Int = (byte1) | (byte2 << 8) | (byte3 << 16) | (byte4 << 24)
-    		int yaw_ticks = (canMessage.r1) | (canMessage.r2 << 8) | (canMessage.r3 << 16) | (canMessage.r4 << 24);
-    		int roll_ticks = (canMessage.r5) | (canMessage.r6 << 8) | (canMessage.r7 << 16) | (canMessage.r8 << 24);
+    		int yaw_ticks = canMessage.r1;// DO NOT BITWISE!(canMessage.r1) | (canMessage.r2 << 8) | (canMessage.r3 << 16) | (canMessage.r4 << 24);
+    		int roll_ticks = canMessage.r2;//DO NOT BITWISE!! (canMessage.r5) | (canMessage.r6 << 8) | (canMessage.r7 << 16) | (canMessage.r8 << 24);
     		vector<int> ticks(2);
     		ticks[0] = yaw_ticks;
     		ticks[1] = roll_ticks;
@@ -447,11 +451,31 @@ vector<float> trajectoryValues(string path){
   void RobotControl::disable(int board, int delay){
       this->state->getBoardByNumber(board)->setHIP(0);
       this->state->getBoardByNumber(board)->disableController();
-      this->state->getBoardByNumber(board)->requestEncoderPosition(0);
+      //this->state->getBoardByNumber(board)->requestEncoderPosition(0);
   }
 
   void RobotControl::requestEncoderPosition(int board, int delay){
 	  this->state->getBoardByNumber(board)->requestEncoderPosition(0);
+  }
+
+  void RobotControl::debugControl(int board, int operation){
+	  switch (operation)
+	  {
+	  case 1:
+		  this->state->getBoardByNumber(board)->setHIP(0);
+		  break;
+	  case 2:
+		  this->state->getBoardByNumber(board)->disableController();
+		  break;
+	  case 3:
+		  this->state->getBoardByNumber(board)->setHIP(1);
+		  break;
+	  case 4:
+		  this->state->getBoardByNumber(board)->enableController();
+		  break;
+	  default:
+		  std::cout << "Operations: " << std::endl << "1: disable (step 1)	  2: disable (step 2)	   3: enable (step 1)		4: enable (step 2)";
+	  }
   }
 
   void RobotControl::runGesture(string path, int board){

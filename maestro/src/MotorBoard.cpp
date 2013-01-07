@@ -722,7 +722,7 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 
     canMsg* out;
 
-    /** Standard 10 Step Interpolation */
+    /** Standard 10 Step Interpolation /
 
     if (delta0 > 500 || delta1 > 500){
         //Lots of motion, try to interpolate?
@@ -752,16 +752,19 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
     
         this->outQueue->push(buildCanMessage(out));
     }
+	*/
 
 
-
-    /** Constant Decay Interpolation /
+    /** Constant Decay Interpolation */
     const int MAX_STEP = 500;
     const int MIN_STEP = 50;
     const float LEAP_PERCENTAGE = .6;
-    vector<int> error = { REF0 - this->motors[0]->getTicksPosition(),
-							REF1 - this->motors[1]->getTicksPosition()};
-    vector<int> output = { 0, 0 };
+    vector<int> error(2);
+    error[0] = REF0 - this->motors[0]->getTicksPosition();
+    error[1] = REF1 - this->motors[1]->getTicksPosition();
+    vector<int> output(2);
+    output[0] = 0;
+    output[1] = 0;
 
     while(error[0] != 0 && error[1] != 0){
 		for (int i = 0; i < 1; i++){

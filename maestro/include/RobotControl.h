@@ -63,6 +63,7 @@ public:
     void enable(int board, int delay);
     void disable(int board, int delay);
     void requestEncoderPosition(int board, int delay);
+    void debugControl(int board, int operation);
     void runGesture(string path, int board);
 
 private:
