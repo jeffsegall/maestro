@@ -168,12 +168,17 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("requestEncoderPosition", &RobotControl::requestEncoderPosition, this, RTT::OwnThread)
-                .arg("Board", "The board to request encoder data from")
-                .arg("Timestamp", "Timestamp delay (in milliseconds)");
+			.arg("Board", "The board to request encoder data from")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+    this->addOperation("getCurrentTicks", &RobotControl::getCurrentTicks, this, RTT::OwnThread)
+			.arg("Board", "The board to send commands to")
+			.arg("Motor", "The motor channel to request current perceived position from.")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("debugControl", &RobotControl::debugControl, this, RTT::OwnThread)
-                    .arg("Board", "The board to send commands to")
-                    .arg("Operation", "Operation to perform. Use a value of 0 for a list of commands.");
+			.arg("Board", "The board to send commands to")
+			.arg("Operation", "Operation to perform. Use a value of 0 for a list of commands.");
 
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
             .arg("Path", "The path to the file that contains the gesture.")
@@ -224,7 +229,8 @@ vector<float> trajectoryValues(string path){
     			//mb->sendPositionReference(mb->getMotorByChannel(0)->getTicksPosition(), mb->getMotorByChannel(0)->getTicksPosition());
 
     		//}
-    		mb->setTicksPosition(ticks);
+    		//mb->setTicksPosition(ticks);
+    		std::cout << "Encoder Position value received! ticks: " << std::endl << "yaw: " << yaw_ticks << std::endl << "roll: " << roll_ticks << std::endl;
     	}
 
     }
@@ -476,6 +482,10 @@ vector<float> trajectoryValues(string path){
 	  default:
 		  std::cout << "Operations: " << std::endl << "1: disable (step 1)	  2: disable (step 2)	   3: enable (step 1)		4: enable (step 2)";
 	  }
+  }
+
+  void RobotControl::getCurrentTicks(int board, int motor, int delay){
+	  std::cout << "Motor[" << motor << "] ticks: " << this->state->getBoardByNumber(board)->getMotorByChannel(motor)->getTicksPosition() << std::endl;
   }
 
   void RobotControl::runGesture(string path, int board){
