@@ -250,15 +250,15 @@ vector<float> trajectoryValues(string path){
         this->canDownPort->write(outputQueue->front());
         //std::cout << ++written << std::endl;
         outputQueue->pop();
+	usleep(500000);
     }
     else{
         if (mb != NULL){
-            canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_REF, (cmdType)2,
+             canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_REF, (cmdType)2,
                                  mb->getMotorByChannel(0)->getTicksPosition(), 
                                  mb->getMotorByChannel(1)->getTicksPosition(), 0, 0, 0, 0, 0, 0);
- 
-            outputQueue->push(buildCanMessage(out));
-            this->canDownPort->write(outputQueue->front());
+            //outputQueue->push(buildCanMessage(out));
+            //this->canDownPort->write(outputQueue->front());
         }
     }
   }
