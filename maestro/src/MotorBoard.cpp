@@ -781,8 +781,8 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 				output[i] = error[i];
 
 			error[i] -= output[i];
-			output[i] += output[i+2];
-			output[i+2] = output[i];
+			output[i] += this->motors[i]->getTicksPosition();
+			//output[i+2] = output[i];
 			std::cout << "output[" << i << "]: " << output[i] << std::endl;
 
 		}
