@@ -783,13 +783,11 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 			std::cout << "output[" << i << "]: " << output[i] << std::endl;
 
 		}
+		this->motors[0]->setTicksPosition(this->motors[0]->getTicksPosition() + output[0]);
+		this->motors[1]->setTicksPosition(this->motors[1]->getTicksPosition() + output[1]);
 		out = new canMsg(this->BNO, TX_REF, (cmdType)2, output[0], output[1], 0, 0, 0, 0, 0, 0);
 		this->outQueue->push(buildCanMessage(out));
     }
-    this->motors[0]->setTicksPosition(this->motors[0]->getTicksPosition() + REF0);
-	this->motors[1]->setTicksPosition(this->motors[1]->getTicksPosition() + REF1);
-
-
 
     return out;
 }
