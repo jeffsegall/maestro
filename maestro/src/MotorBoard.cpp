@@ -762,9 +762,11 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
     vector<int> error(2);
     error[0] = REF0 - this->motors[0]->getTicksPosition();
     error[1] = REF1 - this->motors[1]->getTicksPosition();
-    vector<int> output(2);
-    output[0] = 0;
-    output[1] = 0;
+    vector<int> output(4);
+    output[0] = 0; //current output
+    output[1] = 0; //current output
+    output[2] = this->motors[0]->getTicksPosition(); //current position
+    output[3] = this->motors[1]->getTicksPosition(); //current position
 
     while(error[0] != 0 && error[1] != 0){
 		for (int i = 0; i < 1; i++){
@@ -779,15 +781,17 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 				output[i] = error[i];
 
 			error[i] -= output[i];
-			output[i] += this->motors[i]->getTicksPosition();
+			output[i] += output[i+2];
+			output[i+2] = output[i];
 			std::cout << "output[" << i << "]: " << output[i] << std::endl;
 
 		}
-		this->motors[0]->setTicksPosition(this->motors[0]->getTicksPosition() + output[0]);
-		this->motors[1]->setTicksPosition(this->motors[1]->getTicksPosition() + output[1]);
+
 		out = new canMsg(this->BNO, TX_REF, (cmdType)2, output[0], output[1], 0, 0, 0, 0, 0, 0);
 		this->outQueue->push(buildCanMessage(out));
     }
+    this->motors[0]->setTicksPosition(this->motors[0]->getTicksPosition() + REF0);
+	this->motors[1]->setTicksPosition(this->motors[1]->getTicksPosition() + REF1);
 
     return out;
 }
