@@ -788,7 +788,7 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
     }
     this->motors[0]->setTicksPosition(this->motors[0]->getTicksPosition() + REF0);
 	this->motors[1]->setTicksPosition(this->motors[1]->getTicksPosition() + REF1);
-	*/
+
 
 
     return out;
