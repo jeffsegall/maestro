@@ -143,7 +143,7 @@ HuboMotor* MotorBoard::getMotorByChannel(int channel){
 * @param	ticks1		position of motor 2
 * @return	The motor in the given channel
 ******************************************************************************/
-void MotorBoard::setTicksPosition(vector<int> ticks){
+void MotorBoard::setTicksPosition(vector<long> ticks){
 	if (ticks.size() <= channels)
 		for (int i = 0; i < ticks.size(); i++)
 			this->motors[i]->setTicksPosition(ticks[i]);
@@ -770,7 +770,7 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 		for (int i = 0; i < 1; i++){
 
 			if((abs(error[i]) > MIN_STEP)){
-				output[i] = (int)(LEAP_PERCENTAGE * error);
+				output[i] = (int)(LEAP_PERCENTAGE * error[i]);
 
 				if(abs(output[i] > MAX_STEP))
 					output[i] = output[i] < 0 ? -MAX_STEP : MAX_STEP;
