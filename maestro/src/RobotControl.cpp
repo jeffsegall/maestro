@@ -220,9 +220,9 @@ vector<float> trajectoryValues(string path){
     	if (canMessage.mType == RX_ENC_VAL+BNO_R_HIP_YAW_ROLL){
     		//Update is an encoder return from our motor board, so let's grab those values.
     		// 4 Byte Int = (byte1) | (byte2 << 8) | (byte3 << 16) | (byte4 << 24)
-    		int yaw_ticks = canMessage.r1;// DO NOT BITWISE!(canMessage.r1) | (canMessage.r2 << 8) | (canMessage.r3 << 16) | (canMessage.r4 << 24);
-    		int roll_ticks = canMessage.r2;//DO NOT BITWISE!! (canMessage.r5) | (canMessage.r6 << 8) | (canMessage.r7 << 16) | (canMessage.r8 << 24);
-    		vector<int> ticks(2);
+    		long yaw_ticks = canMessage.r1;// DO NOT BITWISE!(canMessage.r1) | (canMessage.r2 << 8) | (canMessage.r3 << 16) | (canMessage.r4 << 24);
+    		long roll_ticks = canMessage.r2;//DO NOT BITWISE!! (canMessage.r5) | (canMessage.r6 << 8) | (canMessage.r7 << 16) | (canMessage.r8 << 24);
+    		vector<long> ticks(2);
     		ticks[0] = yaw_ticks;
     		ticks[1] = roll_ticks;
     		//if (mb->getMotorByChannel(0)->getTicksPosition() != yaw_ticks || mb->getMotorByChannel(1)->getTicksPosition() != roll_ticks){
