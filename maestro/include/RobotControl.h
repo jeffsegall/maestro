@@ -9,7 +9,7 @@
 #include <hubomsg/typekit/HuboCmd.h>
 #include <hubomsg/typekit/CanMessage.h>
 #include <vector>
-#include <queue>
+#include <list>
 #include "huboCan.h"
 #include "HuboState.h"
 #include "HuboMotor.h"
@@ -80,8 +80,8 @@ private:
 
     HuboState* state;
 
-    queue<hubomsg::CanMessage>* inputQueue;
-    queue<hubomsg::CanMessage>* outputQueue;
+    list<hubomsg::CanMessage>* inputQueue;
+    list<hubomsg::CanMessage>* outputQueue;
 
     map< string, vector<float> > gestures;
    

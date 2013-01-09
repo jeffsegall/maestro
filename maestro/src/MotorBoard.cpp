@@ -44,7 +44,7 @@ hubomsg::CanMessage buildCanMessage(canMsg* msg){
 * Creates a new motor board with default BNO and number of channels. 
 ******************************************************************************/
 MotorBoard::MotorBoard(){// : TaskContext(name){
-    MotorBoard((boardNum)0, DEFAULT_CHANNELS, new queue<hubomsg::CanMessage>());
+    MotorBoard((boardNum)0, DEFAULT_CHANNELS, new listf<hubomsg::CanMessage>());
 }
 
 /******************************************************************************
@@ -57,7 +57,7 @@ MotorBoard::MotorBoard(){// : TaskContext(name){
 * @param	channels	The number of motors (channels) this motor board
 * 				controls.
 ******************************************************************************/
-MotorBoard::MotorBoard(boardNum BNO, int channels, queue<hubomsg::CanMessage>* outQueue){// :
+MotorBoard::MotorBoard(boardNum BNO, int channels, list<hubomsg::CanMessage>* outQueue){// :
             //  TaskContext(name){
     this->BNO = BNO;
     this->motors = vector<HuboMotor*>(channels);
@@ -161,7 +161,7 @@ canMsg* MotorBoard::setRequestBoardInfo(char CANR){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, 
                              CMD_SETREQ_BOARD_INFO, CANR,
                              0, 0, 0, 0, 0, 0, 0); 
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -174,7 +174,7 @@ canMsg* MotorBoard::setRequestBoardInfo(char CANR){
 ******************************************************************************/
 canMsg* MotorBoard::requestBoardStatus(){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_REQ_BOARD_STATUS);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -191,7 +191,7 @@ canMsg* MotorBoard::requestBoardStatus(){
 canMsg* MotorBoard::requestEncoderPosition(char FES){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_REQ_ENC_POS,
                              FES, 0, 0, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -202,7 +202,7 @@ canMsg* MotorBoard::requestEncoderPosition(char FES){
 ******************************************************************************/
 canMsg* MotorBoard::requestCurrent(){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_REQ_CURR);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -220,7 +220,7 @@ canMsg* MotorBoard::resetEncoderToZero(char CH){
     //@TODO: This probably does other things.
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_RESET_ENC_ZERO,
                              CH, 0, 0, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -246,7 +246,7 @@ canMsg* MotorBoard::setPositionGain(char CH, int Kp, int Ki, int Kd){
 
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, (cmdType)(CMD_SET_POS_GAIN_0 + CH),
                              Kp, Ki, Kd, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -272,7 +272,7 @@ canMsg* MotorBoard::setCurrentGain(char CH, int KPt, int KDt, int Kf){
 
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, (cmdType)(CMD_SET_CUR_GAIN_0 + CH),
                              KPt, KDt, Kf, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -287,7 +287,7 @@ canMsg* MotorBoard::setCurrentGain(char CH, int KPt, int KDt, int Kf){
 canMsg* MotorBoard::setHIP(char HIP_EN){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_HIP_ENABLE,
                              HIP_EN, 0, 0, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -309,7 +309,7 @@ canMsg* MotorBoard::openLoop(char PUL_ON, char DIR0, char DUTY0, char DIR1, char
 
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_OPEN_LOOP,
                              PUL_ON, DIR0, DUTY0, DIR1, DUTY1, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -332,7 +332,7 @@ canMsg* MotorBoard::openLoop(char PUL_ON, char D_DT0, char D_DT1, char D_DT2, ch
 
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_OPEN_LOOP,
                              PUL_ON, D_DT0, D_DT1, D_DT2, D_DT3, D_DT4, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -353,7 +353,7 @@ canMsg* MotorBoard::openLoop(char PUL_ON, char D_DT0, char D_DT1, char D_DT2){
 
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_OPEN_LOOP,
                              PUL_ON, D_DT0, D_DT1, D_DT2, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -365,7 +365,7 @@ canMsg* MotorBoard::openLoop(char PUL_ON, char D_DT0, char D_DT1, char D_DT2){
 ******************************************************************************/
 canMsg* MotorBoard::enableController(){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_CONTROLLER_ON);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -376,7 +376,7 @@ canMsg* MotorBoard::enableController(){
 ******************************************************************************/
 canMsg* MotorBoard::disableController(){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_CONTROLLER_OFF);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -391,7 +391,7 @@ canMsg* MotorBoard::disableController(){
 canMsg* MotorBoard::setControlMode(char FBC){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_SET_CTRL_MODE,
                              FBC, 0, 0, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -417,7 +417,7 @@ canMsg* MotorBoard::goToHomeOffset(char CHD, char SDR, int H_OFFSET){
 
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_GO_HOME_OFFSET,
                              CHD, SDR, H_OFFSET, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -436,7 +436,7 @@ canMsg* MotorBoard::setDeadZone(char CH, char DZone){
 
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, (cmdType)(CMD_SET_DEAD_ZONE + CH),
                              DZone, 0, 0, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -450,7 +450,7 @@ canMsg* MotorBoard::setDeadZone(char CH, char DZone){
 canMsg* MotorBoard::requestBoardParams(char PARM){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_REQ_BOARD_PARAM,
                              PARM, 0, 0, 0, 0, 0, 0 ,0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -472,7 +472,7 @@ canMsg* MotorBoard::setHomeSearchParams(char CH, char SRL, char SDR, int OFFSET)
 
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, (cmdType)(CMD_SET_HOME_SEARCH + CH),
                              SRL, SDR, OFFSET, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -501,7 +501,7 @@ canMsg* MotorBoard::setEncoderResolution(char CH, int ENC_RE){
 
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, (cmdType)(CMD_SET_ENC_RESOLUTION + CH),
                              ENC_RE, 0, 0, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -524,7 +524,7 @@ canMsg* MotorBoard::setEncoderResolution(char CH, int ERS, char AS, char MD){
 
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, (cmdType)(CMD_SET_ENC_RESOLUTION + CH),
                              ENC_RE, 0, 0, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -544,7 +544,7 @@ canMsg* MotorBoard::setMaxAccVel(char CH, int MACC, int MVEL){
 
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, (cmdType)(CMD_SET_MAX_ACC_VEL + CH),
                              MACC, MVEL, 0, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -565,7 +565,7 @@ canMsg* MotorBoard::setLowerPosLimit(char CH, char MPS, int MPOS1){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, (cmdType)(CMD_SET_LOWER_POS_LIMIT + CH),
                              MPS, MPOS1, 0, 0, 0, 0, 0, 0);
 
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -585,7 +585,7 @@ canMsg* MotorBoard::setUpperPosLimit(char CH, char MPS, int MPOS2){
 
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, (cmdType)(CMD_SET_UPPER_POS_LIMIT + CH),
                              MPS, MPOS2, 0, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -610,7 +610,7 @@ canMsg* MotorBoard::setHomeVelAcc(char CH, char HMA, char HMV1, char HMV2, char 
  
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, (cmdType)(CMD_SET_HOME_ACC_VEL + CH),
                              HMA, HMV1, HMV2, SRM, LIMD, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -629,7 +629,7 @@ canMsg* MotorBoard::setHomeVelAcc(char CH, char HMA, char HMV1, char HMV2, char 
 canMsg* MotorBoard::setGainOverride(char GOVW0, char GOVW1, int GDUR){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_SET_GAIN_OVR,
                              GOVW0, GOVW1, GDUR, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -647,7 +647,7 @@ canMsg* MotorBoard::setNewBoardNum(char NEW_BNO, char CANR){
 
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_NEW_BOARD_NUM,
                              NEW_BNO, CANR, 0, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -668,7 +668,7 @@ canMsg* MotorBoard::setJamPwmSatLim(int JAM_LIM, int PWM_LIM, char LIMD, char JA
 
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_SET_JAM_PWM_SAT_LIMIT,
                              JAM_LIM, PWM_LIM, LIMD, JAMD, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -686,7 +686,7 @@ canMsg* MotorBoard::setErrorBound(int I_ERR, int B_ERR, int E_ERR){
     //       this doesn't take a channel parameter.
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_SET_ERR_BOUND,
                              I_ERR, B_ERR, E_ERR, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));  
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -697,7 +697,7 @@ canMsg* MotorBoard::setErrorBound(int I_ERR, int B_ERR, int E_ERR){
 ******************************************************************************/
 canMsg* MotorBoard::initBoard(){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_INIT_BOARD);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -736,7 +736,7 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
             out = new canMsg(this->BNO, TX_REF, (cmdType)2,
                                      this->motors[0]->getTicksPosition(), 
                                      this->motors[1]->getTicksPosition(), 0, 0, 0, 0, 0, 0);
-            this->outQueue->push(buildCanMessage(out));
+            this->outQueue->push_back(buildCanMessage(out));
         }
 
     }
@@ -749,7 +749,7 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
                                  this->motors[0]->getTicksPosition(), 
                                  this->motors[1]->getTicksPosition(), 0, 0, 0, 0, 0, 0);
     
-        this->outQueue->push(buildCanMessage(out));
+        this->outQueue->push_back(buildCanMessage(out));
     }
 	*/
 
@@ -789,7 +789,7 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 		std::cout << "output[" << 0 << "]: " << output[0] << std::endl;
 		std::cout << "output[" << 1 << "]: " << output[1] << std::endl;
 		out = new canMsg(this->BNO, TX_REF, (cmdType)2, output[0], output[1], 0, 0, 0, 0, 0, 0);
-		this->outQueue->push(buildCanMessage(out));
+		this->outQueue->push_back(buildCanMessage(out));
     }
     this->motors[0]->setTicksPosition((long)output[2]);
 	this->motors[1]->setTicksPosition((long)output[3]);
@@ -816,7 +816,7 @@ canMsg* MotorBoard::sendPositionReference(char REF0, char REF1, char REF2){
 
     canMsg* out = new canMsg(this->BNO, TX_REF, (cmdType)3,
                              REF0, REF1, REF2, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
 
@@ -843,6 +843,6 @@ canMsg* MotorBoard::sendPositionReference(char REF0, char REF1, char REF2, char 
 
     canMsg* out = new canMsg(this->BNO, TX_REF, (cmdType)5,
                              REF0, REF1, REF2, REF3, REF4, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));
+    this->outQueue->push_back(buildCanMessage(out));
     return out;
 }
