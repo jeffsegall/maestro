@@ -16,7 +16,7 @@
 #include "MotorBoard.h"
 #include <fstream>
 
-using std::queue;
+using std::list;
 using std::vector;
 using namespace RTT;
 
