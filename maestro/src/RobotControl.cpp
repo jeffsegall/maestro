@@ -176,6 +176,11 @@ RobotControl::RobotControl(const std::string& name):
 			.arg("Motor", "The motor channel to request current perceived position from.")
 			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+    this->addOperation("getCurrentTicks", &RobotControl::setCurrentTicks, this, RTT::OwnThread)
+    			.arg("Board", "The board to send commands to")
+    			.arg("Motor", "The motor channel to set current perceived position on.")
+    			.arg("Ticks", "Desired current perceived position in ticks.");
+
     this->addOperation("debugControl", &RobotControl::debugControl, this, RTT::OwnThread)
 			.arg("Board", "The board to send commands to")
 			.arg("Operation", "Operation to perform. Use a value of 0 for a list of commands.");
@@ -486,6 +491,10 @@ vector<float> trajectoryValues(string path){
 
   void RobotControl::getCurrentTicks(int board, int motor, int delay){
 	  std::cout << "Motor[" << motor << "] ticks: " << this->state->getBoardByNumber(board)->getMotorByChannel(motor)->getTicksPosition() << std::endl;
+  }
+
+  void RobotControl::setCurrentTicks(int board, int motor, int ticks){
+	  this->state->getBoardByNumber(board)->getMotorByChannel(motor)->setTicksPosition((long)ticks);
   }
 
   void RobotControl::runGesture(string path, int board){

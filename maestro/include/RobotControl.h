@@ -64,6 +64,7 @@ public:
     void disable(int board, int delay);
     void requestEncoderPosition(int board, int delay);
     void getCurrentTicks(int board, int motor, int delay);
+    void setCurrentTicks(int board, int motor, int ticks);
     void debugControl(int board, int operation);
     void runGesture(string path, int board);
 
