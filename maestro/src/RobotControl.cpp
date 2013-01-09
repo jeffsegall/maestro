@@ -176,7 +176,7 @@ RobotControl::RobotControl(const std::string& name):
 			.arg("Motor", "The motor channel to request current perceived position from.")
 			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
-    this->addOperation("getCurrentTicks", &RobotControl::setCurrentTicks, this, RTT::OwnThread)
+    this->addOperation("setCurrentTicks", &RobotControl::setCurrentTicks, this, RTT::OwnThread)
     			.arg("Board", "The board to send commands to")
     			.arg("Motor", "The motor channel to set current perceived position on.")
     			.arg("Ticks", "Desired current perceived position in ticks.");
