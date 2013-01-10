@@ -9,14 +9,14 @@
 #include <hubomsg/typekit/HuboCmd.h>
 #include <hubomsg/typekit/CanMessage.h>
 #include <vector>
-#include <list>
+#include <queue>
 #include "huboCan.h"
 #include "HuboState.h"
 #include "HuboMotor.h"
 #include "MotorBoard.h"
 #include <fstream>
 
-using std::list;
+using std::queue;
 using std::vector;
 using namespace RTT;
 
@@ -80,8 +80,8 @@ private:
 
     HuboState* state;
 
-    list<hubomsg::CanMessage>* inputQueue;
-    list<hubomsg::CanMessage>* outputQueue;
+    queue<hubomsg::CanMessage>* inputQueue;
+    queue<hubomsg::CanMessage>* outputQueue;
 
     map< string, vector<float> > gestures;
    

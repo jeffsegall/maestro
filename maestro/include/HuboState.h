@@ -14,7 +14,7 @@
 #include <rtt/Port.hpp>
 #include <map>
 #include <string>
-#include <list> >
+#include <queue>
 
 using namespace std;
 using namespace RTT;
@@ -39,7 +39,7 @@ class HuboState{
 	HuboState(){
 	}
         HuboState(const HuboState& rhs);	
-        void initHuboWithDefaults(string path, list<hubomsg::CanMessage>* outQueue);
+        void initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* outQueue);
 
         MotorBoard* getBoardByNumber(int number);
         MotorBoard* getBoardByNumber(boardNum number);

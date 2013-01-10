@@ -12,8 +12,8 @@ RobotControl::RobotControl(const std::string& name):
     this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
 
     //CAN QUEUES
-    this->inputQueue = new list<hubomsg::CanMessage>();
-    this->outputQueue = new list<hubomsg::CanMessage>();
+    this->inputQueue = new queue<hubomsg::CanMessage>();
+    this->outputQueue = new queue<hubomsg::CanMessage>();
     
     //CAN PORTS 
     this->addEventPort(*canUpPort);
@@ -249,20 +249,24 @@ vector<float> trajectoryValues(string path){
 
 
 /*    if (mb != NULL)
-        outputQueue->push_back(buildCanMessage(mb->sendPositionReference(mb->getMotorByChannel(0)->getTicksPosition(), mb->getMotorByChannel(1)->getTicksPosition())));
+        outputQueue->push(buildCanMessage(mb->sendPositionReference(mb->getMotorByChannel(0)->getTicksPosition(), mb->getMotorByChannel(1)->getTicksPosition())));
  */
     if (!outputQueue->empty()){
+    	if (outputQueue->front()->getBNO() == BNO_R_HIP_YAW_ROLL){
+    		std::cout << "Writing message to Board: R1 = " << outputQueue->front()->getR1() << std::endl;
+    	}
         this->canDownPort->write(outputQueue->front());
+
         //std::cout << ++written << std::endl;
-        outputQueue->pop_front();
-	usleep(500000);
+        outputQueue->pop();
+        usleep(500000);
     }
     else{
         if (mb != NULL){
              canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_REF, (cmdType)2,
                                  mb->getMotorByChannel(0)->getTicksPosition(), 
                                  mb->getMotorByChannel(1)->getTicksPosition(), 0, 0, 0, 0, 0, 0);
-            //outputQueue->push_back(buildCanMessage(out));
+            //outputQueue->push(buildCanMessage(out));
             //this->canDownPort->write(outputQueue->front());
         }
     }
