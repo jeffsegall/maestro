@@ -28,7 +28,7 @@ private:
 	hubomsg::CanMessage currMessage;
 
 	//Subscribe
-	InputPort<hubomsg::CanMessage> canPort;
+	InputPort<hubomsg::CanMessage>* canPort;
 	InputPort<hubomsg::HuboCmd>* orPort;
 
 	bool newCanData;
