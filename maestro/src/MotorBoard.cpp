@@ -44,7 +44,7 @@ hubomsg::CanMessage buildCanMessage(canMsg* msg){
 * Creates a new motor board with default BNO and number of channels. 
 ******************************************************************************/
 MotorBoard::MotorBoard(){// : TaskContext(name){
-    MotorBoard((boardNum)0, DEFAULT_CHANNELS, new listf<hubomsg::CanMessage>());
+    MotorBoard((boardNum)0, DEFAULT_CHANNELS, new list<hubomsg::CanMessage>());
 }
 
 /******************************************************************************
