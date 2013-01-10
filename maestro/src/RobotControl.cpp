@@ -269,7 +269,7 @@ vector<float> trajectoryValues(string path){
     	if (output.bno == BNO_R_HIP_YAW_ROLL){
     		std::cout << "Writing message to Board 0: R1 = " << outputQueue->front().r1 << std::endl;
     	}
-    	if (output.mType == TX_REF && output.cmdType == cmdType(2)){
+    	if (output.mType == TX_REF && output.cmdType == 2){
     		needRequest = true;
     		this->canDownPort->write(outputQueue->front());
     		usleep(10000);
@@ -277,7 +277,7 @@ vector<float> trajectoryValues(string path){
     		canMsg* out = new canMsg(output.bno, TX_MOTOR_CMD, CMD_REQ_ENC_POS,
     		                             0, 0, 0, 0, 0, 0, 0, 0); //Creates a Request Encoder Position CanMsg
 
-    		this->canDownPort->write(&out);
+    		this->canDownPort->write(*out);
 
     		usleep(100000);
     	} else {
