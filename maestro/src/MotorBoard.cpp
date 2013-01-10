@@ -755,9 +755,9 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 
 
     /** Constant Decay Interpolation */
-    const int MAX_STEP = 350;
-    const int MIN_STEP = 50;
-    const float LEAP_PERCENTAGE = .6;
+    const int MAX_STEP = 150;
+    const int MIN_STEP = 10;
+    const float LEAP_PERCENTAGE = .5;
     vector<int> error(2);
     error[0] = REF0 - this->motors[0]->getTicksPosition();
     error[1] = REF1 - this->motors[1]->getTicksPosition();
