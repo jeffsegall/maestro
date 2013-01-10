@@ -252,8 +252,8 @@ vector<float> trajectoryValues(string path){
         outputQueue->push(buildCanMessage(mb->sendPositionReference(mb->getMotorByChannel(0)->getTicksPosition(), mb->getMotorByChannel(1)->getTicksPosition())));
  */
     if (!outputQueue->empty()){
-    	if (outputQueue->front()->getBNO() == BNO_R_HIP_YAW_ROLL){
-    		std::cout << "Writing message to Board: R1 = " << outputQueue->front()->getR1() << std::endl;
+    	if (outputQueue->front().bno == BNO_R_HIP_YAW_ROLL){
+    		std::cout << "Writing message to Board: R1 = " << outputQueue->front().r1 << std::endl;
     	}
         this->canDownPort->write(outputQueue->front());
 
