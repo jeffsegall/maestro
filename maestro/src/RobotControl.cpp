@@ -264,7 +264,7 @@ vector<float> trajectoryValues(string path){
  */
     if (!outputQueue->empty()){
 
-    	hubomsg::CanMessage output = outputQueue.front();
+    	hubomsg::CanMessage output = outputQueue->front();
 
     	if (output.bno == BNO_R_HIP_YAW_ROLL){
     		std::cout << "Writing message to Board 0: R1 = " << outputQueue->front().r1 << std::endl;
@@ -276,7 +276,6 @@ vector<float> trajectoryValues(string path){
 
     		canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_CMD, CMD_REQ_ENC_POS,
     		                             0, 0, 0, 0, 0, 0, 0, 0); //Creates a Request Encoder Position CanMsg
-    		outputQueue->push_front(out);
 
     		this->canDownPort->write(buildCanMessage(out));
 
