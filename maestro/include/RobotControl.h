@@ -11,6 +11,7 @@
 #include <vector>
 #include <queue>
 #include "huboCan.h"
+#include "CommHandler.h"
 #include "HuboState.h"
 #include "HuboMotor.h"
 #include "MotorBoard.h"
@@ -73,6 +74,7 @@ private:
     //SUBSCRIBE
     InputPort<hubomsg::CanMessage>* canUpPort;
     InputPort<hubomsg::HuboCmd>* orOutPort;
+    CommHandler* commHandler;
 
     //PUBLISH
     OutputPort<hubomsg::CanMessage>* canDownPort;

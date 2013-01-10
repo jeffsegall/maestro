@@ -10,8 +10,7 @@ RobotControl::RobotControl(const std::string& name):
     this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
     this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
     this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
-
-
+    this->commHandler = new CommHandler(canUpPort, orOutPort);
 
     //CAN QUEUES
     this->inputQueue = new queue<hubomsg::CanMessage>();
@@ -220,10 +219,14 @@ vector<float> trajectoryValues(string path){
     hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
     hubomsg::CanMessage canMessage = hubomsg::CanMessage();
 
+    commHandler->update();
+
     MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
 
-    if (NewData == this->canUpPort->read(canMessage)){
+    if (commHandler->isNew()){
         //Received update from CanGateway
+
+    	canMessage = commHandler->getMessage();
 
     	if (canMessage.mType == RX_ENC_VAL+BNO_R_HIP_YAW_ROLL){
     		//Update is an encoder return from our motor board, so let's grab those values.
@@ -240,13 +243,13 @@ vector<float> trajectoryValues(string path){
     		//}
     		//mb->setTicksPosition(ticks);
     		std::cout << "Encoder Position value received! ticks: " << std::endl << "yaw: " << yaw_ticks << std::endl << "roll: " << roll_ticks << std::endl;
-    		if (needRequest){
-    			needRequest = false;
-    			if (abs(mb->getMotorByChannel(0)->getTicksPosition() - yaw_ticks) > MAX_ERROR)
-    				std::cout << "Missed by more than " << MAX_ERROR << " ticks on Yaw motor!" << std::endl;
-    			if (abs(mb->getMotorByChannel(1)->getTicksPosition() - roll_ticks) > MAX_ERROR)
-    				std::cout << "Missed by more than " << MAX_ERROR << " ticks on Roll motor!" << std::endl;
-    		}
+//    		if (needRequest){
+//    			needRequest = false;
+//    			if (abs(mb->getMotorByChannel(0)->getTicksPosition() - yaw_ticks) > MAX_ERROR)
+//    				std::cout << "Missed by more than " << MAX_ERROR << " ticks on Yaw motor!" << std::endl;
+//    			if (abs(mb->getMotorByChannel(1)->getTicksPosition() - roll_ticks) > MAX_ERROR)
+//    				std::cout << "Missed by more than " << MAX_ERROR << " ticks on Roll motor!" << std::endl;
+//    		}
     	}
 
     }
