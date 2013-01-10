@@ -29,7 +29,7 @@ using namespace std;
 			this->currMessage = canMessage;
 
 		}
-		if (NewData == this->orOutPort->read(huboCmd)){
+		if (NewData == this->orPort->read(huboCmd)){
 			this->currCmd = huboCmd;
 		}
 	}
