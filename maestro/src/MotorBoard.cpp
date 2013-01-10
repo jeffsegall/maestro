@@ -686,7 +686,7 @@ canMsg* MotorBoard::setErrorBound(int I_ERR, int B_ERR, int E_ERR){
     //       this doesn't take a channel parameter.
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_SET_ERR_BOUND,
                              I_ERR, B_ERR, E_ERR, 0, 0, 0, 0, 0);
-    this->outQueue->push(buildCanMessage(out));  
+    this->outQueue->push(buildCanMessage(out));
     return out;
 }
 
