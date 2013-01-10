@@ -13,12 +13,12 @@
 #include "huboCan.h"
 #include "ros/ros.h"
 #include <vector>
-#include <queue>
+#include <list>
 
 #define DEFAULT_CHANNELS 2
 using namespace RTT;
 using std::vector;
-using std::queue;
+using std::list;
 
 /* The MotorBoard class represents a single motor board in the HUBO+ */
 
@@ -37,7 +37,7 @@ class MotorBoard{// : public RTT::TaskContext {
         InputPort<hubomsg::CanMessage>* canUpPort;
         InputPort<hubomsg::HuboCmd>* orOutPort;
 
-        queue<hubomsg::CanMessage>* outQueue;
+        list<hubomsg::CanMessage>* outQueue;
  
     public:
         
