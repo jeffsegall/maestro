@@ -86,6 +86,7 @@ private:
     map< string, vector<float> > gestures;
    
     int written;
+    bool needRequest;
 };
 
 #endif

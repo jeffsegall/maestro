@@ -11,6 +11,8 @@ RobotControl::RobotControl(const std::string& name):
     this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
     this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
 
+
+
     //CAN QUEUES
     this->inputQueue = new queue<hubomsg::CanMessage>();
     this->outputQueue = new queue<hubomsg::CanMessage>();
@@ -190,6 +192,7 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Board", "The board on which to run the gesture");
 
     this->written = 0;
+    this->needRequest = false;
     initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
 
   }
@@ -225,6 +228,7 @@ vector<float> trajectoryValues(string path){
     	if (canMessage.mType == RX_ENC_VAL+BNO_R_HIP_YAW_ROLL){
     		//Update is an encoder return from our motor board, so let's grab those values.
     		// 4 Byte Int = (byte1) | (byte2 << 8) | (byte3 << 16) | (byte4 << 24)
+    		const int MAX_ERROR = 25;
     		long yaw_ticks = canMessage.r1;// DO NOT BITWISE!(canMessage.r1) | (canMessage.r2 << 8) | (canMessage.r3 << 16) | (canMessage.r4 << 24);
     		long roll_ticks = canMessage.r2;//DO NOT BITWISE!! (canMessage.r5) | (canMessage.r6 << 8) | (canMessage.r7 << 16) | (canMessage.r8 << 24);
     		vector<long> ticks(2);
@@ -236,6 +240,13 @@ vector<float> trajectoryValues(string path){
     		//}
     		//mb->setTicksPosition(ticks);
     		std::cout << "Encoder Position value received! ticks: " << std::endl << "yaw: " << yaw_ticks << std::endl << "roll: " << roll_ticks << std::endl;
+    		if (needRequest){
+    			needRequest = false;
+    			if (abs(mb->getMotorByChannel(0)->getTicksPosition() - yaw_ticks) > MAX_ERROR)
+    				std::cout << "Missed by more than " << MAX_ERROR << " ticks on Yaw motor!" << std::endl;
+    			if (abs(mb->getMotorByChannel(1)->getTicksPosition() - roll_ticks) > MAX_ERROR)
+    				std::cout << "Missed by more than " << MAX_ERROR << " ticks on Roll motor!" << std::endl;
+    		}
     	}
 
     }
@@ -252,14 +263,30 @@ vector<float> trajectoryValues(string path){
         outputQueue->push(buildCanMessage(mb->sendPositionReference(mb->getMotorByChannel(0)->getTicksPosition(), mb->getMotorByChannel(1)->getTicksPosition())));
  */
     if (!outputQueue->empty()){
-    	if (outputQueue->front().bno == BNO_R_HIP_YAW_ROLL){
-    		std::cout << "Writing message to Board: R1 = " << outputQueue->front().r1 << std::endl;
+
+    	hubomsg::CanMessage output = outputQueue.front();
+
+    	if (output.bno == BNO_R_HIP_YAW_ROLL){
+    		std::cout << "Writing message to Board 0: R1 = " << outputQueue->front().r1 << std::endl;
     	}
-        this->canDownPort->write(outputQueue->front());
+    	if (output.mType == TX_REF && output.cmdType == cmdType(2)){
+    		needRequest = true;
+    		this->canDownPort->write(outputQueue->front());
+    		usleep(10000);
+
+    		canMsg* out = new canMsg(output.bno, TX_MOTOR_CMD, CMD_REQ_ENC_POS,
+    		                             FES, 0, 0, 0, 0, 0, 0, 0); //Creates a Request Encoder Position CanMsg
+
+    		this->canDownPort->write(out);
+
+    		usleep(100000);
+    	} else {
+    		this->canDownPort->write(outputQueue->front());
+    	}
 
         //std::cout << ++written << std::endl;
         outputQueue->pop();
-        usleep(500000);
+        usleep(400000);
     }
     else{
         if (mb != NULL){
