@@ -12,7 +12,7 @@
 
 using namespace std;
 
-	CommHandler::CommHandler (InputPort port1, InputPort port2){
+	CommHandler::CommHandler (InputPort<hubomsg::CanMessage>* port1, InputPort<hubomsg::HuboCmd>* port2){
 		canPort = port1;
 		orPort = port2;
 
