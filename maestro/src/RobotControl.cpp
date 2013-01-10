@@ -277,7 +277,7 @@ vector<float> trajectoryValues(string path){
     		canMsg* out = new canMsg(output.bno, TX_MOTOR_CMD, CMD_REQ_ENC_POS,
     		                             FES, 0, 0, 0, 0, 0, 0, 0); //Creates a Request Encoder Position CanMsg
 
-    		this->canDownPort->write(*out);
+    		this->canDownPort->write(buildCanMessage(out));
 
     		usleep(100000);
     	} else {
