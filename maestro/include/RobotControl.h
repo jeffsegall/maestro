@@ -66,6 +66,7 @@ public:
     void requestEncoderPosition(int board, int delay);
     void getCurrentTicks(int board, int motor, int delay);
     void setCurrentTicks(int board, int motor, int ticks);
+    void setMaxAccVel(int board, int delay, int acc, int vel);
     void debugControl(int board, int operation);
     void runGesture(string path, int board);
 
