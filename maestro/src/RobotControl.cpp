@@ -243,6 +243,8 @@ vector<float> trajectoryValues(string path){
     		//}
     		//mb->setTicksPosition(ticks);
     		std::cout << "Encoder Position value received! ticks: " << std::endl << "yaw: " << yaw_ticks << std::endl << "roll: " << roll_ticks << std::endl;
+		//std::cout << "Written: " << written << std::endl;
+		//written = 0;
 //    		if (needRequest){
 //    			needRequest = false;
 //    			if (abs(mb->getMotorByChannel(0)->getTicksPosition() - yaw_ticks) > MAX_ERROR)
@@ -268,13 +270,13 @@ vector<float> trajectoryValues(string path){
     if (!outputQueue->empty()){
 
     	hubomsg::CanMessage output = outputQueue->front();
-
+	//written++;
     	if (output.bno == BNO_R_HIP_YAW_ROLL){
     		std::cout << "Writing message to Board 0: R1 = " << outputQueue->front().r1 << std::endl;
     	}
     	if (output.mType == TX_REF && output.cmdType == 2){
     		needRequest = true;
-    		this->canDownPort->write(outputQueue->front());
+    		this->canDownPort->write(output);
     		usleep(10000);
 
     		canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_CMD, CMD_REQ_ENC_POS,
@@ -282,14 +284,14 @@ vector<float> trajectoryValues(string path){
 
     		this->canDownPort->write(buildCanMessage(out));
 
-    		usleep(100000);
+    		//usleep(100000);
     	} else {
-    		this->canDownPort->write(outputQueue->front());
+    		this->canDownPort->write(output);
     	}
 
         //std::cout << ++written << std::endl;
         outputQueue->pop();
-        usleep(400000);
+        //usleep(100000);
     }
     else{
         if (mb != NULL){
@@ -499,8 +501,8 @@ vector<float> trajectoryValues(string path){
       //this->state->getBoardByNumber(board)->requestEncoderPosition(0);
   }
 
-  void RobotControl::requestEncoderPosition(int board, int delay){
-	  this->state->getBoardByNumber(board)->requestEncoderPosition(0);
+  void RobotControl::requestEncoderPosition(int board, int delay){ 
+      this->state->getBoardByNumber(board)->requestEncoderPosition(0);
   }
 
   void RobotControl::debugControl(int board, int operation){
@@ -519,7 +521,7 @@ vector<float> trajectoryValues(string path){
 		  this->state->getBoardByNumber(board)->enableController();
 		  break;
 	  default:
-		  std::cout << "Operations: " << std::endl << "1: disable (step 1)	  2: disable (step 2)	   3: enable (step 1)		4: enable (step 2)";
+		  std::cout << "Operations: " << std::endl << "1: disable (step 1)    2: disable (step 2)    3: enable (step 1)    4: enable (step 2)";
 	  }
   }
 
