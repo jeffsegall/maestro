@@ -277,12 +277,12 @@ vector<float> trajectoryValues(string path){
     	if (output.mType == TX_REF && output.cmdType == 2){
     		needRequest = true;
     		this->canDownPort->write(output);
-    		usleep(10000);
+    		//usleep(10000);
 
-    		canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_CMD, CMD_REQ_ENC_POS,
-    		                             0, 0, 0, 0, 0, 0, 0, 0); //Creates a Request Encoder Position CanMsg
+    		//canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_CMD, CMD_REQ_ENC_POS,
+    		//                             0, 0, 0, 0, 0, 0, 0, 0); //Creates a Request Encoder Position CanMsg
 
-    		this->canDownPort->write(buildCanMessage(out));
+    		//this->canDownPort->write(buildCanMessage(out));
 
     		//usleep(100000);
     	} else {

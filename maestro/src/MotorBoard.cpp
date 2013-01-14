@@ -754,7 +754,7 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 	*/
 
 
-    /** Constant Decay Interpolation */
+    /** Constant Decay Interpolation /
     const int MAX_STEP = 75;
     const int MIN_STEP = 5;
     const float LEAP_PERCENTAGE = .5;
@@ -795,7 +795,10 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 		this->motors[1]->setTicksPosition((long)output[3]);
     }
 
-
+	*/
+	
+    out = new canMsg(this->BNO, TX_REF, (cmdType)2, REF0, REF1, 0, 0, 0, 0, 0, 0);
+    this->outQueue->push(buildCanMessage(out));
     return out;
 }
 
