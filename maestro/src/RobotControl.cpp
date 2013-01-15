@@ -188,6 +188,13 @@ RobotControl::RobotControl(const std::string& name):
         			.arg("Max Accel", "Maximum Acceleration in unknown units.")
         			.arg("Max Vel", "Maximum Velocity in unknown units.");
 
+    this->addOperation("setPositionGain", &RobotControl::setPositionGain, this, RTT::OwnThread)
+            			.arg("Board", "The board to send commands to")
+            			.arg("Motor", "The motor channel to set gains on.")
+            			.arg("kP", "Proportion gain.")
+            			.arg("kI", "Integral gain.")
+						.arg("kD", "Derivative gain");
+
     this->addOperation("debugControl", &RobotControl::debugControl, this, RTT::OwnThread)
 			.arg("Board", "The board to send commands to")
 			.arg("Operation", "Operation to perform. Use a value of 0 for a list of commands.");
@@ -541,6 +548,10 @@ vector<float> trajectoryValues(string path){
 
   void RobotControl::setMaxAccVel(int board, int motor, int acc, int vel){
 	  this->state->getBoardByNumber(board)->setMaxAccVel((char)motor, acc, vel);
+  }
+
+  void RobotControl::setPositionGain(int board, int motor, int kp, int ki, int kd){
+	  this->state->getBoardByNumber(board)->setPositionGain(motor, kp, ki, kd);
   }
 
   void RobotControl::runGesture(string path, int board){
