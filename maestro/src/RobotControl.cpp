@@ -199,12 +199,16 @@ RobotControl::RobotControl(const std::string& name):
 			.arg("Board", "The board to send commands to")
 			.arg("Operation", "Operation to perform. Use a value of 0 for a list of commands.");
 
+    this->addOperation("delays", &RobotControl::delays, this, RTT::OwnThread)
+    			.arg("State", "[0] for removing delays between commands, [1] for adding them.");
+
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
             .arg("Path", "The path to the file that contains the gesture.")
             .arg("Board", "The board on which to run the gesture");
 
     this->written = 0;
     this->needRequest = false;
+    this->delaysOn = true;
     initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
 
   }
@@ -304,7 +308,8 @@ vector<float> trajectoryValues(string path){
 
         //std::cout << ++written << std::endl;
         outputQueue->pop();
-        //usleep(100000);
+        if (delaysOn)
+        	usleep(100000);
     }
     else{
         if (mb != NULL){
@@ -535,6 +540,19 @@ vector<float> trajectoryValues(string path){
 		  break;
 	  default:
 		  std::cout << "Operations: " << std::endl << "1: disable (step 1)    2: disable (step 2)    3: enable (step 1)    4: enable (step 2)";
+	  }
+  }
+
+  void RobotControl::delays(int state){
+	  switch (state){
+	  case 0:
+		  delaysOn = false;
+		  break;
+	  case 1:
+		  delaysOn = true;
+		  break;
+	  default:
+		  std::cout << "[0] - delays off. [1] - delays on." << std::endl;
 	  }
   }
 
