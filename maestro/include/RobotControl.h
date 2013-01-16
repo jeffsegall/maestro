@@ -69,7 +69,7 @@ public:
     void setMaxAccVel(int board, int delay, int acc, int vel);
     void setPositionGain(int board, int motor, int kp, int ki, int kd);
     void debugControl(int board, int operation);
-    void delays(int state);
+    void setDelay(int us);
     void runGesture(string path, int board);
 
 private:
@@ -92,7 +92,7 @@ private:
    
     int written;
     bool needRequest;
-    bool delaysOn;
+    int delay;
 };
 
 #endif
