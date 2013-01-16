@@ -260,15 +260,21 @@ vector<float> trajectoryValues(string path){
     		//}
     		//mb->setTicksPosition(ticks);
     		std::cout << "Encoder Position value received! ticks: " << std::endl << "yaw: " << yaw_ticks << std::endl << "roll: " << roll_ticks << std::endl;
-		//std::cout << "Written: " << written << std::endl;
-		//written = 0;
-//    		if (needRequest){
-//    			needRequest = false;
-//    			if (abs(mb->getMotorByChannel(0)->getTicksPosition() - yaw_ticks) > MAX_ERROR)
-//    				std::cout << "Missed by more than " << MAX_ERROR << " ticks on Yaw motor!" << std::endl;
-//    			if (abs(mb->getMotorByChannel(1)->getTicksPosition() - roll_ticks) > MAX_ERROR)
-//    				std::cout << "Missed by more than " << MAX_ERROR << " ticks on Roll motor!" << std::endl;
-//    		}
+
+
+    		//If the current packet is telling us to go to a place which is reverse of the current direction we are currently going,
+    		//Pop the packet and check the next one.
+    		hubomsg::CanMessage output = outputQueue->front();
+    		if (output.mType == TX_REF && output.cmdType == 2){
+				bool forward_yaw = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL)->getMotorByChannel(0)->getTicksPosition() - yaw_ticks > 0;
+				bool forward_roll = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL)->getMotorByChannel(1)->getTicksPosition() - roll_ticks > 0;
+
+				while (forward_yaw ? output.r1 < yaw_ticks : output.r1 > yaw_ticks
+						|| forward_roll ? output.r2 < roll_ticks : output.r2 > roll_ticks){
+					outputQueue.pop();
+					output = outputQueue->front();
+				}
+    		}
     	}
 
     }
@@ -292,14 +298,17 @@ vector<float> trajectoryValues(string path){
     		std::cout << "Writing message to Board 0: R1 = " << outputQueue->front().r1 << std::endl;
     	}
     	if (output.mType == TX_REF && output.cmdType == 2){
-    		needRequest = true;
     		this->canDownPort->write(output);
+    		written++;
     		//usleep(10000);
 
-    		//canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_CMD, CMD_REQ_ENC_POS,
-    		//                             0, 0, 0, 0, 0, 0, 0, 0); //Creates a Request Encoder Position CanMsg
+    		if (written > 2){
+    			written = 0;
+				canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_CMD, CMD_REQ_ENC_POS,
+				                             0, 0, 0, 0, 0, 0, 0, 0); //Creates a Request Encoder Position CanMsg
 
-    		//this->canDownPort->write(buildCanMessage(out));
+				this->canDownPort->write(buildCanMessage(out));
+    		}
 
     		//usleep(100000);
     	} else {

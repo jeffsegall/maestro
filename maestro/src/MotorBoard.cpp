@@ -755,7 +755,10 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 
 
     /** Constant Decay Interpolation */
-    const int MAX_STEP = 500;
+    const int MAXIMUM_MAX_STEP = 500;
+    const int MINIMUM_MAX_STEP = 75;
+    const int THRESHOLD = 1000;
+    int maxStep = MAX_STEP;
     const int MIN_STEP = 5;
     const float LEAP_PERCENTAGE = .5;
     vector<int> error(2);
@@ -770,12 +773,13 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
     std::cout << "errors: " << error[0] << ", " << error[1] << std::endl;
     while(error[0] != 0 || error[1] != 0){
 	    for (int i = 0; i <= 1; i++){
+	    	maxStep = (error[i] <= THRESHOLD) ? MINIMUM_MAX_STEP : MAXIMUM_MAX_STEP;
 
 			if((abs(error[i]) > MIN_STEP)){
 				output[i] = (int)(LEAP_PERCENTAGE * error[i]);
 
 				if(abs(output[i]) > MAX_STEP)
-					output[i] = output[i] < 0 ? -MAX_STEP : MAX_STEP;
+					output[i] = output[i] < 0 ? -maxStep : maxStep;
 
 			} else
 				output[i] = error[i];
