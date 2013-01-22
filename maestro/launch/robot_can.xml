@@ -18,7 +18,7 @@
 
 <struct name="CanGateway" type="CanGateway">
   <struct name="Activity" type="PeriodicActivity">
-    <simple name="Period" type="double"><value>0.02</value></simple>
+    <simple name="Period" type="double"><value>0.01</value></simple>
     <simple name="Priority" type="short"><value>0</value></simple>
     <simple name="Scheduler" type="string"><value>ORO_SCHED_RT</value></simple>
   </struct>

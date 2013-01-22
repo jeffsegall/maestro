@@ -755,10 +755,10 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 
 
     /** Constant Decay Interpolation */
-    const int MAXIMUM_MAX_STEP = 500;
+    const int MAXIMUM_MAX_STEP = 100;
     const int MINIMUM_MAX_STEP = 75;
-    const int THRESHOLD = 1000;
-    int maxStep = MAX_STEP;
+    const int THRESHOLD = 500;
+    int maxStep = MAXIMUM_MAX_STEP;
     const int MIN_STEP = 5;
     const float LEAP_PERCENTAGE = .5;
     vector<int> error(2);
@@ -771,14 +771,15 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
     output[3] = this->motors[1]->getTicksPosition(); //current position
 
     std::cout << "errors: " << error[0] << ", " << error[1] << std::endl;
-    while(error[0] != 0 || error[1] != 0){
-	    for (int i = 0; i <= 1; i++){
-	    	maxStep = (error[i] <= THRESHOLD) ? MINIMUM_MAX_STEP : MAXIMUM_MAX_STEP;
-
-			if((abs(error[i]) > MIN_STEP)){
+    if (abs(error[0]) > (maxStep / LEAP_PERCENTAGE) || abs(error[1]) > (maxStep / LEAP_PERCENTAGE)){
+        while(error[0] != 0 || error[1] != 0){
+	        for (int i = 0; i <= 1; i++){
+	        	maxStep = (abs(error[i]) <= THRESHOLD) ? MINIMUM_MAX_STEP : MAXIMUM_MAX_STEP;
+    
+    			if((abs(error[i]) > MIN_STEP)){
 				output[i] = (int)(LEAP_PERCENTAGE * error[i]);
 
-				if(abs(output[i]) > MAX_STEP)
+				if(abs(output[i]) > maxStep)
 					output[i] = output[i] < 0 ? -maxStep : maxStep;
 
 			} else
@@ -795,12 +796,16 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 		out = new canMsg(this->BNO, TX_REF, (cmdType)2, output[0], output[1], 0, 0, 0, 0, 0, 0);
 		this->outQueue->push(buildCanMessage(out));
 
-		this->motors[0]->setTicksPosition((long)output[2]);
-		this->motors[1]->setTicksPosition((long)output[3]);
-    }
+        }
 
-    //out = new canMsg(this->BNO, TX_REF, (cmdType)2, REF0, REF1, 0, 0, 0, 0, 0, 0);
-    //this->outQueue->push(buildCanMessage(out));
+	this->motors[0]->setTicksPosition((long)output[2]);
+	this->motors[1]->setTicksPosition((long)output[3]);
+    } else {
+	this->motors[0]->setTicksPosition(REF0);
+	this->motors[1]->setTicksPosition(REF1);
+        out = new canMsg(this->BNO, TX_REF, (cmdType)2, REF0, REF1, 0, 0, 0, 0, 0, 0);
+        this->outQueue->push(buildCanMessage(out));
+    }
     return out;
 }
 

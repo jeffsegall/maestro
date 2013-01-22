@@ -225,7 +225,7 @@ vector<float> trajectoryValues(string path){
 
     while (!is.eof()){
         is >> f;
-        val.push_back(f/5.0); 
+        val.push_back(abs(f/1.0)); 
     } 
 
     return val;
@@ -264,17 +264,21 @@ vector<float> trajectoryValues(string path){
 
     		//If the current packet is telling us to go to a place which is reverse of the current direction we are currently going,
     		//Pop the packet and check the next one.
+		/*
     		hubomsg::CanMessage output = outputQueue->front();
     		if (output.mType == TX_REF && output.cmdType == 2){
 				bool forward_yaw = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL)->getMotorByChannel(0)->getTicksPosition() - yaw_ticks > 0;
 				bool forward_roll = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL)->getMotorByChannel(1)->getTicksPosition() - roll_ticks > 0;
+				std::cout << "Yaw Forward: " << forward_yaw << "  Roll Forward: " << forward_roll << std::endl;
 
 				while (forward_yaw ? output.r1 < yaw_ticks : output.r1 > yaw_ticks
 						|| forward_roll ? output.r2 < roll_ticks : output.r2 > roll_ticks){
-					outputQueue.pop();
+					outputQueue->pop();
+					std::cout << "I have popped a command... I should already know this." << std::endl;
 					output = outputQueue->front();
 				}
     		}
+		*/
     	}
 
     }
@@ -299,17 +303,21 @@ vector<float> trajectoryValues(string path){
     	}
     	if (output.mType == TX_REF && output.cmdType == 2){
     		this->canDownPort->write(output);
-    		written++;
+    		//written++;
     		//usleep(10000);
-
-    		if (written > 2){
-    			written = 0;
+		/*
+    		if (written > 1){
+    			//std::cout << "Written: " << written << std::endl;
+			written = 0;
+			if (delay < 50000){
+				usleep(50000);
+			}
 				canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_CMD, CMD_REQ_ENC_POS,
 				                             0, 0, 0, 0, 0, 0, 0, 0); //Creates a Request Encoder Position CanMsg
 
 				this->canDownPort->write(buildCanMessage(out));
     		}
-
+		*/
     		//usleep(100000);
     	} else {
     		this->canDownPort->write(output);
@@ -582,7 +590,7 @@ vector<float> trajectoryValues(string path){
       }
       for (int i = 0; i < (int)trajVal.size(); i++){
           val = (int)trajVal.at(i);
-          this->state->getBoardByNumber(board)->sendPositionReference(val, val);     
+          this->state->getBoardByNumber(board)->sendPositionReference(val, 0);     
       }
   }
 
