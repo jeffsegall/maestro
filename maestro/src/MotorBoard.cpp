@@ -858,3 +858,22 @@ canMsg* MotorBoard::sendPositionReference(char REF0, char REF1, char REF2, char 
     this->outQueue->push(buildCanMessage(out));
     return out;
 }
+
+canMsg* MotorBoard::sendPositionReferenceRadians(double rad0, double rad1){
+	return sendPositionReference(getMotorByChannel(0)->radiansToTicks(rad0), getMotorByChannel(1)->radiansToTicks(rad1));
+}
+
+canMsg* MotorBoard::sendPositionReferenceRadians(double rad0, double rad1, double rad2){
+	return sendPositionReference(getMotorByChannel(0)->radiansToTicks(rad0),
+								 getMotorByChannel(1)->radiansToTicks(rad1),
+								 getMotorByChannel(2)->radiansToTicks(rad2));
+}
+
+canMsg* MotorBoard::sendPositionReferenceRadians(double rad0, double rad1, double rad2, double rad3, double rad4){
+	return sendPositionReference(getMotorByChannel(0)->radiansToTicks(rad0),
+								 getMotorByChannel(1)->radiansToTicks(rad1),
+								 getMotorByChannel(2)->radiansToTicks(rad2),
+								 getMotorByChannel(3)->radiansToTicks(rad3),
+								 getMotorByChannel(4)->radiansToTicks(rad4));
+}
+}

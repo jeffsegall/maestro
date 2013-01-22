@@ -131,10 +131,20 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Value", "New ticks for right hip yaw.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+    this->addOperation("setRightHipYawRads", &RobotControl::setRightHipYawRads, this, RTT::OwnThread)
+                .doc("Set Right Hip Yaw")
+                .arg("Rads", "New radians for right hip yaw.")
+                .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("setRightHipRoll", &RobotControl::setRightHipRoll, this, RTT::OwnThread)
             .doc("Set Right Hip Roll")
             .arg("Value", "New ticks for right hip roll.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+    this->addOperation("setRightHipRollRads", &RobotControl::setRightHipRollRads, this, RTT::OwnThread)
+                    .doc("Set Right Hip Yaw")
+                    .arg("Rads", "New radians for right hip roll.")
+                    .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightHipPitch", &RobotControl::setRightHipPitch, this, RTT::OwnThread)
             .doc("Set Right Hip Pitch")
@@ -260,6 +270,7 @@ vector<float> trajectoryValues(string path){
     		//}
     		//mb->setTicksPosition(ticks);
     		std::cout << "Encoder Position value received! ticks: " << std::endl << "yaw: " << yaw_ticks << std::endl << "roll: " << roll_ticks << std::endl;
+    		std::cout << "In Radians: yaw: " << mb->getMotorByChannel(0)->ticksToRadians(ticks[0]) << std::endl << "roll: " << mb->getMotorByChannel(0)->ticksToRadians(ticks[1]) << std::endl;
 
 
     		//If the current packet is telling us to go to a place which is reverse of the current direction we are currently going,
@@ -487,10 +498,20 @@ vector<float> trajectoryValues(string path){
       //this->canDownPort->write(buildCanMessage(out));
   }
 
+  void RobotControl::setRightHipYawRads(double rads, int delay){
+        MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
+        mb->sendPositionReferenceRadians(rads, mb->getMotorByChannel(1)->ticksToRadians(mb->getMotorByChannel(1)->getTicksPosition()));
+  }
+
   void RobotControl::setRightHipRoll(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
       mb->sendPositionReference(mb->getMotorByChannel(0)->getTicksPosition(), ticks);
       //ros_gateway->transmit(27,ticks);
+  }
+
+  void RobotControl::setRightHipRollRads(double rads, int delay){
+          MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
+          mb->sendPositionReferenceRadians(mb->getMotorByChannel(0)->ticksToRadians(mb->getMotorByChannel(0)->getTicksPosition()), rads);
   }
 
   void RobotControl::setRightHipPitch(int ticks, int delay){

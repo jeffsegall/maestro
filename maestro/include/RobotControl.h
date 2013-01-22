@@ -34,7 +34,9 @@ public:
 
     //JOINT MOVEMENT API
     void setRightHipYaw(int ticks, int delay);
+    void setRightHipYawRad(double rads, int delay);
     void setRightHipRoll(int ticks, int delay);
+    void setRightHipRollRad(double rads, int delay);
     void setRightHipPitch(int ticks, int delay);
     void setRightKnee(int ticks, int delay);
     void setRightAnklePitch(int ticks, int delay);
