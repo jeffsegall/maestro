@@ -173,7 +173,7 @@
      * used to transform integer tick values to a byte array needed for CAN */
     unsigned char* ticksToArray(int src){
         unsigned char* retval = new unsigned char[3];
-/*
+
         int b0i = 255;
         int b1i = 65280;
         int b2i = 16711680;
@@ -194,7 +194,9 @@
         retval[1] = b1;
         retval[2] = b2;
 
-        return retval;*/
+        std::cout << "Jeff's Method: b0: " << b0 << " b1: " << b1 << " b2: " << b2 << std::endl;
+
+        //return retval;
 
         if (src < 0)
         	src = (unsigned long)(((-src & 0x007FFFFF) | (1<<23)));
@@ -209,6 +211,8 @@
         retval[0] = b0;
         retval[1] = b1;
         retval[2] = b2;
+
+        std::cout << "Dan's Method: b0: " << b0 << " b1: " << b1 << " b2: " << b2 << std::endl;
 
         return retval;
     }
