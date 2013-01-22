@@ -91,7 +91,7 @@ class MotorBoard{// : public RTT::TaskContext {
 
         canMsg* sendPositionReferenceRadians(double rad0, double rad1);
         canMsg* sendPositionReferenceRadians(double rad0, double rad1, double rad2);
-        canMsg* sendPositionReferenceRadians(double rad0, double rad1, double rad2, roubl rad3, double rad4);
+        canMsg* sendPositionReferenceRadians(double rad0, double rad1, double rad2, double rad3, double rad4);
          
 };
 

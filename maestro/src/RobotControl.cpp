@@ -131,7 +131,7 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Value", "New ticks for right hip yaw.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
-    this->addOperation("setRightHipYawRads", &RobotControl::setRightHipYawRads, this, RTT::OwnThread)
+    this->addOperation("setRightHipYawRads", &RobotControl::setRightHipYawRad, this, RTT::OwnThread)
                 .doc("Set Right Hip Yaw")
                 .arg("Rads", "New radians for right hip yaw.")
                 .arg("Timestamp", "Timestamp delay (in milliseconds)");
@@ -141,7 +141,7 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Value", "New ticks for right hip roll.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
-    this->addOperation("setRightHipRollRads", &RobotControl::setRightHipRollRads, this, RTT::OwnThread)
+    this->addOperation("setRightHipRollRads", &RobotControl::setRightHipRollRad, this, RTT::OwnThread)
                     .doc("Set Right Hip Yaw")
                     .arg("Rads", "New radians for right hip roll.")
                     .arg("Timestamp", "Timestamp delay (in milliseconds)");
@@ -498,7 +498,7 @@ vector<float> trajectoryValues(string path){
       //this->canDownPort->write(buildCanMessage(out));
   }
 
-  void RobotControl::setRightHipYawRads(double rads, int delay){
+  void RobotControl::setRightHipYawRad(double rads, int delay){
         MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
         mb->sendPositionReferenceRadians(rads, mb->getMotorByChannel(1)->ticksToRadians(mb->getMotorByChannel(1)->getTicksPosition()));
   }
@@ -509,7 +509,7 @@ vector<float> trajectoryValues(string path){
       //ros_gateway->transmit(27,ticks);
   }
 
-  void RobotControl::setRightHipRollRads(double rads, int delay){
+  void RobotControl::setRightHipRollRad(double rads, int delay){
           MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
           mb->sendPositionReferenceRadians(mb->getMotorByChannel(0)->ticksToRadians(mb->getMotorByChannel(0)->getTicksPosition()), rads);
   }
