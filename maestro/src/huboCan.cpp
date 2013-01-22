@@ -201,18 +201,18 @@
         if (src < 0)
         	src = (unsigned long)(((-src & 0x007FFFFF) | (1<<23)));
 
-        uint8_t b0 = src & 0x000000FF;
-        uint8_t b1 = (src>>8) & 0x000000FF;
-        uint8_t b2 = (src>>16) & 0x000000FF;
+        uint8_t bit0 = src & 0x000000FF;
+        uint8_t bit1 = (src>>8) & 0x000000FF;
+        uint8_t bit2 = (src>>16) & 0x000000FF;
 
         if (src < 0)
-        	b2 = b2 | 0x80;
+        	bit2 = bit2 | 0x80;
 
-        retval[0] = b0;
-        retval[1] = b1;
-        retval[2] = b2;
+        retval[0] = bit0;
+        retval[1] = bit1;
+        retval[2] = bit2;
 
-        std::cout << "Dan's Method: b0: " << b0 << " b1: " << b1 << " b2: " << b2 << std::endl;
+        std::cout << "Dan's Method: b0: " << bit0 << " b1: " << bit1 << " b2: " << bit2 << std::endl;
 
         return retval;
     }
