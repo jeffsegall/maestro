@@ -225,7 +225,7 @@ vector<float> trajectoryValues(string path){
 
     while (!is.eof()){
         is >> f;
-        val.push_back(abs(f/1.0)); 
+        val.push_back(f/5.0); 
     } 
 
     return val;
@@ -590,7 +590,7 @@ vector<float> trajectoryValues(string path){
       }
       for (int i = 0; i < (int)trajVal.size(); i++){
           val = (int)trajVal.at(i);
-          this->state->getBoardByNumber(board)->sendPositionReference(val, 0);     
+          this->state->getBoardByNumber(board)->sendPositionReference(val, val);     
       }
   }
 
