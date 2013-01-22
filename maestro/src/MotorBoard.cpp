@@ -876,4 +876,3 @@ canMsg* MotorBoard::sendPositionReferenceRadians(double rad0, double rad1, doubl
 								 getMotorByChannel(3)->radiansToTicks(rad3),
 								 getMotorByChannel(4)->radiansToTicks(rad4));
 }
-}
