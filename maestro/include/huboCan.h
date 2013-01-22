@@ -36,6 +36,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <sys/time.h>
+#include <inttypes.h>
 #include <assert.h>
 #include <string>
 #include <algorithm>
