@@ -241,10 +241,10 @@ long HuboMotor::getTicksPosition(){
     return this->ticks_position;
 }
 
-double ticksToRadians(long ticks){
-	return (ticks * (double)(drive * 2 * M_PI))/(driven * harm * enc);
+double HuboMotor::ticksToRadians(long ticks){
+	return (ticks * (double)(this->drive * 2 * M_PI))/(this->driven * this->harm * this->enc);
 }
 
-long radiansToTicks(double rad){
-	return (long)(rad * ((double)(driven * harm * enc))/(drive * 2 * M_PI));
+long HuboMotor::radiansToTicks(double rad){
+	return (long)(rad * ((double)(this->driven * this->harm * this->enc))/(this->drive * 2 * M_PI));
 }

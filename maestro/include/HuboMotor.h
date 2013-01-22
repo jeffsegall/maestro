@@ -1,6 +1,8 @@
 #ifndef HUBOMOTOR_H
 #define HUBOMOTOR_H
 
+#include <math.h>
+
 /* The HuboMotor class defines some state parameters for a single motor in the HUBO+ */
 
 class HuboMotor {
