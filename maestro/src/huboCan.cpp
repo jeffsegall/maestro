@@ -173,7 +173,7 @@
      * used to transform integer tick values to a byte array needed for CAN */
     unsigned char* ticksToArray(int src){
         unsigned char* retval = new unsigned char[3];
-
+/*
         int b0i = 255;
         int b1i = 65280;
         int b2i = 16711680;
@@ -189,6 +189,22 @@
             t = 128;
 
         b2 = (b2 & 127) | t;
+
+        retval[0] = b0;
+        retval[1] = b1;
+        retval[2] = b2;
+
+        return retval;*/
+
+        if (src < 0)
+        	src = (unsigned long)(((-src & 0x007FFFFF) | (1<<23)));
+
+        uint8_t b0 = src & 0x000000FF;
+        uint8_t b1 = (src>>8) & 0x000000FF;
+        uint8_t b2 = (src>>16) & 0x000000FF;
+
+        if (src < 0)
+        	b2 = b2 | 0x80;
 
         retval[0] = b0;
         retval[1] = b1;
