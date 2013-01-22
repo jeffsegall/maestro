@@ -87,6 +87,11 @@ void HuboState::initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* ou
                                     motor.attribute("jamd").as_int());
                 mb->setRequestBoardInfo(5);
             }
+
+            mb->getMotorByChannel(CH)->setGearRatios(motor.attribute("drive").as_int(),
+													 motor.attribute("driven").as_int(),
+													 motor.attribute("harm").as_int(),
+													 motor.attribute("enc").as_int()); //Set Gear Ratios for Radian <-> Tick conversions
         }
         this->addBoard(BNO, mb);
     }

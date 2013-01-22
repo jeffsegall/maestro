@@ -122,6 +122,13 @@ void HuboMotor::setErrorLimit(long i_err, long b_err){
     this->b_err = b_err;
 }
 
+void HuboMotor::setGearRatios(long drive, long driven, long harm, long enc){
+	this->drive = drive;
+	this->driven = driven;
+	this->harm = harm;
+	this->enc = enc;
+}
+
 void HuboMotor::setTicksPosition(long ticks){
     this->ticks_position = ticks;
 }
@@ -232,4 +239,12 @@ long HuboMotor::getBerr(){
 
 long HuboMotor::getTicksPosition(){
     return this->ticks_position;
+}
+
+double ticksToRadians(long ticks){
+	return (ticks * (double)(drive * 2 * M_PI))/(driven * harm * enc);
+}
+
+long radiansToTicks(double rad){
+	return (long)(rad * ((double)(driven * harm * enc))/(drive * 2 * M_PI));
 }

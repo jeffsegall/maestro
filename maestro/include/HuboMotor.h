@@ -21,6 +21,8 @@ class HuboMotor {
 	long jam_lim, jamd, pwm_lim;    //Jam and power sat limits
 	long i_err, b_err;              //Error limits
 	
+	long drive, driven, harm, enc;
+
 	long ticks_position;            //Current position in ticks from zero
 	
 	public:
@@ -43,6 +45,7 @@ class HuboMotor {
 	void setSpeedLimit(long vel, long acc);
 	void setJamPowerLimit(long jam_lim, long jamd, long pwm_lim);
 	void setErrorLimit(long i_err, long b_err);
+	void setGearRatios(long drive, long driven, long harm, long enc);
 	void setTicksPosition(long ticks);
 	
         long getUpperLimit();
@@ -73,6 +76,9 @@ class HuboMotor {
         long getBerr();
 	
 	long getTicksPosition();
+
+	double ticksToRadians(long ticks);
+	long radiansToTicks(double rads);
 };
 
 #endif
