@@ -369,7 +369,7 @@ vector<float> trajectoryValues(string path){
 
   void RobotControl::initRobot(string path){
       this->state = new HuboState();
-      if (path == "")
+      if (strcmp(path.c_str(), "") == 0)
           path == "/home/hubo/maestro/maestro/models/hubo_testrig.xml";
       
       //@TODO: Check for file existence before initializing.
