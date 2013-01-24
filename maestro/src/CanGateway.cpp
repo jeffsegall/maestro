@@ -366,7 +366,7 @@ void CanGateway::updateHook(){
 
     if (!this->downQueue->empty()){
         transmit(this->downQueue->front().toCAN());
-        tempOutput << "Transmitting message! r1: " << this->downQueue->front().getR1() << std::endl;
+        this->tempOutput << "Transmitting message! r1: " << this->downQueue->front().getR1() << std::endl;
         this->downQueue->pop();
     }
     
@@ -392,7 +392,7 @@ void CanGateway::updateHook(){
 ******************************************************************/
 void CanGateway::stopHook(){
     closeCanConnection(this->channel);
-    tempOutput.close();
+    this->tempOutput.close();
 }
 
 ORO_LIST_COMPONENT_TYPE(CanGateway)
