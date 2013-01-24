@@ -25,7 +25,9 @@ CanGateway::CanGateway(const std::string& name):
     this->addPort(*outPort);
 
     tempYaw = 0;
+    yawEnabled = false;
     tempRoll = 0;
+    rollEnabled = false;
 }
 
 CanGateway::~CanGateway(){
@@ -205,6 +207,14 @@ void CanGateway::recvFromRos(){
         if (inMsg.bno == BNO_R_HIP_YAW_ROLL && inMsg.mType == TX_REF && inMsg.cmdType == 2) {
         	tempYaw = inMsg.r1;
         	tempRoll = inMsg.r2;
+        } else if (inMsg.bno == BNO_R_HIP_YAW_ROLL && inMsg.mType == TX_MOTOR_CMD && inMsg.cmdType == CMD_CONTROLLER_ON){
+        	yawEnabled = true;
+        	rollEnabled = true;
+        	this->downQueue->push(can_message);
+        } else if (inMsg.bno == BNO_R_HIP_YAW_ROLL && inMsg.mType == TX_MOTOR_CMD && inMsg.cmdType == CMD_CONTROLLER_OFF){
+        	yawEnabled = false;
+			rollEnabled = false;
+			this->downQueue->push(can_message);
         } else
         	this->downQueue->push(can_message);
         //std::cout << this->downQueue->size() << std::endl;
