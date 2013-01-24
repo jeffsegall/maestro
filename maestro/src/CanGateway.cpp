@@ -272,10 +272,7 @@ OutputPort<hubomsg::CanMessage>* CanGateway::getOutputPort(){
 void CanGateway::runTick(){
     canmsg_t** rx = new canmsg_t*[5]; 
     //At each clock interval (50 ms?) send a message out to the hardware.
-    if (downQueue->empty()){
-    	downQueue->push(canMsg((boardNum)BNO_R_HIP_YAW_ROLL, (messageType)TX_REF, (cmdType)2,
-                tempYaw, tempRoll, 0, 0, 0, 0, 0, 0));
-    }
+
 
     canMsg out_message = this->downQueue->front();
     this->downQueue->pop();
@@ -351,6 +348,10 @@ bool CanGateway::startHook(){
 void CanGateway::updateHook(){
     //runTick();
     recvFromRos();
+    if (downQueue->empty()){
+		downQueue->push(canMsg((boardNum)BNO_R_HIP_YAW_ROLL, (messageType)TX_REF, (cmdType)2,
+				tempYaw, tempRoll, 0, 0, 0, 0, 0, 0));
+	}
 
     canmsg_t rx[5];
 
