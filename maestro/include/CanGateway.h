@@ -68,7 +68,7 @@ private:
     queue<canMsg>* downQueue;
 
     long tempYaw, tempRoll;
-    bool yawEnabled, rollEnabled;
+    bool rightHipEnabled;
 
 };
 
