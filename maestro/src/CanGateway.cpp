@@ -28,6 +28,7 @@ CanGateway::CanGateway(const std::string& name):
     tempYaw = 0;
     rightHipEnabled = false;
     tempRoll = 0;
+    tempOutput.open("outputlog.txt");
 }
 
 CanGateway::~CanGateway(){
@@ -365,7 +366,7 @@ void CanGateway::updateHook(){
 
     if (!this->downQueue->empty()){
         transmit(this->downQueue->front().toCAN());
-	std::cout << "Transmitting message! r1: " << this->downQueue->front().getR1() << std::endl;
+        tempOutput << "Transmitting message! r1: " << this->downQueue->front().getR1() << std::endl;
         this->downQueue->pop();
     }
     
@@ -391,6 +392,7 @@ void CanGateway::updateHook(){
 ******************************************************************/
 void CanGateway::stopHook(){
     closeCanConnection(this->channel);
+    tempOutput.close();
 }
 
 ORO_LIST_COMPONENT_TYPE(CanGateway)
