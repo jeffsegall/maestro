@@ -69,7 +69,7 @@ private:
 
     long tempYaw, tempRoll;
     bool rightHipEnabled;
-    ofstream tempOutput;
+    ofstream * tempOutput;
 
 };
 

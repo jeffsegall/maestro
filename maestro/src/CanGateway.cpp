@@ -28,7 +28,7 @@ CanGateway::CanGateway(const std::string& name):
     tempYaw = 0;
     rightHipEnabled = false;
     tempRoll = 0;
-    tempOutput.open("outputlog.txt");
+    tempOutput = new ofstream ("outputlog.txt");
 }
 
 CanGateway::~CanGateway(){
@@ -392,7 +392,7 @@ void CanGateway::updateHook(){
 ******************************************************************/
 void CanGateway::stopHook(){
     closeCanConnection(this->channel);
-    this->tempOutput.close();
+    this->tempOutput->close();
 }
 
 ORO_LIST_COMPONENT_TYPE(CanGateway)
