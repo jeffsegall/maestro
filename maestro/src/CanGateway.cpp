@@ -23,6 +23,9 @@ CanGateway::CanGateway(const std::string& name):
 
     this->addEventPort(*inPort);
     this->addPort(*outPort);
+
+    tempYaw = 0;
+    tempRoll = 0;
 }
 
 CanGateway::~CanGateway(){
@@ -199,7 +202,11 @@ void CanGateway::recvFromRos(){
         //Add message to queue
         //if (!this->downQueue->empty())
             //this->downQueue->pop();
-        this->downQueue->push(can_message); 
+        if (inMsg.bno == BNO_R_HIP_YAW_ROLL && inMsg.mType == TX_REF && inMsg.cmdType == 2) {
+        	tempYaw = inMsg.r1;
+        	tempRoll = inMsg.r2;
+        } else
+        	this->downQueue->push(can_message);
         //std::cout << this->downQueue->size() << std::endl;
     }
 
@@ -265,6 +272,11 @@ OutputPort<hubomsg::CanMessage>* CanGateway::getOutputPort(){
 void CanGateway::runTick(){
     canmsg_t** rx = new canmsg_t*[5]; 
     //At each clock interval (50 ms?) send a message out to the hardware.
+    if (downQueue->empty()){
+    	downQueue->push(canMsg((boardNum)BNO_R_HIP_YAW_ROLL, (messageType)TX_REF, (cmdType)2,
+                temp_yaw, temp_roll, 0, 0, 0, 0, 0, 0));
+    }
+
     canMsg out_message = this->downQueue->front();
     this->downQueue->pop();
 
