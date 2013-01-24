@@ -25,6 +25,7 @@ CanGateway::CanGateway(const std::string& name):
     this->addPort(*outPort);
 
     tempYaw = 0;
+    rightHipEnabled = false;
     tempRoll = 0;
 }
 
@@ -205,6 +206,12 @@ void CanGateway::recvFromRos(){
         if (inMsg.bno == BNO_R_HIP_YAW_ROLL && inMsg.mType == TX_REF && inMsg.cmdType == 2) {
         	tempYaw = inMsg.r1;
         	tempRoll = inMsg.r2;
+        } else if (inMsg.bno == BNO_R_HIP_YAW_ROLL && inMsg.mType == TX_MOTOR_CMD && inMsg.cmdType == CMD_CONTROLLER_ON){
+        	rightHipEnabled = true;
+        	this->downQueue->push(can_message);
+        } else if (inMsg.bno == BNO_R_HIP_YAW_ROLL && inMsg.mType == TX_MOTOR_CMD && inMsg.cmdType == CMD_CONTROLLER_OFF){
+        	rightHipEnabled = false;
+			this->downQueue->push(can_message);
         } else
         	this->downQueue->push(can_message);
         //std::cout << this->downQueue->size() << std::endl;
@@ -348,7 +355,7 @@ bool CanGateway::startHook(){
 void CanGateway::updateHook(){
     //runTick();
     recvFromRos();
-    if (downQueue->empty()){
+    if (downQueue->empty() && rightHipEnabled){
 		downQueue->push(canMsg((boardNum)BNO_R_HIP_YAW_ROLL, (messageType)TX_REF, (cmdType)2,
 				tempYaw, tempRoll, 0, 0, 0, 0, 0, 0));
 	}

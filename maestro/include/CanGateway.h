@@ -68,6 +68,7 @@ private:
     queue<canMsg>* downQueue;
 
     long tempYaw, tempRoll;
+    bool rightHipEnabled;
 
 };
 
