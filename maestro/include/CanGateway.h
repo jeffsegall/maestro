@@ -23,6 +23,7 @@
 #include <queue>
 #include <hubomsg/typekit/CanMessage.h>
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 using namespace RTT;
