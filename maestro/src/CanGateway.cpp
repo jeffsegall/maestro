@@ -366,7 +366,7 @@ void CanGateway::updateHook(){
 
     if (!this->downQueue->empty()){
         transmit(this->downQueue->front().toCAN());
-        this->tempOutput << "Transmitting message! r1: " << this->downQueue->front().getR1() << std::endl;
+        (tempOutput) << "Transmitting message! r1: " << this->downQueue->front().getR1() << std::endl;
         this->downQueue->pop();
     }
     
