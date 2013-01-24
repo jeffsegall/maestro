@@ -274,7 +274,7 @@ void CanGateway::runTick(){
     //At each clock interval (50 ms?) send a message out to the hardware.
     if (downQueue->empty()){
     	downQueue->push(canMsg((boardNum)BNO_R_HIP_YAW_ROLL, (messageType)TX_REF, (cmdType)2,
-                temp_yaw, temp_roll, 0, 0, 0, 0, 0, 0));
+                tempYaw, tempRoll, 0, 0, 0, 0, 0, 0));
     }
 
     canMsg out_message = this->downQueue->front();
