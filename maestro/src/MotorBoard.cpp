@@ -755,9 +755,10 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 
 
     /** Constant Decay Interpolation */
-    const int MAXIMUM_MAX_STEP = 100;
+    const int MAXIMUM_MAX_STEP = 75;
     const int MINIMUM_MAX_STEP = 75;
     const int THRESHOLD = 500;
+    const int SLOW_STEPS = 10;
     int maxStep = MAXIMUM_MAX_STEP;
     const int MIN_STEP = 5;
     const float LEAP_PERCENTAGE = .5;
