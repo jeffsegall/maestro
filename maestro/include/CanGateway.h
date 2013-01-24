@@ -67,6 +67,8 @@ private:
     queue<canMsg>* upQueue;
     queue<canMsg>* downQueue;
 
+    long tempYaw, tempRoll;
+
 };
 
 #endif
