@@ -759,6 +759,7 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
     const int MINIMUM_MAX_STEP = 75;
     const int THRESHOLD = 500;
     const int SLOW_STEPS = 10;
+    int steps = 0;
     int maxStep = MAXIMUM_MAX_STEP;
     const int MIN_STEP = 5;
     const float LEAP_PERCENTAGE = .5;
@@ -775,7 +776,7 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
     if (abs(error[0]) > (maxStep / LEAP_PERCENTAGE) || abs(error[1]) > (maxStep / LEAP_PERCENTAGE)){
         while(error[0] != 0 || error[1] != 0){
 	        for (int i = 0; i <= 1; i++){
-	        	maxStep = (abs(error[i]) <= THRESHOLD) ? MINIMUM_MAX_STEP : MAXIMUM_MAX_STEP;
+	        	maxStep = (abs(error[i]) <= THRESHOLD || steps < SLOW_STEPS) ? MINIMUM_MAX_STEP : MAXIMUM_MAX_STEP;
     
     			if((abs(error[i]) > MIN_STEP)){
 				output[i] = (int)(LEAP_PERCENTAGE * error[i]);
@@ -796,6 +797,7 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 		std::cout << "output[" << 1 << "]: " << output[1] << std::endl;
 		out = new canMsg(this->BNO, TX_REF, (cmdType)2, output[0], output[1], 0, 0, 0, 0, 0, 0);
 		this->outQueue->push(buildCanMessage(out));
+		steps++;
 
         }
 
