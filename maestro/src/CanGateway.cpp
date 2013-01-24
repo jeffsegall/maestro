@@ -207,11 +207,11 @@ void CanGateway::recvFromRos(){
         	tempYaw = inMsg.r1;
         	tempRoll = inMsg.r2;
         } else if (inMsg.bno == BNO_R_HIP_YAW_ROLL && inMsg.mType == TX_MOTOR_CMD && inMsg.cmdType == CMD_CONTROLLER_ON){
-        	rightHipEnabled = true;
         	this->downQueue->push(can_message);
+        	rightHipEnabled = true;
         } else if (inMsg.bno == BNO_R_HIP_YAW_ROLL && inMsg.mType == TX_MOTOR_CMD && inMsg.cmdType == CMD_CONTROLLER_OFF){
-        	rightHipEnabled = false;
 			this->downQueue->push(can_message);
+			rightHipEnabled = false;
         } else
         	this->downQueue->push(can_message);
         //std::cout << this->downQueue->size() << std::endl;
