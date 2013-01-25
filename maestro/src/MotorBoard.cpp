@@ -57,13 +57,13 @@ MotorBoard::MotorBoard(){// : TaskContext(name){
 * @param	channels	The number of motors (channels) this motor board
 * 				controls.
 ******************************************************************************/
-MotorBoard::MotorBoard(boardNum BNO, int channels, queue<hubomsg::CanMessage>* outQueue){// :
+MotorBoard::MotorBoard(boardNum BNO, int channels, queue<hubomsg::CanMessage>* outQueue, ofstream & output){// :
             //  TaskContext(name){
     this->BNO = BNO;
     this->motors = vector<HuboMotor*>(channels);
     this->channels = channels;
     this->outQueue = outQueue;
-    tempOutput.open("/home/hubo/maestro/outputlog.txt");
+    tempOutput = output;
     //this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
     //this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
     //this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
