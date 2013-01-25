@@ -776,10 +776,10 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
     if (abs(error[0]) > (maxStep / LEAP_PERCENTAGE) || abs(error[1]) > (maxStep / LEAP_PERCENTAGE)){
         while(error[0] != 0 || error[1] != 0){
 	        for (int i = 0; i <= 1; i++){
-				if (error[i] == 0) break;
+				if (error[i] != 0) continue;
 
 	        	maxStep = (abs(error[i]) <= THRESHOLD) ? MINIMUM_MAX_STEP : MAXIMUM_MAX_STEP;
-    
+
     			if((abs(error[i]) > MIN_STEP)){
     				output[i] = (int)(LEAP_PERCENTAGE * error[i]);
 
