@@ -358,7 +358,7 @@ vector<float> trajectoryValues(string path){
           path == "/home/hubo/maestro/maestro/models/hubo_testrig.xml";
       
       //@TODO: Check for file existence before initializing.
-      this->state->initHuboWithDefaults(path, this->outputQueue, this);
+      this->state->initHuboWithDefaults(path, this->outputQueue);
   }
 
   void RobotControl::setWaist(int ticks, int delay){
