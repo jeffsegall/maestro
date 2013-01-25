@@ -11,6 +11,7 @@
 #include "HuboMotor.h"
 #include "huboCan.h"
 #include "MotorBoard.h"
+#include "RobotControl.h"
 #include <rtt/Port.hpp>
 #include <map>
 #include <string>

@@ -763,7 +763,7 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
     const int MAXIMUM_MAX_STEP = 75;
     const int MINIMUM_MAX_STEP = 25;
     const int THRESHOLD = 500;
-    const int SLOW_STEPS = 300;
+    const int SLOW_STEPS = 5;
     int steps = 0;
     int maxStep = MAXIMUM_MAX_STEP;
     const int MIN_STEP = 5;
@@ -781,30 +781,33 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
     if (abs(error[0]) > (maxStep / LEAP_PERCENTAGE) || abs(error[1]) > (maxStep / LEAP_PERCENTAGE)){
         while(error[0] != 0 || error[1] != 0){
 	        for (int i = 0; i <= 1; i++){
-	        	maxStep = (abs(error[i]) <= THRESHOLD || steps < SLOW_STEPS) ? MINIMUM_MAX_STEP : MAXIMUM_MAX_STEP;
+	        	maxStep = (abs(error[i]) <= THRESHOLD) ? MINIMUM_MAX_STEP : MAXIMUM_MAX_STEP;
     
     			if((abs(error[i]) > MIN_STEP)){
-				output[i] = (int)(LEAP_PERCENTAGE * error[i]);
+    				output[i] = (int)(LEAP_PERCENTAGE * error[i]);
 
-				if(abs(output[i]) > maxStep)
-					output[i] = output[i] < 0 ? -maxStep : maxStep;
+					if(abs(output[i]) > maxStep)
+						output[i] = output[i] < 0 ? -maxStep : maxStep;
 
-			} else
-				output[i] = error[i];
+    			} else
+    				output[i] = error[i];
 
-			error[i] -= output[i];
-			output[i] += output[i+2];
-			output[i+2] = output[i];
+    			error[i] -= output[i];
+    			output[i] += output[i+2];
+    			output[i+2] = output[i];
 
-		}
+	        }
 
-		std::cout << "output[" << 0 << "]: " << output[0] << std::endl;
-		std::cout << "output[" << 1 << "]: " << output[1] << std::endl;
-		out = new canMsg(this->BNO, TX_REF, (cmdType)2, output[0], output[1], 0, 0, 0, 0, 0, 0);
-		this->outQueue->push(buildCanMessage(out));
-		std::cout << "Pushing message to CanGateway. O1: " << output[0] << " O2: " << output[1] << std::endl;
-		steps++;
-		usleep(1);
+			std::cout << "output[" << 0 << "]: " << output[0] << std::endl;
+			std::cout << "output[" << 1 << "]: " << output[1] << std::endl;
+			out = new canMsg(this->BNO, TX_REF, (cmdType)2, output[0], output[1], 0, 0, 0, 0, 0, 0);
+			this->outQueue->push(buildCanMessage(out));
+			std::cout << "Pushing message to CanGateway. O1: " << output[0] << " O2: " << output[1] << std::endl;
+			steps++;
+			if (steps >= SLOW_STEPS){
+				steps = 0;
+				controller->updateHook(); //This could potentially be very bad.
+			}
         }
 
         this->motors[0]->setTicksPosition((long)output[2]);
