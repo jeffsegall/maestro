@@ -63,7 +63,7 @@ MotorBoard::MotorBoard(boardNum BNO, int channels, queue<hubomsg::CanMessage>* o
     this->motors = vector<HuboMotor*>(channels);
     this->channels = channels;
     this->outQueue = outQueue;
-    tempOutput.open("outputlog.txt");
+    tempOutput.open("/home/hubo/maestro/outputlog.txt");
     //this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
     //this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
     //this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");

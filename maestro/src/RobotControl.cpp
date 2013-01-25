@@ -310,7 +310,7 @@ vector<float> trajectoryValues(string path){
     	hubomsg::CanMessage output = outputQueue->front();
 	//written++;
     	if (output.bno == BNO_R_HIP_YAW_ROLL){
-    		std::cout << "Writing message to Board 0: R1 = " << outputQueue->front().r1 << std::endl;
+    		//std::cout << "Writing message to Board 0: R1 = " << outputQueue->front().r1 << std::endl;
     	}
     	if (output.mType == TX_REF && output.cmdType == 2){
     		this->canDownPort->write(output);
@@ -343,8 +343,8 @@ vector<float> trajectoryValues(string path){
              canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_REF, (cmdType)2,
                                  mb->getMotorByChannel(0)->getTicksPosition(), 
                                  mb->getMotorByChannel(1)->getTicksPosition(), 0, 0, 0, 0, 0, 0);
-            //outputQueue->push(buildCanMessage(out));
-            //this->canDownPort->write(outputQueue->front());
+            outputQueue->push(buildCanMessage(out));
+            this->canDownPort->write(outputQueue->front());
         }
     }
   }
