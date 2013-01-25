@@ -27,7 +27,7 @@ CanGateway::CanGateway(const std::string& name):
     tempYaw = 0;
     rightHipEnabled = false;
     tempRoll = 0;
-    //tempOutput.open("/home/hubo/maestro/outputlog.txt");
+    tempOutput.open("/home/hubo/maestro/outputlog.txt");
 }
 
 CanGateway::~CanGateway(){
