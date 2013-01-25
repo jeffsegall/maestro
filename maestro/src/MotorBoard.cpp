@@ -767,19 +767,17 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
     error[0] = REF0 - this->motors[0]->getTicksPosition();
     error[1] = REF1 - this->motors[1]->getTicksPosition();
     vector<int> output(4);
-    output[0] = 0; //current output
-    output[1] = 0; //current output
-    output[2] = this->motors[0]->getTicksPosition(); //current position
-    output[3] = this->motors[1]->getTicksPosition(); //current position
+    output[0] = this->motors[0]->getTicksPosition(); //current output
+    output[1] = this->motors[1]->getTicksPosition(); //current output
+    output[2] = output[0]; //current position
+    output[3] = output[1]; //current position
 
     //std::cout << "errors: " << error[0] << ", " << error[1] << std::endl;
     if (abs(error[0]) > (maxStep / LEAP_PERCENTAGE) || abs(error[1]) > (maxStep / LEAP_PERCENTAGE)){
         while(error[0] != 0 || error[1] != 0){
 	        for (int i = 0; i <= 1; i++){
-			if (error[i] == 0){
-				//output[i] = output[i+2]; Unnecessary
-				break;
-			}
+				if (error[i] == 0) break;
+
 	        	maxStep = (abs(error[i]) <= THRESHOLD) ? MINIMUM_MAX_STEP : MAXIMUM_MAX_STEP;
     
     			if((abs(error[i]) > MIN_STEP)){
