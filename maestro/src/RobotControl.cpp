@@ -24,8 +24,6 @@ RobotControl::RobotControl(const std::string& name):
     this->addEventPort(*orOutPort);
     this->addPort(*orInPort);
 
-    tempOutput.open("/home/hubo/maestro/outputlog.txt");
-
     this->addOperation("setWaist", &RobotControl::setWaist, this, RTT::OwnThread)
             .doc("Set Torso Yaw")
             .arg("Value", "New ticks for torso yaw.")
@@ -375,7 +373,7 @@ vector<float> trajectoryValues(string path){
           path == "/home/hubo/maestro/maestro/models/hubo_testrig.xml";
       
       //@TODO: Check for file existence before initializing.
-      this->state->initHuboWithDefaults(path, this->outputQueue, tempOutput);
+      this->state->initHuboWithDefaults(path, this->outputQueue);
   }
 
   void RobotControl::setWaist(int ticks, int delay){
