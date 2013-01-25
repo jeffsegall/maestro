@@ -63,7 +63,6 @@ MotorBoard::MotorBoard(boardNum BNO, int channels, queue<hubomsg::CanMessage>* o
     this->motors = vector<HuboMotor*>(channels);
     this->channels = channels;
     this->outQueue = outQueue;
-    controller = 0;
     //this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
     //this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
     //this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
@@ -121,10 +120,6 @@ void MotorBoard::removeMotor(HuboMotor* motor){
 ******************************************************************************/
 void MotorBoard::removeMotor(int channel){
     this->motors[channel] = NULL;
-}
-
-void MotorBoard::setController(RobotControl * control){
-	controller = control;
 }
 
 /******************************************************************************
@@ -760,10 +755,10 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 
 
     /** Constant Decay Interpolation */
-    const int MAXIMUM_MAX_STEP = 75;
-    const int MINIMUM_MAX_STEP = 25;
+    const int MAXIMUM_MAX_STEP = 100;
+    const int MINIMUM_MAX_STEP = 75;
     const int THRESHOLD = 500;
-    const int SLOW_STEPS = 5;
+    const int SLOW_STEPS = 50;
     int steps = 0;
     int maxStep = MAXIMUM_MAX_STEP;
     const int MIN_STEP = 5;
@@ -781,6 +776,10 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
     if (abs(error[0]) > (maxStep / LEAP_PERCENTAGE) || abs(error[1]) > (maxStep / LEAP_PERCENTAGE)){
         while(error[0] != 0 || error[1] != 0){
 	        for (int i = 0; i <= 1; i++){
+			if (error[i] == 0){
+				//output[i] = output[i+2]; Unnecessary
+				break;
+			}
 	        	maxStep = (abs(error[i]) <= THRESHOLD) ? MINIMUM_MAX_STEP : MAXIMUM_MAX_STEP;
     
     			if((abs(error[i]) > MIN_STEP)){
@@ -798,11 +797,11 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 
 	        }
 
-			std::cout << "output[" << 0 << "]: " << output[0] << std::endl;
-			std::cout << "output[" << 1 << "]: " << output[1] << std::endl;
+		//	std::cout << "output[" << 0 << "]: " << output[0] << std::endl;
+		//	std::cout << "output[" << 1 << "]: " << output[1] << std::endl;
 			out = new canMsg(this->BNO, TX_REF, (cmdType)2, output[0], output[1], 0, 0, 0, 0, 0, 0);
 			this->outQueue->push(buildCanMessage(out));
-			std::cout << "Pushing message to CanGateway. O1: " << output[0] << " O2: " << output[1] << std::endl;
+		//	std::cout << "Pushing message to CanGateway. O1: " << output[0] << " O2: " << output[1] << std::endl;
 			steps++;
         }
 
