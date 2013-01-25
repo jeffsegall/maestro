@@ -315,21 +315,6 @@ vector<float> trajectoryValues(string path){
     	if (output.mType == TX_REF && output.cmdType == 2){
     		this->canDownPort->write(output);
     		//written++;
-    		//usleep(10000);
-		/*
-    		if (written > 1){
-    			//std::cout << "Written: " << written << std::endl;
-			written = 0;
-			if (delay < 50000){
-				usleep(50000);
-			}
-				canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_MOTOR_CMD, CMD_REQ_ENC_POS,
-				                             0, 0, 0, 0, 0, 0, 0, 0); //Creates a Request Encoder Position CanMsg
-
-				this->canDownPort->write(buildCanMessage(out));
-    		}
-		*/
-    		//usleep(100000);
     	} else {
     		this->canDownPort->write(output);
     	}
@@ -343,8 +328,8 @@ vector<float> trajectoryValues(string path){
              canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_REF, (cmdType)2,
                                  mb->getMotorByChannel(0)->getTicksPosition(), 
                                  mb->getMotorByChannel(1)->getTicksPosition(), 0, 0, 0, 0, 0, 0);
-            outputQueue->push(buildCanMessage(out));
-            this->canDownPort->write(outputQueue->front());
+            //outputQueue->push(buildCanMessage(out));
+            //this->canDownPort->write(outputQueue->front());
         }
     }
   }
@@ -373,7 +358,7 @@ vector<float> trajectoryValues(string path){
           path == "/home/hubo/maestro/maestro/models/hubo_testrig.xml";
       
       //@TODO: Check for file existence before initializing.
-      this->state->initHuboWithDefaults(path, this->outputQueue);
+      this->state->initHuboWithDefaults(path, this->outputQueue, this);
   }
 
   void RobotControl::setWaist(int ticks, int delay){

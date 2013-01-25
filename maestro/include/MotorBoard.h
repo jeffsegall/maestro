@@ -39,6 +39,8 @@ class MotorBoard{// : public RTT::TaskContext {
         InputPort<hubomsg::HuboCmd>* orOutPort;
 
         queue<hubomsg::CanMessage>* outQueue;
+
+        RobotControl * controller;
  
     public:
         
@@ -50,6 +52,7 @@ class MotorBoard{// : public RTT::TaskContext {
         void removeMotor(HuboMotor* motor);
         void removeMotor(int channel);
         void setTicksPosition(vector<long> ticks);
+        void setController(RobotControl * control);
         HuboMotor* getMotorByChannel(int channel);
 
         // PROTOCOL MOTOR COMMANDS

@@ -15,7 +15,7 @@ using std::string;
 *
 * @param	path		The file path of the XML representation
 ******************************************************************************/
-void HuboState::initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* outQueue){
+void HuboState::initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* outQueue, RobotControl * control){
     pugi::xml_document doc;
     if (!doc.load_file(path.c_str())){
         std::cout << "No such file, " << path.c_str() << std::endl;
@@ -40,6 +40,8 @@ void HuboState::initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* ou
         MotorBoard* mb = new MotorBoard((boardNum)BNO, channels, outQueue);
 
         std::cout << "After new mb" << std::endl;
+
+        mb->setController(control);
 
         //Loop through each motor on each board.  Initialize a blank motor and then use
         //the board methods to set values.  This way the values are also sent to the
