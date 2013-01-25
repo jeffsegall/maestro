@@ -804,10 +804,6 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 			this->outQueue->push(buildCanMessage(out));
 			std::cout << "Pushing message to CanGateway. O1: " << output[0] << " O2: " << output[1] << std::endl;
 			steps++;
-			if (steps >= SLOW_STEPS){
-				steps = 0;
-				controller->updateHook(); //This could potentially be very bad.
-			}
         }
 
         this->motors[0]->setTicksPosition((long)output[2]);

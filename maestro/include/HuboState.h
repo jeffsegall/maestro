@@ -11,7 +11,6 @@
 #include "HuboMotor.h"
 #include "huboCan.h"
 #include "MotorBoard.h"
-#include "RobotControl.h"
 #include <rtt/Port.hpp>
 #include <map>
 #include <string>
@@ -40,7 +39,7 @@ class HuboState{
 	HuboState(){
 	}
         HuboState(const HuboState& rhs);	
-        void initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* outQueue, RobotControl* control);
+        void initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* outQueue);
 
         MotorBoard* getBoardByNumber(int number);
         MotorBoard* getBoardByNumber(boardNum number);
