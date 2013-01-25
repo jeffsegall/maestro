@@ -2,6 +2,7 @@
 #define MOTORBOARD_H
 
 #include "HuboMotor.h"
+#include "RobotControl.h"
 #include <rtt/TaskContext.hpp>
 #include <rtt/Port.hpp>
 #include <std_msgs/Float64.h>
@@ -40,7 +41,7 @@ class MotorBoard{// : public RTT::TaskContext {
 
         queue<hubomsg::CanMessage>* outQueue;
 
-        RobotControl * controller;
+        RobotControl* controller;
  
     public:
         

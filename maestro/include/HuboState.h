@@ -40,7 +40,7 @@ class HuboState{
 	HuboState(){
 	}
         HuboState(const HuboState& rhs);	
-        void initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* outQueue, RobotControl * control);
+        void initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* outQueue, RobotControl* control);
 
         MotorBoard* getBoardByNumber(int number);
         MotorBoard* getBoardByNumber(boardNum number);
