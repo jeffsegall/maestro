@@ -772,7 +772,7 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
     output[2] = this->motors[0]->getTicksPosition(); //current position
     output[3] = this->motors[1]->getTicksPosition(); //current position
 
-    std::cout << "errors: " << error[0] << ", " << error[1] << std::endl;
+    //std::cout << "errors: " << error[0] << ", " << error[1] << std::endl;
     if (abs(error[0]) > (maxStep / LEAP_PERCENTAGE) || abs(error[1]) > (maxStep / LEAP_PERCENTAGE)){
         while(error[0] != 0 || error[1] != 0){
 	        for (int i = 0; i <= 1; i++){
@@ -799,7 +799,7 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 		this->outQueue->push(buildCanMessage(out));
 		std::cout << "Pushing message to CanGateway. O1: " << output[0] << " O2: " << output[1] << std::endl;
 		steps++;
-
+		usleep(1);
         }
 
         this->motors[0]->setTicksPosition((long)output[2]);
