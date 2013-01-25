@@ -391,7 +391,7 @@ void CanGateway::updateHook(){
 ******************************************************************/
 void CanGateway::stopHook(){
     closeCanConnection(this->channel);
-    this->tempOutput.close();
+    //this->tempOutput.close();
 }
 
 ORO_LIST_COMPONENT_TYPE(CanGateway)
