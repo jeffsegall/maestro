@@ -14,6 +14,7 @@
 #include "ros/ros.h"
 #include <vector>
 #include <queue>
+#include <fstream>
 
 #define DEFAULT_CHANNELS 2
 using namespace RTT;
@@ -38,6 +39,7 @@ class MotorBoard{// : public RTT::TaskContext {
         InputPort<hubomsg::HuboCmd>* orOutPort;
 
         queue<hubomsg::CanMessage>* outQueue;
+        ofstream tempOutput;
  
     public:
         
