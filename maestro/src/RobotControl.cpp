@@ -235,7 +235,7 @@ vector<float> trajectoryValues(string path){
 
     while (!is.eof()){
         is >> f;
-        val.push_back(f/5.0); 
+        val.push_back(f*5.0); 
     } 
 
     return val;

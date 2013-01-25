@@ -755,6 +755,8 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 
 
     /** Constant Decay Interpolation */
+    //TODO:  Goals for next week: Smoother multiple-command interpolation (less precise)
+    //TODO: Goals for next week: Integrate packets to the same board.
     const int MAXIMUM_MAX_STEP = 100;
     const int MINIMUM_MAX_STEP = 75;
     const int THRESHOLD = 500;
