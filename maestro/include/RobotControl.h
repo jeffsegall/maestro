@@ -96,7 +96,6 @@ private:
     int written;
     bool needRequest;
     int delay;
-    ofstream tempOutput;
 };
 
 #endif

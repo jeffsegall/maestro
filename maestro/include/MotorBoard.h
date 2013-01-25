@@ -39,7 +39,6 @@ class MotorBoard{// : public RTT::TaskContext {
         InputPort<hubomsg::HuboCmd>* orOutPort;
 
         queue<hubomsg::CanMessage>* outQueue;
-        ofstream tempOutput;
  
     public:
         

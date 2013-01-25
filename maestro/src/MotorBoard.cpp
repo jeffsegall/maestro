@@ -44,7 +44,7 @@ hubomsg::CanMessage buildCanMessage(canMsg* msg){
 * Creates a new motor board with default BNO and number of channels. 
 ******************************************************************************/
 MotorBoard::MotorBoard(){// : TaskContext(name){
-    MotorBoard((boardNum)0, DEFAULT_CHANNELS, new queue<hubomsg::CanMessage>(), ofstream("output.txt"));
+    MotorBoard((boardNum)0, DEFAULT_CHANNELS, new queue<hubomsg::CanMessage>());
 }
 
 /******************************************************************************
@@ -57,13 +57,12 @@ MotorBoard::MotorBoard(){// : TaskContext(name){
 * @param	channels	The number of motors (channels) this motor board
 * 				controls.
 ******************************************************************************/
-MotorBoard::MotorBoard(boardNum BNO, int channels, queue<hubomsg::CanMessage>* outQueue, ofstream & output){// :
+MotorBoard::MotorBoard(boardNum BNO, int channels, queue<hubomsg::CanMessage>* outQueue){// :
             //  TaskContext(name){
     this->BNO = BNO;
     this->motors = vector<HuboMotor*>(channels);
     this->channels = channels;
     this->outQueue = outQueue;
-    tempOutput = output;
     //this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
     //this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
     //this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
@@ -798,7 +797,7 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 		std::cout << "output[" << 1 << "]: " << output[1] << std::endl;
 		out = new canMsg(this->BNO, TX_REF, (cmdType)2, output[0], output[1], 0, 0, 0, 0, 0, 0);
 		this->outQueue->push(buildCanMessage(out));
-		tempOutput << "Pushing message to CanGateway. O1: " << output[0] << " O2: " << output[1] << std::endl;
+		std::cout << "Pushing message to CanGateway. O1: " << output[0] << " O2: " << output[1] << std::endl;
 		steps++;
 
         }

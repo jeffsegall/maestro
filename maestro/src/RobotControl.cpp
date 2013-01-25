@@ -311,8 +311,8 @@ vector<float> trajectoryValues(string path){
 
     	hubomsg::CanMessage output = outputQueue->front();
 	//written++;
-    	if (output.bno == BNO_R_HIP_YAW_ROLL){
-    		tempOutput << "Writing message to Board 0: R1 = " << outputQueue->front().r1 << std::endl;
+    	if (output.bno == BNO_R_HIP_YAW_ROLL && needRequest){
+    		std::cout << "Writing message to Board 0: R1 = " << outputQueue->front().r1 << std::endl;
     	}
     	if (output.mType == TX_REF && output.cmdType == 2){
     		this->canDownPort->write(output);
@@ -576,6 +576,12 @@ vector<float> trajectoryValues(string path){
 		  break;
 	  case 4:
 		  this->state->getBoardByNumber(board)->enableController();
+		  break;
+	  case 5:
+		  this->needRequest = true;
+		  break;
+	  case 6:
+		  this->needRequest = false;
 		  break;
 	  default:
 		  std::cout << "Operations: " << std::endl << "1: disable (step 1)    2: disable (step 2)    3: enable (step 1)    4: enable (step 2)";

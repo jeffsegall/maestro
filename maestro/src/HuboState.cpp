@@ -15,7 +15,7 @@ using std::string;
 *
 * @param	path		The file path of the XML representation
 ******************************************************************************/
-void HuboState::initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* outQueue, ofstream & output){
+void HuboState::initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* outQueue){
     pugi::xml_document doc;
     if (!doc.load_file(path.c_str())){
         std::cout << "No such file, " << path.c_str() << std::endl;
@@ -37,7 +37,7 @@ void HuboState::initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* ou
 
         std::cout << "Before new mb" << std::endl;
 
-        MotorBoard* mb = new MotorBoard((boardNum)BNO, channels, outQueue, output);
+        MotorBoard* mb = new MotorBoard((boardNum)BNO, channels, outQueue);
 
         std::cout << "After new mb" << std::endl;
 
