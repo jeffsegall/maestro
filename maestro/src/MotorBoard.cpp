@@ -712,7 +712,7 @@ canMsg* MotorBoard::initBoard(){
 * @param	REF0		Reference position for channel 0
 * @param	REF1		Reference position for channel 1
 ******************************************************************************/
-canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
+canMsg* MotorBoard::sendPositionReference(int REF0, int REF1, int MAX_STEP, int MIN_STEP){
     assert(this->channels <= 2);
 
     canMsg* out; 
@@ -757,13 +757,8 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
     /** Constant Decay Interpolation */
     //TODO:  Goals for next week: Smoother multiple-command interpolation (less precise)
     //TODO: Goals for next week: Integrate packets to the same board.
-    const int MAXIMUM_MAX_STEP = 100;
-    const int MINIMUM_MAX_STEP = 75;
-    const int THRESHOLD = 500;
-    const int SLOW_STEPS = 50;
-    int steps = 0;
-    int maxStep = MAXIMUM_MAX_STEP;
-    const int MIN_STEP = 5;
+    //const int MAX_STEP = 100;
+    //const int MIN_STEP = 5;
     const float LEAP_PERCENTAGE = .5;
     vector<int> error(2);
     error[0] = REF0 - this->motors[0]->getTicksPosition();
@@ -775,18 +770,16 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
     output[3] = output[1]; //current position
 
     //std::cout << "errors: " << error[0] << ", " << error[1] << std::endl;
-    if (abs(error[0]) > (maxStep / LEAP_PERCENTAGE) || abs(error[1]) > (maxStep / LEAP_PERCENTAGE)){
+    if (abs(error[0]) > (MAX_STEP / LEAP_PERCENTAGE) || abs(error[1]) > (MAX_STEP / LEAP_PERCENTAGE)){
         while(error[0] != 0 || error[1] != 0){
 	        for (int i = 0; i <= 1; i++){
 				if (error[i] == 0) continue;
 
-	        	maxStep = (abs(error[i]) <= THRESHOLD) ? MINIMUM_MAX_STEP : MAXIMUM_MAX_STEP;
-
     			if((abs(error[i]) > MIN_STEP)){
     				output[i] = (int)(LEAP_PERCENTAGE * error[i]);
 
-					if(abs(output[i]) > maxStep)
-						output[i] = output[i] < 0 ? -maxStep : maxStep;
+					if(abs(output[i]) > MAX_STEP)
+						output[i] = output[i] < 0 ? -MAX_STEP : MAX_STEP;
 
     			} else
     				output[i] = error[i];
@@ -797,12 +790,8 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1){
 
 	        }
 
-		//	std::cout << "output[" << 0 << "]: " << output[0] << std::endl;
-		//	std::cout << "output[" << 1 << "]: " << output[1] << std::endl;
 			out = new canMsg(this->BNO, TX_REF, (cmdType)2, output[0], output[1], 0, 0, 0, 0, 0, 0);
 			this->outQueue->push(buildCanMessage(out));
-		//	std::cout << "Pushing message to CanGateway. O1: " << output[0] << " O2: " << output[1] << std::endl;
-			steps++;
         }
 
         this->motors[0]->setTicksPosition((long)output[2]);

@@ -217,7 +217,7 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Board", "The board on which to run the gesture");
 
     this->written = 0;
-    this->needRequest = false;
+    this->printNow = false;
     this->delay = 100000;
     initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
 
@@ -256,40 +256,14 @@ vector<float> trajectoryValues(string path){
     	canMessage = commHandler->getMessage();
 
     	if (canMessage.mType == RX_ENC_VAL+BNO_R_HIP_YAW_ROLL){
-    		//Update is an encoder return from our motor board, so let's grab those values.
-    		// 4 Byte Int = (byte1) | (byte2 << 8) | (byte3 << 16) | (byte4 << 24)
-    		const int MAX_ERROR = 25;
-    		long yaw_ticks = canMessage.r1;// DO NOT BITWISE!(canMessage.r1) | (canMessage.r2 << 8) | (canMessage.r3 << 16) | (canMessage.r4 << 24);
-    		long roll_ticks = canMessage.r2;//DO NOT BITWISE!! (canMessage.r5) | (canMessage.r6 << 8) | (canMessage.r7 << 16) | (canMessage.r8 << 24);
+    		long yaw_ticks = canMessage.r1;
+    		long roll_ticks = canMessage.r2;
     		vector<long> ticks(2);
     		ticks[0] = yaw_ticks;
     		ticks[1] = roll_ticks;
-    		//if (mb->getMotorByChannel(0)->getTicksPosition() != yaw_ticks || mb->getMotorByChannel(1)->getTicksPosition() != roll_ticks){
-    			//mb->sendPositionReference(mb->getMotorByChannel(0)->getTicksPosition(), mb->getMotorByChannel(0)->getTicksPosition());
-
-    		//}
-    		//mb->setTicksPosition(ticks);
     		std::cout << "Encoder Position value received! ticks: " << std::endl << "yaw: " << yaw_ticks << std::endl << "roll: " << roll_ticks << std::endl;
     		std::cout << "In Radians: yaw: " << mb->getMotorByChannel(0)->ticksToRadians(ticks[0]) << std::endl << "roll: " << mb->getMotorByChannel(0)->ticksToRadians(ticks[1]) << std::endl;
 
-
-    		//If the current packet is telling us to go to a place which is reverse of the current direction we are currently going,
-    		//Pop the packet and check the next one.
-		/*
-    		hubomsg::CanMessage output = outputQueue->front();
-    		if (output.mType == TX_REF && output.cmdType == 2){
-				bool forward_yaw = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL)->getMotorByChannel(0)->getTicksPosition() - yaw_ticks > 0;
-				bool forward_roll = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL)->getMotorByChannel(1)->getTicksPosition() - roll_ticks > 0;
-				std::cout << "Yaw Forward: " << forward_yaw << "  Roll Forward: " << forward_roll << std::endl;
-
-				while (forward_yaw ? output.r1 < yaw_ticks : output.r1 > yaw_ticks
-						|| forward_roll ? output.r2 < roll_ticks : output.r2 > roll_ticks){
-					outputQueue->pop();
-					std::cout << "I have popped a command... I should already know this." << std::endl;
-					output = outputQueue->front();
-				}
-    		}
-		*/
     	}
 
     }
@@ -299,38 +273,28 @@ vector<float> trajectoryValues(string path){
    
     //Write out a message if we have one
 
-    //TODO: as per dan's suggestion, try to send all positions every time  
-
-
-/*    if (mb != NULL)
-        outputQueue->push(buildCanMessage(mb->sendPositionReference(mb->getMotorByChannel(0)->getTicksPosition(), mb->getMotorByChannel(1)->getTicksPosition())));
- */
     if (!outputQueue->empty()){
 
     	hubomsg::CanMessage output = outputQueue->front();
-	//written++;
-    	if (output.bno == BNO_R_HIP_YAW_ROLL && needRequest){
-    		std::cout << "Writing message to Board 0: R1 = " << outputQueue->front().r1 << std::endl;
-    	}
-    	if (output.mType == TX_REF && output.cmdType == 2){
-    		this->canDownPort->write(output);
-    		//written++;
-    	} else {
-    		this->canDownPort->write(output);
+    	if (printNow){
+    		std::cout << "Writing message to Board " << output.bno << ": R1 = " << outputQueue->front().r1 << std::endl;
     	}
 
-        //std::cout << ++written << std::endl;
+		this->canDownPort->write(output);
+
         outputQueue->pop();
         usleep(delay);
     }
     else{
+    	/*
         if (mb != NULL){
              canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_REF, (cmdType)2,
                                  mb->getMotorByChannel(0)->getTicksPosition(), 
                                  mb->getMotorByChannel(1)->getTicksPosition(), 0, 0, 0, 0, 0, 0);
-            //outputQueue->push(buildCanMessage(out));
-            //this->canDownPort->write(outputQueue->front());
+            outputQueue->push(buildCanMessage(out));
+            this->canDownPort->write(outputQueue->front());
         }
+        */
     }
   }
 
@@ -561,13 +525,13 @@ vector<float> trajectoryValues(string path){
 		  this->state->getBoardByNumber(board)->enableController();
 		  break;
 	  case 5:
-		  this->needRequest = true;
+		  this->printNow = true;
 		  break;
 	  case 6:
-		  this->needRequest = false;
+		  this->printNow = false;
 		  break;
 	  default:
-		  std::cout << "Operations: " << std::endl << "1: disable (step 1)    2: disable (step 2)    3: enable (step 1)    4: enable (step 2)";
+		  std::cout << "Operations: " << std::endl << "1: disable (step 1)    2: disable (step 2)    3: enable (step 1)    4: enable (step 2)    5: enable printing     6: disable printing";
 	  }
   }
 
@@ -602,7 +566,7 @@ vector<float> trajectoryValues(string path){
       }
       for (int i = 0; i < (int)trajVal.size(); i++){
           val = (int)trajVal.at(i);
-          this->state->getBoardByNumber(board)->sendPositionReference(val, val);     
+          this->state->getBoardByNumber(board)->sendPositionReference(val, val, 50, 125);
       }
   }
 

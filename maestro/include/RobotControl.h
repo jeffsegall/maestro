@@ -94,7 +94,7 @@ private:
     map< string, vector<float> > gestures;
    
     int written;
-    bool needRequest;
+    bool printNow;
     int delay;
 };
 
