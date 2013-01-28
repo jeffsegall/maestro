@@ -330,7 +330,6 @@ vector<float> trajectoryValues(string path){
       vector<int> pos(2);
 	  pos[0] = ticks;
 	  pos[1] = 0;
-      mb->sendPositionReference(pos);
       this->state->getBoardByNumber(BNO_WAIST)->sendPositionReference(pos);
   }
 
