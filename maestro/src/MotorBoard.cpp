@@ -712,46 +712,9 @@ canMsg* MotorBoard::initBoard(){
 * @param	REF0		Reference position for channel 0
 * @param	REF1		Reference position for channel 1
 ******************************************************************************/
-canMsg* MotorBoard::sendPositionReference(int REF0, int REF1, int MAX_STEP, int MIN_STEP){
-    assert(this->channels <= 2);
-
+canMsg* MotorBoard::sendPositionReference(vector<int> REF, int MAX_STEP, int MIN_STEP){
+	assert(REF.size()>= this->channels); //We need at least enough data to send positions to every channel on our board.
     canMsg* out; 
-
-    /** Standard 10 Step Interpolation /
-    int delta0 = abs(this->motors[0]->getTicksPosition() - REF0);
-    int delta1 = abs(this->motors[1]->getTicksPosition() - REF1);
-
-
-
-    if (delta0 > 500 || delta1 > 500){
-        //Lots of motion, try to interpolate?
-        int step0 = ((delta0 / 10) * ((REF0 < this->motors[0]->getTicksPosition()) ? -1 : 1));
-        int step1 = ((delta1 / 10) * ((REF1 < this->motors[1]->getTicksPosition()) ? -1 : 1));
-        std::cout << "steps: " << step0 << ", " << step1 << std::endl;
-        for (int i = 1; i <= 10; i++){
-            this->motors[0]->setTicksPosition(this->motors[0]->getTicksPosition() + (step0));
-            this->motors[1]->setTicksPosition(this->motors[1]->getTicksPosition() + (step1));
-            std::cout << "positions: " << this->motors[0]->getTicksPosition() << ", " <<
-                                          this->motors[1]->getTicksPosition() << std::endl;
-            out = new canMsg(this->BNO, TX_REF, (cmdType)2,
-                                     this->motors[0]->getTicksPosition(), 
-                                     this->motors[1]->getTicksPosition(), 0, 0, 0, 0, 0, 0);
-            this->outQueue->push(buildCanMessage(out));
-        }
-
-    }
-    else{
-        
-        this->motors[0]->setTicksPosition(REF0);
-        this->motors[1]->setTicksPosition(REF1);
-
-        out = new canMsg(this->BNO, TX_REF, (cmdType)2,
-                                 this->motors[0]->getTicksPosition(), 
-                                 this->motors[1]->getTicksPosition(), 0, 0, 0, 0, 0, 0);
-    
-        this->outQueue->push(buildCanMessage(out));
-    }
-	*/
 
 
     /** Constant Decay Interpolation */
@@ -760,19 +723,30 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1, int MAX_STEP, int 
     //const int MAX_STEP = 100;
     //const int MIN_STEP = 5;
     const float LEAP_PERCENTAGE = .5;
-    vector<int> error(2);
-    error[0] = REF0 - this->motors[0]->getTicksPosition();
-    error[1] = REF1 - this->motors[1]->getTicksPosition();
-    vector<int> output(4);
-    output[0] = this->motors[0]->getTicksPosition(); //current output
-    output[1] = this->motors[1]->getTicksPosition(); //current output
-    output[2] = output[0]; //current position
-    output[3] = output[1]; //current position
 
-    //std::cout << "errors: " << error[0] << ", " << error[1] << std::endl;
-    if (abs(error[0]) > (MAX_STEP / LEAP_PERCENTAGE) || abs(error[1]) > (MAX_STEP / LEAP_PERCENTAGE)){
-        while(error[0] != 0 || error[1] != 0){
-	        for (int i = 0; i <= 1; i++){
+    vector<int> error(this->channels);
+    for(int i = 0; i < channels; i++)
+    	error[i] = REF[i] - motors[i]->getTicksPosition();
+
+    vector<int> output(this->channels * 2);
+    for (int i = 0; i < channels; i++){
+    	output[i] = motors[i]->getTicksPosition(); //current output
+    	output[i+channels] = output[i]; // current position
+    }
+
+    bool interpolate = false;
+    for (int i = 0; i < channels; i++){
+    	if (abs(error[i]) > (MAX_STEP / LEAP_PERCENTAGE)){
+    		interpolate = true;
+    		break;
+    	}
+    }
+
+    if (interpolate){
+    	bool repeat = false;
+        do {
+        	repeat = false;
+	        for (int i = 0; i < channels; i++){
 				if (error[i] == 0) continue;
 
     			if((abs(error[i]) > MIN_STEP)){
@@ -785,22 +759,51 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1, int MAX_STEP, int 
     				output[i] = error[i];
 
     			error[i] -= output[i];
-    			output[i] += output[i+2];
-    			output[i+2] = output[i];
-
+    			output[i] += output[i+channels];
+    			output[i+channels] = output[i];
 	        }
 
-			out = new canMsg(this->BNO, TX_REF, (cmdType)2, output[0], output[1], 0, 0, 0, 0, 0, 0);
-			this->outQueue->push(buildCanMessage(out));
-        }
+	        switch (channels){
+	        case 2:
+	        	out = new canMsg(this->BNO, TX_REF, (cmdType)2, output[0], output[1], 0, 0, 0, 0, 0, 0);
+	        	break;
+	        case 3:
+	        	out = new canMsg(this->BNO, TX_REF, (cmdType)3, output[0], output[1], output[2], 0, 0, 0, 0, 0);
+	        	break;
+	        case 5:
+	        	out = new canMsg(this->BNO, TX_REF, (cmdType)5, output[0], output[1], output[2], output[3], output[4], 0, 0, 0);
+	        	break;
+	        }
 
-        this->motors[0]->setTicksPosition((long)output[2]);
-        this->motors[1]->setTicksPosition((long)output[3]);
+			this->outQueue->push(buildCanMessage(out));
+
+			for (int i = 0; i < channels; i++){
+				if (error[i] != 0){
+					repeat = true;
+					break;
+				}
+			}
+        } while (repeat);
+
+        for (int i = 0; i < channels; i++)
+        	motors[i]->setTicksPosition((long)output[i+channels]);
+
     } else {
-    	this->motors[0]->setTicksPosition(REF0);
-    	this->motors[1]->setTicksPosition(REF1);
-        out = new canMsg(this->BNO, TX_REF, (cmdType)2, REF0, REF1, 0, 0, 0, 0, 0, 0);
-        this->outQueue->push(buildCanMessage(out));
+    	for (int i = 0; i < channels; i++)
+			motors[i]->setTicksPosition(REF[i]);
+    	switch (channels){
+		case 2:
+			out = new canMsg(this->BNO, TX_REF, (cmdType)2, REF[0], REF[1], 0, 0, 0, 0, 0, 0);
+			break;
+		case 3:
+			out = new canMsg(this->BNO, TX_REF, (cmdType)3, REF[0], REF[1], REF[2], 0, 0, 0, 0, 0);
+			break;
+		case 5:
+			out = new canMsg(this->BNO, TX_REF, (cmdType)5, REF[0], REF[1], REF[2], REF[3], REF[4], 0, 0, 0);
+			break;
+		}
+
+		this->outQueue->push(buildCanMessage(out));
     }
     return out;
 }
@@ -814,8 +817,8 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1, int MAX_STEP, int 
 * @param	REF0		Reference position for channel 0
 * @param	REF1		Reference position for channel 1
 * @param	REF2		Reference position for channel 2
-******************************************************************************/
-canMsg* MotorBoard::sendPositionReference(char REF0, char REF1, char REF2, int dummy1, int dummy2){
+******************************************************************************
+canMsg* MotorBoard::sendPositionReference(char REF0, char REF1, char REF2){
     assert(this->channels == 3);
 
     this->motors[0]->setTicksPosition(REF0);
@@ -827,6 +830,7 @@ canMsg* MotorBoard::sendPositionReference(char REF0, char REF1, char REF2, int d
     this->outQueue->push(buildCanMessage(out));
     return out;
 }
+*/
 
 /******************************************************************************
 * sendPositionReference
@@ -839,8 +843,8 @@ canMsg* MotorBoard::sendPositionReference(char REF0, char REF1, char REF2, int d
 * @param	REF2		Reference position for channel 2
 * @param	REF3		Reference position for channel 3
 * @param	REF4		Reference position for channel 4
-******************************************************************************/
-canMsg* MotorBoard::sendPositionReference(char REF0, char REF1, char REF2, char REF3, char REF4, int dummy1, int dummy2){
+******************************************************************************
+canMsg* MotorBoard::sendPositionReference(char REF0, char REF1, char REF2, char REF3, char REF4){
     assert(this->channels == 5);
 
     this->motors[0]->setTicksPosition(REF0);
@@ -854,21 +858,29 @@ canMsg* MotorBoard::sendPositionReference(char REF0, char REF1, char REF2, char 
     this->outQueue->push(buildCanMessage(out));
     return out;
 }
+*/
 
 canMsg* MotorBoard::sendPositionReferenceRadians(double rad0, double rad1){
-	return sendPositionReference(getMotorByChannel(0)->radiansToTicks(rad0), getMotorByChannel(1)->radiansToTicks(rad1));
+	vector<int> ticks(2);
+	ticks[0] = getMotorByChannel(0)->radiansToTicks(rad0);
+	ticks[1] = getMotorByChannel(1)->radiansToTicks(rad1);
+	return sendPositionReference(ticks);
 }
 
 canMsg* MotorBoard::sendPositionReferenceRadians(double rad0, double rad1, double rad2){
-	return sendPositionReference(getMotorByChannel(0)->radiansToTicks(rad0),
-								 getMotorByChannel(1)->radiansToTicks(rad1),
-								 getMotorByChannel(2)->radiansToTicks(rad2));
+	vector<int> ticks(2);
+	ticks[0] = getMotorByChannel(0)->radiansToTicks(rad0);
+	ticks[1] = getMotorByChannel(1)->radiansToTicks(rad1);
+	ticks[2] = getMotorByChannel(2)->radiansToTicks(rad2);
+	return sendPositionReference(ticks);
 }
 
 canMsg* MotorBoard::sendPositionReferenceRadians(double rad0, double rad1, double rad2, double rad3, double rad4){
-	return sendPositionReference(getMotorByChannel(0)->radiansToTicks(rad0),
-								 getMotorByChannel(1)->radiansToTicks(rad1),
-								 getMotorByChannel(2)->radiansToTicks(rad2),
-								 getMotorByChannel(3)->radiansToTicks(rad3),
-								 getMotorByChannel(4)->radiansToTicks(rad4));
+	vector<int> ticks(2);
+	ticks[0] = getMotorByChannel(0)->radiansToTicks(rad0);
+	ticks[1] = getMotorByChannel(1)->radiansToTicks(rad1);
+	ticks[2] = getMotorByChannel(2)->radiansToTicks(rad2);
+	ticks[3] = getMotorByChannel(3)->radiansToTicks(rad3);
+	ticks[4] = getMotorByChannel(4)->radiansToTicks(rad4);
+	return sendPositionReference(ticks);
 }
