@@ -815,7 +815,7 @@ canMsg* MotorBoard::sendPositionReference(int REF0, int REF1, int MAX_STEP, int 
 * @param	REF1		Reference position for channel 1
 * @param	REF2		Reference position for channel 2
 ******************************************************************************/
-canMsg* MotorBoard::sendPositionReference(char REF0, char REF1, char REF2){
+canMsg* MotorBoard::sendPositionReference(char REF0, char REF1, char REF2, int dummy1, int dummy2){
     assert(this->channels == 3);
 
     this->motors[0]->setTicksPosition(REF0);
@@ -840,7 +840,7 @@ canMsg* MotorBoard::sendPositionReference(char REF0, char REF1, char REF2){
 * @param	REF3		Reference position for channel 3
 * @param	REF4		Reference position for channel 4
 ******************************************************************************/
-canMsg* MotorBoard::sendPositionReference(char REF0, char REF1, char REF2, char REF3, char REF4){
+canMsg* MotorBoard::sendPositionReference(char REF0, char REF1, char REF2, char REF3, char REF4, int dummy1, int dummy2){
     assert(this->channels == 5);
 
     this->motors[0]->setTicksPosition(REF0);
