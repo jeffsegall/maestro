@@ -2,6 +2,7 @@
 #define HUBOMOTOR_H
 
 #include <math.h>
+#include <stdlib.h>
 
 /* The HuboMotor class defines some state parameters for a single motor in the HUBO+ */
 
