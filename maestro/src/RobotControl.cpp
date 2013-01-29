@@ -286,7 +286,7 @@ vector<float> trajectoryValues(string path){
         outputQueue->pop();
         usleep(delay);
     }
-    else if (/*enableControl*/){
+    else {
 
     	for (map<boardNum, MotorBoard*>::iterator it = this->state->getBoards().begin(); it != this->state->getBoards().end(); it++){
     		std::cout << "Iterating loop!" << std::endl;
