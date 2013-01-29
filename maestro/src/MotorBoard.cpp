@@ -805,6 +805,9 @@ canMsg* MotorBoard::sendPositionReference(vector<int> REF, int MAX_STEP, int MIN
 
 		this->outQueue->push(buildCanMessage(out));
     }
+
+    for (int i = 0; i < channels; i++)
+    	getMotorByChannel(i)->setDesiredPosition(REF[i]);
     return out;
 }
 
