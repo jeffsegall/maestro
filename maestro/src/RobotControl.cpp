@@ -218,6 +218,7 @@ RobotControl::RobotControl(const std::string& name):
 
     this->written = 0;
     this->printNow = false;
+    this->enableControl = false;
     this->delay = 100000;
     initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
 
@@ -285,7 +286,7 @@ vector<float> trajectoryValues(string path){
         outputQueue->pop();
         usleep(delay);
     }
-    else{
+    else if (enableControl){
 
     	for (map<boardNum, MotorBoard*>::iterator it = this->state->getBoards().begin(); it != this->state->getBoards().end(); it++){
     		std::cout << "Iterating loop!" << std::endl;
@@ -505,12 +506,14 @@ vector<float> trajectoryValues(string path){
   void RobotControl::enable(int board, int delay){
       this->state->getBoardByNumber(board)->setHIP(1);
       this->state->getBoardByNumber(board)->enableController();
+      enableControl = true;
       //this->state->getBoardByNumber(board)->requestEncoderPosition(0);
   }
 
   void RobotControl::disable(int board, int delay){
       this->state->getBoardByNumber(board)->setHIP(0);
       this->state->getBoardByNumber(board)->disableController();
+      enableControl = false;
       //this->state->getBoardByNumber(board)->requestEncoderPosition(0);
   }
 

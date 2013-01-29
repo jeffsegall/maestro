@@ -95,7 +95,7 @@ private:
     map< string, vector<float> > gestures;
    
     int written;
-    bool printNow;
+    bool printNow, enableControl;
     int delay;
 };
 
