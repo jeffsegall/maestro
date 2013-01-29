@@ -62,6 +62,7 @@ HuboMotor::HuboMotor(const HuboMotor& rhs){
     this->i_err = rhs.i_err;
     this->b_err = rhs.b_err;
     this->ticks_position = rhs.ticks_position;
+    this->desired_position = rhs.desired_position;
 }
 
 void HuboMotor::setUpperLimit(long limit){
