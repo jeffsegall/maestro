@@ -193,24 +193,24 @@ RobotControl::RobotControl(const std::string& name):
     			.arg("Ticks", "Desired current perceived position in ticks.");
 
     this->addOperation("setMaxAccVel", &RobotControl::setMaxAccVel, this, RTT::OwnThread)
-        			.arg("Board", "The board to send commands to")
-        			.arg("Motor", "The motor channel to set maximum velocity and acceleration on.")
-        			.arg("Max Accel", "Maximum Acceleration in unknown units.")
-        			.arg("Max Vel", "Maximum Velocity in unknown units.");
+				.arg("Board", "The board to send commands to")
+				.arg("Motor", "The motor channel to set maximum velocity and acceleration on.")
+				.arg("Max Accel", "Maximum Acceleration in unknown units.")
+				.arg("Max Vel", "Maximum Velocity in unknown units.");
 
     this->addOperation("setPositionGain", &RobotControl::setPositionGain, this, RTT::OwnThread)
-            			.arg("Board", "The board to send commands to")
-            			.arg("Motor", "The motor channel to set gains on.")
-            			.arg("kP", "Proportion gain.")
-            			.arg("kI", "Integral gain.")
-						.arg("kD", "Derivative gain");
+				.arg("Board", "The board to send commands to")
+				.arg("Motor", "The motor channel to set gains on.")
+				.arg("kP", "Proportion gain.")
+				.arg("kI", "Integral gain.")
+				.arg("kD", "Derivative gain");
 
     this->addOperation("debugControl", &RobotControl::debugControl, this, RTT::OwnThread)
 			.arg("Board", "The board to send commands to")
 			.arg("Operation", "Operation to perform. Use a value of 0 for a list of commands.");
 
     this->addOperation("setDelay", &RobotControl::setDelay, this, RTT::OwnThread)
-    			.arg("Microseconds", "Delay amount in microseconds.");
+			.arg("Microseconds", "Delay amount in microseconds.");
 
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
             .arg("Path", "The path to the file that contains the gesture.")
@@ -286,15 +286,12 @@ vector<float> trajectoryValues(string path){
         usleep(delay);
     }
     else{
-    	/*
-        if (mb != NULL){
-             canMsg* out = new canMsg(BNO_R_HIP_YAW_ROLL, TX_REF, (cmdType)2,
-                                 mb->getMotorByChannel(0)->getTicksPosition(), 
-                                 mb->getMotorByChannel(1)->getTicksPosition(), 0, 0, 0, 0, 0, 0);
-            outputQueue->push(buildCanMessage(out));
-            this->canDownPort->write(outputQueue->front());
-        }
-        */
+
+    	for (map<boardNum, MotorBoard*>::iterator it = this->state->getBoards().begin(); it != this->state->getBoards().end(); it++){
+    		std::cout << "Iterating loop!" << std::endl;
+    		this->canDownPort->write(buildCanMessage(it->second->sendPositionReference()));
+    	}
+
     }
   }
 
@@ -319,7 +316,7 @@ vector<float> trajectoryValues(string path){
   void RobotControl::initRobot(string path){
       this->state = new HuboState();
       if (strcmp(path.c_str(), "") == 0)
-          path == "/home/hubo/maestro/maestro/models/hubo_testrig.xml";
+          path = "/home/hubo/maestro/maestro/models/hubo_testrig.xml";
       
       //@TODO: Check for file existence before initializing.
       this->state->initHuboWithDefaults(path, this->outputQueue);
@@ -327,186 +324,124 @@ vector<float> trajectoryValues(string path){
 
   void RobotControl::setWaist(int ticks, int delay){
       //ros_gateway->transmit(0,ticks);
-      vector<int> pos(2);
-	  pos[0] = ticks;
-	  pos[1] = 0;
-      this->state->getBoardByNumber(BNO_WAIST)->sendPositionReference(pos);
+	  this->state->getBoardByNumber(BNO_WAIST)->getMotorByChannel(0)->setDesiredPosition(ticks);
   }
 
   void RobotControl::setNeck(int ticks, int one, int two, int delay){
-	  vector<int> pos(3);
-	  pos[0] = ticks;
-	  pos[1] = one;
-	  pos[2] = two;
-      this->state->getBoardByNumber(BNO_NECK_YAW_1_2)->sendPositionReference(pos);
+	  this->state->getBoardByNumber(BNO_NECK_YAW_1_2)->getMotorByChannel(0)->setDesiredPosition(ticks);
+	  this->state->getBoardByNumber(BNO_NECK_YAW_1_2)->getMotorByChannel(1)->setDesiredPosition(one);
+	  this->state->getBoardByNumber(BNO_NECK_YAW_1_2)->getMotorByChannel(1)->setDesiredPosition(two);
      //ros_gateway->transmit(1,ticks);
   }
 
   void RobotControl::setLeftShoulderRoll(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL);
-      vector<int> pos(2);
-	  pos[0] = mb->getMotorByChannel(0)->getTicksPosition();
-	  pos[1] = ticks;
-	  mb->sendPositionReference(pos);
+      mb->getMotorByChannel(1)->setDesiredPosition(ticks);
      //ros_gateway->transmit(3,ticks);
   }
 
   void RobotControl::setLeftShoulderPitch(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL);
-      vector<int> pos(2);
-	  pos[0] = ticks;
-	  pos[1] = mb->getMotorByChannel(1)->getTicksPosition();
-      mb->sendPositionReference(pos);
+      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
      //ros_gateway->transmit(4,ticks);
   }
   
   void RobotControl::setLeftShoulderYaw(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_SHOULDER_YAW_ELBOW);
-      vector<int> pos(2);
-	  pos[0] = mb->getMotorByChannel(1)->getTicksPosition();
-	  pos[1] = ticks;
-	  mb->sendPositionReference(pos);
+	  mb->getMotorByChannel(0)->setDesiredPosition(ticks);
      //ros_gateway->transmit(6,ticks);
   }
 
   void RobotControl::setLeftElbow(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_SHOULDER_YAW_ELBOW);
-      vector<int> pos(2);
-	  pos[0] = mb->getMotorByChannel(0)->getTicksPosition();
-	  pos[1] = ticks;
-	  mb->sendPositionReference(pos);
+	  mb->getMotorByChannel(1)->setDesiredPosition(ticks);
      //ros_gateway->transmit(6,ticks);
   }
 
   void RobotControl::setLeftWristPitch(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_WRIST_YAW_PITCH);
-      vector<int> pos(2);
-	  pos[0] = mb->getMotorByChannel(0)->getTicksPosition();
-	  pos[1] = ticks;
-	  mb->sendPositionReference(pos);
+	  mb->getMotorByChannel(1)->setDesiredPosition(ticks);
      //ros_gateway->transmit(8,ticks);
   }
 
   void RobotControl::setLeftWristYaw(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_WRIST_YAW_PITCH);
-      vector<int> pos(2);
-	  pos[0] = ticks;
-	  pos[1] = mb->getMotorByChannel(1)->getTicksPosition();
-      mb->sendPositionReference(pos);
+      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
       //ros_gateway->transmit(9,ticks);
   }
 
   void RobotControl::setRightShoulderRoll(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_SHOULDER_PITCH_ROLL);
-      vector<int> pos(2);
-	  pos[0] = mb->getMotorByChannel(0)->getTicksPosition();
-	  pos[1] = ticks;
-	  mb->sendPositionReference(pos);
+	  mb->getMotorByChannel(1)->setDesiredPosition(ticks);
       //ros_gateway->transmit(11,ticks);
   }
 
   void RobotControl::setRightShoulderPitch(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_SHOULDER_PITCH_ROLL);
-      vector<int> pos(2);
-	  pos[0] = ticks;
-	  pos[1] = mb->getMotorByChannel(1)->getTicksPosition();
-      mb->sendPositionReference(pos);
+      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
       //ros_gateway->transmit(12,ticks);
   }
 
   void RobotControl::setRightShoulderYaw(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_SHOULDER_YAW_ELBOW);
-      vector<int> pos(2);
-	  pos[0] = mb->getMotorByChannel(1)->getTicksPosition();
-	  pos[1] = ticks;
-	  mb->sendPositionReference(pos);
+	  mb->getMotorByChannel(0)->setDesiredPosition(ticks);
   }
   
   void RobotControl::setRightElbow(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_SHOULDER_YAW_ELBOW);
-      vector<int> pos(2);
-	  pos[0] = mb->getMotorByChannel(0)->getTicksPosition();
-	  pos[1] = ticks;
-	  mb->sendPositionReference(pos);
+      mb->getMotorByChannel(1)->setDesiredPosition(ticks);
       //ros_gateway->transmit(14,ticks);
   }
 
   void RobotControl::setRightWristPitch(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_WRIST_YAW_PITCH);
-      vector<int> pos(2);
-	  pos[0] = mb->getMotorByChannel(0)->getTicksPosition();
-	  pos[1] = ticks;
-	  mb->sendPositionReference(pos);
+      mb->getMotorByChannel(1)->setDesiredPosition(ticks);
       //ros_gateway->transmit(16,ticks);
   }
 
   void RobotControl::setRightWristYaw(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_WRIST_YAW_PITCH);
-      vector<int> pos(2);
-	  pos[0] = mb->getMotorByChannel(1)->getTicksPosition();
-	  pos[1] = ticks;
-	  mb->sendPositionReference(pos);
+      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
       //ros_gateway->transmit(17,ticks);
   }
 
   void RobotControl::setLeftHipYaw(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_HIP_YAW_ROLL);
-      vector<int> pos(2);
-	  pos[0] = ticks;
-	  pos[1] = mb->getMotorByChannel(1)->getTicksPosition();
-      mb->sendPositionReference(pos);
+      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
       //ros_gateway->transmit(19,ticks);
   }
 
   void RobotControl::setLeftHipRoll(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_HIP_YAW_ROLL);
-      vector<int> pos(2);
-	  pos[0] = mb->getMotorByChannel(0)->getTicksPosition();
-	  pos[1] = ticks;
-	  mb->sendPositionReference(pos);
+      mb->getMotorByChannel(1)->setDesiredPosition(ticks);
       //ros_gateway->transmit(20,ticks);
   }
 
   void RobotControl::setLeftHipPitch(int ticks, int delay){
-      vector<int> pos(2);
-	  pos[0] = ticks;
-	  pos[1] = 0;
-      this->state->getBoardByNumber(BNO_L_HIP_PITCH)->sendPositionReference(pos);
+      this->state->getBoardByNumber(BNO_L_HIP_PITCH)->getMotorByChannel(0)->setDesiredPosition(ticks);
       //ros_gateway->transmit(21,ticks);
   }
 
   void RobotControl::setLeftKnee(int ticks, int delay){
-      vector<int> pos(2);
-	  pos[0] = ticks;
-	  pos[1] = 0;
-      this->state->getBoardByNumber(BNO_L_KNEE)->sendPositionReference(pos);
+      this->state->getBoardByNumber(BNO_L_KNEE)->getMotorByChannel(0)->setDesiredPosition(ticks);
       //ros_gateway->transmit(22,ticks);
   }
 
   void RobotControl::setLeftAnklePitch(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_ANKLE_PITCH_ROLL);
-      vector<int> pos(2);
-	  pos[0] = ticks;
-	  pos[1] = mb->getMotorByChannel(1)->getTicksPosition();
-      mb->sendPositionReference(pos);
+      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
       //ros_gateway->transmit(23,ticks);
   }
 
   void RobotControl::setLeftAnkleRoll(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_ANKLE_PITCH_ROLL);
-      vector<int> pos(2);
-	  pos[0] = mb->getMotorByChannel(0)->getTicksPosition();
-	  pos[1] = ticks;
-	  mb->sendPositionReference(pos);
+      mb->getMotorByChannel(1)->setDesiredPosition(ticks);
       //ros_gateway->transmit(24,ticks);
   }
 
   void RobotControl::setRightHipYaw(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
-      vector<int> pos(2);
-      pos[0] = ticks;
-      pos[1] = mb->getMotorByChannel(1)->getTicksPosition();
-	  mb->sendPositionReference(pos);
+      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
       //ros_gateway->transmit(26,ticks);
       //this->canDownPort->write(buildCanMessage(out));
   }
@@ -518,10 +453,7 @@ vector<float> trajectoryValues(string path){
 
   void RobotControl::setRightHipRoll(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
-      vector<int> pos(2);
-	  pos[0] = mb->getMotorByChannel(0)->getTicksPosition();
-	  pos[1] = ticks;
-	  mb->sendPositionReference(pos);
+      mb->getMotorByChannel(1)->setDesiredPosition(ticks);
       //ros_gateway->transmit(27,ticks);
   }
 
@@ -531,57 +463,43 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setRightHipPitch(int ticks, int delay){
-	  vector<int> pos(2);
-	  pos[0] = ticks;
-	  pos[1] = 0;
-      this->state->getBoardByNumber(BNO_R_HIP_PITCH)->sendPositionReference(pos);
+      this->state->getBoardByNumber(BNO_R_HIP_PITCH)->getMotorByChannel(0)->setDesiredPosition(ticks);
       //ros_gateway->transmit(28,ticks);
   }
 
   void RobotControl::setRightKnee(int ticks, int delay){
-	  vector<int> pos(2);
-	  pos[0] = ticks;
-	  pos[1] = 0;
-      this->state->getBoardByNumber(BNO_R_KNEE)->sendPositionReference(pos);
+      this->state->getBoardByNumber(BNO_R_KNEE)->getMotorByChannel(0)->setDesiredPosition(ticks);;
       //ros_gateway->transmit(29,ticks);
   }
 
   void RobotControl::setRightAnklePitch(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_ANKLE_PITCH_ROLL);
-      vector<int> pos(2);
-      pos[0] = ticks;
-	  pos[1] = mb->getMotorByChannel(0)->getTicksPosition();
-      mb->sendPositionReference(pos);
+      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
       //ros_gateway->transmit(30,ticks);
   }
 
   void RobotControl::setRightAnkleRoll(int ticks, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_ANKLE_PITCH_ROLL);
-      vector<int> pos(2);
-      pos[0] = mb->getMotorByChannel(0)->getTicksPosition();
-      pos[1] = ticks;
-      mb->sendPositionReference(pos);
+      mb->getMotorByChannel(1)->setDesiredPosition(ticks);
       //ros_gateway->transmit(31,ticks);
   }
 
   void RobotControl::setRightHand(int f0, int f1, int f2, int f3, int f4, int delay){
-	  vector<int> ticks(5);
-	  ticks[0] = f0;
-	  ticks[1] = f1;
-	  ticks[2] = f2;
-	  ticks[3] = f3;
-	  ticks[4] = f4;
-      this->state->getBoardByNumber(BNO_R_HAND)->sendPositionReference(ticks);
+	  MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HAND);
+	  mb->getMotorByChannel(0)->setDesiredPosition(f0);
+	  mb->getMotorByChannel(1)->setDesiredPosition(f1);
+	  mb->getMotorByChannel(2)->setDesiredPosition(f2);
+	  mb->getMotorByChannel(3)->setDesiredPosition(f3);
+	  mb->getMotorByChannel(4)->setDesiredPosition(f4);
   }
 
   void RobotControl::setLeftHand(int f0, int f1, int f2, int f3, int f4, int delay){
-	  vector<int> ticks(5);
-	  ticks[0] = f0;
-	  ticks[1] = f1;
-	  ticks[2] = f2;
-	  ticks[3] = f3;
-	  ticks[4] = f4;
-	  this->state->getBoardByNumber(BNO_L_HAND)->sendPositionReference(ticks);
+	  MotorBoard* mb = this->state->getBoardByNumber(BNO_L_HAND);
+	  mb->getMotorByChannel(0)->setDesiredPosition(f0);
+	  mb->getMotorByChannel(1)->setDesiredPosition(f1);
+	  mb->getMotorByChannel(2)->setDesiredPosition(f2);
+	  mb->getMotorByChannel(3)->setDesiredPosition(f3);
+	  mb->getMotorByChannel(4)->setDesiredPosition(f4);
   }
 
   void RobotControl::enable(int board, int delay){

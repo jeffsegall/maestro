@@ -808,6 +808,24 @@ canMsg* MotorBoard::sendPositionReference(vector<int> REF, int MAX_STEP, int MIN
     return out;
 }
 
+canMsg* MotorBoard::sendPositionReference(int MAX_STEP, int MIN_STEP){
+	switch (channels){
+	case 2:
+		return new canMsg(this->BNO, TX_REF, (cmdType)2, motors[0]->interpolate(MAX_STEP, MIN_STEP),
+														motors[1]->interpolate(MAX_STEP, MIN_STEP), 0, 0, 0, 0, 0, 0);
+	case 3:
+		return new canMsg(this->BNO, TX_REF, (cmdType)3, motors[0]->interpolate(MAX_STEP, MIN_STEP),
+														motors[1]->interpolate(MAX_STEP, MIN_STEP),
+														motors[2]->interpolate(MAX_STEP, MIN_STEP), 0, 0, 0, 0, 0);
+	case 5:
+		return new canMsg(this->BNO, TX_REF, (cmdType)5, motors[0]->interpolate(MAX_STEP, MIN_STEP),
+														motors[1]->interpolate(MAX_STEP, MIN_STEP),
+														motors[2]->interpolate(MAX_STEP, MIN_STEP),
+														motors[3]->interpolate(MAX_STEP, MIN_STEP),
+														motors[4]->interpolate(MAX_STEP, MIN_STEP), 0, 0, 0);
+	}
+}
+
 /******************************************************************************
 * sendPositionReference
 * 

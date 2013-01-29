@@ -10,6 +10,7 @@
 #include <hubomsg/typekit/CanMessage.h>
 #include <vector>
 #include <queue>
+#include <map>
 #include "huboCan.h"
 #include "CommHandler.h"
 #include "HuboState.h"
