@@ -288,10 +288,8 @@ vector<float> trajectoryValues(string path){
     }
     else {
 
-    	for (map<boardNum, MotorBoard*>::iterator it = this->state->getBoards().begin(); it != this->state->getBoards().end(); it++){
-    		std::cout << "Iterating loop!" << std::endl;
+    	for (map<boardNum, MotorBoard*>::iterator it = this->state->getBoards().begin(); it != this->state->getBoards().end(); it++)
     		this->outputQueue->push(buildCanMessage(it->second->sendPositionReference()));
-    	}
 
     }
   }
