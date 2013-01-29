@@ -3,6 +3,7 @@
 
 HuboMotor::HuboMotor(){
     this->ticks_position = 0;
+    this->desired_position = 0;
 }
 
 HuboMotor::HuboMotor(long mpos1, long mpos2, long kp, long kd, long ki,
