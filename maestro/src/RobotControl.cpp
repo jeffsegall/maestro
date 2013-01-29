@@ -222,7 +222,7 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Board", "The board on which to run the gesture");
 
     this->written = 0;
-    this->printNow = true;
+    this->printNow = false;
     this->enableControl = false;
     this->delay = 100000;
     initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
@@ -291,7 +291,7 @@ vector<float> trajectoryValues(string path){
         outputQueue->pop();
         usleep(delay);
     }
-    else if (enableControl){
+    else {
 
     	for (map<boardNum, MotorBoard*>::iterator it = this->state->getBoards().begin(); it != this->state->getBoards().end(); it++)
     		this->outputQueue->push(buildCanMessage(it->second->sendPositionReference()));
