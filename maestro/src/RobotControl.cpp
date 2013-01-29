@@ -192,6 +192,11 @@ RobotControl::RobotControl(const std::string& name):
     			.arg("Motor", "The motor channel to set current perceived position on.")
     			.arg("Ticks", "Desired current perceived position in ticks.");
 
+    this->addOperation("getCurrentGoal", &RobotControl::getCurrentGoal, this, RTT::OwnThread)
+    			.arg("Board", "The board to send commands to")
+    			.arg("Motor", "The motor channel to request current requested position from.")
+    			.arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("setMaxAccVel", &RobotControl::setMaxAccVel, this, RTT::OwnThread)
 				.arg("Board", "The board to send commands to")
 				.arg("Motor", "The motor channel to set maximum velocity and acceleration on.")
@@ -556,6 +561,10 @@ vector<float> trajectoryValues(string path){
   void RobotControl::setCurrentTicks(int board, int motor, int ticks){
 	  this->state->getBoardByNumber(board)->getMotorByChannel(motor)->setTicksPosition((long)ticks);
   }
+
+  void RobotControl::getCurrentGoal(int board, int motor, int delay){
+  	  std::cout << "Motor[" << motor << "] goal: " << this->state->getBoardByNumber(board)->getMotorByChannel(motor)->getDesiredPosition() << std::endl;
+   }
 
   void RobotControl::setMaxAccVel(int board, int motor, int acc, int vel){
 	  this->state->getBoardByNumber(board)->setMaxAccVel((char)motor, acc, vel);
