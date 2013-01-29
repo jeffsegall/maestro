@@ -217,7 +217,7 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Board", "The board on which to run the gesture");
 
     this->written = 0;
-    this->printNow = false;
+    this->printNow = true;
     this->enableControl = false;
     this->delay = 100000;
     initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
