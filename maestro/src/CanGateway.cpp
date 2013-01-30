@@ -207,6 +207,7 @@ void CanGateway::recvFromRos(){
 
         switch (inMsg.mType){
         case TX_REF:
+        	tempOutput << "Reference Command Received!" << std::endl;
         	boards[(boardNum)inMsg.bno][0] = inMsg.r1;
         	boards[(boardNum)inMsg.bno][1] = inMsg.r2;
         	boards[(boardNum)inMsg.bno][2] = inMsg.r3;
@@ -383,12 +384,14 @@ void CanGateway::updateHook(){
 	static map<boardNum, vector<int> >::iterator it = boards.begin();
 
     recvFromRos();
-    if (it == boards.end())
+    if (it == boards.end()){
     	it = boards.begin();
-    else if (downQueue->empty()) { // If we have nothing else to send, send a position.
+    	tempOutput << "Reached end of map! Returning to the beginning." << std::endl;
+    } else if (downQueue->empty()) { // If we have nothing else to send, send a position.
     	while (!it->second[5] && it != boards.end()) //Move to an enabled board in our map, or to the end of the list
     		it++;
     	if (it != boards.end()) {
+    		tempOutput << "Found enabled board!" << std::endl;
     		// we have found an enabled board, so let's send a packet and increment the iterator.
     		switch (it->first){ // Which board are we talking to?
     		case BNO_WAIST :
