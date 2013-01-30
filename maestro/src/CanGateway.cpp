@@ -383,7 +383,7 @@ void CanGateway::updateHook(){
 	static map<boardNum, vector<int> >::iterator it = boards.begin();
 
     recvFromRos();
-    if (it = boards.end())
+    if (it == boards.end())
     	it = boards.begin();
     else if (downQueue->empty()) { // If we have nothing else to send, send a position.
     	while (!it->second[5] && it != boards.end()) //Move to an enabled board in our map, or to the end of the list
@@ -421,7 +421,10 @@ void CanGateway::updateHook(){
 				downQueue->push(canMsg(it->first, (messageType)TX_REF, (cmdType)2,
 							it->second[0], it->second[1], it->second[2], it->second[3], it->second[4], 0, 0, 0)); // Send out a position command with preset arguments
 				break;
+			default:
+				break;
     		}
+    		it++;
     	}
     }
 
