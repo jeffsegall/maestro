@@ -396,8 +396,8 @@ void CanGateway::updateHook(){
     		case BNO_L_KNEE :
     		case BNO_R_HIP_PITCH :
 			case BNO_R_KNEE :  // 1 Motor Channel (treated as 2 motor channels)
-				downQueue->push(canMsg(it->first, messageType(TX_REF, (cmdType)2,
-							it->second[0], 0, 0, 0, 0, 0, 0, 0))); // Send out a position command with preset arguments
+				downQueue->push(canMsg(it->first, (messageType)TX_REF, (cmdType)2,
+							it->second[0], 0, 0, 0, 0, 0, 0, 0)); // Send out a position command with preset arguments
 				break;
 			case BNO_L_SHOULDER_PITCH_ROLL :
 			case BNO_L_SHOULDER_YAW_ELBOW :
@@ -409,17 +409,17 @@ void CanGateway::updateHook(){
 			case BNO_L_ANKLE_PITCH_ROLL :
 			case BNO_R_HIP_YAW_ROLL:
     		case BNO_R_ANKLE_PITCH_ROLL :// 2 Motor Channels
-    			downQueue->push(canMsg(it->first, messageType(TX_REF, (cmdType)2,
-							it->second[0], it->second[1], 0, 0, 0, 0, 0, 0))); // Send out a position command with preset arguments
+    			downQueue->push(canMsg(it->first, (messageType)TX_REF, (cmdType)2,
+							it->second[0], it->second[1], 0, 0, 0, 0, 0, 0)); // Send out a position command with preset arguments
 				break;
     		case BNO_NECK_YAW_1_2 : // 3 Motor Channels
-    			downQueue->push(canMsg(it->first, messageType(TX_REF, (cmdType)2,
-							it->second[0], it->second[1], it->second[2], 0, 0, 0, 0, 0))); // Send out a position command with preset arguments
+    			downQueue->push(canMsg(it->first, (messageType)TX_REF, (cmdType)2,
+							it->second[0], it->second[1], it->second[2], 0, 0, 0, 0, 0)); // Send out a position command with preset arguments
 				break;
     		case BNO_R_HAND :
 			case BNO_L_HAND : // 5 Motor Channels
-				downQueue->push(canMsg(it->first, messageType(TX_REF, (cmdType)2,
-							it->second[0], it->second[1], it->second[2], it->second[3], it->second[4], 0, 0, 0))); // Send out a position command with preset arguments
+				downQueue->push(canMsg(it->first, (messageType)TX_REF, (cmdType)2,
+							it->second[0], it->second[1], it->second[2], it->second[3], it->second[4], 0, 0, 0)); // Send out a position command with preset arguments
 				break;
     		}
     	}
