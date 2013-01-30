@@ -208,6 +208,8 @@ void CanGateway::recvFromRos(){
         switch (inMsg.mType){
         case TX_REF:
         	tempOutput << "Reference Command Received!" << std::endl;
+        	if (boards[(boardNum)inMsg.bno] == NULL)
+        		boards[(boardNum)inMsg.bno] = vector<int>(6);
         	boards[(boardNum)inMsg.bno][0] = inMsg.r1;
         	boards[(boardNum)inMsg.bno][1] = inMsg.r2;
         	boards[(boardNum)inMsg.bno][2] = inMsg.r3;
@@ -217,9 +219,13 @@ void CanGateway::recvFromRos(){
         case TX_MOTOR_CMD:
         	switch (inMsg.cmdType){
         	case CMD_CONTROLLER_ON:
+        		if (boards[(boardNum)inMsg.bno] == NULL)
+					boards[(boardNum)inMsg.bno] = vector<int>(6);
         		boards[(boardNum)inMsg.bno][5] = 1; //Set a flag to enable sending positions to this board
         		break;
         	case CMD_CONTROLLER_OFF:
+        		if (boards[(boardNum)inMsg.bno] == NULL)
+					boards[(boardNum)inMsg.bno] = vector<int>(6);
         		boards[(boardNum)inMsg.bno][5] = 0; //Unset the flag to stop sending positions to this board
         		break;
         	default: break;
