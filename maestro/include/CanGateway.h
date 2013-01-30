@@ -21,6 +21,8 @@
 #include <string>
 #include "huboCan.h"
 #include <queue>
+#include <map>
+#include <vector>
 #include <hubomsg/typekit/CanMessage.h>
 #include <iostream>
 #include <fstream>
@@ -67,6 +69,8 @@ private:
 
     queue<canMsg>* upQueue;
     queue<canMsg>* downQueue;
+
+    map<boardNum, vector<int> > boards;
 
     long tempYaw, tempRoll;
     bool rightHipEnabled;
