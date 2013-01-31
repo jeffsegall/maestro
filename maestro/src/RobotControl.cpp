@@ -225,6 +225,7 @@ RobotControl::RobotControl(const std::string& name):
     this->printNow = false;
     this->enableControl = false;
     this->delay = 0;
+    tempOutput.open("/home/hubo/maestro/RobotControlLog.txt");
     initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
 
   }
@@ -295,7 +296,12 @@ vector<float> trajectoryValues(string path){
 
     	if (!this->state->getBoards().empty()) {
 			for (map<boardNum, MotorBoard*>::iterator it = this->state->getBoards().begin(); it != this->state->getBoards().end(); it++){
-				//this->outputQueue->push(buildCanMessage(it->second->sendPositionReference()));
+				try{
+					this->outputQueue->push(buildCanMessage(it->second->sendPositionReference()));
+				}
+				catch(...){
+					tempOutput << "CAUGHT AN EXCEPTION." << endl;
+				}
 			}
     	}
 

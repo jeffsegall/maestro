@@ -94,6 +94,7 @@ private:
     queue<hubomsg::CanMessage>* outputQueue;
 
     map< string, vector<float> > gestures;
+    ofstream tempOutput;
    
     int written;
     bool printNow, enableControl;
