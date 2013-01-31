@@ -385,7 +385,8 @@ void CanGateway::updateHook(){
     if (it == flags.end()){
     	it = flags.begin();
     	//tempOutput << "Reached end of map! Returning to the beginning." << std::endl;
-    } else if (downQueue->empty()) { // If we have nothing else to send, send a position.
+    }
+    if (downQueue->empty()) { // If we have nothing else to send, send a position.
     	while (!it->second && it != flags.end()) //Move to an enabled board in our map, or to the end of the list
     		it++;
     	if (it != flags.end()) {
