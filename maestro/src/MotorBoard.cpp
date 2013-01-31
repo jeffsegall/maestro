@@ -814,7 +814,6 @@ canMsg* MotorBoard::sendPositionReference(vector<int> REF, int MAX_STEP, int MIN
 canMsg* MotorBoard::sendPositionReference(int MAX_STEP, int MIN_STEP){
 	switch (channels){
 	case 2:
-		std::cout << "pointer1: " << motors[0] << "        pointer2: " << motors[1] << std::endl;
 		return new canMsg(this->BNO, TX_REF, (cmdType)2, motors[0]->interpolate(MAX_STEP, MIN_STEP),
 														motors[1]->interpolate(MAX_STEP, MIN_STEP), 0, 0, 0, 0, 0, 0);
 	case 3:
