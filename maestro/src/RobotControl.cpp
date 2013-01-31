@@ -298,7 +298,10 @@ vector<float> trajectoryValues(string path){
 			for (map<boardNum, MotorBoard*>::iterator it = this->state->getBoards().begin(); it != this->state->getBoards().end(); it++){
 				try{
 					//this->outputQueue->push(buildCanMessage(it->second->sendPositionReference()));
-					it->second->sendPositionReference();
+					canMsg* out = it->second->sendPositionReference();
+					tempOutput << "made a message.";
+					buildCanMessage(out);
+					tempOutput << "built a message.";
 				}
 				catch(...){
 					tempOutput << "CAUGHT AN EXCEPTION." << endl;
