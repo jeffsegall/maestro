@@ -207,7 +207,7 @@ void CanGateway::recvFromRos(){
 
         switch (inMsg.mType){
         case TX_REF:{
-        	tempOutput << "Reference Command Received!" << std::endl;
+        	//tempOutput << "Reference Command Received!" << std::endl;
         	// Maximum of 5 arguments, unused args are 0. We'll worry about specific boards later.
         	State vals = { {inMsg.r1, inMsg.r2, inMsg.r3, inMsg.r4, inMsg.r5} };
         	positions[(boardNum)inMsg.bno] = vals;
@@ -384,7 +384,7 @@ void CanGateway::updateHook(){
     recvFromRos();
     if (it == flags.end()){
     	it = flags.begin();
-    	tempOutput << "Reached end of map! Returning to the beginning." << std::endl;
+    	//tempOutput << "Reached end of map! Returning to the beginning." << std::endl;
     } else if (downQueue->empty()) { // If we have nothing else to send, send a position.
     	while (!it->second && it != flags.end()) //Move to an enabled board in our map, or to the end of the list
     		it++;
