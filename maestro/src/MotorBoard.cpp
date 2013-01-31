@@ -812,6 +812,10 @@ canMsg* MotorBoard::sendPositionReference(vector<int> REF, int MAX_STEP, int MIN
 }
 
 canMsg* MotorBoard::sendPositionReference(int MAX_STEP, int MIN_STEP){
+	if (motors.size() < channels){
+		std::cout << "MASSIVE ERROR. NOT ENOUGH MOTORS. PANIC!" << endl;
+		return NULL;
+	}
 	switch (channels){
 	case 2:
 		return new canMsg(this->BNO, TX_REF, (cmdType)2, motors[0]->interpolate(MAX_STEP, MIN_STEP),
