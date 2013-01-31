@@ -590,7 +590,7 @@ vector<float> trajectoryValues(string path){
           vector<int> ticks(2); //TODO: Request number of channels, or make runGesture more robust.
           ticks[0] = val;
           ticks[1] = val;
-          this->state->getBoardByNumber(board)->sendPositionReference(ticks, 50, 125);
+          this->state->getBoardByNumber(board)->sendPositionReference(ticks, 125, 50);
       }
   }
 
