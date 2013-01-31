@@ -388,8 +388,10 @@ void CanGateway::updateHook(){
     }
 
     if (downQueue->empty()) { // If we have nothing else to send, send a position.
-    	while (it != flags.end() && !it->second) //Move to an enabled board in our map, or to the end of the list
+    	while (it != flags.end() && !it->second){ //Move to an enabled board in our map, or to the end of the list
     		it++;
+    		tempOutput << "Moving through list." << endl;
+    	}
 
     	if (it != flags.end()) {
     		//tempOutput << "Found enabled board!" << std::endl;
