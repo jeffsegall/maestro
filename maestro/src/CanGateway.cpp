@@ -369,6 +369,8 @@ bool CanGateway::startHook(){
         return 1;
     }
     
+    it = flags.begin();
+
     return 0;
 }
 
@@ -379,7 +381,6 @@ bool CanGateway::startHook(){
 ******************************************************************/
 void CanGateway::updateHook(){
     //runTick();
-	static map<boardNum, bool >::iterator it = flags.begin();
 
     recvFromRos();
     if (it == flags.end()){

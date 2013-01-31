@@ -74,6 +74,7 @@ private:
 
     map<boardNum, State > positions;
     map<boardNum, bool> flags;
+    map<boardNum, bool>::iterator it;
 
     long tempYaw, tempRoll;
     bool rightHipEnabled;
