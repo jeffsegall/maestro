@@ -390,7 +390,7 @@ void CanGateway::updateHook(){
     		it++;
     	if (it != flags.end()) {
     		//TODO: Search for key in positions, if not found then break. if found, send the packet. iterate iterator regardless.
-    		tempOutput << "Found enabled board!" << std::endl;
+    		//tempOutput << "Found enabled board!" << std::endl;
     		map<boardNum, State>::iterator i = positions.find(it->first);
     		if (i != positions.end()){
 				// we have found an enabled board, so let's send a packet and increment the iterator.
