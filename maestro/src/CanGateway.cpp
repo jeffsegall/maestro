@@ -368,8 +368,6 @@ bool CanGateway::startHook(){
 //        write(channel, run.toCAN(), 1);
         return 1;
     }
-    
-    it = flags.begin();
 
     return 0;
 }
@@ -382,63 +380,67 @@ bool CanGateway::startHook(){
 void CanGateway::updateHook(){
     //runTick();
 
+	static map<boardNum, bool>::iterator it = flags.begin();
+
     recvFromRos();
-    if (it == flags.end()){
-    	it = flags.begin();
-    	//tempOutput << "Reached end of map! Returning to the beginning." << std::endl;
-    }
-
-    if (downQueue->empty()) { // If we have nothing else to send, send a position.
-    	while (it != flags.end() && !it->second){ //Move to an enabled board in our map, or to the end of the list
-    		it++;
-    		tempOutput << "Moving through list." << endl;
-    	}
-
-    	if (it != flags.end()) {
-    		//tempOutput << "Found enabled board!" << std::endl;
-    		map<boardNum, State>::iterator i = positions.find(it->first);
-    		if (i != positions.end()){
-				// we have found an enabled board, so let's send a packet and increment the iterator.
-				switch (i->first){ // Which board are we talking to?
-				case BNO_WAIST :
-				case BNO_L_HIP_PITCH :
-				case BNO_L_KNEE :
-				case BNO_R_HIP_PITCH :
-				case BNO_R_KNEE :  // 1 Motor Channel (treated as 2 motor channels)
-					downQueue->push(canMsg(i->first, (messageType)TX_REF, (cmdType)2,
-								i->second.values[0], 0, 0, 0, 0, 0, 0, 0)); // Send out a position command with preset arguments
-					break;
-				case BNO_L_SHOULDER_PITCH_ROLL :
-				case BNO_L_SHOULDER_YAW_ELBOW :
-				case BNO_L_WRIST_YAW_PITCH :
-				case BNO_R_SHOULDER_PITCH_ROLL :
-				case BNO_R_SHOULDER_YAW_ELBOW :
-				case BNO_R_WRIST_YAW_PITCH :
-				case BNO_L_HIP_YAW_ROLL :
-				case BNO_L_ANKLE_PITCH_ROLL :
-				case BNO_R_HIP_YAW_ROLL:
-				case BNO_R_ANKLE_PITCH_ROLL :// 2 Motor Channels
-					downQueue->push(canMsg(it->first, (messageType)TX_REF, (cmdType)2,
-								i->second.values[0], i->second.values[1], 0, 0, 0, 0, 0, 0)); // Send out a position command with preset arguments
-					break;
-				case BNO_NECK_YAW_1_2 : // 3 Motor Channels
-					downQueue->push(canMsg(it->first, (messageType)TX_REF, (cmdType)2,
-								i->second.values[0], i->second.values[1], i->second.values[2], 0, 0, 0, 0, 0)); // Send out a position command with preset arguments
-					break;
-				case BNO_R_HAND :
-				case BNO_L_HAND : // 5 Motor Channels
-					downQueue->push(canMsg(it->first, (messageType)TX_REF, (cmdType)2,
-								i->second.values[0], i->second.values[1], i->second.values[2],
-								i->second.values[3], i->second.values[4], 0, 0, 0)); // Send out a position command with preset arguments
-					break;
-				default:
-					break;
-				}
-			}
+    if (!flags.empty()){
+		if (it == flags.end()){
+			it = flags.begin();
+			//tempOutput << "Reached end of map! Returning to the beginning." << std::endl;
 		}
 
-		it++;
-	}
+		if (downQueue->empty()) { // If we have nothing else to send, send a position.
+			while (it != flags.end() && !it->second){ //Move to an enabled board in our map, or to the end of the list
+				it++;
+				tempOutput << "Moving through list." << endl;
+			}
+
+			if (it != flags.end()) {
+				//tempOutput << "Found enabled board!" << std::endl;
+				map<boardNum, State>::iterator i = positions.find(it->first);
+				if (i != positions.end()){
+					// we have found an enabled board, so let's send a packet and increment the iterator.
+					switch (i->first){ // Which board are we talking to?
+					case BNO_WAIST :
+					case BNO_L_HIP_PITCH :
+					case BNO_L_KNEE :
+					case BNO_R_HIP_PITCH :
+					case BNO_R_KNEE :  // 1 Motor Channel (treated as 2 motor channels)
+						downQueue->push(canMsg(i->first, (messageType)TX_REF, (cmdType)2,
+									i->second.values[0], 0, 0, 0, 0, 0, 0, 0)); // Send out a position command with preset arguments
+						break;
+					case BNO_L_SHOULDER_PITCH_ROLL :
+					case BNO_L_SHOULDER_YAW_ELBOW :
+					case BNO_L_WRIST_YAW_PITCH :
+					case BNO_R_SHOULDER_PITCH_ROLL :
+					case BNO_R_SHOULDER_YAW_ELBOW :
+					case BNO_R_WRIST_YAW_PITCH :
+					case BNO_L_HIP_YAW_ROLL :
+					case BNO_L_ANKLE_PITCH_ROLL :
+					case BNO_R_HIP_YAW_ROLL:
+					case BNO_R_ANKLE_PITCH_ROLL :// 2 Motor Channels
+						downQueue->push(canMsg(it->first, (messageType)TX_REF, (cmdType)2,
+									i->second.values[0], i->second.values[1], 0, 0, 0, 0, 0, 0)); // Send out a position command with preset arguments
+						break;
+					case BNO_NECK_YAW_1_2 : // 3 Motor Channels
+						downQueue->push(canMsg(it->first, (messageType)TX_REF, (cmdType)2,
+									i->second.values[0], i->second.values[1], i->second.values[2], 0, 0, 0, 0, 0)); // Send out a position command with preset arguments
+						break;
+					case BNO_R_HAND :
+					case BNO_L_HAND : // 5 Motor Channels
+						downQueue->push(canMsg(it->first, (messageType)TX_REF, (cmdType)2,
+									i->second.values[0], i->second.values[1], i->second.values[2],
+									i->second.values[3], i->second.values[4], 0, 0, 0)); // Send out a position command with preset arguments
+						break;
+					default:
+						break;
+					}
+				}
+			}
+
+			it++;
+		}
+    }
 
     /*
     if (downQueue->empty() && rightHipEnabled){
