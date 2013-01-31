@@ -295,6 +295,7 @@ vector<float> trajectoryValues(string path){
 
     	if (!this->state->getBoards().empty()) {
 			for (map<boardNum, MotorBoard*>::iterator it = this->state->getBoards().begin(); it != this->state->getBoards().end(); it++){
+				std::cout << "generating message for board num :" << boardNum << std::endl;
 				this->outputQueue->push(buildCanMessage(it->second->sendPositionReference()));
 			}
     	}
