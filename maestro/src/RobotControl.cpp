@@ -292,9 +292,9 @@ vector<float> trajectoryValues(string path){
         usleep(delay);
     }
     else {
-
-    	for (map<boardNum, MotorBoard*>::iterator it = this->state->getBoards().begin(); it != this->state->getBoards().end(); it++)
-    		if (!this->state->getBoards().empty()) this->outputQueue->push(buildCanMessage(it->second->sendPositionReference()));
+    	if (!this->state->getBoards().empty())
+			for (map<boardNum, MotorBoard*>::iterator it = this->state->getBoards().begin(); it != this->state->getBoards().end(); it++)
+				this->outputQueue->push(buildCanMessage(it->second->sendPositionReference()));
 
     }
   }
