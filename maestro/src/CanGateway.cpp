@@ -206,13 +206,13 @@ void CanGateway::recvFromRos(){
             //this->downQueue->pop();
 
         switch (inMsg.mType){
-        case TX_REF:
+        case TX_REF:{
         	tempOutput << "Reference Command Received!" << std::endl;
         	// Maximum of 5 arguments, unused args are 0. We'll worry about specific boards later.
         	State vals = { {inMsg.r1, inMsg.r2, inMsg.r3, inMsg.r4, inMsg.r5} };
         	positions[(boardNum)inMsg.bno] = vals;
         	break;
-        case TX_MOTOR_CMD:
+		} case TX_MOTOR_CMD:
         	switch (inMsg.cmdType){
         	case CMD_CONTROLLER_ON:
         		flags[(boardNum)inMsg.bno] = true; //Set a flag to enable sending positions to this board
@@ -386,9 +386,9 @@ void CanGateway::updateHook(){
     	it = flags.begin();
     	tempOutput << "Reached end of map! Returning to the beginning." << std::endl;
     } else if (downQueue->empty()) { // If we have nothing else to send, send a position.
-    	while (!it->second && it != boards.end()) //Move to an enabled board in our map, or to the end of the list
+    	while (!it->second && it != flags.end()) //Move to an enabled board in our map, or to the end of the list
     		it++;
-    	if (it != boards.end()) {
+    	if (it != flags.end()) {
     		//TODO: Search for key in positions, if not found then break. if found, send the packet. iterate iterator regardless.
     		tempOutput << "Found enabled board!" << std::endl;
     		map<boardNum, State>::iterator i = positions.find(it->first);
