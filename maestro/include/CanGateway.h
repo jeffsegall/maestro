@@ -56,6 +56,8 @@ public:
 
 private:
 
+    struct State { int values[5]; };
+
     char* strToSerial(string packet);
 
     int channel;
@@ -70,7 +72,8 @@ private:
     queue<canMsg>* upQueue;
     queue<canMsg>* downQueue;
 
-    map<boardNum, vector<int> > boards;
+    map<boardNum, State > positions;
+    map<boardNum, bool> flags;
 
     long tempYaw, tempRoll;
     bool rightHipEnabled;
