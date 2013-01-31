@@ -385,11 +385,13 @@ void CanGateway::updateHook(){
     if (it == flags.end()){
     	it = flags.begin();
     	//tempOutput << "Reached end of map! Returning to the beginning." << std::endl;
-    } else if (downQueue->empty()) { // If we have nothing else to send, send a position.
-    	while (!it->second && it != flags.end()) //Move to an enabled board in our map, or to the end of the list
+    }
+
+    if (downQueue->empty()) { // If we have nothing else to send, send a position.
+    	while (it != flags.end() && !it->second) //Move to an enabled board in our map, or to the end of the list
     		it++;
+
     	if (it != flags.end()) {
-    		//TODO: Search for key in positions, if not found then break. if found, send the packet. iterate iterator regardless.
     		//tempOutput << "Found enabled board!" << std::endl;
     		map<boardNum, State>::iterator i = positions.find(it->first);
     		if (i != positions.end()){
