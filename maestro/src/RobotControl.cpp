@@ -224,7 +224,7 @@ RobotControl::RobotControl(const std::string& name):
     this->written = 0;
     this->printNow = false;
     this->enableControl = false;
-    this->delay = 100000;
+    this->delay = 0;
     initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
 
   }
