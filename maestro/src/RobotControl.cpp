@@ -226,7 +226,7 @@ RobotControl::RobotControl(const std::string& name):
     this->enableControl = false;
     this->delay = 100000;
     tempOutput.open("/home/hubo/maestro/RobotControlLog.txt");
-    initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
+    //initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
 
   }
   
