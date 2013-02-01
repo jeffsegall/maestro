@@ -297,6 +297,8 @@ vector<float> trajectoryValues(string path){
     	if (!this->state->getBoards().empty()) {
     		tempOutput << "Before creation of new iterator. Let's get ready to ITERATE!!!" << std::endl;
 			for (map<boardNum, MotorBoard*>::iterator it = this->state->getBoards().begin(); it != this->state->getBoards().end(); it++){
+				std::cout << "Looping..." << std::endl;
+				std::cout << "Size of map: " << this->state->getBoards().size() << std::endl;
 				try{
 					//this->outputQueue->push(buildCanMessage(it->second->sendPositionReference()));
 					canMsg* out = it->second->sendPositionReference();
