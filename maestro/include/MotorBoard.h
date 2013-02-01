@@ -51,6 +51,7 @@ class MotorBoard{// : public RTT::TaskContext {
         void removeMotor(int channel);
         void setTicksPosition(vector<long> ticks);
         HuboMotor* getMotorByChannel(int channel);
+        boardNum getBoardNumber();
 
         // PROTOCOL MOTOR COMMANDS
 

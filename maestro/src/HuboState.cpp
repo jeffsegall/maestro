@@ -93,7 +93,7 @@ void HuboState::initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* ou
 													 motor.attribute("harm").as_int(),
 													 motor.attribute("enc").as_int()); //Set Gear Ratios for Radian <-> Tick conversions
         }
-        this->addBoard(BNO, mb);
+        this->addBoard(mb);
     }
 }
 
@@ -120,13 +120,12 @@ MotorBoard* HuboState::getBoardByNumber(int number){
 *		not exist with the given number.
 ******************************************************************************/
 MotorBoard* HuboState::getBoardByNumber(boardNum number){
-    map<boardNum, MotorBoard*>::iterator it;
-
-    it = this->boards.find(number);
-    if (it == this->boards.end())
-        return NULL;
-
-    return it->second;
+	for (int i = 0; i < boards.size(); i++){
+		if (boards[i]->getBoardNumber() == number){
+			return boards[i];
+		}
+	}
+	return NULL;
 }
 
 /******************************************************************************
@@ -137,10 +136,10 @@ MotorBoard* HuboState::getBoardByNumber(boardNum number){
 * @param	num		The motor board number
 * @param	board		The motor board to add
 ******************************************************************************/
-void HuboState::addBoard(int num, MotorBoard* board){
-    this->boards[(boardNum)num] = board;
+void HuboState::addBoard(MotorBoard* board){
+    this->boards.push_back(board);
 }
 
-map<boardNum, MotorBoard*> HuboState::getBoards(){
+vector<MotorBoard*> HuboState::getBoards(){
     return this->boards;
 }

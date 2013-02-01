@@ -32,7 +32,7 @@ class HuboState{
 
     private:
     
-	map<boardNum, MotorBoard*> boards;
+	vector<MotorBoard*> boards;
 	
 	public:
 
@@ -44,8 +44,8 @@ class HuboState{
         MotorBoard* getBoardByNumber(int number);
         MotorBoard* getBoardByNumber(boardNum number);
 
-        void addBoard(int num, MotorBoard* board);
+        void addBoard(MotorBoard* board);
 
-        map<boardNum, MotorBoard*> getBoards();
+        vector<MotorBoard*> getBoards();
 };
 #endif

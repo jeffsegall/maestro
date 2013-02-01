@@ -134,6 +134,10 @@ HuboMotor* MotorBoard::getMotorByChannel(int channel){
     return this->motors[channel];
 }
 
+boardNum MotorBoard::getBoardNumber(){
+	return BNO;
+}
+
 /******************************************************************************
 * setTicksPosition
 *

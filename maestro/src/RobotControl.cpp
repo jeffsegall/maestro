@@ -294,10 +294,10 @@ vector<float> trajectoryValues(string path){
     }
     else {
     	if (!this->state->getBoards().empty()) {
-    		it = this->state->getBoards().begin();
+    		tempOutput << "Boards not empty. Map size: " << this->state->getBoards().size() << std::endl;
 			for (int i = 0; i < this->state->getBoards().size(); i++){
-				this->outputQueue->push(buildCanMessage(it->second->sendPositionReference()));
-				it++;
+				tempOutput << "Attempting to build message for :" << this->state->getBoards()[i]->getBoardNumber() << std::endl;
+				this->outputQueue->push(buildCanMessage(this->state->getBoards()[i]->sendPositionReference()));
 			}
     	}
     }
