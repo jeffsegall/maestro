@@ -299,7 +299,7 @@ vector<float> trajectoryValues(string path){
 				tempOutput << "Looping..." << std::endl;
 				tempOutput << "Size of map: " << this->state->getBoards().size() << std::endl;
 				tempOutput << "State: " << this->state << std::endl;
-				tempOutput << "Boards: " << this->state->getBoards() << std::endl;
+				tempOutput << "Boards: " << &this->state->getBoards() << std::endl;
 				try{
 					//this->outputQueue->push(buildCanMessage(it->second->sendPositionReference()));
 					canMsg* out = it->second->sendPositionReference();
