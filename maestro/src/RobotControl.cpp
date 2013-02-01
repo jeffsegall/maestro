@@ -300,8 +300,6 @@ vector<float> trajectoryValues(string path){
 				it++;
 			}
     	}
-
-
     }
   }
 
@@ -458,7 +456,7 @@ vector<float> trajectoryValues(string path){
 
   void RobotControl::setRightHipYawRad(double rads, int delay){
         MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
-        mb->sendPositionReferenceRadians(rads, mb->getMotorByChannel(1)->ticksToRadians(mb->getMotorByChannel(1)->getTicksPosition()));
+        mb->getMotorByChannel(0)->setDesiredPosition(mb->getMotorByChannel(0)->radiansToTicks(rads));
   }
 
   void RobotControl::setRightHipRoll(int ticks, int delay){
@@ -469,7 +467,7 @@ vector<float> trajectoryValues(string path){
 
   void RobotControl::setRightHipRollRad(double rads, int delay){
 	  MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
-	  mb->sendPositionReferenceRadians(mb->getMotorByChannel(0)->ticksToRadians(mb->getMotorByChannel(0)->getTicksPosition()), rads);
+	  mb->getMotorByChannel(1)->setDesiredPosition(mb->getMotorByChannel(1)->radiansToTicks(rads));
   }
 
   void RobotControl::setRightHipPitch(int ticks, int delay){
