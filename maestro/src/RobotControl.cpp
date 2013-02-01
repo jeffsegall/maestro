@@ -293,12 +293,13 @@ vector<float> trajectoryValues(string path){
         usleep(delay);
     }
     else {
-
     	if (!this->state->getBoards().empty()) {
     		tempOutput << "Before initialization of iterator. Let's get ready to ITERATE!!!" << std::endl;
 			for (it = this->state->getBoards().begin(); it != this->state->getBoards().end(); it++){
 				tempOutput << "Looping..." << std::endl;
 				tempOutput << "Size of map: " << this->state->getBoards().size() << std::endl;
+				tempOutput << "State: " << this->state << std::endl;
+				tempOutput << "Boards: " << this->state->getBoards() << std::endl;
 				try{
 					//this->outputQueue->push(buildCanMessage(it->second->sendPositionReference()));
 					canMsg* out = it->second->sendPositionReference();
