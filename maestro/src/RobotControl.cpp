@@ -222,11 +222,11 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Board", "The board on which to run the gesture");
 
     this->written = 0;
-    this->printNow = false;
+    this->printNow = true;
     this->enableControl = false;
-    this->delay = 100000;
+    this->delay = 0;
     tempOutput.open("/home/hubo/maestro/RobotControlLog.txt");
-    //initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
+    initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
 
   }
   
@@ -284,7 +284,7 @@ vector<float> trajectoryValues(string path){
 
     	hubomsg::CanMessage output = outputQueue->front();
     	if (printNow){
-    		std::cout << "Writing message to Board " << output.bno << ": R1 = " << outputQueue->front().r1 << std::endl;
+    		tempOutput << "Writing message to Board " << output.bno << ": R1 = " << outputQueue->front().r1 << std::endl;
     	}
 
 		this->canDownPort->write(output);
