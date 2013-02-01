@@ -295,7 +295,8 @@ vector<float> trajectoryValues(string path){
     else {
     	if (!this->state->getBoards().empty()) {
     		tempOutput << "Before initialization of iterator. Let's get ready to ITERATE!!!" << std::endl;
-			for (it = this->state->getBoards().begin(); it != this->state->getBoards().end(); it++){
+    		it = this->state->getBoards().begin();
+			for (int i = 0; i < this->state->getBoards().size(); i++){
 				tempOutput << "Looping..." << std::endl;
 				tempOutput << "Size of map: " << this->state->getBoards().size() << std::endl;
 				tempOutput << "State: " << this->state << std::endl;
@@ -310,6 +311,7 @@ vector<float> trajectoryValues(string path){
 				catch(...){
 					tempOutput << "CAUGHT AN EXCEPTION." << endl;
 				}
+				it++;
 			}
     	}
 
