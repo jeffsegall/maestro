@@ -837,6 +837,12 @@ canMsg* MotorBoard::sendPositionReference(int MAX_STEP, int MIN_STEP){
 	}
 }
 
+bool MotorBoard::requiresMotion(){
+	for (int i = 0; i < channels; i++)
+		if (motors[i]->getDesiredPosition() != motors[i]->getTicksPosition()) return true;
+	return false;
+}
+
 /******************************************************************************
 * sendPositionReference
 * 
