@@ -226,7 +226,7 @@ RobotControl::RobotControl(const std::string& name):
     this->enableControl = false;
     this->delay = 0;
     tempOutput.open("/home/hubo/maestro/RobotControlLog.txt");
-    initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
+    //initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
 
   }
   
@@ -253,10 +253,13 @@ vector<float> trajectoryValues(string path){
     hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
     hubomsg::CanMessage canMessage = hubomsg::CanMessage();
 
+    tempOutput << "before call to update" << std::endl;
     commHandler->update();
 
+    tempOutput << "before call to getboard" << std::endl;
     MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
 
+    tempOutput << "before call to isNew" << std::endl;
     if (commHandler->isNew()){
         //Received update from CanGateway
 
@@ -291,16 +294,13 @@ vector<float> trajectoryValues(string path){
 
         outputQueue->pop();
         usleep(delay);
-    }
-    else {
-    	if (!this->state->getBoards().empty()) {
-    		tempOutput << "Boards not empty. Map size: " << this->state->getBoards().size() << std::endl;
-			for (int i = 0; i < this->state->getBoards().size(); i++){
-				tempOutput << "Attempting to build message for :" << this->state->getBoards()[i]->getBoardNumber() << std::endl;
-				this->outputQueue->push(buildCanMessage(this->state->getBoards()[i]->sendPositionReference()));
-			}
-    	}
-    }
+    } else if (!this->state->getBoards().empty()) {
+		tempOutput << "Boards not empty. Map size: " << this->state->getBoards().size() << std::endl;
+		for (int i = 0; i < this->state->getBoards().size(); i++){
+			tempOutput << "Attempting to build message for :" << this->state->getBoards()[i]->getBoardNumber() << std::endl;
+			this->outputQueue->push(buildCanMessage(this->state->getBoards()[i]->sendPositionReference()));
+		}
+	}
   }
 
   hubomsg::CanMessage RobotControl::buildCanMessage(canMsg* msg){
