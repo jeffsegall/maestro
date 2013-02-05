@@ -249,6 +249,8 @@ vector<float> trajectoryValues(string path){
 }
 
   void RobotControl::updateHook(){
+
+	tempOutput << "In Update Hook." << std::endl;
     
     hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
     hubomsg::CanMessage canMessage = hubomsg::CanMessage();
