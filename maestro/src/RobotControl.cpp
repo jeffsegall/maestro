@@ -250,8 +250,6 @@ vector<float> trajectoryValues(string path){
 }
 
   void RobotControl::updateHook(){
-
-	tempOutput << "In Update Hook." << std::endl;
     
     hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
     hubomsg::CanMessage canMessage = hubomsg::CanMessage();
@@ -283,7 +281,7 @@ vector<float> trajectoryValues(string path){
         //Recieved update from openRAVE
     }
 
-    if (outputQueue->empty() && !this->state->getBoards().empty()) {
+    if (outputQueue->empty() && state != NULL && !this->state->getBoards().empty()) {
 		tempOutput << "Boards not empty. Map size: " << this->state->getBoards().size() << std::endl;
 		for (int i = 0; i < this->state->getBoards().size(); i++){
 			if (this->state->getBoards()[i]->requiresMotion()){
