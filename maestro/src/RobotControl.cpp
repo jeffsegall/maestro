@@ -222,7 +222,7 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Board", "The board on which to run the gesture");
 
     this->written = 0;
-    this->printNow = true;
+    this->printNow = false;
     this->enableControl = false;
     this->delay = 0;
     tempOutput.open("/home/hubo/maestro/RobotControlLog.txt");
@@ -282,7 +282,7 @@ vector<float> trajectoryValues(string path){
 		tempOutput << "Boards not empty. Map size: " << this->state->getBoards().size() << std::endl;
 		for (int i = 0; i < this->state->getBoards().size(); i++){
 			if (this->state->getBoards()[i]->requiresMotion()){
-				tempOutput << "Attempting to build message for :" << this->state->getBoards()[i]->getBoardNumber() << std::endl;
+				//tempOutput << "Attempting to build message for :" << this->state->getBoards()[i]->getBoardNumber() << std::endl;
 				this->outputQueue->push(buildCanMessage(this->state->getBoards()[i]->sendPositionReference()));
 			}
 		}

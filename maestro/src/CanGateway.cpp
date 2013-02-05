@@ -200,7 +200,7 @@ void CanGateway::recvFromRos(){
     while (NewData==this->inPort->read(inMsg)){
         can_message = canMsg((boardNum)inMsg.bno, (messageType)inMsg.mType, (cmdType)inMsg.cmdType,
                              inMsg.r1, inMsg.r2, inMsg.r3, inMsg.r4, inMsg.r5, inMsg.r6, inMsg.r7, inMsg.r8);
-        tempOutput << "Message received! r1: " << inMsg.r1 << std::endl;
+        //tempOutput << "Message received! r1: " << inMsg.r1 << std::endl;
         //Add message to queue
         //if (!this->downQueue->empty())
             //this->downQueue->pop();
@@ -451,7 +451,7 @@ void CanGateway::updateHook(){
 
     if (!this->downQueue->empty()){
         transmit(this->downQueue->front().toCAN());
-        tempOutput << "Transmitting message! r1: " << this->downQueue->front().getR1() << std::endl;
+        //tempOutput << "Transmitting message! r1: " << this->downQueue->front().getR1() << std::endl;
         this->downQueue->pop();
     }
     
