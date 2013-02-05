@@ -282,7 +282,7 @@ vector<float> trajectoryValues(string path){
     }
 
     if (outputQueue->empty() && state != NULL && !this->state->getBoards().empty()) {
-		tempOutput << "Boards not empty. Map size: " << this->state->getBoards().size() << std::endl;
+		//tempOutput << "Boards not empty. Map size: " << this->state->getBoards().size() << std::endl;
 		for (int i = 0; i < this->state->getBoards().size(); i++){
 			if (this->state->getBoards()[i]->requiresMotion()){
 				//tempOutput << "Attempting to build message for :" << this->state->getBoards()[i]->getBoardNumber() << std::endl;
