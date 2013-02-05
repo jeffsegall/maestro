@@ -277,8 +277,19 @@ vector<float> trajectoryValues(string path){
     if (NewData == this->orOutPort->read(huboCmd)){
         //Recieved update from openRAVE
     }
+
+    if (outputQueue->empty() && !this->state->getBoards().empty()) {
+		tempOutput << "Boards not empty. Map size: " << this->state->getBoards().size() << std::endl;
+		for (int i = 0; i < this->state->getBoards().size(); i++){
+			if (this->state->getBoards()[i]->requiresMotion()){
+				tempOutput << "Attempting to build message for :" << this->state->getBoards()[i]->getBoardNumber() << std::endl;
+				this->outputQueue->push(buildCanMessage(this->state->getBoards()[i]->sendPositionReference()));
+			}
+		}
+	}
    
     //Write out a message if we have one
+
 
     if (!outputQueue->empty()){
 
@@ -291,15 +302,7 @@ vector<float> trajectoryValues(string path){
 
         outputQueue->pop();
         usleep(delay);
-    } else if (!this->state->getBoards().empty()) {
-		tempOutput << "Boards not empty. Map size: " << this->state->getBoards().size() << std::endl;
-		for (int i = 0; i < this->state->getBoards().size(); i++){
-			if (this->state->getBoards()[i]->requiresMotion()){
-				tempOutput << "Attempting to build message for :" << this->state->getBoards()[i]->getBoardNumber() << std::endl;
-				this->outputQueue->push(buildCanMessage(this->state->getBoards()[i]->sendPositionReference()));
-			}
-		}
-	}
+    }
   }
 
   hubomsg::CanMessage RobotControl::buildCanMessage(canMsg* msg){
