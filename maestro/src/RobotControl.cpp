@@ -257,10 +257,10 @@ vector<float> trajectoryValues(string path){
 
     commHandler->update();
 
-    MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
+    if (state != NULL)
+    	MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
 
     if (commHandler->isNew()){
-    	tempOutput << "New Message. " << std::endl;
         //Received update from CanGateway
 
     	canMessage = commHandler->getMessage();
