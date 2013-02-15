@@ -14,6 +14,7 @@
 #include "ros/ros.h"
 #include <vector>
 #include <queue>
+#include <fstream>
 
 #define DEFAULT_CHANNELS 2
 using namespace RTT;
@@ -47,8 +48,11 @@ class MotorBoard{// : public RTT::TaskContext {
 
         void addMotor(HuboMotor* motor, int channel);
         void removeMotor(HuboMotor* motor);
-        void removeMotor(int channel); 
+        void removeMotor(int channel);
+        void setTicksPosition(vector<long> ticks);
         HuboMotor* getMotorByChannel(int channel);
+        boardNum getBoardNumber();
+        bool requiresMotion();
 
         // PROTOCOL MOTOR COMMANDS
 
@@ -84,9 +88,15 @@ class MotorBoard{// : public RTT::TaskContext {
 
         //PROTOCOL REFERENCE MESSAGES
 
-        canMsg* sendPositionReference(int REF0, int REF1);
+        canMsg* sendPositionReference(vector<int> REF, int MAX_STEP = 75, int MIN_STEP = 5);
+        canMsg* sendPositionReference(int MAX_STEP = 250, int MIN_STEP = 5);
+        /*
         canMsg* sendPositionReference(char REF0, char REF1, char REF2);
         canMsg* sendPositionReference(char REF0, char REF1, char REF2, char REF3, char REF4);
+		*/
+        canMsg* sendPositionReferenceRadians(double rad0, double rad1);
+        canMsg* sendPositionReferenceRadians(double rad0, double rad1, double rad2);
+        canMsg* sendPositionReferenceRadians(double rad0, double rad1, double rad2, double rad3, double rad4);
          
 };
 

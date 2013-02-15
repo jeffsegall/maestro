@@ -32,20 +32,20 @@ class HuboState{
 
     private:
     
-	map<boardNum, MotorBoard*> boards;
+	vector<MotorBoard*> boards;
 	
 	public:
 
 	HuboState(){
 	}
         HuboState(const HuboState& rhs);	
-        void initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* outQueue); 
+        void initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* outQueue);
 
         MotorBoard* getBoardByNumber(int number);
         MotorBoard* getBoardByNumber(boardNum number);
 
-        void addBoard(int num, MotorBoard* board);
+        void addBoard(MotorBoard* board);
 
-        map<boardNum, MotorBoard*> getBoards();
+        vector<MotorBoard*> getBoards();
 };
 #endif

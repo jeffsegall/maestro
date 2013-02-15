@@ -23,6 +23,11 @@ CanGateway::CanGateway(const std::string& name):
 
     this->addEventPort(*inPort);
     this->addPort(*outPort);
+
+    tempYaw = 0;
+    rightHipEnabled = false;
+    tempRoll = 0;
+    tempOutput.open("/home/hubo/maestro/CanGatewayLog.txt");
 }
 
 CanGateway::~CanGateway(){
@@ -195,11 +200,45 @@ void CanGateway::recvFromRos(){
     while (NewData==this->inPort->read(inMsg)){
         can_message = canMsg((boardNum)inMsg.bno, (messageType)inMsg.mType, (cmdType)inMsg.cmdType,
                              inMsg.r1, inMsg.r2, inMsg.r3, inMsg.r4, inMsg.r5, inMsg.r6, inMsg.r7, inMsg.r8);
-        
+        //tempOutput << "Message received! r1: " << inMsg.r1 << std::endl;
         //Add message to queue
-        if (!this->downQueue->empty())
-            this->downQueue->pop();      
-        this->downQueue->push(can_message); 
+        //if (!this->downQueue->empty())
+            //this->downQueue->pop();
+
+        switch (inMsg.mType){
+        case TX_REF:{
+        	//tempOutput << "Reference Command Received!" << std::endl;
+        	// Maximum of 5 arguments, unused args are 0. We'll worry about specific boards later.
+        	State vals = { {inMsg.r1, inMsg.r2, inMsg.r3, inMsg.r4, inMsg.r5} };
+        	positions[(boardNum)inMsg.bno] = vals;
+        	break;
+		} case TX_MOTOR_CMD:
+        	switch (inMsg.cmdType){
+        	case CMD_CONTROLLER_ON:
+        		flags[(boardNum)inMsg.bno] = true; //Set a flag to enable sending positions to this board
+        		break;
+        	case CMD_CONTROLLER_OFF:
+        		flags[(boardNum)inMsg.bno] = false; //Unset the flag to stop sending positions to this board
+        		break;
+        	default: break;
+        	} // no break here - we want to fall into default case.
+		default:
+			this->downQueue->push(can_message);
+			break;
+        }
+        /*
+        if (inMsg.bno == BNO_R_HIP_YAW_ROLL && inMsg.mType == TX_REF && inMsg.cmdType == 2) {
+        	tempYaw = inMsg.r1;
+        	tempRoll = inMsg.r2;
+        } else if (inMsg.bno == BNO_R_HIP_YAW_ROLL && inMsg.mType == TX_MOTOR_CMD && inMsg.cmdType == CMD_CONTROLLER_ON){
+        	this->downQueue->push(can_message);
+        	rightHipEnabled = true;
+        } else if (inMsg.bno == BNO_R_HIP_YAW_ROLL && inMsg.mType == TX_MOTOR_CMD && inMsg.cmdType == CMD_CONTROLLER_OFF){
+			this->downQueue->push(can_message);
+			rightHipEnabled = false;
+        } else
+        	this->downQueue->push(can_message);
+		*/
         //std::cout << this->downQueue->size() << std::endl;
     }
 
@@ -265,6 +304,8 @@ OutputPort<hubomsg::CanMessage>* CanGateway::getOutputPort(){
 void CanGateway::runTick(){
     canmsg_t** rx = new canmsg_t*[5]; 
     //At each clock interval (50 ms?) send a message out to the hardware.
+
+
     canMsg out_message = this->downQueue->front();
     this->downQueue->pop();
 
@@ -327,7 +368,7 @@ bool CanGateway::startHook(){
 //        write(channel, run.toCAN(), 1);
         return 1;
     }
-    
+
     return 0;
 }
 
@@ -338,12 +379,79 @@ bool CanGateway::startHook(){
 ******************************************************************/
 void CanGateway::updateHook(){
     //runTick();
+
+	static map<boardNum, bool>::iterator it = flags.begin();
+
     recvFromRos();
+    if (!flags.empty()){
+		if (it == flags.end()){
+			it = flags.begin();
+			//tempOutput << "Reached end of map! Returning to the beginning." << std::endl;
+		}
+
+		if (downQueue->empty()) { // If we have nothing else to send, send a position.
+			while (it != flags.end() && !it->second) //Move to an enabled board in our map, or to the end of the list
+				it++;
+
+			if (it != flags.end()) {
+				//tempOutput << "Found enabled board!" << std::endl;
+				map<boardNum, State>::iterator i = positions.find(it->first);
+				if (i != positions.end()){
+					// we have found an enabled board, so let's send a packet and increment the iterator.
+					switch (i->first){ // Which board are we talking to?
+					case BNO_WAIST :
+					case BNO_L_HIP_PITCH :
+					case BNO_L_KNEE :
+					case BNO_R_HIP_PITCH :
+					case BNO_R_KNEE :  // 1 Motor Channel (treated as 2 motor channels)
+						downQueue->push(canMsg(i->first, (messageType)TX_REF, (cmdType)2,
+									i->second.values[0], 0, 0, 0, 0, 0, 0, 0)); // Send out a position command with preset arguments
+						break;
+					case BNO_L_SHOULDER_PITCH_ROLL :
+					case BNO_L_SHOULDER_YAW_ELBOW :
+					case BNO_L_WRIST_YAW_PITCH :
+					case BNO_R_SHOULDER_PITCH_ROLL :
+					case BNO_R_SHOULDER_YAW_ELBOW :
+					case BNO_R_WRIST_YAW_PITCH :
+					case BNO_L_HIP_YAW_ROLL :
+					case BNO_L_ANKLE_PITCH_ROLL :
+					case BNO_R_HIP_YAW_ROLL:
+					case BNO_R_ANKLE_PITCH_ROLL :// 2 Motor Channels
+						downQueue->push(canMsg(it->first, (messageType)TX_REF, (cmdType)2,
+									i->second.values[0], i->second.values[1], 0, 0, 0, 0, 0, 0)); // Send out a position command with preset arguments
+						break;
+					case BNO_NECK_YAW_1_2 : // 3 Motor Channels
+						downQueue->push(canMsg(it->first, (messageType)TX_REF, (cmdType)2,
+									i->second.values[0], i->second.values[1], i->second.values[2], 0, 0, 0, 0, 0)); // Send out a position command with preset arguments
+						break;
+					case BNO_R_HAND :
+					case BNO_L_HAND : // 5 Motor Channels
+						downQueue->push(canMsg(it->first, (messageType)TX_REF, (cmdType)2,
+									i->second.values[0], i->second.values[1], i->second.values[2],
+									i->second.values[3], i->second.values[4], 0, 0, 0)); // Send out a position command with preset arguments
+						break;
+					default:
+						break;
+					}
+				}
+			}
+
+			it++;
+		}
+    }
+
+    /*
+    if (downQueue->empty() && rightHipEnabled){
+		downQueue->push(canMsg((boardNum)BNO_R_HIP_YAW_ROLL, (messageType)TX_REF, (cmdType)2,
+				tempYaw, tempRoll, 0, 0, 0, 0, 0, 0));
+	}
+	*/
 
     canmsg_t rx[5];
 
     if (!this->downQueue->empty()){
         transmit(this->downQueue->front().toCAN());
+        //tempOutput << "Transmitting message! r1: " << this->downQueue->front().getR1() << std::endl;
         this->downQueue->pop();
     }
     
@@ -369,6 +477,7 @@ void CanGateway::updateHook(){
 ******************************************************************/
 void CanGateway::stopHook(){
     closeCanConnection(this->channel);
+    this->tempOutput.close();
 }
 
 ORO_LIST_COMPONENT_TYPE(CanGateway)

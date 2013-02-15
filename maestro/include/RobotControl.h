@@ -8,10 +8,11 @@
 #include <rtt/Component.hpp>
 #include <hubomsg/typekit/HuboCmd.h>
 #include <hubomsg/typekit/CanMessage.h>
-#include <hubomsg/typekit/HuboState.h>
 #include <vector>
 #include <queue>
+#include <map>
 #include "huboCan.h"
+#include "CommHandler.h"
 #include "HuboState.h"
 #include "HuboMotor.h"
 #include "MotorBoard.h"
@@ -34,7 +35,9 @@ public:
 
     //JOINT MOVEMENT API
     void setRightHipYaw(int ticks, int delay);
+    void setRightHipYawRad(double rads, int delay);
     void setRightHipRoll(int ticks, int delay);
+    void setRightHipRollRad(double rads, int delay);
     void setRightHipPitch(int ticks, int delay);
     void setRightKnee(int ticks, int delay);
     void setRightAnklePitch(int ticks, int delay);
@@ -63,6 +66,15 @@ public:
     void setLeftHand(int f0, int f1, int f2, int f3, int f4, int delay); 
     void enable(int board, int delay);
     void disable(int board, int delay);
+    void sendToHome(int board, int motor);
+    void requestEncoderPosition(int board, int delay);
+    void getCurrentTicks(int board, int motor, int delay);
+    void setCurrentTicks(int board, int motor, int ticks);
+    void getCurrentGoal(int board, int motor, int delay);
+    void setMaxAccVel(int board, int delay, int acc, int vel);
+    void setPositionGain(int board, int motor, int kp, int ki, int kd);
+    void debugControl(int board, int operation);
+    void setDelay(int us);
     void runGesture(string path, int board);
 
 private:
@@ -70,6 +82,7 @@ private:
     //SUBSCRIBE
     InputPort<hubomsg::CanMessage>* canUpPort;
     InputPort<hubomsg::HuboCmd>* orOutPort;
+    CommHandler* commHandler;
 
     //PUBLISH
     OutputPort<hubomsg::CanMessage>* canDownPort;
@@ -81,8 +94,13 @@ private:
     queue<hubomsg::CanMessage>* outputQueue;
 
     map< string, vector<float> > gestures;
+    map<boardNum, MotorBoard*>::iterator it;
+    ofstream tempOutput;
+
    
     int written;
+    bool printNow, enableControl;
+    int delay;
 };
 
 #endif

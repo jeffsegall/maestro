@@ -3,6 +3,7 @@
 
 HuboMotor::HuboMotor(){
     this->ticks_position = 0;
+    this->desired_position = 0;
 }
 
 HuboMotor::HuboMotor(long mpos1, long mpos2, long kp, long kd, long ki,
@@ -34,6 +35,7 @@ HuboMotor::HuboMotor(long mpos1, long mpos2, long kp, long kd, long ki,
     this->i_err = i_err;
     this->b_err = b_err;
     this->ticks_position = 0;
+    this->desired_position = 0;
 }
 
 HuboMotor::HuboMotor(const HuboMotor& rhs){
@@ -61,6 +63,7 @@ HuboMotor::HuboMotor(const HuboMotor& rhs){
     this->i_err = rhs.i_err;
     this->b_err = rhs.b_err;
     this->ticks_position = rhs.ticks_position;
+    this->desired_position = rhs.desired_position;
 }
 
 void HuboMotor::setUpperLimit(long limit){
@@ -122,8 +125,19 @@ void HuboMotor::setErrorLimit(long i_err, long b_err){
     this->b_err = b_err;
 }
 
+void HuboMotor::setGearRatios(long drive, long driven, long harm, long enc){
+	this->drive = drive;
+	this->driven = driven;
+	this->harm = harm;
+	this->enc = enc;
+}
+
 void HuboMotor::setTicksPosition(long ticks){
     this->ticks_position = ticks;
+}
+
+void HuboMotor::setDesiredPosition(long ticks){
+	this->desired_position = ticks;
 }
 
 long HuboMotor::getUpperLimit(){
@@ -232,4 +246,36 @@ long HuboMotor::getBerr(){
 
 long HuboMotor::getTicksPosition(){
     return this->ticks_position;
+}
+
+long HuboMotor::getDesiredPosition(){
+	return this->desired_position;
+}
+
+double HuboMotor::ticksToRadians(long ticks){
+	return (ticks * (double)(this->drive * 2 * M_PI))/(this->driven * this->harm * this->enc);
+}
+
+long HuboMotor::radiansToTicks(double rad){
+	return (long)(rad * ((double)(this->driven * this->harm * this->enc))/(this->drive * 2 * M_PI));
+}
+
+long HuboMotor::interpolate(int MAX_STEP, int MIN_STEP){
+	const float LEAP_PERCENTAGE = .5;
+
+	int error = desired_position - ticks_position;
+	int output = desired_position;
+
+	if((abs(error) > MIN_STEP)){
+		output = (int)(LEAP_PERCENTAGE * error);
+
+		if(abs(output) > MAX_STEP)
+			output = output < 0 ? -MAX_STEP : MAX_STEP;
+
+	} else
+		output = error;
+
+	output += ticks_position;
+	ticks_position = output;
+	return output;
 }

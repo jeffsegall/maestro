@@ -21,8 +21,11 @@
 #include <string>
 #include "huboCan.h"
 #include <queue>
+#include <map>
+#include <vector>
 #include <hubomsg/typekit/CanMessage.h>
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 using namespace RTT;
@@ -53,6 +56,8 @@ public:
 
 private:
 
+    struct State { int values[5]; };
+
     char* strToSerial(string packet);
 
     int channel;
@@ -66,6 +71,13 @@ private:
 
     queue<canMsg>* upQueue;
     queue<canMsg>* downQueue;
+
+    map<boardNum, State > positions;
+    map<boardNum, bool> flags;
+
+    long tempYaw, tempRoll;
+    bool rightHipEnabled;
+    ofstream tempOutput;
 
 };
 
