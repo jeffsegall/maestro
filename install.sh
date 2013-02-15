@@ -17,4 +17,6 @@ cd /opt/ros/diamondback/stacks/openrave_planning/openrave_robot_control/
 rosmake --rosdep-yes
 ln -sf /opt/ros/diamondback/stacks/openrave_planning/openrave/bin/openrave /usr/bin/openrave
 ln -sf /opt/ros/diamondback/stacks/openrave_planning/openrave/bin/openrave-config /usr/bin/openrave-config
-
+#
+#
+#
