@@ -1,7 +1,8 @@
 #include <hubomsg/boost/CanMessage.h>
 #include <rtt/types/TypekitPlugin.hpp>
 #include <rtt/types/StructTypeInfo.hpp>
-#include <rtt/types/SequenceTypeInfo.hpp>
+#include <rtt/types/PrimitiveSequenceTypeInfo.hpp>
+#include <rtt/types/CArrayTypeInfo.hpp>
 #include <vector>
 
 // Note: we need to put these up-front or we get gcc compiler warnings:
@@ -22,7 +23,13 @@ template class RTT_EXPORT RTT::Constant< hubomsg::CanMessage >;
 namespace ros_integration {
   using namespace RTT;
     // Factory function
-            void rtt_ros_addType_CanMessage() { RTT::types::Types()->addType( new types::StructTypeInfo<hubomsg::CanMessage>("/hubomsg/CanMessage") ); RTT::types::Types()->addType( new types::SequenceTypeInfo<std::vector<hubomsg::CanMessage> >("/hubomsg/CanMessage[]") ); }
+    
+        void rtt_ros_addType_hubomsg_CanMessage() {
+             // Only the .msg type is sent over ports. The msg[] (variable size) and  cmsg[] (fixed size) exist only as members of larger messages
+             RTT::types::Types()->addType( new types::StructTypeInfo<hubomsg::CanMessage>("/hubomsg/CanMessage") );
+             RTT::types::Types()->addType( new types::PrimitiveSequenceTypeInfo<std::vector<hubomsg::CanMessage> >("/hubomsg/CanMessage[]") );
+             RTT::types::Types()->addType( new types::CArrayTypeInfo<RTT::types::carray<hubomsg::CanMessage> >("/hubomsg/cCanMessage[]") );
+        }
 
     
 }

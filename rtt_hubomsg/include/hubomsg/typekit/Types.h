@@ -1,12 +1,4 @@
-/* Generated from rtt_ros_integration/src/Types.hpp.in */
+/* Generated from rtt_rosnode/src/Types.h.in */
+#include "Types.hpp"
 
-#ifndef __OROCOS_ROS_GENERATED_hubomsg_TYPES_HPP
-#define __OROCOS_ROS_GENERATED_hubomsg_TYPES_HPP
-
-// includes Types.hpp headers for all messages:
-#include "HuboCmd.h"
-#include "CanMessage.h"
-
-
-#endif
 

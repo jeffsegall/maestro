@@ -1,0 +1,25 @@
+(cl:defpackage hubomsg-msg
+  (:use )
+  (:export
+   "<HUBOHAND>"
+   "HUBOHAND"
+   "<HUBOJOINTSTATE>"
+   "HUBOJOINTSTATE"
+   "<HUBOHANDCOMMAND>"
+   "HUBOHANDCOMMAND"
+   "<HUBOCMD>"
+   "HUBOCMD"
+   "<HUBOJOINTCOMMAND>"
+   "HUBOJOINTCOMMAND"
+   "<HUBOCOMMAND>"
+   "HUBOCOMMAND"
+   "<HUBOSTATE>"
+   "HUBOSTATE"
+   "<CANMESSAGE>"
+   "CANMESSAGE"
+   "<HUBOFT>"
+   "HUBOFT"
+   "<HUBOIMU>"
+   "HUBOIMU"
+  ))
+

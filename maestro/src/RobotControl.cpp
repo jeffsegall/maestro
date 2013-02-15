@@ -198,6 +198,7 @@ vector<float> trajectoryValues(string path){
     
     hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
     hubomsg::CanMessage canMessage = hubomsg::CanMessage();
+    hubomsg::HuboState stateTemp = hubomsg::HuboState();
     if (NewData == this->canUpPort->read(canMessage)){
         //Received update from CanGateway
         

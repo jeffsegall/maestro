@@ -8,6 +8,7 @@
 #include <rtt/Component.hpp>
 #include <hubomsg/typekit/HuboCmd.h>
 #include <hubomsg/typekit/CanMessage.h>
+#include <hubomsg/typekit/HuboState.h>
 #include <vector>
 #include <queue>
 #include "huboCan.h"

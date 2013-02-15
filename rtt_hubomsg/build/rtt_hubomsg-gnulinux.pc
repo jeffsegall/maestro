@@ -1,0 +1,11 @@
+prefix=/usr/local
+libdir=${prefix}/lib
+includedir=${prefix}/include/orocos
+orocos_libdir=${libdir}/orocos/gnulinux/rtt_hubomsg
+
+Name: rtt_hubomsg-gnulinux
+Description: rtt_hubomsg-gnulinux package for Orocos
+Requires: orocos-rtt-gnulinux 
+Version: 1.0
+Libs:  -L${orocos_libdir}/types  -lrtt-hubomsg-typekit-gnulinux -lrtt-hubomsg-ros-transport-gnulinux
+Cflags: -I${includedir}

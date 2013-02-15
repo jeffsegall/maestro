@@ -1,4 +1,4 @@
-/* Generated from rtt_ros_integration/src/msg_Types.hpp.in */
+/* Generated from rtt_rosnode/src/msg_Types.hpp.in */
 
 #ifndef __OROCOS_ROS_GENERATED_hubomsg_HuboCmd_TYPES_HPP
 #define __OROCOS_ROS_GENERATED_hubomsg_HuboCmd_TYPES_HPP
