@@ -289,9 +289,10 @@ vector<float> trajectoryValues(string path){
 			if (this->state->getBoards()[i]->requiresMotion()){
 				//tempOutput << "Attempting to build message for :" << this->state->getBoards()[i]->getBoardNumber() << std::endl;
 				buildHuboStateMessage(this->state->getBoards()[i]->sendPositionReference(), message);
+				outputQueue->push(message);
 			}
 		}
-		outputQueue->push(message);
+
 	}
    
     //Write out a message if we have one
@@ -330,12 +331,9 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::buildHuboStateMessage(vector<hubomsg::HuboJointState>& states, hubomsg::HuboState& message){
-      hubomsg::HuboJointState * newData = hubomsg::HuboJointState[message.commanded + states.size()];
-      for (int i = 0; i < message.commanded; i++){
-    	  newData[i] = message.joints[i];
-      }
+      hubomsg::HuboJointState * newData = hubomsg::HuboJointState[states.size()];
       for (int i = 0; i < states.size(); i++){
-    	  newData[i+message.commanded] = states[i];
+    	  newData[i] = states[i];
       }
       message.joints = newData;
       /*
