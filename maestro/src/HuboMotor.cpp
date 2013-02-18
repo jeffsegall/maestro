@@ -145,7 +145,7 @@ void HuboMotor::setDesiredPosition(long ticks){
 	this->desired_position = ticks;
 }
 
-void HuboMotor::getName(){
+string HuboMotor::getName(){
 	return name;
 }
 
