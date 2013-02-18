@@ -22,8 +22,8 @@ using namespace RTT;
 // Motor names from the HUBO+ protocol
 
 enum MOTOR_NAME {
-    RHY, RHR, RHP1, RHP2, RKN1, RKN2, RAP, RAR, LHY, LHR, LHP1, LHP2,
-	LKN1, LKN2, LAP, LAR, RSP, RSR, RSY, REB, LSP, LSR, LSY, LEB, RWY,
+    RHY, RHR, RHP, RHP1, RHP2, RKP, RKN1, RKN2, RAP, RAR, LHY, LHR, LHP, LHP1, LHP2,
+	LKP, LKN1, LKN2, LAP, LAR, RSP, RSR, RSY, REB, LSP, LSR, LSY, LEB, RWY,
 	RWP, LWY, LWP, NKY, NK1, NK2, WST, RH0, RH1, RH2, RH3, RH4, RH5,
 	LH0, LH1, LH2, LH3, LH4, LH5
 } ;
@@ -39,7 +39,7 @@ class HuboState{
 	HuboState(){
 	}
         HuboState(const HuboState& rhs);	
-        void initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* outQueue);
+        void initHuboWithDefaults(string path, queue<hubomsg::HuboState>* outQueue);
 
         MotorBoard* getBoardByNumber(int number);
         MotorBoard* getBoardByNumber(boardNum number);

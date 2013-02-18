@@ -1,4 +1,5 @@
 #include "HuboMotor.h"
+#include <string>
 #include <iostream>
 
 HuboMotor::HuboMotor(){
@@ -64,6 +65,10 @@ HuboMotor::HuboMotor(const HuboMotor& rhs){
     this->b_err = rhs.b_err;
     this->ticks_position = rhs.ticks_position;
     this->desired_position = rhs.desired_position;
+}
+
+void HuboMotor::setName(string name){
+	this->name = name;
 }
 
 void HuboMotor::setUpperLimit(long limit){
@@ -138,6 +143,10 @@ void HuboMotor::setTicksPosition(long ticks){
 
 void HuboMotor::setDesiredPosition(long ticks){
 	this->desired_position = ticks;
+}
+
+void HuboMotor::getName(){
+	return name;
 }
 
 long HuboMotor::getUpperLimit(){

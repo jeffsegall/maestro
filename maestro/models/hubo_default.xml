@@ -19,7 +19,7 @@
                        dz="44" off="-4000" hlim="20" hld="0" hv1="40" hv2="50"
                        hma="0.1" sm="0" ers="4000" as="1" md="1" v_max="1500"
                        a_max="20" jam_lim="3" jamd="50" pwm_lim="5"
-                       i_err="20000" b_err="10000" channel="0" name="RHP1"
+                       i_err="20000" b_err="10000" channel="0" name="RHP"
                        drive="16" driven="20" harm="160" enc="4000"/>
 	</board>
  	<board number="2" channels="1" name="R_KNEE">
@@ -27,7 +27,7 @@
                        dz="44" off="-13000" hlim="20" hld="1" hv1="40" hv2="50"
                        hma="0.1" sm="0" ers="4000" as="1" md="0" v_max="1500"
                        a_max="20" jam_lim="3" jamd="50" pwm_lim="5"
-                       i_err="20000" b_err="10000" channel="0" name="RKN1"
+                       i_err="20000" b_err="10000" channel="0" name="RKP"
                        drive="16" driven="16" harm="160" enc="4000"/>
 	</board>
  	<board number="3" channels="2" name="R_ANKLE_PITCH_ROLL">
@@ -63,7 +63,7 @@
                        dz="44" off="-4000" hlim="20" hld="0" hv1="40" hv2="50"
                        hma="0.1" sm="0" ers="4000" as="1" md="0" v_max="1500"
                        a_max="20" jam_lim="3" jamd="50" pwm_lim="5"
-                       i_err="20000" b_err="10000" channel="0" name="LHP1"
+                       i_err="20000" b_err="10000" channel="0" name="LHP"
                        drive="16" driven="20" harm="160" enc="4000"/>
 	</board>
  	<board number="6" channels="1" name="L_KNEE">
@@ -71,7 +71,7 @@
                        dz="44" off="-13000" hlim="20" hld="1" hv1="40" hv2="50"
                        hma="0.1" sm="0" ers="4000" as="1" md="1" v_max="1500"
                        a_max="20" jam_lim="3" jamd="50" pwm_lim="5"
-                       i_err="20000" b_err="10000" channel="0" name="LKN1"
+                       i_err="20000" b_err="10000" channel="0" name="LKP"
                        drive="16" driven="16" harm="160" enc="4000"/>
 	</board>
  	<board number="7" channels="2" name="L_ANKLE_PITCH_ROLL">
@@ -113,7 +113,7 @@
                        dz="28" off="0" hlim="20" hld="1" hv1="40" hv2="50"
                        hma="0.1" sm="0" ers="4000" as="1" md="1" v_max="1500"
                        a_max="20" jam_lim="3" jamd="50" pwm_lim="5"
-                       i_err="20000" b_err="10000" channel="1" name="REB"
+                       i_err="20000" b_err="10000" channel="1" name="REP"
                        drive="20" driven="20" harm="100" enc="4000"/>
 	</board>
  	<board number="10" channels="2" name="L_SHOULDER_PITCH_ROLL">
@@ -141,7 +141,7 @@
                        dz="28" off="10000" hlim="20" hld="1" hv1="40" hv2="50"
                        hma="0.1" sm="0" ers="4000" as="1" md="0" v_max="1500"
                        a_max="20" jam_lim="3" jamd="50" pwm_lim="5"
-                       i_err="20000" b_err="10000" channel="1" name="LEB"
+                       i_err="20000" b_err="10000" channel="1" name="LEP"
                        drive="20" driven="20" harm="100" enc="4000"/>
 	</board>
  	<board number="32" channels="2" name="R_WRIST_YAW_PITCH">

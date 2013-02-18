@@ -31,19 +31,20 @@ class MotorBoard{// : public RTT::TaskContext {
         vector<HuboMotor*> motors;
 
         //PUBLISH
-        OutputPort<hubomsg::CanMessage>* canDownPort;
+        //OutputPort<hubomsg::CanMessage>* canDownPort;
         OutputPort<hubomsg::HuboCmd>* orInPort;
+        OutputPort<hubomsg::HuboState> HuboDownPort;
 
         //SUBSCRIBE
         InputPort<hubomsg::CanMessage>* canUpPort;
         InputPort<hubomsg::HuboCmd>* orOutPort;
 
-        queue<hubomsg::CanMessage>* outQueue;
+        queue<hubomsg::HuboState>* outQueue;
  
     public:
         
         MotorBoard();
-        MotorBoard(boardNum BNO, int channels, queue<hubomsg::CanMessage>* outQueue);
+        MotorBoard(boardNum BNO, int channels, queue<hubomsg::HuboState>* outQueue);
         MotorBoard(const MotorBoard& rhs);
 
         void addMotor(HuboMotor* motor, int channel);
@@ -89,7 +90,7 @@ class MotorBoard{// : public RTT::TaskContext {
         //PROTOCOL REFERENCE MESSAGES
 
         canMsg* sendPositionReference(vector<int> REF, int MAX_STEP = 75, int MIN_STEP = 5);
-        canMsg* sendPositionReference(int MAX_STEP = 250, int MIN_STEP = 5);
+        vector<hubomsg::HuboJointState> sendPositionReference(int MAX_STEP = 250, int MIN_STEP = 5);
         /*
         canMsg* sendPositionReference(char REF0, char REF1, char REF2);
         canMsg* sendPositionReference(char REF0, char REF1, char REF2, char REF3, char REF4);

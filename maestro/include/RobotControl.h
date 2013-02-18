@@ -8,6 +8,10 @@
 #include <rtt/Component.hpp>
 #include <hubomsg/typekit/HuboCmd.h>
 #include <hubomsg/typekit/CanMessage.h>
+#include <hubomsg/typekit/HuboState.h>
+#include <hubomsg/typekit/HuboJointState.h>
+#include <hubomsg/typekit/HuboIMU.h>
+#include <hubomsg/typekit/HuboFT.h>
 #include <vector>
 #include <queue>
 #include <map>
@@ -30,6 +34,7 @@ public:
 
     void updateHook(); 
     hubomsg::CanMessage buildCanMessage(canMsg* msg);
+    void buildHuboStateMessage(vector<hubomsg::HuboJointState>& states, hubomsg::HuboState& message);
 
     void initRobot(string path);
 
@@ -87,11 +92,12 @@ private:
     //PUBLISH
     OutputPort<hubomsg::CanMessage>* canDownPort;
     OutputPort<hubomsg::HuboCmd>* orInPort;
+    OutputPort<hubomsg::HuboState>* huboDownPort;
 
     HuboState* state;
 
     queue<hubomsg::CanMessage>* inputQueue;
-    queue<hubomsg::CanMessage>* outputQueue;
+    queue<hubomsg::HuboState>* outputQueue;
 
     map< string, vector<float> > gestures;
     map<boardNum, MotorBoard*>::iterator it;

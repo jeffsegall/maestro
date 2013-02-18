@@ -6,19 +6,20 @@ RobotControl::RobotControl(const std::string& name):
     TaskContext(name)
   {
     
-    this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
-    this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
+    //this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
+    //this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
+	this->huboDownPort = new OutputPort<hubomsg::HuboState>("Hubo/HuboState");
     this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
     this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
     this->commHandler = new CommHandler(canUpPort, orOutPort);
 
     //CAN QUEUES
     this->inputQueue = new queue<hubomsg::CanMessage>();
-    this->outputQueue = new queue<hubomsg::CanMessage>();
+    this->outputQueue = new queue<hubomsg::HuboState>();
     
     //CAN PORTS 
     this->addEventPort(*canUpPort);
-    this->addPort(*canDownPort);
+    this->addPort(*huboDownPort);
 
     //OPENRAVE PORTS
     this->addEventPort(*orOutPort);
@@ -254,13 +255,13 @@ vector<float> trajectoryValues(string path){
     hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
     hubomsg::CanMessage canMessage = hubomsg::CanMessage();
 
-    commHandler->update();
+    //commHandler->update();
 
     MotorBoard* mb;
     if (state != NULL)
     	mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
 
-    if (commHandler->isNew()){
+    if (false /*commHandler->isNew()*/){
         //Received update from CanGateway
 
     	canMessage = commHandler->getMessage();
@@ -283,12 +284,14 @@ vector<float> trajectoryValues(string path){
 
     if (outputQueue->empty() && state != NULL && !this->state->getBoards().empty()) {
 		//tempOutput << "Boards not empty. Map size: " << this->state->getBoards().size() << std::endl;
+    	hubomsg::HuboState message;
 		for (int i = 0; i < this->state->getBoards().size(); i++){
 			if (this->state->getBoards()[i]->requiresMotion()){
 				//tempOutput << "Attempting to build message for :" << this->state->getBoards()[i]->getBoardNumber() << std::endl;
-				this->outputQueue->push(buildCanMessage(this->state->getBoards()[i]->sendPositionReference()));
+				buildHuboStateMessage(this->state->getBoards()[i]->sendPositionReference(), message);
 			}
 		}
+		outputQueue->push(message);
 	}
    
     //Write out a message if we have one
@@ -296,12 +299,12 @@ vector<float> trajectoryValues(string path){
 
     if (!outputQueue->empty()){
 
-    	hubomsg::CanMessage output = outputQueue->front();
+    	hubomsg::HuboState output = outputQueue->front();
     	if (printNow){
-    		tempOutput << "Writing message to Board " << output.bno << ": R1 = " << outputQueue->front().r1 << std::endl;
+    		tempOutput << "Writing message to " << output.commanded << " motors." << std::endl;
     	}
 
-		this->canDownPort->write(output);
+		this->huboDownPort->write(output);
 
         outputQueue->pop();
         usleep(delay);
@@ -324,6 +327,32 @@ vector<float> trajectoryValues(string path){
       canMessage.r8 = msg->getR8();
 
       return canMessage;
+  }
+
+  void RobotControl::buildHuboStateMessage(vector<hubomsg::HuboJointState>& states, hubomsg::HuboState& message){
+      hubomsg::HuboJointState * newData = hubomsg::HuboJointState[message.commanded + states.size()];
+      for (int i = 0; i < message.commanded; i++){
+    	  newData[i] = message.joints[i];
+      }
+      for (int i = 0; i < states.size(); i++){
+    	  newData[i+message.commanded] = states[i];
+      }
+      message.joints = newData;
+      /*
+
+      canMessage.bno = msg->getBNO();
+      canMessage.mType = msg->getType();
+      canMessage.cmdType = msg->getCmd();
+      canMessage.r1 = msg->getR1();
+      canMessage.r2 = msg->getR2();
+      canMessage.r3 = msg->getR3();
+      canMessage.r4 = msg->getR4();
+      canMessage.r5 = msg->getR5();
+      canMessage.r6 = msg->getR6();
+      canMessage.r7 = msg->getR7();
+      canMessage.r8 = msg->getR8();
+	  */
+      return stateMessage;
   }
 
   void RobotControl::initRobot(string path){
