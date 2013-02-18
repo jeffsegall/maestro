@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string>
 
+using namespace std;
+
 /* The HuboMotor class defines some state parameters for a single motor in the HUBO+ */
 
 class HuboMotor {
