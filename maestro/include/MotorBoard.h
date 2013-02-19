@@ -9,6 +9,7 @@
 #include <rtt/Component.hpp>
 #include <hubomsg/typekit/HuboCmd.h>
 #include <hubomsg/typekit/CanMessage.h>
+#include <hubomsg/typekit/HuboJointState.h>
 #include <string>
 #include "huboCan.h"
 #include "ros/ros.h"
