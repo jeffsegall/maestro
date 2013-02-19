@@ -850,8 +850,13 @@ vector<hubomsg::HuboJointState> MotorBoard::sendPositionReference(int MAX_STEP, 
 
 bool MotorBoard::requiresMotion(){
 	for (int i = 0; i < channels; i++)
-		if (motors[i]->getDesiredPosition() != motors[i]->getTicksPosition()) return true;
+		if (motors[i]->requiresMotion()) return true;
 	return false;
+}
+
+bool MotorBoard::requiresMotion(int channel){
+	assert(channel < channels);
+	return motors[channel]->requiresMotion();
 }
 
 /******************************************************************************

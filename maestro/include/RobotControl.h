@@ -2,6 +2,7 @@
 #define ROBOTCONTROL_H
 
 #include <rtt/TaskContext.hpp>
+#include <rtt/PeriodicActivity.hpp>
 #include <rtt/Port.hpp>
 #include <std_msgs/Float64.h>
 #include <std_msgs/String.h>
@@ -76,6 +77,7 @@ public:
     void getCurrentTicks(int board, int motor, int delay);
     void setCurrentTicks(int board, int motor, int ticks);
     void getCurrentGoal(int board, int motor, int delay);
+    bool requiresMotion(int board, int motor, int delay);
     void setMaxAccVel(int board, int delay, int acc, int vel);
     void setPositionGain(int board, int motor, int kp, int ki, int kd);
     void debugControl(int board, int operation);

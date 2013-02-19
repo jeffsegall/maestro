@@ -177,13 +177,13 @@
                        dz="90" off="0" hlim="30" hld="1" hv1="2" hv2="2"
                        hma="1" sm="1" ers="128" as="1" md="1" v_max="-4000"
                        a_max="4000" jam_lim="40" jamd="100" pwm_lim="0"
-                       i_err="0" b_err="30" channel="0" name="NKY"
+                       i_err="0" b_err="30" channel="0" name="NKP"
                        drive="1" driven="1" harm="100" enc="128"/>
 		<motor mpos1="-1300" mpos2="1500" kp="40" kd="100" ki="0"
                        dz="90" off="-1470" hlim="30" hld="1" hv1="2" hv2="2"
                        hma="1" sm="2" ers="128" as="1" md="0" v_max="-1300"
                        a_max="1050" jam_lim="40" jamd="100" pwm_lim="0"
-                       i_err="-1470" b_err="30" channel="1" name="NK1"
+                       i_err="-1470" b_err="30" channel="1" name="NKR"
                        drive="1" driven="1" harm="100" enc="128"/>
 		<motor mpos1="-1300" mpos2="1500" kp="40" kd="100" ki="0"
                        dz="90" off="-1470" hlim="30" hld="1" hv1="2" hv2="2"
@@ -197,7 +197,7 @@
                        dz="44" off="0" hlim="20" hld="0" hv1="40" hv2="50"
                        hma="0.1" sm="0" ers="4000" as="1" md="0" v_max="-170000"
                        a_max="170000" jam_lim="200" jamd="500" pwm_lim="0"
-                       i_err="0" b_err="20" channel="0" name="WST"
+                       i_err="0" b_err="20" channel="0" name="HPY"
                        drive="10" driven="25" harm="100" enc="4000"/>
 	</board>
  	<board number="36" channels="5" name="R_HAND">

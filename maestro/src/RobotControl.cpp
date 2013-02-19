@@ -198,6 +198,11 @@ RobotControl::RobotControl(const std::string& name):
     			.arg("Motor", "The motor channel to request current requested position from.")
     			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+    this->addOperation("requiresMotion", &RobotControl::requiresMotion, this, RTT::OwnThread)
+				.arg("Board", "The board to send commands to")
+				.arg("Motor", "The motor channel to check need for motion from.")
+				.arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("setMaxAccVel", &RobotControl::setMaxAccVel, this, RTT::OwnThread)
 				.arg("Board", "The board to send commands to")
 				.arg("Motor", "The motor channel to set maximum velocity and acceleration on.")
@@ -599,6 +604,10 @@ vector<float> trajectoryValues(string path){
   	  std::cout << "Motor[" << motor << "] goal: " << this->state->getBoardByNumber(board)->getMotorByChannel(motor)->getDesiredPosition() << std::endl;
    }
 
+  bool RobotControl::requiresMotion(int board, int motor, int delay){
+	  return state->getBoardByNumber(board)->requiresMotion(motor);
+  }
+
   void RobotControl::setMaxAccVel(int board, int motor, int acc, int vel){
 	  this->state->getBoardByNumber(board)->setMaxAccVel((char)motor, acc, vel);
   }
@@ -608,6 +617,7 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::runGesture(string path, int board){
+	  /*
       int val = 0;
       vector<float> trajVal;
       if (this->gestures.find(path) != this->gestures.end())
@@ -623,6 +633,19 @@ vector<float> trajectoryValues(string path){
           ticks[1] = val;
           this->state->getBoardByNumber(board)->sendPositionReference(ticks, 125, 50);
       }
+      */
+
+	  TaskContext   tc;
+	  tc.setActivity( new PeriodicActivity(5, 0.01) );
+
+	  // Watch Logger output for errors :
+	  tc.scripting()->loadPrograms(path);
+
+	  // start the task :
+	  tc.start();
+
+	  // start a program :
+	  tc.engine()->programs()->getProgram("gesture")->start();
   }
 
 ORO_CREATE_COMPONENT_LIBRARY()

@@ -88,6 +88,7 @@ class HuboMotor {
 	
 	long getTicksPosition();
 	long getDesiredPosition();
+	bool requiresMotion();
 
 	double ticksToRadians(long ticks);
 	long radiansToTicks(double rads);

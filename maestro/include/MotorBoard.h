@@ -56,6 +56,7 @@ class MotorBoard{// : public RTT::TaskContext {
         HuboMotor* getMotorByChannel(int channel);
         boardNum getBoardNumber();
         bool requiresMotion();
+        bool requiresMotion(int channel);
 
         // PROTOCOL MOTOR COMMANDS
 
