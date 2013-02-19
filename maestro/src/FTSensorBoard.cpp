@@ -18,7 +18,7 @@ FTSensorBoard::FTSensorBoard(){
 ******************************************************************************/
 FTSensorBoard::FTSensorBoard(boardNum BNO){
     this->BNO = BNO;
-    this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
+    this->huboDownPort = new OutputPort<hubomsg::HuboState>("Hubo/HuboState");
     this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
 }
 
@@ -32,7 +32,7 @@ FTSensorBoard::FTSensorBoard(boardNum BNO){
 void FTSensorBoard::setRequestBoardInfo(char CANR){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_SETREQ_BOARD_INFO,
                              CANR, 0, 0, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out));
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 /******************************************************************************
@@ -45,7 +45,7 @@ void FTSensorBoard::setRequestBoardInfo(char CANR){
 void FTSensorBoard::requestBoardParameters(char PARM){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_REQ_BOARD_PARAM,
                              PARM, 0, 0, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out));
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 /******************************************************************************
@@ -58,7 +58,7 @@ void FTSensorBoard::requestBoardParameters(char PARM){
 void FTSensorBoard::requestExecuteNULL(char EFS){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_NULL,
                              EFS, 0, 0, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out));
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 /******************************************************************************
@@ -73,7 +73,7 @@ void FTSensorBoard::requestExecuteNULL(char EFS){
 void FTSensorBoard::setFTMatrixConstant0(int SFT00, int SFT01, int SFT02){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_SET_FT_0,
                              SFT00, SFT01, SFT02, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out));
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 /******************************************************************************
@@ -88,7 +88,7 @@ void FTSensorBoard::setFTMatrixConstant0(int SFT00, int SFT01, int SFT02){
 void FTSensorBoard::setFTMatrixConstant1(int SFT10, int SFT11, int SFT12){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_SET_FT_1,
                              SFT10, SFT11, SFT12, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out));
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 /******************************************************************************
@@ -103,7 +103,7 @@ void FTSensorBoard::setFTMatrixConstant1(int SFT10, int SFT11, int SFT12){
 void FTSensorBoard::setFTMatrixConstant2(int SFT20, int SFT21, int SFT22){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_SET_FT_2,
                              SFT20, SFT21, SFT22, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out));
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 /******************************************************************************
@@ -118,7 +118,7 @@ void FTSensorBoard::setFTMatrixConstant2(int SFT20, int SFT21, int SFT22){
 void FTSensorBoard::setInclinoScaleFactor(int SIF0, int SIF1, int SIF2){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_SET_INCLINO_SCALE,
                              SIF0, SIF1, SIF2, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out));
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 /******************************************************************************
@@ -132,7 +132,7 @@ void FTSensorBoard::setInclinoScaleFactor(int SIF0, int SIF1, int SIF2){
 void FTSensorBoard::setNewBoardNumberFilterFreq(char NEW_BNO, int FREQ10){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_SET_BNO_FREQ,
                              NEW_BNO, FREQ10, 0, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out));
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 /******************************************************************************
@@ -143,7 +143,7 @@ void FTSensorBoard::setNewBoardNumberFilterFreq(char NEW_BNO, int FREQ10){
 void FTSensorBoard::initBoard(){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_INIT_BOARD,
                              0xAA, 0, 0, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out));
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 

@@ -9,6 +9,7 @@
 #include <rtt/Component.hpp>
 #include <hubomsg/typekit/HuboCmd.h>
 #include <hubomsg/typekit/CanMessage.h>
+#include <hubomsg/typekit/HuboState.h>
 
 using namespace RTT;
 
@@ -18,7 +19,7 @@ class IMUBoard {
         boardNum BNO;
         
         //PUBLISH 
-        OutputPort<hubomsg::CanMessage>* canDownPort;
+        OutputPort<hubomsg::HuboState>* huboDownPort;
 
         //SUBSCRIBE
         InputPort<hubomsg::CanMessage>* canUpPort; 

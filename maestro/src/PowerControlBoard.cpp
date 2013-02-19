@@ -18,7 +18,7 @@ PowerControlBoard::PowerControlBoard(){
 ******************************************************************************/
 PowerControlBoard::PowerControlBoard(boardNum BNO){
     this->BNO = BNO;
-    this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
+    this->huboDownPort = new OutputPort<hubomsg::HuboState>("Hubo/HuboState");
     this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
 }
 
@@ -32,7 +32,7 @@ PowerControlBoard::PowerControlBoard(boardNum BNO){
 void PowerControlBoard::setRequestBoardInfo(char CANR){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_SETREQ_BOARD_INFO,
                              CANR, 0, 0, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out)); 
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 /******************************************************************************
@@ -45,7 +45,7 @@ void PowerControlBoard::setRequestBoardInfo(char CANR){
 void PowerControlBoard::setSwitchFunction(char SFUNC){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_SET_SWITCH,
                              SFUNC, 0, 0, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out)); 
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 /******************************************************************************
@@ -58,7 +58,7 @@ void PowerControlBoard::setSwitchFunction(char SFUNC){
 void PowerControlBoard::requestAlarm(char ALRM){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_REQ_ALARM,
                              ALRM, 0, 0, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out));
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 /******************************************************************************
@@ -71,7 +71,7 @@ void PowerControlBoard::requestAlarm(char ALRM){
 void PowerControlBoard::requestBeep(char BDUR){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_REQ_BEEP,
                              BDUR, 0, 0, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out));
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 /******************************************************************************
@@ -82,7 +82,7 @@ void PowerControlBoard::requestBeep(char BDUR){
 void PowerControlBoard::requestVoltageAndCurrent(){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_REQ_VOLT_CUR,
                              0, 0, 0, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out));
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 /******************************************************************************
@@ -93,7 +93,7 @@ void PowerControlBoard::requestVoltageAndCurrent(){
 void PowerControlBoard::requestTimeAndStatus(){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_REQ_TIME_STATUS,
                              0, 0, 0, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out));
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 

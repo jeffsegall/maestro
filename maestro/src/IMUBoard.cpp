@@ -18,7 +18,7 @@ IMUBoard::IMUBoard(){
 ******************************************************************************/
 IMUBoard::IMUBoard(boardNum BNO){
     this->BNO = BNO;
-    this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
+    this->huboDownPort = new OutputPort<hubomsg::HuboState>("Hubo/HuboState");
     this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
 }
 
@@ -32,7 +32,7 @@ IMUBoard::IMUBoard(boardNum BNO){
 void IMUBoard::setRequestBoardInfo(char CANR){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_SETREQ_BOARD_INFO,
                              CANR, 0, 0, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out)); 
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 /******************************************************************************
@@ -46,7 +46,7 @@ void IMUBoard::setRequestBoardInfo(char CANR){
 void IMUBoard::requestExecuteNULL(){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_NULL,
                              0, 0, 0, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out)); 
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 /******************************************************************************
@@ -58,7 +58,7 @@ void IMUBoard::requestExecuteNULL(){
 void IMUBoard::requestExecuteCalib(){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_CALIBRATE,
                              0, 0, 0, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out));
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 /******************************************************************************
@@ -71,7 +71,7 @@ void IMUBoard::requestExecuteCalib(){
 void IMUBoard::requestParameters(char PRF){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_REQ_BOARD_PARAM,
                              PRF, 0, 0, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out));
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 /******************************************************************************
@@ -84,7 +84,7 @@ void IMUBoard::requestParameters(char PRF){
 void IMUBoard::setNewBoardNumber(char NEW_BNO){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_SET_BNO_FREQ,
                              NEW_BNO, 0, 0, 0, 0, 0, 0, 0);
-    this->canDownPort->write(buildCanMessage(out));
+    //this->canDownPort->write(buildCanMessage(out));
 }
 
 
