@@ -287,7 +287,7 @@ vector<float> trajectoryValues(string path){
     	hubomsg::HuboState message;
 		for (int i = 0; i < this->state->getBoards().size(); i++){
 			if (this->state->getBoards()[i]->requiresMotion()){
-				//tempOutput << "Attempting to build message for :" << this->state->getBoards()[i]->getBoardNumber() << std::endl;
+				tempOutput << "Attempting to build message for :" << this->state->getBoards()[i]->getBoardNumber() << std::endl;
 				vector<hubomsg::HuboJointState> states = this->state->getBoards()[i]->sendPositionReference();
 				buildHuboStateMessage(states, message);
 
