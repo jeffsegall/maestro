@@ -635,17 +635,11 @@ vector<float> trajectoryValues(string path){
       }
       */
 
-	  TaskContext   tc;
-	  tc.setActivity( new PeriodicActivity(5, 0.01) );
-
 	  // Watch Logger output for errors :
-	  tc.scripting()->loadPrograms(path);
-
-	  // start the task :
-	  tc.start();
+	  this->scripting()->loadPrograms(path);
 
 	  // start a program :
-	  tc.engine()->programs()->getProgram("gesture")->start();
+	  this->engine()->programs()->getProgram("gesture")->start();
   }
 
 ORO_CREATE_COMPONENT_LIBRARY()

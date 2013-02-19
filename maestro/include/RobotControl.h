@@ -2,7 +2,6 @@
 #define ROBOTCONTROL_H
 
 #include <rtt/TaskContext.hpp>
-#include <rtt/PeriodicActivity.hpp>
 #include <rtt/Port.hpp>
 #include <std_msgs/Float64.h>
 #include <std_msgs/String.h>
