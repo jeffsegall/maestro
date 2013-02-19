@@ -10,6 +10,7 @@
 #include <hubomsg/typekit/HuboCmd.h>
 #include <hubomsg/typekit/CanMessage.h>
 #include <hubomsg/typekit/HuboJointState.h>
+#include <hubomsg/typekit/HuboState.h>
 #include <string>
 #include "huboCan.h"
 #include "ros/ros.h"
