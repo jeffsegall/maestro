@@ -2,7 +2,7 @@ path("/opt/ros/fuerte/stacks/maestro")
 import("maestro")
 
 do RobotControl.setRightHipYaw(90000,0)
-
+/*
 while (true){
 	if RobotControl.requiresMotion(0, 0, 0) then 
 		break
@@ -17,3 +17,4 @@ while (true) {
 }
 
 do RobotControl.setRightHipYaw(0, 0)
+*/
