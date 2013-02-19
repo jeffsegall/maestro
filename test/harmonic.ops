@@ -1,22 +1,19 @@
 path("/opt/ros/fuerte/stacks/maestro")
 import("maestro")
 
-program gesture {
-	do RobotControl.setRightHipYaw(90000,0)
-	
-	while (true){
-		if RobotControl.requiresMotion(0, 0, 0) then 
-			break
-	}
-	
-	
-	do RobotControl.setRightHipYaw(-90000,0)
-	
-	while (true) {
-		if RobotControl.requiresMotion(0, 0, 0) then
-			break
-	}
-	
-	do RobotControl.setRightHipYaw(0, 0)
+do RobotControl.setRightHipYaw(90000,0)
 
+while (true){
+	if RobotControl.requiresMotion(0, 0, 0) then 
+		break
 }
+
+
+do RobotControl.setRightHipYaw(-90000,0)
+
+while (true) {
+	if RobotControl.requiresMotion(0, 0, 0) then
+		break
+}
+
+do RobotControl.setRightHipYaw(0, 0)
