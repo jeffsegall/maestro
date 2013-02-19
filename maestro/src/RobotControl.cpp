@@ -636,10 +636,10 @@ vector<float> trajectoryValues(string path){
       */
 
 	  // Watch Logger output for errors :
-	  this->scripting()->loadPrograms(path);
+	  //this->scripting()->loadPrograms(path);
 
 	  // start a program :
-	  this->engine()->programs()->getProgram("gesture")->start();
+	  //this->engine()->programs()->getProgram("gesture")->start();
   }
 
 ORO_CREATE_COMPONENT_LIBRARY()
