@@ -5,13 +5,13 @@ program gesture {
 	do RobotControl.setRightHipYaw(90000,0)
 	
 	do nothing until {
-		if (not RobotControl.requiresMotion(0, 0, 0)) then continue
+		if not RobotControl.requiresMotion(0, 0, 0) then continue
 	}
 	
 	do RobotControl.setRightHipYaw(-90000,0)
 	
 	do nothing until {
-		if (not RobotControl.requiresMotion(0, 0, 0)) then continue
+		if not RobotControl.requiresMotion(0, 0, 0) then continue
 	}
 	
 	
