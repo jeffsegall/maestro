@@ -6,7 +6,7 @@ RobotControl::RobotControl(const std::string& name):
     TaskContext(name)
   {
     
-    //this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
+    this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
     //this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
 	this->huboDownPort = new OutputPort<hubomsg::HuboState>("Hubo/HuboState");
     this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
