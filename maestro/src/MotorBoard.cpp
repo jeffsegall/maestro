@@ -818,7 +818,7 @@ canMsg* MotorBoard::sendPositionReference(vector<int> REF, int MAX_STEP, int MIN
 vector<hubomsg::HuboJointState> MotorBoard::sendPositionReference(int MAX_STEP, int MIN_STEP){
 	vector<hubomsg::HuboJointState> states;
 	for (int i = 0; i < channels; i++){
-		hubomsg::HuboJointState jointState = new hubomsg::HuboJointState();
+		hubomsg::HuboJointState jointState;
 		jointState.name = motors[i]->getName();
 		jointState.position = motors[i]->ticksToRadians(motors[i]->interpolate(MAX_STEP, MIN_STEP));
 		jointState.commanded++;
