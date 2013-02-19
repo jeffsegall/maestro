@@ -1,7 +1,7 @@
 path("/opt/ros/fuerte/stacks/maestro/maestro")
 import("RobotControl")
 
-do RobotControl.setRightHipYaw(90000,0)
+try RobotControl.setRightHipYaw(90000,0)
 /*
 while (true){
 	if RobotControl.requiresMotion(0, 0, 0) then 
