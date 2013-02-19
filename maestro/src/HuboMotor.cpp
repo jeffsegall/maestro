@@ -262,7 +262,7 @@ long HuboMotor::getDesiredPosition(){
 }
 
 bool HuboMotor::requiresMotion(){
-	return desiredPosition - currentPosition != 0;
+	return desired_position - ticks_position != 0;
 }
 
 double HuboMotor::ticksToRadians(long ticks){
