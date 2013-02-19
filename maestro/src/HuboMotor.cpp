@@ -261,7 +261,7 @@ long HuboMotor::getDesiredPosition(){
 	return this->desired_position;
 }
 
-bool requiresMotion(){
+bool HuboMotor::requiresMotion(){
 	return desiredPosition - currentPosition != 0;
 }
 
