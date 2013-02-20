@@ -6,6 +6,9 @@
 #include <std_msgs/Float64.h>
 #include <std_msgs/String.h>
 #include <rtt/Component.hpp>
+#include <rtt/scripting/Scripting.hpp>
+#include <rtt/scripting/ProgramInterface.hpp>
+#include <rtt/scripting/ScriptingService.hpp>
 #include <hubomsg/typekit/HuboCmd.h>
 #include <hubomsg/typekit/CanMessage.h>
 #include <hubomsg/typekit/HuboState.h>
