@@ -642,7 +642,7 @@ vector<float> trajectoryValues(string path){
 	  //this->engine()->programs()->getProgram("gesture")->start();
 
 	  this->getProvider<Scripting>(string("scripting"))->loadPrograms( path );
-	  scripting::ScriptingService* sa = dynamic_cast<scripting::ScriptingService*>(this->getService("scripting"));
+	  scripting::ScriptingService* sa = dynamic_cast<scripting::ScriptingService*>(this->provides("scripting"));
 	  scripting::ProgramInterface* foo = sa->getProgram("gesture");
   }
 
