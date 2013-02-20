@@ -640,6 +640,10 @@ vector<float> trajectoryValues(string path){
 
 	  // start a program :
 	  //this->engine()->programs()->getProgram("gesture")->start();
+
+	  this->getProvider<Scripting>("scripting")->loadPrograms( path );
+	  scripting::ScriptingService* sa = dynamic_cast<scripting::ScriptingService*>(this->getService("scripting"));
+	  scripting::ProgramInterface* foo = sa->getProgram("gesture");
   }
 
 ORO_CREATE_COMPONENT_LIBRARY()
