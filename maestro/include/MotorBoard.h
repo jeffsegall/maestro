@@ -48,7 +48,7 @@ class MotorBoard{// : public RTT::TaskContext {
     public:
         
         MotorBoard();
-        MotorBoard(boardNum BNO, int channels, queue<hubomsg::HuboState>* outQueue);
+        MotorBoard(boardNum BNO, int channels, queue<hubomsg::HuboCommand>* outQueue);
         MotorBoard(const MotorBoard& rhs);
 
         void addMotor(HuboMotor* motor, int channel);
