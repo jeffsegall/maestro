@@ -2,7 +2,7 @@
 //import("RobotControl")
 
 program gesture{
-
+	/*
 	try RobotControl.setRightHipYaw(90000,0)
 
 	while (true){
@@ -18,5 +18,5 @@ program gesture{
 	}
 	
 	do RobotControl.setRightHipYaw(0, 0)
-
+	*/
 }
