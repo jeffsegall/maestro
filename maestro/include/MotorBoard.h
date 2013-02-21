@@ -37,13 +37,13 @@ class MotorBoard{// : public RTT::TaskContext {
         //PUBLISH
         //OutputPort<hubomsg::CanMessage>* canDownPort;
         OutputPort<hubomsg::HuboCmd>* orInPort;
-        OutputPort<hubomsg::HuboState> HuboDownPort;
+        OutputPort<hubomsg::HuboCommand> HuboDownPort;
 
         //SUBSCRIBE
         InputPort<hubomsg::CanMessage>* canUpPort;
         InputPort<hubomsg::HuboCmd>* orOutPort;
 
-        queue<hubomsg::HuboState>* outQueue;
+        queue<hubomsg::HuboCommand>* outQueue;
  
     public:
         
