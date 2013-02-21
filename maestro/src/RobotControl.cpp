@@ -8,14 +8,14 @@ RobotControl::RobotControl(const std::string& name):
     
     this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
     //this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
-	this->huboDownPort = new OutputPort<hubomsg::HuboState>("Hubo/HuboState");
+	this->huboDownPort = new OutputPort<hubomsg::HuboCommand>("Hubo/HuboState");
     this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
     this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
     this->commHandler = new CommHandler(canUpPort, orOutPort);
 
     //CAN QUEUES
     this->inputQueue = new queue<hubomsg::CanMessage>();
-    this->outputQueue = new queue<hubomsg::HuboState>();
+    this->outputQueue = new queue<hubomsg::HuboCommand>();
     
     //CAN PORTS 
     this->addEventPort(*canUpPort);
@@ -137,10 +137,10 @@ RobotControl::RobotControl(const std::string& name):
                 .arg("Rads", "New radians for right hip yaw.")
                 .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
-    this->addOperation("setRightHipRoll", &RobotControl::setRightHipRoll, this, RTT::OwnThread)
-            .doc("Set Right Hip Roll")
-            .arg("Value", "New ticks for right hip roll.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+		this->addOperation("setRightHipRoll", &RobotControl::setRightHipRoll, this, RTT::OwnThread)
+				.doc("Set Right Hip Roll")
+				.arg("Value", "New ticks for right hip roll.")
+				.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightHipRollRads", &RobotControl::setRightHipRollRad, this, RTT::OwnThread)
                     .doc("Set Right Hip Yaw")
@@ -289,11 +289,11 @@ vector<float> trajectoryValues(string path){
 
     if (outputQueue->empty() && state != NULL && !this->state->getBoards().empty()) {
 		//tempOutput << "Boards not empty. Map size: " << this->state->getBoards().size() << std::endl;
-    	hubomsg::HuboState message;
+    	hubomsg::HuboCommand message;
 		for (int i = 0; i < this->state->getBoards().size(); i++){
 			//if (this->state->getBoards()[i]->requiresMotion()){
 				//tempOutput << "Attempting to build message for :" << this->state->getBoards()[i]->getBoardNumber() << std::endl;
-				vector<hubomsg::HuboJointState> states = this->state->getBoards()[i]->sendPositionReference();
+				vector<hubomsg::HuboJointCommand> states = this->state->getBoards()[i]->sendPositionReference();
 				buildHuboStateMessage(states, message);
 
 			//}
@@ -337,9 +337,10 @@ vector<float> trajectoryValues(string path){
       return canMessage;
   }
 
-  void RobotControl::buildHuboStateMessage(vector<hubomsg::HuboJointState>& states, hubomsg::HuboState& message){
+  void RobotControl::buildHuboCommandMessage(vector<hubomsg::HuboJointCommand>& states, hubomsg::HuboCommand& message){
       for (int i = 0; i < states.size(); i++)
     	  message.joints.push_back(states[i]);
+      message.num_joints=message.joints.size();
       /*
       canMessage.bno = msg->getBNO();
       canMessage.mType = msg->getType();

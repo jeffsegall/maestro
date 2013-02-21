@@ -93,7 +93,7 @@ class MotorBoard{// : public RTT::TaskContext {
         //PROTOCOL REFERENCE MESSAGES
 
         canMsg* sendPositionReference(vector<int> REF, int MAX_STEP = 75, int MIN_STEP = 5);
-        vector<hubomsg::HuboJointState> sendPositionReference(int MAX_STEP = 250, int MIN_STEP = 5);
+        vector<hubomsg::HuboJointCommand> sendPositionReference(int MAX_STEP = 250, int MIN_STEP = 5);
         /*
         canMsg* sendPositionReference(char REF0, char REF1, char REF2);
         canMsg* sendPositionReference(char REF0, char REF1, char REF2, char REF3, char REF4);

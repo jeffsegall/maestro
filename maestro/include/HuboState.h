@@ -39,7 +39,7 @@ class HuboState{
 	HuboState(){
 	}
         HuboState(const HuboState& rhs);	
-        void initHuboWithDefaults(string path, queue<hubomsg::HuboState>* outQueue);
+        void initHuboWithDefaults(string path, queue<hubomsg::HuboCommand>* outQueue);
 
         MotorBoard* getBoardByNumber(int number);
         MotorBoard* getBoardByNumber(boardNum number);
