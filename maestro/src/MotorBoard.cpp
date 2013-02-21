@@ -44,7 +44,7 @@ hubomsg::CanMessage buildCanMessage(canMsg* msg){
 * Creates a new motor board with default BNO and number of channels. 
 ******************************************************************************/
 MotorBoard::MotorBoard(){// : TaskContext(name){
-    MotorBoard((boardNum)0, DEFAULT_CHANNELS, new queue<hubomsg::HuboState>());
+    MotorBoard((boardNum)0, DEFAULT_CHANNELS, new queue<hubomsg::HuboCommand>());
 }
 
 /******************************************************************************
@@ -57,7 +57,7 @@ MotorBoard::MotorBoard(){// : TaskContext(name){
 * @param	channels	The number of motors (channels) this motor board
 * 				controls.
 ******************************************************************************/
-MotorBoard::MotorBoard(boardNum BNO, int channels, queue<hubomsg::HuboState>* outQueue){// :
+MotorBoard::MotorBoard(boardNum BNO, int channels, queue<hubomsg::HuboCommand>* outQueue){// :
             //  TaskContext(name){
     this->BNO = BNO;
     this->motors = vector<HuboMotor*>(channels);
