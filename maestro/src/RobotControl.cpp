@@ -294,7 +294,7 @@ vector<float> trajectoryValues(string path){
 			//if (this->state->getBoards()[i]->requiresMotion()){
 				//tempOutput << "Attempting to build message for :" << this->state->getBoards()[i]->getBoardNumber() << std::endl;
 				vector<hubomsg::HuboJointCommand> states = this->state->getBoards()[i]->sendPositionReference();
-				buildHuboStateMessage(states, message);
+				buildHuboCommandMessage(states, message);
 
 			//}
 		}
@@ -307,7 +307,7 @@ vector<float> trajectoryValues(string path){
 
     if (!outputQueue->empty()){
 
-    	hubomsg::HuboState output = outputQueue->front();
+    	hubomsg::HuboCommand output = outputQueue->front();
     	if (printNow){
     		//tempOutput << "Writing message to " << output.commanded << " motors." << std::endl;
     	}
