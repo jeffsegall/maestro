@@ -8,7 +8,7 @@ RobotControl::RobotControl(const std::string& name):
     
     this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
     //this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
-	this->huboDownPort = new OutputPort<hubomsg::HuboCommand>("Hubo/HuboState");
+	this->huboDownPort = new OutputPort<hubomsg::HuboCommand>("Hubo/HuboCommand");
     this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
     this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
     this->commHandler = new CommHandler(canUpPort, orOutPort);
