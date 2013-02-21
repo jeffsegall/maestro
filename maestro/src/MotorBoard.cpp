@@ -821,7 +821,7 @@ vector<hubomsg::HuboJointCommand> MotorBoard::sendPositionReference(int MAX_STEP
 		hubomsg::HuboJointCommand jointCommand;
 		jointCommand.name = motors[i]->getName();
 		jointCommand.position = motors[i]->ticksToRadians(motors[i]->interpolate(MAX_STEP, MIN_STEP));
-		commands.push_back(jointState);
+		commands.push_back(jointCommand);
 	}
 	return commands;
 	/*

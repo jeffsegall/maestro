@@ -11,6 +11,8 @@
 #include <hubomsg/typekit/CanMessage.h>
 #include <hubomsg/typekit/HuboJointState.h>
 #include <hubomsg/typekit/HuboState.h>
+#include <hubomsg/typekit/HuboCommand.h>
+#include <hubomsg/typekit/HuboJointCommand.h>
 #include <string>
 #include "huboCan.h"
 #include "ros/ros.h"
