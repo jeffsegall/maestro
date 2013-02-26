@@ -17,29 +17,11 @@ rosws set -y orocos/rtt_ros_integration --git http://git.mech.kuleuven.be/roboti
 rosws set -y orocos/rtt_ros_comm --git http://git.mech.kuleuven.be/robotics/rtt_ros_comm.git
 rosws set -y orocos/rtt_common_msgs --git http://git.mech.kuleuven.be/robotics/rtt_common_msgs.git
 rosws set -y orocos/rtt_geometry --git http://git.mech.kuleuven.be/robotics/rtt_geometry.git
-udo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu precise main" > /etc/apt/sources.list.d/ros-latest.list'
+sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu precise main" > /etc/apt/sources.list.d/ros-latest.list'
 wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
 apt-get update
 apt-get install -y mercurial
 apt-get install -y ros-fuerte-desktop-full
-cd /opt/ros/fuerte/stacks/
-mkdir workspace
-export ROS_WORKSPACE="/opt/ros/fuerte/stacks/workspace"
-cd $ROS_WORKSPACE
-source /opt/ros/fuerte/setup.sh
-rosws init . /opt/ros/fuerte
-roscd
-rosws set -y orocos/rtt_ros_integration --git http://git.mech.kuleuven.be/robotics/rtt_ros_integration.git
-rosws set -y orocos/rtt_ros_comm --git http://git.mech.kuleuven.be/robotics/rtt_ros_comm.git
-rosws set -y orocos/rtt_common_msgs --git http://git.mech.kuleuven.be/robotics/rtt_common_msgs.git
-rosws set -y orocos/rtt_geometry --git http://git.mech.kuleuven.be/robotics/rtt_geometry.git
-rosws update
-rosws regenerate
-source setup.sh
-roscd orocos_toolchain
-source env.sh
-rosdep install orogen
-rosmake orocos_toolchain rtt_ros_integration rtt_ros_comm rtt_common_msgs rtt_geometry
 #rosdep install -y openrave_planning
 #cd /opt/ros/diamondback/stacks/openrave_planning/openrave_robot_control/
 #rosmake --rosdep-yes
