@@ -8,7 +8,7 @@ apt-get update
 apt-get install -y mercurial
 apt-get install -y ros-fuerte-desktop-full
 echo "source /opt/ros/fuerte/setup.bash" >> ~/.bashrc
-. ~/.bashrc
+source /opt/ros/fuerte/setup.bash
 apt-get install python-rosinstall python-rosdep
 cd /opt/ros/fuerte/stacks/
 #OROCOS
