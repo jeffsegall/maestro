@@ -26,6 +26,7 @@ git submodule init
 git submodule update
 git submodule foreach git checkout toolchain-2.5
 source env.sh
+apt-get install libboost-dev
 rosmake orocos_toolchain rtt_ros_integration rtt_ros_comm rtt_common_msgs rtt_geometry
 #OPENRAVE
 cd /opt/ros/fuerte/stacks
