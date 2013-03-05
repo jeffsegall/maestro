@@ -4,6 +4,8 @@ sh -c 'echo "deb http://www.drc-hubo.com/software precise main" > /etc/apt/sourc
 apt-get update
 apt-get install hubo-ach hubo-ach-dev
 
+source /opt/ros/fuerte/setup.bash
+
 #Hubo-Ach-Ros
 cd /opt/ros/fuerte/stacks
 git clone http://github.com/isaacgaretmia/hubo-ach-ros.git
