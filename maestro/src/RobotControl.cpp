@@ -309,6 +309,7 @@ vector<float> trajectoryValues(string path){
 
     	hubomsg::HuboCommand output = outputQueue->front();
     	if (printNow){
+		std::cout << "script running " << std::endl;	
     		//tempOutput << "Writing message to " << output.commanded << " motors." << std::endl;
     	}
 
@@ -641,9 +642,14 @@ vector<float> trajectoryValues(string path){
 
 	  // start a program :
 	  //this->engine()->programs()->getProgram("gesture")->start();
-
+		/*
 	  this->getProvider<Scripting>(string("scripting"))->loadPrograms( path );
 	  this->getProvider<Scripting>(string("scripting"))->startProgram("gesture");
+	  if (!this->getProvider<Scripting>(string("scripting"))->isProgramRunning("gesture")) std::cout << "Error. Program not running." << std::endl;
+	  */	  
+	  //RTT::scripting::ProgramInterface * program = this->getProvider<Scripting>(string("scripting"))->getProgram(string("gesture"));
+	  //program->start();
+	  //this->getProvider<Scripting>(string("scripting"))->unloadProgram( "gesture" );
 	  //scripting::ScriptingService* sa = dynamic_cast<scripting::ScriptingService*>(this->getService("scripting"));
 	  //scripting::ProgramInterface* foo = this->getProvider<Scripting>(string("scripting"))->getProgram("gesture");
   }
