@@ -39,6 +39,7 @@ cd /opt/ros/fuerte/stacks/openrave_planning/openrave_robot_control/
 rosmake
 ln -sf /opt/ros/fuerte/stacks/openrave_planning/openrave/bin/openrave /usr/bin/openrave
 ln -sf /opt/ros/fuerte/stacks/openrave_planning/openrave/bin/openrave-config /usr/bin/openrave-config
-chown -R $USER /opt/ros/fuerte/stacks/openrave_planning
-chown -R $USER /opt/ros/fuerte/stacks/orocos_toolchain_ros
+cd /opt/ros/fuerte/stacks
+chown -R $USER openrave_planning
+chown -R $USER orocos_toolchain_ros
 ln -s $installDir maestro
