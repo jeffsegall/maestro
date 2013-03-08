@@ -86,8 +86,9 @@ public:
     void setPositionGain(int board, int motor, int kp, int ki, int kd);
     void debugControl(int board, int operation);
     void setDelay(int us);
-    void loadGesture(string path);
     void runGesture(string name, int board);
+
+    vector<string> getGestureScripts(string path);
 
 private:
 

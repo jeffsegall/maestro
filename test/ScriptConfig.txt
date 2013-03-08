@@ -1,0 +1,1 @@
+/opt/ros/fuerte/stacks/maestro/test/harmonic.ops

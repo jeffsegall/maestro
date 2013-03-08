@@ -133,19 +133,19 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightHipYawRads", &RobotControl::setRightHipYawRad, this, RTT::OwnThread)
-                .doc("Set Right Hip Yaw")
-                .arg("Rads", "New radians for right hip yaw.")
-                .arg("Timestamp", "Timestamp delay (in milliseconds)");
+			.doc("Set Right Hip Yaw")
+			.arg("Rads", "New radians for right hip yaw.")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
-		this->addOperation("setRightHipRoll", &RobotControl::setRightHipRoll, this, RTT::OwnThread)
-				.doc("Set Right Hip Roll")
-				.arg("Value", "New ticks for right hip roll.")
-				.arg("Timestamp", "Timestamp delay (in milliseconds)");
+	this->addOperation("setRightHipRoll", &RobotControl::setRightHipRoll, this, RTT::OwnThread)
+			.doc("Set Right Hip Roll")
+			.arg("Value", "New ticks for right hip roll.")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightHipRollRads", &RobotControl::setRightHipRollRad, this, RTT::OwnThread)
-                    .doc("Set Right Hip Yaw")
-                    .arg("Rads", "New radians for right hip roll.")
-                    .arg("Timestamp", "Timestamp delay (in milliseconds)");
+			.doc("Set Right Hip Yaw")
+			.arg("Rads", "New radians for right hip roll.")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightHipPitch", &RobotControl::setRightHipPitch, this, RTT::OwnThread)
             .doc("Set Right Hip Pitch")
@@ -189,32 +189,32 @@ RobotControl::RobotControl(const std::string& name):
 			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setCurrentTicks", &RobotControl::setCurrentTicks, this, RTT::OwnThread)
-    			.arg("Board", "The board to send commands to")
-    			.arg("Motor", "The motor channel to set current perceived position on.")
-    			.arg("Ticks", "Desired current perceived position in ticks.");
+			.arg("Board", "The board to send commands to")
+			.arg("Motor", "The motor channel to set current perceived position on.")
+			.arg("Ticks", "Desired current perceived position in ticks.");
 
     this->addOperation("getCurrentGoal", &RobotControl::getCurrentGoal, this, RTT::OwnThread)
-    			.arg("Board", "The board to send commands to")
-    			.arg("Motor", "The motor channel to request current requested position from.")
-    			.arg("Timestamp", "Timestamp delay (in milliseconds)");
+			.arg("Board", "The board to send commands to")
+			.arg("Motor", "The motor channel to request current requested position from.")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("requiresMotion", &RobotControl::requiresMotion, this, RTT::OwnThread)
-				.arg("Board", "The board to send commands to")
-				.arg("Motor", "The motor channel to check need for motion from.")
-				.arg("Timestamp", "Timestamp delay (in milliseconds)");
+			.arg("Board", "The board to send commands to")
+			.arg("Motor", "The motor channel to check need for motion from.")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setMaxAccVel", &RobotControl::setMaxAccVel, this, RTT::OwnThread)
-				.arg("Board", "The board to send commands to")
-				.arg("Motor", "The motor channel to set maximum velocity and acceleration on.")
-				.arg("Max Accel", "Maximum Acceleration in unknown units.")
-				.arg("Max Vel", "Maximum Velocity in unknown units.");
+			.arg("Board", "The board to send commands to")
+			.arg("Motor", "The motor channel to set maximum velocity and acceleration on.")
+			.arg("Max Accel", "Maximum Acceleration in unknown units.")
+			.arg("Max Vel", "Maximum Velocity in unknown units.");
 
     this->addOperation("setPositionGain", &RobotControl::setPositionGain, this, RTT::OwnThread)
-				.arg("Board", "The board to send commands to")
-				.arg("Motor", "The motor channel to set gains on.")
-				.arg("kP", "Proportion gain.")
-				.arg("kI", "Integral gain.")
-				.arg("kD", "Derivative gain");
+			.arg("Board", "The board to send commands to")
+			.arg("Motor", "The motor channel to set gains on.")
+			.arg("kP", "Proportion gain.")
+			.arg("kI", "Integral gain.")
+			.arg("kD", "Derivative gain");
 
     this->addOperation("debugControl", &RobotControl::debugControl, this, RTT::OwnThread)
 			.arg("Board", "The board to send commands to")
@@ -223,11 +223,9 @@ RobotControl::RobotControl(const std::string& name):
     this->addOperation("setDelay", &RobotControl::setDelay, this, RTT::OwnThread)
 			.arg("Microseconds", "Delay amount in microseconds.");
 
-    this->addOperation("loadGesture", &RobotControl::loadGesture, this, RTT::OwnThread)
-            .arg("Path", "The path to the file that contains the gesture.");
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
-	    .arg("Name", "The name of the gesture to load.")
-	    .arg("Board", "The board on which to run the gesture.");
+	    	.arg("Name", "The name of the gesture to load.")
+			.arg("Board", "The board on which to run the gesture.");
 
     this->written = 0;
     this->printNow = false;
@@ -236,7 +234,12 @@ RobotControl::RobotControl(const std::string& name):
     this->state = NULL;
     tempOutput.open("/opt/ros/fuerte/stacks/maestro/RobotControlLog.txt");
     //initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
-    this->getProvider<Scripting>("scripting")->loadPrograms("/opt/ros/fuerte/stacks/maestro/test/harmonic.ops");	
+    vector<string> paths = getGestureScripts("/opt/ros/fuerte/stacks/maestro/test/ScriptConfig.txt");
+    for (int i = 0; i < paths.size(); i++){
+		std::cout << "Adding gestures from path: " << paths[i] << std::endl;
+		this->getProvider<Scripting>("scripting")->loadPrograms(paths[i]);
+    }
+
 }
   
   RobotControl::~RobotControl(){}
@@ -253,6 +256,7 @@ vector<float> trajectoryValues(string path){
         is >> f;
         val.push_back(f*5.0);
     } 
+    is.close();
 
     return val;
 }
@@ -357,6 +361,24 @@ vector<float> trajectoryValues(string path){
       canMessage.r7 = msg->getR7();
       canMessage.r8 = msg->getR8();
 	  */
+  }
+
+  vector<string> RobotControl::getGestureScripts(string path){
+	  vector<string> files;
+
+	  ifstream is;
+	  is.open(path.c_str());
+	  string temp;
+	  if (is.is_open()){
+		  do {
+			  getline(is, temp, '\n');
+			  if (temp.compare("") != 0) files.push_back(temp);
+		  } while (!is.eof());
+
+	  } else
+		  std::cout << "Error. Config file nonexistent. Aborting." << std::endl;
+
+	  return files;
   }
 
   void RobotControl::initRobot(string path){
@@ -618,10 +640,6 @@ vector<float> trajectoryValues(string path){
 
   void RobotControl::setPositionGain(int board, int motor, int kp, int ki, int kd){
 	  this->state->getBoardByNumber(board)->setPositionGain(motor, kp, ki, kd);
-  }
-
-  void RobotControl::loadGesture(string path){
-  	  this->getProvider<Scripting>("scripting")->loadPrograms(path);	
   }
 
   void RobotControl::runGesture(string name, int board){
