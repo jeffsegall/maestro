@@ -12,7 +12,8 @@ set(ROS_BUILD_TYPE RelWithDebInfo)
 rosbuild_init()
 
 rosbuild_find_ros_package(rtt )
-find_package(Orocos-RTT HINTS rtt-scripting ${rtt_PACKAGE_PATH}/install)
+find_package(Orocos-RTT HINTS ${rtt_PACKAGE_PATH}/install)
+find_package(Orocos-RTT REQUIRED rtt-scripting)
 
 rosbuild_genmsg()
 # Defines the orocos_* cmake macros. See that file for additional

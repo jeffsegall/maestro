@@ -223,9 +223,11 @@ RobotControl::RobotControl(const std::string& name):
     this->addOperation("setDelay", &RobotControl::setDelay, this, RTT::OwnThread)
 			.arg("Microseconds", "Delay amount in microseconds.");
 
+    this->addOperation("loadGesture", &RobotControl::loadGesture, this, RTT::OwnThread)
+            .arg("Path", "The path to the file that contains the gesture.");
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
-            .arg("Path", "The path to the file that contains the gesture.")
-            .arg("Board", "The board on which to run the gesture");
+	    .arg("Name", "The name of the gesture to load.")
+	    .arg("Board", "The board on which to run the gesture.");
 
     this->written = 0;
     this->printNow = false;
@@ -234,8 +236,8 @@ RobotControl::RobotControl(const std::string& name):
     this->state = NULL;
     tempOutput.open("/opt/ros/fuerte/stacks/maestro/RobotControlLog.txt");
     //initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
-
-  }
+    this->getProvider<Scripting>("scripting")->loadPrograms("/opt/ros/fuerte/stacks/maestro/test/harmonic.ops");	
+}
   
   RobotControl::~RobotControl(){}
 
@@ -618,7 +620,11 @@ vector<float> trajectoryValues(string path){
 	  this->state->getBoardByNumber(board)->setPositionGain(motor, kp, ki, kd);
   }
 
-  void RobotControl::runGesture(string path, int board){
+  void RobotControl::loadGesture(string path){
+  	  this->getProvider<Scripting>("scripting")->loadPrograms(path);	
+  }
+
+  void RobotControl::runGesture(string name, int board){
 	  /*
       int val = 0;
       vector<float> trajVal;
@@ -642,16 +648,13 @@ vector<float> trajectoryValues(string path){
 
 	  // start a program :
 	  //this->engine()->programs()->getProgram("gesture")->start();
-		/*
-	  this->getProvider<Scripting>(string("scripting"))->loadPrograms( path );
-	  this->getProvider<Scripting>(string("scripting"))->startProgram("gesture");
-	  if (!this->getProvider<Scripting>(string("scripting"))->isProgramRunning("gesture")) std::cout << "Error. Program not running." << std::endl;
-	  */	  
-	  //RTT::scripting::ProgramInterface * program = this->getProvider<Scripting>(string("scripting"))->getProgram(string("gesture"));
-	  //program->start();
+	  
+	  this->getProvider<Scripting>(string("scripting"))->startProgram(name);
+	  if (!this->getProvider<Scripting>(string("scripting"))->isProgramRunning(name))
+		std::cout << "Error. Program not running." << std::endl;
+	  if (this->getProvider<Scripting>(string("scripting"))->inProgramError(name))
+		std::cout << "Error. Program has encountered an error. " << std::endl;
 	  //this->getProvider<Scripting>(string("scripting"))->unloadProgram( "gesture" );
-	  //scripting::ScriptingService* sa = dynamic_cast<scripting::ScriptingService*>(this->getService("scripting"));
-	  //scripting::ProgramInterface* foo = this->getProvider<Scripting>(string("scripting"))->getProgram("gesture");
   }
 
 ORO_CREATE_COMPONENT_LIBRARY()
