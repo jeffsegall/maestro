@@ -29,6 +29,11 @@ RobotControl::RobotControl(const std::string& name):
             .doc("Set Torso Yaw")
             .arg("Value", "New ticks for torso yaw.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+    this->addOperation("setWaistRad", &RobotControl::setWaistRad, this, RTT::OwnThread)
+                .doc("Set Torso Yaw")
+                .arg("Rads", "New radians for torso yaw.")
+                .arg("Timestamp", "Timestamp delay (in milliseconds)");
   
     this->addOperation("setNeck", &RobotControl::setNeck, this, RTT::OwnThread)
             .doc("Set Neck positions")
@@ -42,14 +47,29 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Value", "New ticks for left shoulder roll.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
     
+    this->addOperation("setLeftShoulderRollRad", &RobotControl::setLeftShoulderRollRad, this, RTT::OwnThread)
+            .doc("Set Left Shoulder Roll")
+            .arg("Rads", "New radians for left shoulder roll.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("setLeftShoulderPitch", &RobotControl::setLeftShoulderPitch, this, RTT::OwnThread)
             .doc("Set Left Shoulder Pitch")
             .arg("Value", "New ticks for left shoulder pitch.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+    this->addOperation("setLeftShoulderPitchRad", &RobotControl::setLeftShoulderPitchRad, this, RTT::OwnThread)
+            .doc("Set Left Shoulder Pitch")
+            .arg("Rads", "New radians for left shoulder pitch.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
    
     this->addOperation("setLeftShoulderYaw", &RobotControl::setLeftShoulderYaw, this, RTT::OwnThread)
             .doc("Set Left Shoulder Yaw")
             .arg("Value", "New ticks for left shoulder yaw.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+    this->addOperation("setLeftShoulderYawRad", &RobotControl::setLeftShoulderYawRad, this, RTT::OwnThread)
+            .doc("Set Left Shoulder Yaw")
+            .arg("Rads", "New radians for left shoulder yaw.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
    
     this->addOperation("setLeftElbow", &RobotControl::setLeftElbow, this, RTT::OwnThread)
@@ -57,9 +77,19 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Value", "New ticks for left elbow.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+    this->addOperation("setLeftElbowRad", &RobotControl::setLeftElbowRad, this, RTT::OwnThread)
+            .doc("Set Left Elbow")
+            .arg("Rads", "New radians for left elbow.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("setLeftWristPitch", &RobotControl::setLeftWristPitch, this, RTT::OwnThread)
             .doc("Set Left Wrist Pitch")
             .arg("Value", "New ticks for left wrist pitch.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+    this->addOperation("setLeftWristPitchRad", &RobotControl::setLeftWristPitchRad, this, RTT::OwnThread)
+            .doc("Set Left Wrist Pitch")
+            .arg("Rads", "New radians for left wrist pitch.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftWristYaw", &RobotControl::setLeftWristYaw, this, RTT::OwnThread)
@@ -67,9 +97,19 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Value", "New ticks for left Wrist Yaw.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+    this->addOperation("setLeftWristYawRad", &RobotControl::setLeftWristYawRad, this, RTT::OwnThread)
+            .doc("Set Left Wrist Yaw")
+            .arg("Rads", "New radians for left Wrist Yaw.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("setRightShoulderRoll", &RobotControl::setRightShoulderRoll, this, RTT::OwnThread)
             .doc("Set Right Shoulder Roll")
             .arg("Value", "New ticks for right shoulder roll.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+    this->addOperation("setRightShoulderRollRad", &RobotControl::setRightShoulderRollRad, this, RTT::OwnThread)
+            .doc("Set Right Shoulder Roll")
+            .arg("Rads", "New radians for right shoulder roll.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightShoulderPitch", &RobotControl::setRightShoulderPitch, this, RTT::OwnThread)
@@ -77,9 +117,19 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Value", "New ticks for right shoulder pitch.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+    this->addOperation("setRightShoulderPitchRad", &RobotControl::setRightShoulderPitchRad, this, RTT::OwnThread)
+            .doc("Set Right Shoulder Pitch")
+            .arg("Rads", "New radians for right shoulder pitch.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("setRightShoulderYaw", &RobotControl::setRightShoulderYaw, this, RTT::OwnThread)
             .doc("Set Right Shoulder Yaw")
             .arg("Value", "New ticks for right shoulder yaw.")			
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+    this->addOperation("setRightShoulderYawRad", &RobotControl::setRightShoulderYawRad, this, RTT::OwnThread)
+            .doc("Set Right Shoulder Yaw")
+            .arg("Rads", "New radians for right shoulder yaw.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 			
     this->addOperation("setRightElbow", &RobotControl::setRightElbow, this, RTT::OwnThread)
@@ -87,9 +137,19 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Value", "New ticks for right elbow.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+    this->addOperation("setRightElbowRad", &RobotControl::setRightElbowRad, this, RTT::OwnThread)
+            .doc("Set Right Elbow")
+            .arg("Rads", "New radians for right elbow.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("setRightWristPitch", &RobotControl::setRightWristPitch, this, RTT::OwnThread)
             .doc("Set Right Wrist Pitch")
             .arg("Value", "New ticks for right wrist pitch.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+    this->addOperation("setRightWristPitchRad", &RobotControl::setRightWristPitchRad, this, RTT::OwnThread)
+            .doc("Set Right Wrist Pitch")
+            .arg("Rads", "New radians for right wrist pitch.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightWristYaw", &RobotControl::setRightWristYaw, this, RTT::OwnThread)
@@ -97,9 +157,19 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Value", "New ticks for right wrist yaw.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+    this->addOperation("setRightWristYawRad", &RobotControl::setRightWristYawRad, this, RTT::OwnThread)
+            .doc("Set Right Wrist Yaw")
+            .arg("Rads", "New radians for right wrist yaw.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("setLeftHipYaw", &RobotControl::setLeftHipYaw, this, RTT::OwnThread)
             .doc("Set Left Hip Yaw")
             .arg("Value", "New ticks for left hip yaw.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+    this->addOperation("setLeftHipYawRad", &RobotControl::setLeftHipYawRad, this, RTT::OwnThread)
+            .doc("Set Left Hip Yaw")
+            .arg("Rads", "New radians for left hip yaw.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftHipRoll", &RobotControl::setLeftHipRoll, this, RTT::OwnThread)
@@ -107,9 +177,19 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Value", "New ticks for left hip roll.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+    this->addOperation("setLeftHipRollRad", &RobotControl::setLeftHipRollRad, this, RTT::OwnThread)
+            .doc("Set Left Hip Roll")
+            .arg("Rads", "New radians for left hip roll.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("setLeftHipPitch", &RobotControl::setLeftHipPitch, this, RTT::OwnThread)
             .doc("Set Left Hip Pitch")
             .arg("Value", "New ticks for left hip pitch.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+    this->addOperation("setLeftHipPitchRad", &RobotControl::setLeftHipPitchRad, this, RTT::OwnThread)
+            .doc("Set Left Hip Pitch")
+            .arg("Rads", "New radians for left hip pitch.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftKnee", &RobotControl::setLeftKnee, this, RTT::OwnThread)
@@ -117,9 +197,19 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Value", "New ticks for left knee.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+    this->addOperation("setLeftKneeRad", &RobotControl::setLeftKneeRad, this, RTT::OwnThread)
+            .doc("Set Left Knee")
+            .arg("Rads", "New radians for left knee.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("setLeftAnklePitch", &RobotControl::setLeftAnklePitch, this, RTT::OwnThread)
             .doc("Set Left Ankle Pitch")
             .arg("Value", "New ticks for left ankle pitch.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+    this->addOperation("setLeftAnklePitchRad", &RobotControl::setLeftAnklePitchRad, this, RTT::OwnThread)
+            .doc("Set Left Ankle Pitch")
+            .arg("Rads", "New radians for left ankle pitch.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftAnkleRoll", &RobotControl::setLeftAnkleRoll, this, RTT::OwnThread)
@@ -127,12 +217,17 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Value", "New ticks for left ankle roll.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+    this->addOperation("setLeftAnkleRollRad", &RobotControl::setLeftAnkleRollRad, this, RTT::OwnThread)
+            .doc("Set Left Ankle Roll")
+            .arg("Rads", "New radians for left ankle roll.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("setRightHipYaw", &RobotControl::setRightHipYaw, this, RTT::OwnThread)
             .doc("Set Right Hip Yaw")
             .arg("Value", "New ticks for right hip yaw.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
-    this->addOperation("setRightHipYawRads", &RobotControl::setRightHipYawRad, this, RTT::OwnThread)
+    this->addOperation("setRightHipYawRad", &RobotControl::setRightHipYawRad, this, RTT::OwnThread)
 			.doc("Set Right Hip Yaw")
 			.arg("Rads", "New radians for right hip yaw.")
 			.arg("Timestamp", "Timestamp delay (in milliseconds)");
@@ -142,7 +237,7 @@ RobotControl::RobotControl(const std::string& name):
 			.arg("Value", "New ticks for right hip roll.")
 			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
-    this->addOperation("setRightHipRollRads", &RobotControl::setRightHipRollRad, this, RTT::OwnThread)
+    this->addOperation("setRightHipRollRad", &RobotControl::setRightHipRollRad, this, RTT::OwnThread)
 			.doc("Set Right Hip Yaw")
 			.arg("Rads", "New radians for right hip roll.")
 			.arg("Timestamp", "Timestamp delay (in milliseconds)");
@@ -152,9 +247,19 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Value", "New ticks for right hip pitch.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+    this->addOperation("setRightHipPitchRad", &RobotControl::setRightHipPitchRad, this, RTT::OwnThread)
+            .doc("Set Right Hip Pitch")
+            .arg("Rads", "New radians for right hip pitch.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("setRightKnee", &RobotControl::setRightKnee, this, RTT::OwnThread)
             .doc("Set Right Knee")
             .arg("Value", "New ticks for right knee.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+    this->addOperation("setRightKneeRad", &RobotControl::setRightKneeRad, this, RTT::OwnThread)
+            .doc("Set Right Knee")
+            .arg("Rads", "New radians for right knee.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightAnklePitch", &RobotControl::setRightAnklePitch, this, RTT::OwnThread)
@@ -162,9 +267,19 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Value", "New ticks for right ankle pitch.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+    this->addOperation("setRightAnklePitchRad", &RobotControl::setRightAnklePitchRad, this, RTT::OwnThread)
+            .doc("Set Right Ankle Pitch")
+            .arg("Rads", "New radians for right ankle pitch.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("setRightAnkleRoll", &RobotControl::setRightAnkleRoll, this, RTT::OwnThread)
             .doc("Set Right Ankle Roll")
             .arg("Value", "New ticks for right ankle roll.")
+            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+    this->addOperation("setRightAnkleRollRad", &RobotControl::setRightAnkleRollRad, this, RTT::OwnThread)
+            .doc("Set Right Ankle Roll")
+            .arg("Rads", "New radians for right ankle roll.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("initRobot", &RobotControl::initRobot, this, RTT::OwnThread)
