@@ -1,6 +1,6 @@
 #!/bin/bash
 #Hubo-Ach
-sh -c 'echo "deb http://www.drc-hubo.com/software precise main" > /etc/apt/source.list'
+sh -c 'echo "deb-src http://www.repo.danlofaro.com/release precise main" >> /etc/apt/source.list'
 apt-get update
 apt-get install hubo-ach hubo-ach-dev
 
