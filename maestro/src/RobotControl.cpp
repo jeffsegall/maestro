@@ -513,8 +513,8 @@ vector<float> trajectoryValues(string path){
 
   void RobotControl::setWaistRad(double rads, int delay){
         //ros_gateway->transmit(0,ticks);
-  	  MotorBoard* mb = this->state->getBoardByNumber(BNO_WAIST);
-  	  mb->getMotorByChannel(0)->setDesiredPosition(mb->getMotorByChannel(0)->radiansToTicks(rads));
+  	  HuboMotor* motor = this->state->getBoardByNumber(BNO_WAIST)->getMotorByChannel(0);
+  	  motor->setDesiredPosition(motor->radiansToTicks(rads));
   }
 
   void RobotControl::setNeck(int ticks, int one, int two, int delay){
@@ -525,26 +525,26 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setLeftShoulderRoll(int ticks, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL);
-      mb->getMotorByChannel(1)->setDesiredPosition(ticks);
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL)->getMotorByChannel(1);
+      motor->setDesiredPosition(ticks);
      //ros_gateway->transmit(3,ticks);
   }
 
   void RobotControl::setLeftShoulderRollRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL);
-      mb->getMotorByChannel(1)->setDesiredPosition(mb->getMotorByChannel(1)->radiansToTicks(rads));
+	  HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL)->getMotorByChannel(1);
+      motor->setDesiredPosition(motor->radiansToTicks(rads));
        //ros_gateway->transmit(3,ticks);
   }
 
   void RobotControl::setLeftShoulderPitch(int ticks, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL);
-      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
+	  HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL)->getMotorByChannel(0);
+      motor->setDesiredPosition(ticks);
      //ros_gateway->transmit(4,ticks);
   }
 
   void RobotControl::setLeftShoulderPitchRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL);
-      mb->getMotorByChannel(0)->setDesiredPosition(mb->getMotorByChannel(0)->radiansToTicks(rads));
+	  HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL)->getMotorByChannel(0);
+      motor->setDesiredPosition(motor->radiansToTicks(rads));
        //ros_gateway->transmit(4,ticks);
   }
   
@@ -555,8 +555,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setLeftShoulderYawRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_SHOULDER_YAW_ELBOW);
-  	  mb->getMotorByChannel(0)->setDesiredPosition(mb->getMotorByChannel(0)->radiansToTicks(rads));
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_YAW_ELBOW)->getMotorByChannel(0);
+  	  motor->setDesiredPosition(motor->radiansToTicks(rads));
        //ros_gateway->transmit(6,ticks);
   }
 
@@ -567,8 +567,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setLeftElbowRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_SHOULDER_YAW_ELBOW);
-  	  mb->getMotorByChannel(1)->setDesiredPosition(mb->getMotorByChannel(1)->radiansToTicks(rads));
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_YAW_ELBOW)->getMotorByChannel(1);
+  	  motor->setDesiredPosition(motor->radiansToTicks(rads));
        //ros_gateway->transmit(6,ticks);
   }
 
@@ -579,8 +579,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setLeftWristPitchRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_WRIST_YAW_PITCH);
-	  mb->getMotorByChannel(1)->setDesiredPosition(mb->getMotorByChannel(1)->radiansToTicks(rads));
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_WRIST_YAW_PITCH)->getMotorByChannel(1);
+	  motor->setDesiredPosition(motor->radiansToTicks(rads));
      //ros_gateway->transmit(8,ticks);
   }
 
@@ -591,8 +591,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setLeftWristYawRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_WRIST_YAW_PITCH);
-      mb->getMotorByChannel(0)->setDesiredPosition(mb->getMotorByChannel(0)->radiansToTicks(rads));
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_WRIST_YAW_PITCH)->getMotorByChannel(0);
+      motor->setDesiredPosition(motor->radiansToTicks(rads));
       //ros_gateway->transmit(9,ticks);
   }
 
@@ -603,8 +603,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setRightShoulderRollRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_SHOULDER_PITCH_ROLL);
-	  mb->getMotorByChannel(1)->setDesiredPosition(mb->getMotorByChannel(1)->radiansToTicks(rads));
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_R_SHOULDER_PITCH_ROLL)->getMotorByChannel(1);
+	  motor->setDesiredPosition(motor->radiansToTicks(rads));
       //ros_gateway->transmit(11,ticks);
   }
 
@@ -615,8 +615,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setRightShoulderPitchRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_SHOULDER_PITCH_ROLL);
-      mb->getMotorByChannel(0)->setDesiredPosition(mb->getMotorByChannel(0)->radiansToTicks(rads));
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_R_SHOULDER_PITCH_ROLL)->getMotorByChannel(0);
+      motor->setDesiredPosition(motor->radiansToTicks(rads));
       //ros_gateway->transmit(12,ticks);
   }
 
@@ -626,8 +626,8 @@ vector<float> trajectoryValues(string path){
   }
   
   void RobotControl::setRightShoulderYawRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_SHOULDER_YAW_ELBOW);
-	  mb->getMotorByChannel(0)->setDesiredPosition(mb->getMotorByChannel(0)->radiansToTicks(rads));
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_R_SHOULDER_YAW_ELBOW)->getMotorByChannel(0);
+	  motor->setDesiredPosition(motor->radiansToTicks(rads));
   }
 
   void RobotControl::setRightElbow(int ticks, int delay){
@@ -637,8 +637,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setRightElbowRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_SHOULDER_YAW_ELBOW);
-      mb->getMotorByChannel(1)->setDesiredPosition(mb->getMotorByChannel(1)->radiansToTicks(rads));
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_R_SHOULDER_YAW_ELBOW)->getMotorByChannel(1);
+      motor->setDesiredPosition(motor->radiansToTicks(rads));
       //ros_gateway->transmit(14,ticks);
   }
 
@@ -649,8 +649,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setRightWristPitchRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_WRIST_YAW_PITCH);
-      mb->getMotorByChannel(1)->setDesiredPosition(mb->getMotorByChannel(1)->radiansToTicks(rads));
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_R_WRIST_YAW_PITCH)->getMotorByChannel(1);
+      motor->setDesiredPosition(motor->radiansToTicks(rads));
       //ros_gateway->transmit(16,ticks);
   }
 
@@ -661,8 +661,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setRightWristYawRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_WRIST_YAW_PITCH);
-      mb->getMotorByChannel(0)->setDesiredPosition(mb->getMotorByChannel(0)->radiansToTicks(rads));
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_R_WRIST_YAW_PITCH)->getMotorByChannel(0);
+      motor->setDesiredPosition(motor->radiansToTicks(rads));
       //ros_gateway->transmit(17,ticks);
   }
 
@@ -673,8 +673,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setLeftHipYawRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_HIP_YAW_ROLL);
-      mb->getMotorByChannel(0)->setDesiredPosition(mb->getMotorByChannel(0)->radiansToTicks(rads));
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_HIP_YAW_ROLL)->getMotorByChannel(0);
+      motor->setDesiredPosition(motor->radiansToTicks(rads));
       //ros_gateway->transmit(19,ticks);
   }
 
@@ -685,8 +685,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setLeftHipRollRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_HIP_YAW_ROLL);
-      mb->getMotorByChannel(1)->setDesiredPosition(mb->getMotorByChannel(1)->radiansToTicks(rads));
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_HIP_YAW_ROLL)->getMotorByChannel(1);
+      motor->setDesiredPosition(motor->radiansToTicks(rads));
       //ros_gateway->transmit(20,ticks);
   }
 
@@ -697,8 +697,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setLeftHipPitchRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_HIP_PITCH);
-      mb->getMotorByChannel(0)->setDesiredPosition(mb->getMotorByChannel(0)->radiansToTicks(rads));
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_HIP_PITCH)->getMotorByChannel(0);
+      motor->setDesiredPosition(motor->radiansToTicks(rads));
   }
 
   void RobotControl::setLeftKnee(int ticks, int delay){
@@ -708,8 +708,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setLeftKneeRad(double rads, int delay){
-	  MotorBoard* mb = this->state->getBoardByNumber(BNO_L_KNEE);
-      mb->getMotorByChannel(0)->setDesiredPosition(mb->getMotorByChannel(0)->radiansToTicks(rads));
+	  HuboMotor* motor = this->state->getBoardByNumber(BNO_L_KNEE)->getMotorByChannel(0);
+      motor->setDesiredPosition(motor->radiansToTicks(rads));
       //ros_gateway->transmit(22,ticks);
   }
 
@@ -720,8 +720,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setLeftAnklePitchRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_ANKLE_PITCH_ROLL);
-      mb->getMotorByChannel(0)->setDesiredPosition(mb->getMotorByChannel(0)->radiansToTicks(rads));
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_ANKLE_PITCH_ROLL)->getMotorByChannel(0);
+      motor->setDesiredPosition(motor->radiansToTicks(rads));
       //ros_gateway->transmit(23,ticks);
   }
 
@@ -732,8 +732,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setLeftAnkleRollRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_ANKLE_PITCH_ROLL);
-      mb->getMotorByChannel(1)->setDesiredPosition(mb->getMotorByChannel(1)->radiansToTicks(rads));
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_ANKLE_PITCH_ROLL)->getMotorByChannel(1);
+      motor->setDesiredPosition(motor->radiansToTicks(rads));
       //ros_gateway->transmit(24,ticks);
   }
 
@@ -745,8 +745,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setRightHipYawRad(double rads, int delay){
-        MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
-        mb->getMotorByChannel(0)->setDesiredPosition(mb->getMotorByChannel(0)->radiansToTicks(rads));
+        HuboMotor* motor = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL)->getMotorByChannel(0);
+        motor->setDesiredPosition(motor->radiansToTicks(rads));
   }
 
   void RobotControl::setRightHipRoll(int ticks, int delay){
@@ -756,8 +756,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setRightHipRollRad(double rads, int delay){
-	  MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
-	  mb->getMotorByChannel(1)->setDesiredPosition(mb->getMotorByChannel(1)->radiansToTicks(rads));
+	  HuboMotor* motor = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL)->getMotorByChannel(1);
+	  motor->setDesiredPosition(motor->radiansToTicks(rads));
   }
 
   void RobotControl::setRightHipPitch(int ticks, int delay){
@@ -767,8 +767,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setRightHipPitchRad(double rads, int delay){
-	  MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_PITCH);
-      mb->getMotorByChannel(0)->setDesiredPosition(mb->getMotorByChannel(0)->radiansToTicks(rads));
+	  HuboMotor* motor = this->state->getBoardByNumber(BNO_R_HIP_PITCH)->getMotorByChannel(0);
+      motor->setDesiredPosition(motor->radiansToTicks(rads));
       //ros_gateway->transmit(28,ticks);
   }
 
@@ -779,8 +779,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setRightKneeRad(double rads, int delay){
-	  MotorBoard* mb = this->state->getBoardByNumber(BNO_R_KNEE);
-      mb->getMotorByChannel(0)->setDesiredPosition(mb->getMotorByChannel(0)->radiansToTicks(rads));
+	  HuboMotor* motor = this->state->getBoardByNumber(BNO_R_KNEE)->getMotorByChannel(0);
+      motor->setDesiredPosition(motor->radiansToTicks(rads));
       //ros_gateway->transmit(29,ticks);
   }
 
@@ -791,8 +791,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setRightAnklePitchRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_ANKLE_PITCH_ROLL);
-      mb->getMotorByChannel(0)->setDesiredPosition(mb->getMotorByChannel(0)->radiansToTicks(rads));
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_R_ANKLE_PITCH_ROLL)->getMotorByChannel(0);
+      motor->setDesiredPosition(motor->radiansToTicks(rads));
       //ros_gateway->transmit(30,ticks);
   }
 
@@ -803,8 +803,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::setRightAnkleRollRad(double rads, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_ANKLE_PITCH_ROLL);
-      mb->getMotorByChannel(1)->setDesiredPosition(mb->getMotorByChannel(1)->radiansToTicks(rads));
+      HuboMotor* motor = this->state->getBoardByNumber(BNO_R_ANKLE_PITCH_ROLL)->getMotorByChannel(1);
+      motor->setDesiredPosition(motor->radiansToTicks(rads));
       //ros_gateway->transmit(31,ticks);
   }
 
@@ -830,14 +830,12 @@ vector<float> trajectoryValues(string path){
       this->state->getBoardByNumber(board)->setHIP(1);
       this->state->getBoardByNumber(board)->enableController();
       enableControl = true;
-      //this->state->getBoardByNumber(board)->requestEncoderPosition(0);
   }
 
   void RobotControl::disable(int board, int delay){
       this->state->getBoardByNumber(board)->setHIP(0);
       this->state->getBoardByNumber(board)->disableController();
       enableControl = false;
-      //this->state->getBoardByNumber(board)->requestEncoderPosition(0);
   }
 
   void RobotControl::requestEncoderPosition(int board, int delay){
@@ -845,8 +843,7 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::debugControl(int board, int operation){
-	  switch (operation)
-	  {
+	  switch (operation) {
 	  case 1:
 		  this->state->getBoardByNumber(board)->setHIP(0);
 		  break;
@@ -899,36 +896,11 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::runGesture(string name, int board){
-	  /*
-      int val = 0;
-      vector<float> trajVal;
-      if (this->gestures.find(path) != this->gestures.end())
-          trajVal = this->gestures[path];
-      else{
-          trajVal = trajectoryValues(path);
-          this->gestures[path] = trajVal;
-      }
-      for (int i = 0; i < (int)trajVal.size(); i++){
-          val = (int)trajVal.at(i);
-          vector<int> ticks(2); //TODO: Request number of channels, or make runGesture more robust.
-          ticks[0] = val;
-          ticks[1] = val;
-          this->state->getBoardByNumber(board)->sendPositionReference(ticks, 125, 50);
-      }
-      */
-
-	  // Watch Logger output for errors :
-	  //this->scripting()->loadPrograms(path);
-
-	  // start a program :
-	  //this->engine()->programs()->getProgram("gesture")->start();
-	  
 	  this->getProvider<Scripting>(string("scripting"))->startProgram(name);
 	  if (!this->getProvider<Scripting>(string("scripting"))->isProgramRunning(name))
 		std::cout << "Error. Program not running." << std::endl;
 	  if (this->getProvider<Scripting>(string("scripting"))->inProgramError(name))
 		std::cout << "Error. Program has encountered an error. " << std::endl;
-	  //this->getProvider<Scripting>(string("scripting"))->unloadProgram( "gesture" );
   }
 
 ORO_CREATE_COMPONENT_LIBRARY()
