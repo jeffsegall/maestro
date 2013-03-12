@@ -896,6 +896,7 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::runGesture(string name, int board){
+	  Scripting* scripting = this->getProvider<Scripting>("scripting");
 	  this->getProvider<Scripting>(string("scripting"))->startProgram(name);
 	  if (!this->getProvider<Scripting>(string("scripting"))->isProgramRunning(name))
 		std::cout << "Error. Program not running." << std::endl;
