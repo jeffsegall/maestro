@@ -897,10 +897,10 @@ vector<float> trajectoryValues(string path){
 
   void RobotControl::runGesture(string name, int board){
 	  boost::shared_ptr<Scripting> scripting = this->getProvider<Scripting>("scripting");
-	  this->getProvider<Scripting>(string("scripting"))->startProgram(name);
-	  if (!this->getProvider<Scripting>(string("scripting"))->isProgramRunning(name))
+	  scripting->startProgram(name);
+	  if (!scripting->isProgramRunning(name))
 		std::cout << "Error. Program not running." << std::endl;
-	  if (this->getProvider<Scripting>(string("scripting"))->inProgramError(name))
+	  if (scripting->inProgramError(name))
 		std::cout << "Error. Program has encountered an error. " << std::endl;
   }
 
