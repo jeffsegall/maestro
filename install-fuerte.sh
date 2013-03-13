@@ -41,5 +41,5 @@ ln -sf /opt/ros/fuerte/stacks/openrave_planning/openrave/bin/openrave /usr/bin/o
 ln -sf /opt/ros/fuerte/stacks/openrave_planning/openrave/bin/openrave-config /usr/bin/openrave-config
 cd /opt/ros/fuerte/stacks
 chown -R $USER openrave_planning
-chown -R $USER orocos_toolchain_ros
+chown -R $USER orocos
 ln -s $installDir maestro

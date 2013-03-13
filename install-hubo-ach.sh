@@ -1,20 +1,23 @@
 #!/bin/bash
 #Hubo-Ach
-sh -c 'echo "deb-src http://www.repo.danlofaro.com/release precise main" >> /etc/apt/source.list'
+add-apt-repository "deb http://code.golems.org/ubuntu precise golems.org"
+add-apt-repository "deb http://www.repo.danlofaro.com/release precise main"
 apt-get update
-apt-get install hubo-ach hubo-ach-dev
+apt-get install libach1 libach-dev ach-utils hubo-ach hubo-ach-dev
 
 source /opt/ros/fuerte/setup.bash
 
 #Hubo-Ach-Ros
 cd /opt/ros/fuerte/stacks
 git clone http://github.com/isaacgaretmia/hubo-ach-ros.git
+chown -R $USER hubo-ach-ros
 cd hubo-ach-ros
 git checkout maestro
 
 #Hubo-Ach-Ros-Visualization
 cd /opt/ros/fuerte/stacks
 git clone http://github.com/isaacgaretmia/hubo-ach-ros-visualization.git
+chown -R $USER hubo-ach-ros-visualization
 cd hubo-ach-ros-visualization
 git checkout maestro
 
