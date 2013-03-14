@@ -2,7 +2,7 @@
 # This script installs ROS Fuerte with the Orocos Toolchain and
 # openRAVE stacks.
 installDir=`pwd`
-#ROS
+ROS
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu precise main" > /etc/apt/sources.list.d/ros-latest.list'
 wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
 apt-get update
@@ -40,6 +40,6 @@ rosmake
 ln -sf /opt/ros/fuerte/stacks/openrave_planning/openrave/bin/openrave /usr/bin/openrave
 ln -sf /opt/ros/fuerte/stacks/openrave_planning/openrave/bin/openrave-config /usr/bin/openrave-config
 cd /opt/ros/fuerte/stacks
-chown -R $USER openrave_planning
-chown -R $USER orocos
+chown -R $USER /opt/ros/fuerte/stacks/openrave_planning
+chown -R $USER /opt/ros/fuerte/stacks/orocos
 ln -s $installDir maestro
