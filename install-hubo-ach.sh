@@ -13,6 +13,7 @@ git clone http://github.com/isaacgaretmia/hubo-ach-ros.git
 chown -R $USER hubo-ach-ros
 cd hubo-ach-ros
 git checkout maestro
+rosmake hubo_ros
 
 #Hubo-Ach-Ros-Visualization
 cd /opt/ros/fuerte/stacks

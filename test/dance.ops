@@ -1,9 +1,9 @@
 program dance {
-	do RobotControl.setRightKnee(60000,0)
-	do RobotControl.setLeftKnee(60000,0)
+	do RobotControl.setRightKneeRad(1.2,0)
+	do RobotControl.setLeftKneeRad(1.2,0)
 
-	do RobotControl.setRightAnklePitch(60000,0)
-	do RobotControl.setLeftAnklePitch(60000,0)
+	do RobotControl.setRightAnklePitchRad(-.77,0)
+	do RobotControl.setLeftAnklePitchRad(-.77,0)
 
 	while (RobotControl.requiresMotion(2, 0, 0)){
 		do nothing
@@ -21,10 +21,10 @@ program dance {
 		do nothing
 	}
 	
-	do RobotControl.setRightKnee(0,0)
-	do RobotControl.setLeftKnee(0,0)
+	do RobotControl.setRightKneeRad(0,0)
+	do RobotControl.setLeftKneeRad(0,0)
 	
-	do RobotControl.setRightAnklePitch(0,0)
-	do RobotControl.setLeftAnklePitch(0,0)
+	do RobotControl.setRightAnklePitchRad(0,0)
+	do RobotControl.setLeftAnklePitchRad(0,0)
 	
 }
