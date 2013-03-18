@@ -1,0 +1,5 @@
+program doSomethingElse {
+	do RobotControl.setRightShoulderPitch(0,0)
+	do RobotControl.setRightAnkleRoll(0,0)
+	do RobotControl.setRightHipRoll(0,0)
+}
