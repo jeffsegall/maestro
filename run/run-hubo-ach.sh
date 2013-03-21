@@ -2,19 +2,19 @@
 
 source /opt/ros/fuerte/setup.bash
 
-gnome-terminal -x hubo-ach virtual
-sleep 1
-gnome-terminal -x ./run.sh
+xterm -e "hubo-ach virtual" &
+sleep 7
+xterm -e ./run.sh &
 sleep 1
 
 roscd hubo_ros_visualization
 echo `pwd`
-gnome-terminal -x ./run.sh
+xterm -e ./run.sh &
 sleep 1
 
 roscd hubo_ros
 echo `pwd`
-gnome-terminal -x ./run-feedback.sh
+xterm -e ./run-feedback.sh &
 sleep 1
-gnome-terminal -x ./run-feedforward.sh
+xterm -e ./run-feedforward.sh &
 sleep 1
