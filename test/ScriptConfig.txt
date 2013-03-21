@@ -2,3 +2,4 @@
 /opt/ros/fuerte/stacks/maestro/test/newscript.ops
 /opt/ros/fuerte/stacks/maestro/test/otherscript.ops
 /opt/ros/fuerte/stacks/maestro/test/dance.ops
+/opt/ros/fuerte/stacks/maestro/test/testure.ops

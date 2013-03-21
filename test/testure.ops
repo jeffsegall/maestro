@@ -1,0 +1,15 @@
+program testure {
+	do RobotControl.setRightShoulderPitchRad(1.57,0)
+	do RobotControl.setLeftShoulderPitchRad(1.57,0)
+
+	while RobotControl.requiresMotion(8, 0, 0) {
+		do nothing
+	}
+
+	while RobotControl.requiresMotion(10, 0, 0) {
+		do nothing
+	}
+
+	do RobotControl.setRightShoulderPitchRad(0, 0)
+	do RobotControl.setRightShoulderPitchrad(0, 0)
+}
