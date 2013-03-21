@@ -4,7 +4,7 @@ from ._HuboJointCommand import *
 from ._CanMessage import *
 from ._HuboCmd import *
 from ._HuboIMU import *
-from ._HuboHandCommand import *
+from ._HuboJointState import *
 from ._HuboCommand import *
 from ._HuboState import *
-from ._HuboJointState import *
+from ._HuboHandCommand import *
