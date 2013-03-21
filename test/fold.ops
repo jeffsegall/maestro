@@ -1,0 +1,42 @@
+program fold {
+	do RobotControl.setRightShoulderPitchRad(-1.75,0)
+	do RobotControl.setLeftShoulderPitchRad(-1.4,0)
+
+	while RobotControl.requiresMotion(8, 0, 0) {
+		do nothing
+	}
+
+	while RobotControl.requiresMotion(10, 0, 0) {
+		do nothing
+	}
+
+	do RobotControl.setRightShoulderYawRad(1.57, 0)
+	do RobotControl.setLeftShoulderYawRad(-1.57, 0)
+
+	while RobotControl.requiresMotion(9, 0, 0) {
+		do nothing
+	}
+
+	while RobotControl.requiresMotion(11, 0, 0) {
+		do nothing
+	}
+
+	
+	do RobotControl.setRightElbowRad(-1.8, 0)
+	do RobotControl.setLeftElbowRad(-1.8, 0)
+
+	while (RobotControl.requiresMotion(9, 1, 0)){
+		do nothing
+	}
+
+	while (RobotControl.requiresMotion(11, 1, 0)){
+		do nothing
+	}
+
+	do RobotControl.setRightShoulderYawRad(0, 0)
+	do RobotControl.setLeftShoulderYawRad(0, 0)
+	do RobotControl.setRightElbowRad(0, 0)
+	do RobotControl.setLeftElbowRad(0, 0)
+	do RobotControl.setRightShoulderPitchRad(0, 0)
+	do RobotControl.setLeftShoulderPitchRad(0, 0)
+}
