@@ -40,4 +40,4 @@ rosmake
 ln -sf /opt/ros/fuerte/stacks/openrave_planning/openrave/bin/openrave /usr/bin/openrave
 ln -sf /opt/ros/fuerte/stacks/openrave_planning/openrave/bin/openrave-config /usr/bin/openrave-config
 cd /opt/ros/fuerte/stacks
-ln -s $installDir maestro
+ln -s $installDir/../ maestro
