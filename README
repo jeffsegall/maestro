@@ -38,6 +38,9 @@ Run (MAESTRO only):
 	./run.sh
 
 A terminal will open which will permit control of the robot.
+Check the Usage section for available commands.
+
+This option is useful for developers who wish to interface with MAESTRO directly. MAESTRO publishes state information on the /Hubo/HuboCommand ROS Topic. There is also an unused channel for simulation input on ROS Topic < >.
 
 
 Run (MAESTRO & Hubo-ach):
@@ -49,6 +52,9 @@ hubo-ach (Will require privilege escalation)
 hubo-ros-feedforward (hubo-ach interface)
 hubo-ros-feedback (visualization interface)
 hubo-ach-ros-visualization (rViz visualization of the HUBO Robot)
+
+This option allows a user to visualize the HUBO Robot's motion as commanded by MAESTRO. The visualization package utilizes rViz to display the simulation, and accepts input on the ROS Topic Hubo/HuboState. Hubo-Ros-Feedback publishes information on this topic, which it obtains through an interface with Hubo-Ach. Hubo-Ach controls raw communication with the Robot and simulation, and accepts commands over the Hubo-Ros-Feedforward interface, which listens on the ROS topic Hubo/HuboCommand. MAESTRO publishes on this topic, and thus, MAESTRO commands are funneled to the simulation.
+The downside of using this package is that the HUBO model in rViz is not strictly verified to an actual robot. OpenHUBO is the more accurate simulation.
 
 
 Run (MAESTRO & OpenHUBO):
@@ -67,21 +73,38 @@ hubo-ros-feedforward (hubo-ach interface)
 hubo-ros-feedback (visualization interface)
 openHUBO (OpenRAVE Visualization of the HUBO Robot)
 
+This option allows a user to visualize the HUBO Robot's motion as commanded by MAESTRO. The visualization package utilizes an OpenRAVE plugin simulation environment called OpenHUBO to display the simulation, and accepts input on the ROS Topic Hubo/HuboState. Hubo-Ros-Feedback publishes information on this topic, which it obtains through an interface with Hubo-Ach. Hubo-Ach controls raw communication with the Robot and simulation, and accepts commands over the Hubo-Ros-Feedforward interface, which listens on the ROS topic Hubo/HuboCommand. MAESTRO publishes on this topic, and thus, MAESTRO commands are funneled to the simulation.
+
+
 MAESTRO Usage:
 Enable control:
 	cd RobotControl
+
+This command is required by the Orocos Deployer to connect to the Robot Control portion of MAESTRO. The following commands can only be run in this context.
+
 Initialize Robot:
 	initRobot("/opt/ros/fuerte/stacks/maestro/maestro/models/hubo_default.xml");
+
+This command loads Robot configuration information from the xml file specified. Before this command, MAESTRO cannot perform any operations which work with actual robot components (Which all of the following commands do.)
+
 Move Joints:
 	set<Joint Name><Axis>([Ticks], [Delay])
 Examples:
 	setRightHipYaw(60000,0);
 	setLeftShoulderPitch(-45000,0);
 	setLeftKnee(50000,0);
+
+These commands allow arbitrary movement of single joints in specific directions as specified by their arguments. You can verify the motion in the offered simulation packages. More involved movements may be programmed using gestures.
+
+
 Moving Joints using Radians:
 	set<Joint Name><Axis>Rad([Radians], [Delay])
 Example:
 	setRightHipYawRad(3.14,0);
+
+These commands offer the same movement capabilities as the non-radian versions. Each command converts radians to motor ticks using gear ratio conversions specific to each joint and axis.
+
+
 Running Gestures:
 Gestures may be created using Orocos Program Script (.ops). There are example scripts in the test folder. Scripts can be executed using the following command:
 	runGesture([Gesture Name], [Board Number])
