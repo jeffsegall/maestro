@@ -115,7 +115,7 @@ public:
 
 private:
 
-    const string CONFIG_PATH = "/opt/ros/fuerte/stacks/maestro/test/config.text";
+    const string CONFIG_PATH = "/opt/ros/fuerte/stacks/maestro/test/config.txt";
 
     //SUBSCRIBE
     InputPort<hubomsg::CanMessage>* canUpPort;
