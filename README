@@ -14,6 +14,8 @@ or
 or
 * Ubuntu 12.04 LTS
 
+Installation scripts exist to install dependencies such as ROS, Orocos, and OpenRAVE, as well as complementary packages such as Hubo-Ach and OpenHUBO.
+
 Installation:
 In 10.04 Lucid:
 Append the full maestro path to the /opt/ros/diamondback/setup.sh file
