@@ -13,9 +13,9 @@ fi
 source /opt/ros/fuerte/setup.bash 
 
 case $1 in
-	virtual ) xterm -e "hubo-ach virtual"; break;;
-	sim ) xterm -e "hubo-ach sim openhubo nodynamics"; break;;
-	real ) xterm -e "hubo-ach start"; break;;
+	virtual ) xterm -e "hubo-ach virtual" &;;
+	sim ) xterm -e "hubo-ach sim openhubo nodynamics" &;;
+	real ) xterm -e "hubo-ach start" &;;
 esac
 
 sleep 3
