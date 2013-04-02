@@ -318,7 +318,7 @@ RobotControl::RobotControl(const std::string& name):
 			.arg("Motor", "The motor channel to check need for motion from.")
 			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
-    this->addOperation("requiresMotionByName", &RobotContro::requiresMotionByName, this, RTT::OwnThread)
+    this->addOperation("requiresMotionByName", &RobotControl::requiresMotionByName, this, RTT::OwnThread)
 			.arg("Name", "The name of the motor to send commands to")
 			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
@@ -896,9 +896,9 @@ vector<float> trajectoryValues(string path){
   bool RobotControl::requiresMotionByName(string name, int delay){
 	  vector<MotorBoard*> boards = state->getBoards();
 	  for (vector<MotorBoard*>::iterator it = boards.begin(); it != boards.end(); it++){
-		  for (int i = 0; i < *it->getNumChannels(); it++){
-			  if (*it->getMotorByChannel(i)->getName().compare(name) == 0)
-				  return *it->getMotorByChannel(i)->requiresMotion();
+		  for (int i = 0; i < (*it)->getNumChannels(); it++){
+			  if ((*it)->getMotorByChannel(i)->getName().compare(name) == 0)
+				  return (*it)->getMotorByChannel(i)->requiresMotion();
 		  }
 	  }
 	  return false;
