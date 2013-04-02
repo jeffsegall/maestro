@@ -106,7 +106,7 @@ public:
     void setCurrentTicks(int board, int motor, int ticks);
     void getCurrentGoal(int board, int motor, int delay);
     bool requiresMotion(int board, int motor, int delay);
-    bool requiresMotion(string name, int delay);
+    bool requiresMotionByName(string name, int delay);
     void setMaxAccVel(int board, int delay, int acc, int vel);
     void setPositionGain(int board, int motor, int kp, int ki, int kd);
     void debugControl(int board, int operation);
