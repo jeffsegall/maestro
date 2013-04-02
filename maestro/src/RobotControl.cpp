@@ -347,7 +347,7 @@ RobotControl::RobotControl(const std::string& name):
     this->enableControl = false;
     this->delay = 0;
     this->state = NULL;
-    CONFIG_PATH = "/opt/ros/fuerte/stacks/maestro/test/config.txt";
+    this->CONFIG_PATH = "/opt/ros/fuerte/stacks/maestro/test/config.txt";
     tempOutput.open("/opt/ros/fuerte/stacks/maestro/RobotControlLog.txt");
     vector<string> paths = getGestureScripts(CONFIG_PATH);
     for (int i = 0; i < paths.size(); i++){
