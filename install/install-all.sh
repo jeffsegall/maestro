@@ -5,10 +5,10 @@ echo "Version 1.0"
 echo ""
 
 echo "Installing ROS-Orocos-Maestro..."
-sudo sh install-fuerte.sh
+sudo bash install-fuerte.sh
 echo "Installing Hubo-ACH..."
-sudo sh install-hubo-ach.sh
+sudo bash install-hubo-ach.sh
 echo "Installing OpenHUBO..."
-sh install-openHubo.sh
+bash install-openHubo.sh
 
 echo "Install Complete. Exiting..."
