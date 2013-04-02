@@ -8,7 +8,7 @@ echo ""
 add-apt-repository "deb http://code.golems.org/ubuntu precise golems.org"
 add-apt-repository "deb http://www.repo.danlofaro.com/release precise main"
 apt-get update
-apt-get install -y --no-remove libach1 libach-dev ach-utils hubo-ach hubo-ach-dev
+apt-get install -y --force-yes --no-remove libach1 libach-dev ach-utils hubo-ach hubo-ach-dev
 
 source /opt/ros/fuerte/setup.bash
 

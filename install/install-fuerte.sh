@@ -43,6 +43,9 @@ source env.sh
 apt-get install -y --no-remove libboost-dev
 rosmake orocos_toolchain rtt_ros_integration rtt_ros_comm rtt_common_msgs rtt_geometry
 #OPENRAVE
+add-apt-repository ppa:openrave/testing
+apt-get update
+apt-get install openrave
 cd /opt/ros/fuerte/stacks
 svn co https://jsk-ros-pkg.svn.sourceforge.net/svnroot/jsk-ros-pkg/trunk/ .
 hg clone https://kforge.ros.org/armnavigation/armnavigation

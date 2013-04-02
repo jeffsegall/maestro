@@ -88,3 +88,11 @@ Gestures may be created using Orocos Program Script (.ops). There are example sc
 
 Board Number is useless. Ignore it.
 Gesture name is the name of the program inside of the .ops file, NOT the name of the file.
+
+
+Uninstallation:
+Navigate to /install/uninstall
+Run:
+	source uninstall.sh
+
+You will be prompted to uninstall each of the separate components installed by the install scripts. NOTE: Using source to call the script is necessary because otherwise it will unable to read the OPENHUBO_DIR environment variable.
