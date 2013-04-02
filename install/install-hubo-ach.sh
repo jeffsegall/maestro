@@ -1,9 +1,13 @@
 #!/bin/bash
+echo "Hubo-ACH - Maestro installation script"
+echo "Version 1.0"
+echo ""
+
 #Hubo-Ach
 add-apt-repository "deb http://code.golems.org/ubuntu precise golems.org"
 add-apt-repository "deb http://www.repo.danlofaro.com/release precise main"
 apt-get update
-apt-get install libach1 libach-dev ach-utils hubo-ach hubo-ach-dev
+apt-get install -y --no-remove libach1 libach-dev ach-utils hubo-ach hubo-ach-dev
 
 source /opt/ros/fuerte/setup.bash
 
@@ -21,5 +25,5 @@ cd hubo-ach-ros-visualization
 git checkout maestro
 
 cd /opt/ros/fuerte/stacks
-rosmake hubo_ros_visualization
+rosmake hubo_ros hubo_ros_visualization maestro
 

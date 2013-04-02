@@ -1,7 +1,7 @@
 source /opt/ros/fuerte/setup.bash 
 
 xterm -e "hubo-ach virtual" &
-sleep 1
+sleep 3
 xterm -e ./run.sh &
 sleep 1
 
