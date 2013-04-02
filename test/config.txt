@@ -1,3 +1,6 @@
+Init File:
+/opt/ros/fuerte/stacks/maestro/maestro/models/hubo_default.xml
+Scripts:
 /opt/ros/fuerte/stacks/maestro/test/harmonic.ops
 /opt/ros/fuerte/stacks/maestro/test/newscript.ops
 /opt/ros/fuerte/stacks/maestro/test/otherscript.ops

@@ -40,7 +40,6 @@ public:
     void updateHook(); 
     hubomsg::CanMessage buildCanMessage(canMsg* msg);
     void buildHuboCommandMessage(vector<hubomsg::HuboJointCommand>& states, hubomsg::HuboCommand& message);
-
     void initRobot(string path);
 
     //JOINT MOVEMENT API
@@ -112,8 +111,11 @@ public:
     void runGesture(string name, int board);
 
     vector<string> getGestureScripts(string path);
+    string getDefaultInitPath(string path);
 
 private:
+
+    const string CONFIG_PATH = "/opt/ros/fuerte/stacks/maestro/test/config.text";
 
     //SUBSCRIBE
     InputPort<hubomsg::CanMessage>* canUpPort;
