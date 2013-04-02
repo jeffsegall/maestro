@@ -1,13 +1,14 @@
 #!/bin/bash
+set -e
 echo "Comprehensive Install Script for Maestro"
 echo "Version 1.0"
 echo ""
 
 echo "Installing ROS-Orocos-Maestro..."
-sh -c ' install-fuerte.sh'
+sudo sh install-fuerte.sh
 echo "Installing Hubo-ACH..."
-sh -c ' install-hubo-ach.sh'
+sudo sh install-hubo-ach.sh
 echo "Installing OpenHUBO..."
-sh -c ' install-openHubo.sh'
+sh install-openHubo.sh
 
 echo "Install Complete. Exiting..."

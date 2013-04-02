@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 echo "Hubo-ACH - Maestro installation script"
 echo "Version 1.0"
 echo ""

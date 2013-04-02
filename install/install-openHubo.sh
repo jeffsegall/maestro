@@ -1,3 +1,4 @@
+set -e
 echo "OpenHUBO Maestro installation Script"
 echo "Version 1.0"
 echo ""

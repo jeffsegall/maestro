@@ -28,7 +28,7 @@ echo ""
 echo "Would you like to clean your hubo-ach environment?"
 select yn in "Yes" "No"; do
         case $yn in
-                Yes ) echo "Running Hubo-Ach clean script..."; sh -c ' hubo-ach-clean-all.sh'; apt-get purge libach1 libach-dev ach-utils hubo-ach hubo-ach-dev;  break;;
+                Yes ) echo "Running Hubo-Ach clean script..."; sh hubo-ach-clean-all.sh; apt-get purge libach1 libach-dev ach-utils hubo-ach hubo-ach-dev;  break;;
                 No ) echo "Skipping cleaning of Hubo-Ach..."; break;;
         esac
 done

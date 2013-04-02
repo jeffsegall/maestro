@@ -1,6 +1,7 @@
 #!/bin/bash
 # This script installs ROS Fuerte with the Orocos Toolchain and
 # openRAVE stacks.
+set -e
 echo "ROS-Fuerte Maestro installation Script"
 echo "Version 1.0"
 echo ""
