@@ -138,6 +138,10 @@ boardNum MotorBoard::getBoardNumber(){
 	return BNO;
 }
 
+int MotorBoard::getNumChannels(){
+	return channels;
+}
+
 /******************************************************************************
 * setTicksPosition
 *
