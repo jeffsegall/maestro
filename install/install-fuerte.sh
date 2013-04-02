@@ -63,4 +63,5 @@ select yn in "Yes" "No"; do
         esac
 done
 echo ""
+rosmake maestro
 echo "Installation complete."

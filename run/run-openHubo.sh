@@ -1,6 +1,23 @@
+
+echo "Maestro OpenHUBO Robot Control Run Script"
+if [ $# -lt 1 ]
+then
+	echo "Usage : $0 <Mode>"
+	echo "<Mode>:"
+	echo "	virtual : Runs Hubo-Ach in Virtual (No Hardware) Mode"
+	echo "	sim	: Runs Hubo-Ach in Simulation (Hardware) Mode"
+	echo "	real	: Runs Hubo-Ach in Robot Comm (Hardware) Mode"
+	exit
+fi
+
 source /opt/ros/fuerte/setup.bash 
 
-xterm -e "hubo-ach virtual" &
+case $1 in
+	virtual ) xterm -e "hubo-ach virtual"; break;;
+	sim ) xterm -e "hubo-ach sim openhubo nodynamics"; break;;
+	real ) xterm -e "hubo-ach start"; break;;
+esac
+
 sleep 3
 xterm -e ./run.sh &
 sleep 1

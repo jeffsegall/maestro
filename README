@@ -18,30 +18,71 @@ Installation:
 In 10.04 Lucid:
 Append the full maestro path to the /opt/ros/diamondback/setup.sh file
 under the ROS_PACKAGE_PATH variable.
-sudo ./install.sh
+	sudo ./install.sh
 
 In 12.04 Precise:
-sudo ./install-fuerte.sh
+	./install-all.sh
+
+Alternatively, you can install some components individually:
+(12.04 Precise ONLY)
+
+Installation of ROS, Orocos, and OpenRAVE:
+	sudo ./install-fuerte.sh
 
 Installation of Hubo-Ach, Hubo-Ach-Ros, Hubo-Ach-Ros-Visualization:
-sudo ./install-hubo-ach.sh
+	sudo ./install-hubo-ach.sh
 
 Run (MAESTRO only):
-./run.sh
+	./run.sh
+
 A terminal will open which will permit control of the robot.
 
+
 Run (MAESTRO & Hubo-ach):
-./run-hubo-ach.sh
+	./run-hubo-ach.sh
+
 Terminals will open which hold the following packages:
 MAESTRO
 hubo-ach (Will require privilege escalation)
 hubo-ros-feedforward (hubo-ach interface)
 hubo-ros-feedback (visualization interface)
-hubo-ach-ros-visualization (rViz visualization of the HUBO robot)
+hubo-ach-ros-visualization (rViz visualization of the HUBO Robot)
 
-Usage:
+
+Run (MAESTRO & OpenHUBO):
+	./run-openHubo.sh <Mode>
+
+Usage : ./run-openHubo.sh <Mode>
+<Mode>:
+	virtual : Runs Hubo-Ach in Virtual (No Hardware) Mode
+	sim	: Runs Hubo-Ach in Simulation (Hardware) Mode
+	real	: Runs Hubo-Ach in Robot Comm (Hardware) Mode
+
+Terminals will open which hold the following packages:
+MAESTRO
+hubo-ach (Will require privilege escalation)
+hubo-ros-feedforward (hubo-ach interface)
+hubo-ros-feedback (visualization interface)
+openHUBO (OpenRAVE Visualization of the HUBO Robot)
+
+MAESTRO Usage:
 Enable control:
 	cd RobotControl
 Initialize Robot:
 	initRobot("/opt/ros/fuerte/stacks/maestro/maestro/models/hubo_default.xml");
+Move Joints:
+	set<Joint Name><Axis>([Ticks], [Delay])
+Examples:
+	setRightHipYaw(60000,0);
+	setLeftShoulderPitch(-45000,0);
+	setLeftKnee(50000,0);
+Moving Joints using Radians:
+	set<Joint Name><Axis>Rad([Radians], [Delay])
+Example:
+	setRightHipYawRad(3.14,0);
+Running Gestures:
+Gestures may be created using Orocos Program Script (.ops). There are example scripts in the test folder. Scripts can be executed using the following command:
+	runGesture([Gesture Name], [Board Number])
 
+Board Number is useless. Ignore it.
+Gesture name is the name of the program inside of the .ops file, NOT the name of the file.

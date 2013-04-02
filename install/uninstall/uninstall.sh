@@ -42,7 +42,7 @@ echo "Would you like to delete them?"
 
 select yn in "Yes" "No"; do
         case $yn in
-                Yes ) echo "Removing ROS folder..."; rm -rf /opt/ros;  break;;
+                Yes ) echo "Removing ROS folder..."; rm -rf /opt/ros/fuerte/stacks;  break;;
                 No ) echo "Skipping removal of ROS folder..."; break;;
         esac
 done
