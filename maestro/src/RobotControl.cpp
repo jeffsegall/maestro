@@ -347,7 +347,6 @@ RobotControl::RobotControl(const std::string& name):
     this->enableControl = false;
     this->delay = 0;
     this->state = NULL;
-    this->CONFIG_PATH = "/opt/ros/fuerte/stacks/maestro/test/config.txt";
     tempOutput.open("/opt/ros/fuerte/stacks/maestro/RobotControlLog.txt");
     vector<string> paths = getGestureScripts(CONFIG_PATH);
     for (int i = 0; i < paths.size(); i++){
@@ -427,7 +426,7 @@ vector<float> trajectoryValues(string path){
 
     	hubomsg::HuboCommand output = outputQueue->front();
     	if (printNow){
-    		tempOutput << "Writing message to " << output.commanded << " motors." << std::endl;
+    		tempOutput << "Writing message to " << output.num_joints << " motors." << std::endl;
     	}
 
 		this->huboDownPort->write(output);

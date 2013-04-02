@@ -1,6 +1,8 @@
 #ifndef ROBOTCONTROL_H
 #define ROBOTCONTROL_H
 
+#define CONFIG_PATH "/opt/ros/fuerte/stacks/maestro/test/config.txt"
+
 #include <rtt/TaskContext.hpp>
 #include <rtt/Port.hpp>
 #include <std_msgs/Float64.h>
@@ -115,7 +117,6 @@ public:
 
 private:
 
-    const string CONFIG_PATH;
 
     //SUBSCRIBE
     InputPort<hubomsg::CanMessage>* canUpPort;
