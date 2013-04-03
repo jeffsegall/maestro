@@ -897,6 +897,7 @@ vector<float> trajectoryValues(string path){
 	  vector<MotorBoard*> boards = state->getBoards();
 	  for (vector<MotorBoard*>::iterator it = boards.begin(); it != boards.end(); it++){
 		  for (int i = 0; i < (*it)->getNumChannels(); it++){
+			  tempOutput << "Searching through Motor named: " << (*it)->getMotorByChannel(i)->getName();
 			  if ((*it)->getMotorByChannel(i)->getName().compare(name) == 0)
 				  return (*it)->getMotorByChannel(i)->requiresMotion();
 		  }
