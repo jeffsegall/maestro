@@ -318,6 +318,10 @@ RobotControl::RobotControl(const std::string& name):
 			.arg("Motor", "The motor channel to check need for motion from.")
 			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+    this->addOperation("requiresMotionByName", &RobotControl::requiresMotionByName, this, RTT::OwnThread)
+			.arg("Name", "The name of the motor to send commands to")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("setMaxAccVel", &RobotControl::setMaxAccVel, this, RTT::OwnThread)
 			.arg("Board", "The board to send commands to")
 			.arg("Motor", "The motor channel to set maximum velocity and acceleration on.")
@@ -348,8 +352,7 @@ RobotControl::RobotControl(const std::string& name):
     this->delay = 0;
     this->state = NULL;
     tempOutput.open("/opt/ros/fuerte/stacks/maestro/RobotControlLog.txt");
-    //initRobot("/home/hubo/maestro/maestro/models/hubo_testrig.xml");
-    vector<string> paths = getGestureScripts("/opt/ros/fuerte/stacks/maestro/test/ScriptConfig.txt");
+    vector<string> paths = getGestureScripts(CONFIG_PATH);
     for (int i = 0; i < paths.size(); i++){
 		std::cout << "Adding gestures from path: " << paths[i] << std::endl;
 		this->getProvider<Scripting>("scripting")->loadPrograms(paths[i]);
@@ -400,9 +403,7 @@ vector<float> trajectoryValues(string path){
     		ticks[1] = roll_ticks;
     		std::cout << "Encoder Position value received! ticks: " << std::endl << "yaw: " << yaw_ticks << std::endl << "roll: " << roll_ticks << std::endl;
     		std::cout << "In Radians: yaw: " << mb->getMotorByChannel(0)->ticksToRadians(ticks[0]) << std::endl << "roll: " << mb->getMotorByChannel(0)->ticksToRadians(ticks[1]) << std::endl;
-
     	}
-
     }
     if (NewData == this->orOutPort->read(huboCmd)){
         //Recieved update from openRAVE
@@ -425,13 +426,11 @@ vector<float> trajectoryValues(string path){
    
     //Write out a message if we have one
 
-
     if (!outputQueue->empty()){
 
     	hubomsg::HuboCommand output = outputQueue->front();
     	if (printNow){
-		std::cout << "script running " << std::endl;	
-    		//tempOutput << "Writing message to " << output.commanded << " motors." << std::endl;
+    		tempOutput << "Writing message to " << output.num_joints << " motors." << std::endl;
     	}
 
 		this->huboDownPort->write(output);
@@ -462,20 +461,7 @@ vector<float> trajectoryValues(string path){
   void RobotControl::buildHuboCommandMessage(vector<hubomsg::HuboJointCommand>& states, hubomsg::HuboCommand& message){
       for (int i = 0; i < states.size(); i++)
     	  message.joints.push_back(states[i]);
-      message.num_joints=message.joints.size();
-      /*
-      canMessage.bno = msg->getBNO();
-      canMessage.mType = msg->getType();
-      canMessage.cmdType = msg->getCmd();
-      canMessage.r1 = msg->getR1();
-      canMessage.r2 = msg->getR2();
-      canMessage.r3 = msg->getR3();
-      canMessage.r4 = msg->getR4();
-      canMessage.r5 = msg->getR5();
-      canMessage.r6 = msg->getR6();
-      canMessage.r7 = msg->getR7();
-      canMessage.r8 = msg->getR8();
-	  */
+      message.num_joints = message.joints.size();
   }
 
   vector<string> RobotControl::getGestureScripts(string path){
@@ -487,19 +473,39 @@ vector<float> trajectoryValues(string path){
 	  if (is.is_open()){
 		  do {
 			  getline(is, temp, '\n');
+		  } while (temp.compare("Scripts:") != 0);
+		  do {
+			  getline(is, temp, '\n');
 			  if (temp.compare("") != 0) files.push_back(temp);
 		  } while (!is.eof());
-
+		  is.close();
 	  } else
 		  std::cout << "Error. Config file nonexistent. Aborting." << std::endl;
 
 	  return files;
   }
 
+  string RobotControl::getDefaultInitPath(string path){
+	  	  ifstream is;
+	  	  is.open(path.c_str());
+	  	  string temp;
+	  	  if (is.is_open()){
+	  		  do {
+	  			  getline(is, temp, '\n');
+	  		  } while (temp.compare("Init File:") != 0);
+
+	  		  getline(is, temp, '\n');
+	  		  is.close();
+	  	  } else
+	  		  std::cout << "Error. Config file nonexistent. Aborting." << std::endl;
+
+	  	  return temp;
+  }
+
   void RobotControl::initRobot(string path){
       this->state = new HuboState();
       if (strcmp(path.c_str(), "") == 0)
-          path = "/opt/ros/fuerte/stacks/maestro/maestro/models/hubo_testrig.xml";
+          path = getDefaultInitPath(CONFIG_PATH);
       
       //@TODO: Check for file existence before initializing.
       this->state->initHuboWithDefaults(path, this->outputQueue);
@@ -885,6 +891,17 @@ vector<float> trajectoryValues(string path){
 
   bool RobotControl::requiresMotion(int board, int motor, int delay){
 	  return state->getBoardByNumber(board)->requiresMotion(motor);
+  }
+
+  bool RobotControl::requiresMotionByName(string name, int delay){
+	  vector<MotorBoard*> boards = state->getBoards();
+	  for (vector<MotorBoard*>::iterator it = boards.begin(); it != boards.end(); it++){
+		  for (int i = 0; i < (*it)->getNumChannels(); i++){
+			  if ((*it)->getMotorByChannel(i)->getName().compare(name) == 0)
+				  return (*it)->getMotorByChannel(i)->requiresMotion();
+		  }
+	  }
+	  return false;
   }
 
   void RobotControl::setMaxAccVel(int board, int motor, int acc, int vel){

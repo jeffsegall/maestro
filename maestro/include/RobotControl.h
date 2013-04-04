@@ -1,6 +1,8 @@
 #ifndef ROBOTCONTROL_H
 #define ROBOTCONTROL_H
 
+#define CONFIG_PATH "/opt/ros/fuerte/stacks/maestro/test/config.txt"
+
 #include <rtt/TaskContext.hpp>
 #include <rtt/Port.hpp>
 #include <std_msgs/Float64.h>
@@ -40,7 +42,6 @@ public:
     void updateHook(); 
     hubomsg::CanMessage buildCanMessage(canMsg* msg);
     void buildHuboCommandMessage(vector<hubomsg::HuboJointCommand>& states, hubomsg::HuboCommand& message);
-
     void initRobot(string path);
 
     //JOINT MOVEMENT API
@@ -105,6 +106,7 @@ public:
     void setCurrentTicks(int board, int motor, int ticks);
     void getCurrentGoal(int board, int motor, int delay);
     bool requiresMotion(int board, int motor, int delay);
+    bool requiresMotionByName(string name, int delay);
     void setMaxAccVel(int board, int delay, int acc, int vel);
     void setPositionGain(int board, int motor, int kp, int ki, int kd);
     void debugControl(int board, int operation);
@@ -112,8 +114,10 @@ public:
     void runGesture(string name, int board);
 
     vector<string> getGestureScripts(string path);
+    string getDefaultInitPath(string path);
 
 private:
+
 
     //SUBSCRIBE
     InputPort<hubomsg::CanMessage>* canUpPort;
