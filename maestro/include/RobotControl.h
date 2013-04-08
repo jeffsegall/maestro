@@ -107,6 +107,8 @@ public:
     void getCurrentGoal(int board, int motor, int delay);
     bool requiresMotion(int board, int motor, int delay);
     bool requiresMotionByName(string name, int delay);
+    bool setJoint(string name, int ticks, int delay);
+    bool setJointRad(string name, double rads, int delay);
     void setMaxAccVel(int board, int delay, int acc, int vel);
     void setPositionGain(int board, int motor, int kp, int ki, int kd);
     void debugControl(int board, int operation);

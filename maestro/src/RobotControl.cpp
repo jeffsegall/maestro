@@ -904,6 +904,28 @@ vector<float> trajectoryValues(string path){
 	  return false;
   }
 
+  bool RobotControl::setJoint(string name, int ticks, int delay){
+	  vector<MotorBoard*> boards = state->getBoards();
+	  	  for (vector<MotorBoard*>::iterator it = boards.begin(); it != boards.end(); it++){
+	  		  for (int i = 0; i < (*it)->getNumChannels(); i++){
+	  			  if ((*it)->getMotorByChannel(i)->getName().compare(name) == 0)
+	  				  return (*it)->getMotorByChannel(i)->setDesiredPosition(ticks);
+	  		  }
+	  	  }
+	  	  return false;
+  }
+
+  bool RobotControl::setJointRad(string name, double rads, int delay){
+	  vector<MotorBoard*> boards = state->getBoards();
+	  	  for (vector<MotorBoard*>::iterator it = boards.begin(); it != boards.end(); it++){
+	  		  for (int i = 0; i < (*it)->getNumChannels(); i++){
+	  			  if ((*it)->getMotorByChannel(i)->getName().compare(name) == 0)
+	  				  return (*it)->getMotorByChannel(i)->setDesiredPosition((*it)->getMotorByChannel(i)->radiansToTicks(rads));
+	  		  }
+	  	  }
+	  	  return false;
+  }
+
   void RobotControl::setMaxAccVel(int board, int motor, int acc, int vel){
 	  this->state->getBoardByNumber(board)->setMaxAccVel((char)motor, acc, vel);
   }
