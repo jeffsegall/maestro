@@ -12,16 +12,26 @@ wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
 apt-get update
 apt-get install -y --no-remove mercurial
 apt-get install -y --no-remove ros-fuerte-desktop-full
-echo ""
-echo ""
-echo "Would you like to add a source line to your bashrc file?"
-select yn in "Yes" "No"; do
-	case $yn in
-		Yes ) echo "Adding source command to bashrc..."; echo "source /opt/ros/fuerte/setup.bash" >> ~/.bashrc; break;;
-		No ) echo "Skipping modification of bashrc..."; break;;
-	esac
-done
-echo ""
+
+if [ $# -lt 1 ]
+then
+	echo ""
+	echo ""
+	echo "Would you like to add a source line to your bashrc file?"
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes ) echo "Adding source command to bashrc..."; echo "source /opt/ros/fuerte/setup.bash" >> ~/.bashrc; break;;
+			No ) echo "Skipping modification of bashrc..."; break;;
+		esac
+	done
+	echo ""
+elif [ "$1" == "-y"] || [ "$1" == "--auto-yes"]
+then
+	echo "Adding source command to bashrc..."; 
+	echo "source /opt/ros/fuerte/setup.bash" >> ~/.bashrc;
+
+fi
+
 source /opt/ros/fuerte/setup.bash
 apt-get install -y --no-remove python-rosinstall python-rosdep
 cd /opt/ros/fuerte/stacks/
@@ -56,15 +66,22 @@ rosmake
 ln -sf /opt/ros/fuerte/stacks/openrave_planning/openrave/bin/openrave /usr/bin/openrave
 ln -sf /opt/ros/fuerte/stacks/openrave_planning/openrave/bin/openrave-config /usr/bin/openrave-config
 cd /opt/ros/fuerte/stacks
-echo ""
-echo ""
-echo "Would you like a link to your Maestro install in /opt/ros/fuerte/stacks?"
-select yn in "Yes" "No"; do
-        case $yn in
-                Yes ) echo "Creating symbolic link in /opt/ros/fuerte/stacks..."; ln -s $installDir/../ maestro; break;;
-                No ) echo "Skipping symbolic link creation..."; break;;
-        esac
-done
-echo ""
+if [ $# -lt 1 ]
+then
+	echo ""
+	echo ""
+	echo "Would you like a link to your Maestro install in /opt/ros/fuerte/stacks?"
+	select yn in "Yes" "No"; do
+        	case $yn in
+                	Yes ) echo "Creating symbolic link in /opt/ros/fuerte/stacks..."; ln -s $installDir/../ maestro; break;;
+                	No ) echo "Skipping symbolic link creation..."; break;;
+        	esac
+	done
+	echo ""
+elif [ "$1" == "-y"] || [ "$1" == "--auto-yes"]
+then
+	echo "Creating symbolic link in /opt/ros/fuerte/stacks..."; 
+	ln -s $installDir/../ maestro;
+fi
 rosmake maestro
 echo "Installation complete."
