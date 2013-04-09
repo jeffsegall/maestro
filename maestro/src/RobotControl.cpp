@@ -665,7 +665,7 @@ vector<float> trajectoryValues(string path){
   void RobotControl::setLeftShoulderYaw(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_SHOULDER_YAW_ELBOW);
 	  mb->getMotorByChannel(0)->setDesiredPosition(ticks);
-	  motor->setAngularVelocity(omega);
+	  mb->getMotorByChannel(0)->setAngularVelocity(omega);
      //ros_gateway->transmit(6,ticks);
   }
 
