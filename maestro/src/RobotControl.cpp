@@ -888,7 +888,7 @@ vector<float> trajectoryValues(string path){
   void RobotControl::enableJoint(string name, int delay){
 	  HuboMotor* motor = this->state->getMotorByName(name);
 	  if (motor != NULL){
-		  AchCommand output;
+		  hubomsg::AchCommand output;
 		  output.commandName = "enableJoint";
 		  output.jointName = name;
 		  achOutputQueue.push(output);
@@ -900,7 +900,7 @@ vector<float> trajectoryValues(string path){
   void RobotControl::disableJoint(string name, int delay){
 	  HuboMotor* motor = this->state->getMotorByName(name);
 	  if (motor != NULL){
-		  AchCommand output;
+		  hubomsg::AchCommand output;
 		  output.commandName = "disableJoint";
 		  output.jointName = name;
 		  achOutputQueue.push(output);
@@ -909,13 +909,13 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::enableAll(int delay){
-	  AchCommand output;
+	  hubomsg::AchCommand output;
 	  output.commandName = "enableAll";
 	  achOutputQueue.push(output);
   }
 
   void RobotControl::disableAll(int delay){
-	  AchCommand output;
+	  hubomsg::AchCommand output;
 	  output.commandName = "disableAll";
 	  achOutputQueue.push(output);
   }
