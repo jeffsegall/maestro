@@ -284,7 +284,7 @@ long HuboMotor::interpolate(int MAX_STEP, int MIN_STEP){
 	const float LEAP_PERCENTAGE = .5;
 	const int FREQUENCY = 100; //Hertz
 	if (MAX_STEP == 0)
-		MAX_STEP = radiansToTicks(omega) * 100;
+		MAX_STEP = radiansToTicks(omega) / 100;
 
 	int error = desired_position - ticks_position;
 	int output = desired_position;
