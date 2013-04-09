@@ -8,6 +8,7 @@
 #include <hubomsg/HuboState.h>
 #include <hubomsg/CanMessage.h>
 #include <hubomsg/HuboCommand.h>
+#include <hubomsg/AchCommand.h>
 #include <hubomsg/HuboIMU.h>
 
 #include "ros_msg_transporter.hpp"
@@ -40,6 +41,8 @@ namespace ros_integration {
               return ti->addProtocol(ORO_ROS_PROTOCOL_ID,new RosMsgTransporter<hubomsg::CanMessage>());
          if(name == "/hubomsg/HuboCommand")
               return ti->addProtocol(ORO_ROS_PROTOCOL_ID,new RosMsgTransporter<hubomsg::HuboCommand>());
+         if(name == "/hubomsg/AchCommand")
+              return ti->addProtocol(ORO_ROS_PROTOCOL_ID,new RosMsgTransporter<hubomsg::AchCommand>());
          if(name == "/hubomsg/HuboIMU")
               return ti->addProtocol(ORO_ROS_PROTOCOL_ID,new RosMsgTransporter<hubomsg::HuboIMU>());
 

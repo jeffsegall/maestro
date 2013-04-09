@@ -7,6 +7,7 @@
 #include <hubomsg/HuboState.h>
 #include <hubomsg/CanMessage.h>
 #include <hubomsg/HuboCommand.h>
+#include <hubomsg/AchCommand.h>
 #include <hubomsg/HuboIMU.h>
 
 #include <rtt/types/TypekitPlugin.hpp>
@@ -25,6 +26,7 @@ namespace ros_integration {
         void rtt_ros_addType_hubomsg_HuboState();
         void rtt_ros_addType_hubomsg_CanMessage();
         void rtt_ros_addType_hubomsg_HuboCommand();
+        void rtt_ros_addType_hubomsg_AchCommand();
         void rtt_ros_addType_hubomsg_HuboIMU();
 
    
@@ -50,6 +52,7 @@ namespace ros_integration {
         rtt_ros_addType_hubomsg_HuboState(); // factory function for adding TypeInfo.
         rtt_ros_addType_hubomsg_CanMessage(); // factory function for adding TypeInfo.
         rtt_ros_addType_hubomsg_HuboCommand(); // factory function for adding TypeInfo.
+        rtt_ros_addType_hubomsg_AchCommand(); // factory function for adding TypeInfo.
         rtt_ros_addType_hubomsg_HuboIMU(); // factory function for adding TypeInfo.
 
           return true;

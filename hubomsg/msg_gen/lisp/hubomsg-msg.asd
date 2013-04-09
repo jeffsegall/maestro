@@ -22,6 +22,8 @@
     (:file "_package_CanMessage" :depends-on ("_package"))
     (:file "HuboCommand" :depends-on ("_package_HuboCommand"))
     (:file "_package_HuboCommand" :depends-on ("_package"))
+    (:file "AchCommand" :depends-on ("_package_AchCommand"))
+    (:file "_package_AchCommand" :depends-on ("_package"))
     (:file "HuboIMU" :depends-on ("_package_HuboIMU"))
     (:file "_package_HuboIMU" :depends-on ("_package"))
   ))

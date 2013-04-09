@@ -19,6 +19,8 @@
    "CANMESSAGE"
    "<HUBOCOMMAND>"
    "HUBOCOMMAND"
+   "<ACHCOMMAND>"
+   "ACHCOMMAND"
    "<HUBOIMU>"
    "HUBOIMU"
   ))
