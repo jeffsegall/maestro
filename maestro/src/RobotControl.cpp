@@ -297,6 +297,15 @@ RobotControl::RobotControl(const std::string& name):
 			.arg("Rads", "New radians for given joint.")
 			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+	this->addOperation("homeJoint", &RobotControl::homeJoint, this, RTT::OwnThread)
+			.doc("Home Joint")
+			.arg("Name", "Name of joint to send to home.")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+	this->addOperation("homeAll", &RobotControl::homeAll, this, RTT::OwnThread)
+			.doc("Home All")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("initRobot", &RobotControl::initRobot, this, RTT::OwnThread)
             .doc("Initialize a robot")
             .arg("Path", "The path to the XML robot representation");
@@ -988,6 +997,23 @@ vector<float> trajectoryValues(string path){
 		  motor->setDesiredPosition(motor->radiansToTicks(rads));
 	  else
 		  std::cout << "Error! Joint " << name << " either does not exist, or has not yet been initialized!" << std::endl;
+  }
+
+  void RobotControl::homeJoint(string name, int delay){
+	  HuboMotor* motor = this->state->getMotorByName(name);
+	  if (motor != NULL) {
+		  hubomsg::AchCommand output;
+		  output.commandName = "homeJoint";
+		  output.jointName = name;
+		  achOutputQueue.push(output);
+	  } else
+		  std::cout << "Error! Joint " << name << " either does not exist, or has not yet been initialized!" << std::endl;
+  }
+
+  void RobotControl::homeAll(string name, int delay){
+	  hubomsg::AchCommand output;
+	  output.commandName = "homeAll";
+	  achOutputQueue.push(output);
   }
 
   void RobotControl::setMaxAccVel(int board, int motor, int acc, int vel){

@@ -99,26 +99,34 @@ public:
     void setWaistRad(double rads, int delay);
     void setRightHand(int f0, int f1, int f2, int f3, int f4, int delay);
     void setLeftHand(int f0, int f1, int f2, int f3, int f4, int delay); 
+    void setJoint(string name, int ticks, int delay);
+    void setJointRad(string name, double rads, int delay);
+    void homeJoint(string name, int delay);
+    void homeAll(string name, int delay)
+
+    // Control Commands
     void enable(int board, int delay);
     void disable(int board, int delay);
     void enableJoint(string name, int delay);
     void disableJoint(string name, int delay);
     void enableAll(int delay);
     void disableAll(int delay);
-    void sendToHome(int board, int motor);
+    void debugControl(int board, int operation);
+	void setDelay(int us);
+	void runGesture(string name, int board);
+
+    // Feedback Commands
     void requestEncoderPosition(int board, int delay);
     void getCurrentTicks(int board, int motor, int delay);
     void setCurrentTicks(int board, int motor, int ticks);
     void getCurrentGoal(int board, int motor, int delay);
     bool requiresMotion(int board, int motor, int delay);
     bool requiresMotionByName(string name, int delay);
-    void setJoint(string name, int ticks, int delay);
-    void setJointRad(string name, double rads, int delay);
+
+    // Parameter Commands
     void setMaxAccVel(int board, int delay, int acc, int vel);
     void setPositionGain(int board, int motor, int kp, int ki, int kd);
-    void debugControl(int board, int operation);
-    void setDelay(int us);
-    void runGesture(string name, int board);
+
 
     vector<string> getGestureScripts(string path);
     string getDefaultInitPath(string path);
