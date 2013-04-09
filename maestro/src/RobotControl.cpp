@@ -9,17 +9,20 @@ RobotControl::RobotControl(const std::string& name):
     this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
     //this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
 	this->huboDownPort = new OutputPort<hubomsg::HuboCommand>("Hubo/HuboCommand");
+	this->achDownPort = new OutputPort<hubomsg::AchCommand>("Hubo/AchCommand");
     this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
     this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
     this->commHandler = new CommHandler(canUpPort, orOutPort);
 
     //CAN QUEUES
     this->inputQueue = new queue<hubomsg::CanMessage>();
-    this->outputQueue = new queue<hubomsg::HuboCommand>();
+    this->huboOutputQueue = new queue<hubomsg::HuboCommand>();
+    this->achDownPort = new queue<hubomsg::AchCommand>();
     
     //CAN PORTS 
     this->addEventPort(*canUpPort);
     this->addPort(*huboDownPort);
+    this->addPort(*achDownPort);
 
     //OPENRAVE PORTS
     this->addEventPort(*orOutPort);
@@ -282,6 +285,18 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Rads", "New radians for right ankle roll.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+    this->addOperation("setJoint", &RobotControl::setJoint, this, RTT::OwnThread)
+			.doc("Set Joint")
+			.arg("Name", "Name of joint to move.")
+			.arg("Value", "New ticks for given joint.")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+	this->addOperation("setJointRad", &RobotControl::setJointRad, this, RTT::OwnThread)
+			.doc("Set Joint")
+			.arg("Name", "Name of joint to move.")
+			.arg("Rads", "New radians for given joint.")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("initRobot", &RobotControl::initRobot, this, RTT::OwnThread)
             .doc("Initialize a robot")
             .arg("Path", "The path to the XML robot representation");
@@ -409,7 +424,7 @@ vector<float> trajectoryValues(string path){
         //Recieved update from openRAVE
     }
 
-    if (outputQueue->empty() && state != NULL && !this->state->getBoards().empty()) {
+    if (huboOutputQueue->empty() && state != NULL && !this->state->getBoards().empty()) {
 		//tempOutput << "Boards not empty. Map size: " << this->state->getBoards().size() << std::endl;
     	hubomsg::HuboCommand message;
 		for (int i = 0; i < this->state->getBoards().size(); i++){
@@ -420,24 +435,36 @@ vector<float> trajectoryValues(string path){
 
 			//}
 		}
-		outputQueue->push(message);
+		huboOutputQueue->push(message);
 
 	}
    
     //Write out a message if we have one
 
-    if (!outputQueue->empty()){
+    if (!huboOutputQueue->empty()){
 
-    	hubomsg::HuboCommand output = outputQueue->front();
+    	hubomsg::HuboCommand output = huboOutputQueue->front();
     	if (printNow){
     		tempOutput << "Writing message to " << output.num_joints << " motors." << std::endl;
     	}
 
 		this->huboDownPort->write(output);
 
-        outputQueue->pop();
-        usleep(delay);
+        huboOutputQueue->pop();
     }
+
+    if (!achOutputQueue->empty()){
+
+    	hubomsg::AchCommand output = achOutputQueue->front();
+    	if (printNow){
+    		tempOutput << "Writing command " << output.commandName << " to ach." << std::endl;
+    	}
+
+		this->achDownPort->write(output);
+
+        achOutputQueue->pop();
+    }
+    usleep(delay);
   }
 
   hubomsg::CanMessage RobotControl::buildCanMessage(canMsg* msg){
@@ -508,7 +535,7 @@ vector<float> trajectoryValues(string path){
           path = getDefaultInitPath(CONFIG_PATH);
       
       //@TODO: Check for file existence before initializing.
-      this->state->initHuboWithDefaults(path, this->outputQueue);
+      this->state->initHuboWithDefaults(path, this->huboOutputQueue);
   }
 
   void RobotControl::setWaist(int ticks, int delay){

@@ -130,11 +130,13 @@ private:
     OutputPort<hubomsg::CanMessage>* canDownPort;
     OutputPort<hubomsg::HuboCmd>* orInPort;
     OutputPort<hubomsg::HuboCommand>* huboDownPort;
+    OutputPort<hubomsg::AchCommand>* achDownPort;
 
     HuboState* state;
 
     queue<hubomsg::CanMessage>* inputQueue;
-    queue<hubomsg::HuboCommand>* outputQueue;
+    queue<hubomsg::HuboCommand>* huboOutputQueue;
+    queue<hubomsg::AchCommand>* achOutputQueue;
 
     map< string, vector<float> > gestures;
     map<boardNum, MotorBoard*>::iterator it;
