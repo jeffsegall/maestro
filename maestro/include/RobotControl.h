@@ -17,6 +17,7 @@
 #include <hubomsg/typekit/HuboJointState.h>
 #include <hubomsg/typekit/HuboCommand.h>
 #include <hubomsg/typekit/HuboJointCommand.h>
+#include <hubomsg/typekit/AchCommand.h>
 #include <hubomsg/typekit/HuboIMU.h>
 #include <hubomsg/typekit/HuboFT.h>
 #include <vector>
