@@ -1006,14 +1006,28 @@ vector<float> trajectoryValues(string path){
 		  output.commandName = "homeJoint";
 		  output.jointName = name;
 		  achOutputQueue->push(output);
+
+		  //Send our software joint home so we have an accurate picture.
+		  motor->setDesiredPosition(0);
+		  motor->setTicksPosition(0);
 	  } else
 		  std::cout << "Error! Joint " << name << " either does not exist, or has not yet been initialized!" << std::endl;
   }
 
-  void RobotControl::homeAll(string name, int delay){
+  void RobotControl::homeAll(int delay){
 	  hubomsg::AchCommand output;
 	  output.commandName = "homeAll";
 	  achOutputQueue->push(output);
+
+	  //Send out software joints home so we have an accurate picture.
+	  vector<MotorBoard*> boards = state->getBoards();
+	  for (vector<MotorBoard*>::iterator it = boards.begin(); it != boards.end(); it++){
+		  for (int i = 0; i < (*it)->getNumChannels(); i++){
+			  HuboMotor* motor = (*it)->getMotorByChannel(i);
+			  motor->setDesiredPosition(0);
+			  motor->setTicksPosition(0);
+		  }
+	  }
   }
 
   void RobotControl::setMaxAccVel(int board, int motor, int acc, int vel){
