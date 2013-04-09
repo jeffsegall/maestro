@@ -130,6 +130,16 @@ MotorBoard* HuboState::getBoardByNumber(boardNum number){
 	return NULL;
 }
 
+HuboMotor* HuboState::getMotorByName(string name){
+	for (vector<MotorBoard*>::iterator it = boards.begin(); it != boards.end(); it++){
+	  for (int i = 0; i < (*it)->getNumChannels(); i++){
+		  if ((*it)->getMotorByChannel(i)->getName().compare(name) == 0)
+			  return *it;
+	  }
+	}
+	return NULL;
+}
+
 /******************************************************************************
 * addBoard
 * 

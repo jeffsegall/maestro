@@ -101,6 +101,10 @@ public:
     void setLeftHand(int f0, int f1, int f2, int f3, int f4, int delay); 
     void enable(int board, int delay);
     void disable(int board, int delay);
+    void enableJoint(string name, int delay);
+    void disableJoint(string name, int delay);
+    void enableAll(int delay);
+    void disableAll(int delay);
     void sendToHome(int board, int motor);
     void requestEncoderPosition(int board, int delay);
     void getCurrentTicks(int board, int motor, int delay);

@@ -43,6 +43,7 @@ class HuboState{
 
         MotorBoard* getBoardByNumber(int number);
         MotorBoard* getBoardByNumber(boardNum number);
+        HuboMotor* getMotorByName(string name);
 
         void addBoard(MotorBoard* board);
 

@@ -309,6 +309,20 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Board", "The board to disable")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
+    this->addOperation("enableJoint", &RobotControl::enableJoint, this, RTT::OwnThread)
+			.arg("Name", "The name of the joint to enable")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+	this->addOperation("disableJoint", &RobotControl::disableJoint, this, RTT::OwnThread)
+			.arg("Name", "The name of the joint to disable")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+	this->addOperation("enableAll", &RobotControl::enableAll, this, RTT::OwnThread)
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
+
+	this->addOperation("disableAll", &RobotControl::disableAll, this, RTT::OwnThread)
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
+
     this->addOperation("requestEncoderPosition", &RobotControl::requestEncoderPosition, this, RTT::OwnThread)
 			.arg("Board", "The board to request encoder data from")
 			.arg("Timestamp", "Timestamp delay (in milliseconds)");
@@ -378,20 +392,20 @@ RobotControl::RobotControl(const std::string& name):
   RobotControl::~RobotControl(){}
 
 vector<float> trajectoryValues(string path){
-    vector<float> val;
+	vector<float> val;
 
-    float f;
+	float f;
 
-    ifstream is;
-    is.open(path.c_str());
+	ifstream is;
+	is.open(path.c_str());
 
-    while (!is.eof()){
-        is >> f;
-        val.push_back(f*5.0);
-    } 
-    is.close();
+	while (!is.eof()){
+		is >> f;
+		val.push_back(f*5.0);
+	}
+	is.close();
 
-    return val;
+	return val;
 }
 
   void RobotControl::updateHook(){
@@ -871,6 +885,41 @@ vector<float> trajectoryValues(string path){
       enableControl = false;
   }
 
+  void RobotControl::enableJoint(string name, int delay){
+	  HuboMotor* motor = this->state->getMotorByName(name);
+	  if (motor != NULL){
+		  AchCommand output;
+		  output.commandName = "enableJoint";
+		  output.jointName = name;
+		  achOutputQueue.push(output);
+	  } else
+		  std::cout << "Error! Joint " << name << " either does not exist, or has not yet been initialized!" << std::endl;
+
+  }
+
+  void RobotControl::disableJoint(string name, int delay){
+	  HuboMotor* motor = this->state->getMotorByName(name);
+	  if (motor != NULL){
+		  AchCommand output;
+		  output.commandName = "disableJoint";
+		  output.jointName = name;
+		  achOutputQueue.push(output);
+	  } else
+		  std::cout << "Error! Joint " << name << " either does not exist, or has not yet been initialized!" << std::endl;
+  }
+
+  void RobotControl::enableAll(int delay){
+	  AchCommand output;
+	  output.commandName = "enableAll";
+	  achOutputQueue.push(output);
+  }
+
+  void RobotControl::disableAll(int delay){
+	  AchCommand output;
+	  output.commandName = "disableAll";
+	  achOutputQueue.push(output);
+  }
+
   void RobotControl::requestEncoderPosition(int board, int delay){
       this->state->getBoardByNumber(board)->requestEncoderPosition(0);
   }
@@ -921,34 +970,24 @@ vector<float> trajectoryValues(string path){
   }
 
   bool RobotControl::requiresMotionByName(string name, int delay){
-	  vector<MotorBoard*> boards = state->getBoards();
-	  for (vector<MotorBoard*>::iterator it = boards.begin(); it != boards.end(); it++){
-		  for (int i = 0; i < (*it)->getNumChannels(); i++){
-			  if ((*it)->getMotorByChannel(i)->getName().compare(name) == 0)
-				  return (*it)->getMotorByChannel(i)->requiresMotion();
-		  }
-	  }
-	  return false;
+	  HuboMotor* motor = this->state->getMotorByName(name);
+	  return motor != NULL ? (*it)->getMotorByChannel(i)->requiresMotion() : false;
   }
 
   void RobotControl::setJoint(string name, int ticks, int delay){
-	  vector<MotorBoard*> boards = state->getBoards();
-	  for (vector<MotorBoard*>::iterator it = boards.begin(); it != boards.end(); it++){
-		  for (int i = 0; i < (*it)->getNumChannels(); i++){
-			  if ((*it)->getMotorByChannel(i)->getName().compare(name) == 0)
-				  (*it)->getMotorByChannel(i)->setDesiredPosition(ticks);
-		  }
-	  }
+	  HuboMotor* motor = this->state->getMotorByName(name);
+	  if (motor != NULL)
+		  motor->setDesiredPosition(ticks);
+	  else
+		  std::cout << "Error! Joint " << name << " either does not exist, or has not yet been initialized!" << std::endl;
   }
 
   void RobotControl::setJointRad(string name, double rads, int delay){
-	  vector<MotorBoard*> boards = state->getBoards();
-	  for (vector<MotorBoard*>::iterator it = boards.begin(); it != boards.end(); it++){
-		  for (int i = 0; i < (*it)->getNumChannels(); i++){
-			  if ((*it)->getMotorByChannel(i)->getName().compare(name) == 0)
-				  (*it)->getMotorByChannel(i)->setDesiredPosition((*it)->getMotorByChannel(i)->radiansToTicks(rads));
-		  }
-	  }
+	  HuboMotor* motor = this->state->getMotorByName(name);
+	  if (motor != NULL)
+		  motor->setDesiredPosition(motor->radiansToTicks(rads));
+	  else
+		  std::cout << "Error! Joint " << name << " either does not exist, or has not yet been initialized!" << std::endl;
   }
 
   void RobotControl::setMaxAccVel(int board, int motor, int acc, int vel){
