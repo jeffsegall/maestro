@@ -17,7 +17,7 @@ RobotControl::RobotControl(const std::string& name):
     //CAN QUEUES
     this->inputQueue = new queue<hubomsg::CanMessage>();
     this->huboOutputQueue = new queue<hubomsg::HuboCommand>();
-    this->achDownPort = new queue<hubomsg::AchCommand>();
+    this->achOutputQueue = new queue<hubomsg::AchCommand>();
     
     //CAN PORTS 
     this->addEventPort(*canUpPort);
