@@ -891,7 +891,7 @@ vector<float> trajectoryValues(string path){
 		  hubomsg::AchCommand output;
 		  output.commandName = "enableJoint";
 		  output.jointName = name;
-		  achOutputQueue.push(output);
+		  achOutputQueue->push(output);
 	  } else
 		  std::cout << "Error! Joint " << name << " either does not exist, or has not yet been initialized!" << std::endl;
 
@@ -903,7 +903,7 @@ vector<float> trajectoryValues(string path){
 		  hubomsg::AchCommand output;
 		  output.commandName = "disableJoint";
 		  output.jointName = name;
-		  achOutputQueue.push(output);
+		  achOutputQueue->push(output);
 	  } else
 		  std::cout << "Error! Joint " << name << " either does not exist, or has not yet been initialized!" << std::endl;
   }
@@ -911,13 +911,13 @@ vector<float> trajectoryValues(string path){
   void RobotControl::enableAll(int delay){
 	  hubomsg::AchCommand output;
 	  output.commandName = "enableAll";
-	  achOutputQueue.push(output);
+	  achOutputQueue->push(output);
   }
 
   void RobotControl::disableAll(int delay){
 	  hubomsg::AchCommand output;
 	  output.commandName = "disableAll";
-	  achOutputQueue.push(output);
+	  achOutputQueue->push(output);
   }
 
   void RobotControl::requestEncoderPosition(int board, int delay){
@@ -971,7 +971,7 @@ vector<float> trajectoryValues(string path){
 
   bool RobotControl::requiresMotionByName(string name, int delay){
 	  HuboMotor* motor = this->state->getMotorByName(name);
-	  return motor != NULL ? (*it)->getMotorByChannel(i)->requiresMotion() : false;
+	  return motor != NULL ? motor->requiresMotion() : false;
   }
 
   void RobotControl::setJoint(string name, int ticks, int delay){
