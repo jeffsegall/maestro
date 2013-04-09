@@ -102,7 +102,7 @@ public:
     void setJoint(string name, int ticks, int delay);
     void setJointRad(string name, double rads, int delay);
     void homeJoint(string name, int delay);
-    void homeAll(string name, int delay)
+    void homeAll(string name, int delay);
 
     // Control Commands
     void enable(int board, int delay);

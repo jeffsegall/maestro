@@ -1005,7 +1005,7 @@ vector<float> trajectoryValues(string path){
 		  hubomsg::AchCommand output;
 		  output.commandName = "homeJoint";
 		  output.jointName = name;
-		  achOutputQueue.push(output);
+		  achOutputQueue->push(output);
 	  } else
 		  std::cout << "Error! Joint " << name << " either does not exist, or has not yet been initialized!" << std::endl;
   }
@@ -1013,7 +1013,7 @@ vector<float> trajectoryValues(string path){
   void RobotControl::homeAll(string name, int delay){
 	  hubomsg::AchCommand output;
 	  output.commandName = "homeAll";
-	  achOutputQueue.push(output);
+	  achOutputQueue->push(output);
   }
 
   void RobotControl::setMaxAccVel(int board, int motor, int acc, int vel){
