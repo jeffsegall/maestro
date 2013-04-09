@@ -43,258 +43,309 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Neck", "New ticks for neck.")
             .arg("One", "New ticks for one.")
             .arg("Two", "New ticks for two.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
  
     this->addOperation("setLeftShoulderRoll", &RobotControl::setLeftShoulderRoll, this, RTT::OwnThread)
             .doc("Set Left Shoulder Roll")
             .arg("Value", "New ticks for left shoulder roll.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
     
     this->addOperation("setLeftShoulderRollRad", &RobotControl::setLeftShoulderRollRad, this, RTT::OwnThread)
             .doc("Set Left Shoulder Roll")
             .arg("Rads", "New radians for left shoulder roll.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftShoulderPitch", &RobotControl::setLeftShoulderPitch, this, RTT::OwnThread)
             .doc("Set Left Shoulder Pitch")
             .arg("Value", "New ticks for left shoulder pitch.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftShoulderPitchRad", &RobotControl::setLeftShoulderPitchRad, this, RTT::OwnThread)
             .doc("Set Left Shoulder Pitch")
             .arg("Rads", "New radians for left shoulder pitch.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
    
     this->addOperation("setLeftShoulderYaw", &RobotControl::setLeftShoulderYaw, this, RTT::OwnThread)
             .doc("Set Left Shoulder Yaw")
             .arg("Value", "New ticks for left shoulder yaw.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftShoulderYawRad", &RobotControl::setLeftShoulderYawRad, this, RTT::OwnThread)
             .doc("Set Left Shoulder Yaw")
             .arg("Rads", "New radians for left shoulder yaw.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
    
     this->addOperation("setLeftElbow", &RobotControl::setLeftElbow, this, RTT::OwnThread)
             .doc("Set Left Elbow")
             .arg("Value", "New ticks for left elbow.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftElbowRad", &RobotControl::setLeftElbowRad, this, RTT::OwnThread)
             .doc("Set Left Elbow")
             .arg("Rads", "New radians for left elbow.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftWristPitch", &RobotControl::setLeftWristPitch, this, RTT::OwnThread)
             .doc("Set Left Wrist Pitch")
             .arg("Value", "New ticks for left wrist pitch.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftWristPitchRad", &RobotControl::setLeftWristPitchRad, this, RTT::OwnThread)
             .doc("Set Left Wrist Pitch")
             .arg("Rads", "New radians for left wrist pitch.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftWristYaw", &RobotControl::setLeftWristYaw, this, RTT::OwnThread)
             .doc("Set Left Wrist Yaw")
             .arg("Value", "New ticks for left Wrist Yaw.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftWristYawRad", &RobotControl::setLeftWristYawRad, this, RTT::OwnThread)
             .doc("Set Left Wrist Yaw")
             .arg("Rads", "New radians for left Wrist Yaw.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightShoulderRoll", &RobotControl::setRightShoulderRoll, this, RTT::OwnThread)
             .doc("Set Right Shoulder Roll")
             .arg("Value", "New ticks for right shoulder roll.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightShoulderRollRad", &RobotControl::setRightShoulderRollRad, this, RTT::OwnThread)
             .doc("Set Right Shoulder Roll")
             .arg("Rads", "New radians for right shoulder roll.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightShoulderPitch", &RobotControl::setRightShoulderPitch, this, RTT::OwnThread)
             .doc("Set Right Shoulder Pitch")
             .arg("Value", "New ticks for right shoulder pitch.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightShoulderPitchRad", &RobotControl::setRightShoulderPitchRad, this, RTT::OwnThread)
             .doc("Set Right Shoulder Pitch")
             .arg("Rads", "New radians for right shoulder pitch.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightShoulderYaw", &RobotControl::setRightShoulderYaw, this, RTT::OwnThread)
             .doc("Set Right Shoulder Yaw")
-            .arg("Value", "New ticks for right shoulder yaw.")			
+            .arg("Value", "New ticks for right shoulder yaw.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightShoulderYawRad", &RobotControl::setRightShoulderYawRad, this, RTT::OwnThread)
             .doc("Set Right Shoulder Yaw")
             .arg("Rads", "New radians for right shoulder yaw.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 			
     this->addOperation("setRightElbow", &RobotControl::setRightElbow, this, RTT::OwnThread)
             .doc("Set Right Elbow")
             .arg("Value", "New ticks for right elbow.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightElbowRad", &RobotControl::setRightElbowRad, this, RTT::OwnThread)
             .doc("Set Right Elbow")
             .arg("Rads", "New radians for right elbow.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightWristPitch", &RobotControl::setRightWristPitch, this, RTT::OwnThread)
             .doc("Set Right Wrist Pitch")
             .arg("Value", "New ticks for right wrist pitch.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightWristPitchRad", &RobotControl::setRightWristPitchRad, this, RTT::OwnThread)
             .doc("Set Right Wrist Pitch")
             .arg("Rads", "New radians for right wrist pitch.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightWristYaw", &RobotControl::setRightWristYaw, this, RTT::OwnThread)
             .doc("Set Right Wrist Yaw")
             .arg("Value", "New ticks for right wrist yaw.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightWristYawRad", &RobotControl::setRightWristYawRad, this, RTT::OwnThread)
             .doc("Set Right Wrist Yaw")
             .arg("Rads", "New radians for right wrist yaw.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftHipYaw", &RobotControl::setLeftHipYaw, this, RTT::OwnThread)
             .doc("Set Left Hip Yaw")
             .arg("Value", "New ticks for left hip yaw.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftHipYawRad", &RobotControl::setLeftHipYawRad, this, RTT::OwnThread)
             .doc("Set Left Hip Yaw")
             .arg("Rads", "New radians for left hip yaw.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftHipRoll", &RobotControl::setLeftHipRoll, this, RTT::OwnThread)
             .doc("Set Left Hip Roll")
             .arg("Value", "New ticks for left hip roll.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftHipRollRad", &RobotControl::setLeftHipRollRad, this, RTT::OwnThread)
             .doc("Set Left Hip Roll")
             .arg("Rads", "New radians for left hip roll.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftHipPitch", &RobotControl::setLeftHipPitch, this, RTT::OwnThread)
             .doc("Set Left Hip Pitch")
             .arg("Value", "New ticks for left hip pitch.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftHipPitchRad", &RobotControl::setLeftHipPitchRad, this, RTT::OwnThread)
             .doc("Set Left Hip Pitch")
             .arg("Rads", "New radians for left hip pitch.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftKnee", &RobotControl::setLeftKnee, this, RTT::OwnThread)
             .doc("Set Left Knee")
             .arg("Value", "New ticks for left knee.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftKneeRad", &RobotControl::setLeftKneeRad, this, RTT::OwnThread)
             .doc("Set Left Knee")
             .arg("Rads", "New radians for left knee.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftAnklePitch", &RobotControl::setLeftAnklePitch, this, RTT::OwnThread)
             .doc("Set Left Ankle Pitch")
             .arg("Value", "New ticks for left ankle pitch.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftAnklePitchRad", &RobotControl::setLeftAnklePitchRad, this, RTT::OwnThread)
             .doc("Set Left Ankle Pitch")
             .arg("Rads", "New radians for left ankle pitch.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftAnkleRoll", &RobotControl::setLeftAnkleRoll, this, RTT::OwnThread)
             .doc("Set Left Ankle Roll")
             .arg("Value", "New ticks for left ankle roll.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setLeftAnkleRollRad", &RobotControl::setLeftAnkleRollRad, this, RTT::OwnThread)
             .doc("Set Left Ankle Roll")
             .arg("Rads", "New radians for left ankle roll.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightHipYaw", &RobotControl::setRightHipYaw, this, RTT::OwnThread)
             .doc("Set Right Hip Yaw")
             .arg("Value", "New ticks for right hip yaw.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightHipYawRad", &RobotControl::setRightHipYawRad, this, RTT::OwnThread)
 			.doc("Set Right Hip Yaw")
 			.arg("Rads", "New radians for right hip yaw.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
 			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
 	this->addOperation("setRightHipRoll", &RobotControl::setRightHipRoll, this, RTT::OwnThread)
 			.doc("Set Right Hip Roll")
 			.arg("Value", "New ticks for right hip roll.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
 			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightHipRollRad", &RobotControl::setRightHipRollRad, this, RTT::OwnThread)
 			.doc("Set Right Hip Yaw")
 			.arg("Rads", "New radians for right hip roll.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
 			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightHipPitch", &RobotControl::setRightHipPitch, this, RTT::OwnThread)
             .doc("Set Right Hip Pitch")
             .arg("Value", "New ticks for right hip pitch.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightHipPitchRad", &RobotControl::setRightHipPitchRad, this, RTT::OwnThread)
             .doc("Set Right Hip Pitch")
             .arg("Rads", "New radians for right hip pitch.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightKnee", &RobotControl::setRightKnee, this, RTT::OwnThread)
             .doc("Set Right Knee")
             .arg("Value", "New ticks for right knee.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightKneeRad", &RobotControl::setRightKneeRad, this, RTT::OwnThread)
             .doc("Set Right Knee")
             .arg("Rads", "New radians for right knee.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightAnklePitch", &RobotControl::setRightAnklePitch, this, RTT::OwnThread)
             .doc("Set Right Ankle Pitch")
             .arg("Value", "New ticks for right ankle pitch.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightAnklePitchRad", &RobotControl::setRightAnklePitchRad, this, RTT::OwnThread)
             .doc("Set Right Ankle Pitch")
             .arg("Rads", "New radians for right ankle pitch.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightAnkleRoll", &RobotControl::setRightAnkleRoll, this, RTT::OwnThread)
             .doc("Set Right Ankle Roll")
             .arg("Value", "New ticks for right ankle roll.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightAnkleRollRad", &RobotControl::setRightAnkleRollRad, this, RTT::OwnThread)
             .doc("Set Right Ankle Roll")
             .arg("Rads", "New radians for right ankle roll.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setJoint", &RobotControl::setJoint, this, RTT::OwnThread)
 			.doc("Set Joint")
 			.arg("Name", "Name of joint to move.")
 			.arg("Value", "New ticks for given joint.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
 			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
 	this->addOperation("setJointRad", &RobotControl::setJointRad, this, RTT::OwnThread)
 			.doc("Set Joint")
 			.arg("Name", "Name of joint to move.")
 			.arg("Rads", "New radians for given joint.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
 			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
 	this->addOperation("homeJoint", &RobotControl::homeJoint, this, RTT::OwnThread)
@@ -561,325 +612,378 @@ vector<float> trajectoryValues(string path){
       this->state->initHuboWithDefaults(path, this->huboOutputQueue);
   }
 
-  void RobotControl::setWaist(int ticks, int delay){
+  void RobotControl::setWaist(int ticks, double omega, int delay){
       //ros_gateway->transmit(0,ticks);
 	  MotorBoard* mb = this->state->getBoardByNumber(BNO_WAIST);
 	  mb->getMotorByChannel(0)->setDesiredPosition(ticks);
+	  mb->getMotorByChannel(0)->setAngularVelocity(omega);
   }
 
-  void RobotControl::setWaistRad(double rads, int delay){
+  void RobotControl::setWaistRad(double rads, double omega, int delay){
         //ros_gateway->transmit(0,ticks);
   	  HuboMotor* motor = this->state->getBoardByNumber(BNO_WAIST)->getMotorByChannel(0);
   	  motor->setDesiredPosition(motor->radiansToTicks(rads));
+  	  motor->setAngularVelocity(omega);
   }
 
-  void RobotControl::setNeck(int ticks, int one, int two, int delay){
+  void RobotControl::setNeck(int ticks, int one, int two, double omega, int delay){
 	  this->state->getBoardByNumber(BNO_NECK_YAW_1_2)->getMotorByChannel(0)->setDesiredPosition(ticks);
 	  this->state->getBoardByNumber(BNO_NECK_YAW_1_2)->getMotorByChannel(1)->setDesiredPosition(one);
 	  this->state->getBoardByNumber(BNO_NECK_YAW_1_2)->getMotorByChannel(1)->setDesiredPosition(two);
+	  //TODO: FIX THIS METHOD
      //ros_gateway->transmit(1,ticks);
   }
 
-  void RobotControl::setLeftShoulderRoll(int ticks, int delay){
+  void RobotControl::setLeftShoulderRoll(int ticks, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL)->getMotorByChannel(1);
       motor->setDesiredPosition(ticks);
+      motor->setAngularVelocity(omega);
      //ros_gateway->transmit(3,ticks);
   }
 
-  void RobotControl::setLeftShoulderRollRad(double rads, int delay){
+  void RobotControl::setLeftShoulderRollRad(double rads, double omega, int delay){
 	  HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL)->getMotorByChannel(1);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
+      motor->setAngularVelocity(omega);
        //ros_gateway->transmit(3,ticks);
   }
 
-  void RobotControl::setLeftShoulderPitch(int ticks, int delay){
+  void RobotControl::setLeftShoulderPitch(int ticks, double omega, int delay){
 	  HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL)->getMotorByChannel(0);
       motor->setDesiredPosition(ticks);
+      motor->setAngularVelocity(omega);
      //ros_gateway->transmit(4,ticks);
   }
 
-  void RobotControl::setLeftShoulderPitchRad(double rads, int delay){
+  void RobotControl::setLeftShoulderPitchRad(double rads, double omega, int delay){
 	  HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL)->getMotorByChannel(0);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
+      motor->setAngularVelocity(omega);
        //ros_gateway->transmit(4,ticks);
   }
   
-  void RobotControl::setLeftShoulderYaw(int ticks, int delay){
+  void RobotControl::setLeftShoulderYaw(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_SHOULDER_YAW_ELBOW);
 	  mb->getMotorByChannel(0)->setDesiredPosition(ticks);
+	  motor->setAngularVelocity(omega);
      //ros_gateway->transmit(6,ticks);
   }
 
-  void RobotControl::setLeftShoulderYawRad(double rads, int delay){
+  void RobotControl::setLeftShoulderYawRad(double rads, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_YAW_ELBOW)->getMotorByChannel(0);
   	  motor->setDesiredPosition(motor->radiansToTicks(rads));
+  	  motor->setAngularVelocity(omega);
        //ros_gateway->transmit(6,ticks);
   }
 
-  void RobotControl::setLeftElbow(int ticks, int delay){
+  void RobotControl::setLeftElbow(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_SHOULDER_YAW_ELBOW);
 	  mb->getMotorByChannel(1)->setDesiredPosition(ticks);
+	  mb->getMotorByChannel(1)->setAngularVelocity(omega);
      //ros_gateway->transmit(6,ticks);
   }
 
-  void RobotControl::setLeftElbowRad(double rads, int delay){
+  void RobotControl::setLeftElbowRad(double rads, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_YAW_ELBOW)->getMotorByChannel(1);
   	  motor->setDesiredPosition(motor->radiansToTicks(rads));
+  	  motor->setAngularVelocity(omega);
        //ros_gateway->transmit(6,ticks);
   }
 
-  void RobotControl::setLeftWristPitch(int ticks, int delay){
+  void RobotControl::setLeftWristPitch(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_WRIST_YAW_PITCH);
 	  mb->getMotorByChannel(1)->setDesiredPosition(ticks);
+	  mb->getMotorByChannel(1)->setAngularVelocity(omega);
      //ros_gateway->transmit(8,ticks);
   }
 
-  void RobotControl::setLeftWristPitchRad(double rads, int delay){
+  void RobotControl::setLeftWristPitchRad(double rads, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_L_WRIST_YAW_PITCH)->getMotorByChannel(1);
 	  motor->setDesiredPosition(motor->radiansToTicks(rads));
+	  motor->setAngularVelocity(omega);
      //ros_gateway->transmit(8,ticks);
   }
 
-  void RobotControl::setLeftWristYaw(int ticks, int delay){
+  void RobotControl::setLeftWristYaw(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_WRIST_YAW_PITCH);
       mb->getMotorByChannel(0)->setDesiredPosition(ticks);
+      mb->getMotorByChannel(0)->setAngularVelocity(omega);
       //ros_gateway->transmit(9,ticks);
   }
 
-  void RobotControl::setLeftWristYawRad(double rads, int delay){
+  void RobotControl::setLeftWristYawRad(double rads, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_L_WRIST_YAW_PITCH)->getMotorByChannel(0);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
+      motor->setAngularVelocity(omega);
       //ros_gateway->transmit(9,ticks);
   }
 
-  void RobotControl::setRightShoulderRoll(int ticks, int delay){
+  void RobotControl::setRightShoulderRoll(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_SHOULDER_PITCH_ROLL);
 	  mb->getMotorByChannel(1)->setDesiredPosition(ticks);
+	  mb->getMotorByChannel(1)->setAngularVelocity(omega);
       //ros_gateway->transmit(11,ticks);
   }
 
-  void RobotControl::setRightShoulderRollRad(double rads, int delay){
+  void RobotControl::setRightShoulderRollRad(double rads, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_R_SHOULDER_PITCH_ROLL)->getMotorByChannel(1);
 	  motor->setDesiredPosition(motor->radiansToTicks(rads));
+	  motor->setAngularVelocity(omega);
       //ros_gateway->transmit(11,ticks);
   }
 
-  void RobotControl::setRightShoulderPitch(int ticks, int delay){
+  void RobotControl::setRightShoulderPitch(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_SHOULDER_PITCH_ROLL);
       mb->getMotorByChannel(0)->setDesiredPosition(ticks);
+      mb->getMotorByChannel(0)->setAngularVelocity(omega);
       //ros_gateway->transmit(12,ticks);
   }
 
-  void RobotControl::setRightShoulderPitchRad(double rads, int delay){
+  void RobotControl::setRightShoulderPitchRad(double rads, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_R_SHOULDER_PITCH_ROLL)->getMotorByChannel(0);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
+      motor->setAngularVelocity(omega);
       //ros_gateway->transmit(12,ticks);
   }
 
-  void RobotControl::setRightShoulderYaw(int ticks, int delay){
+  void RobotControl::setRightShoulderYaw(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_SHOULDER_YAW_ELBOW);
 	  mb->getMotorByChannel(0)->setDesiredPosition(ticks);
+	  mb->getMotorByChannel(0)->setAngularVelocity(omega);
   }
   
-  void RobotControl::setRightShoulderYawRad(double rads, int delay){
+  void RobotControl::setRightShoulderYawRad(double rads, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_R_SHOULDER_YAW_ELBOW)->getMotorByChannel(0);
 	  motor->setDesiredPosition(motor->radiansToTicks(rads));
+	  motor->setAngularVelocity(omega);
   }
 
-  void RobotControl::setRightElbow(int ticks, int delay){
+  void RobotControl::setRightElbow(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_SHOULDER_YAW_ELBOW);
       mb->getMotorByChannel(1)->setDesiredPosition(ticks);
+      mb->getMotorByChannel(1)->setAngularVelocity(omega);
       //ros_gateway->transmit(14,ticks);
   }
 
-  void RobotControl::setRightElbowRad(double rads, int delay){
+  void RobotControl::setRightElbowRad(double rads, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_R_SHOULDER_YAW_ELBOW)->getMotorByChannel(1);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
+      motor->setAngularVelocity(omega);
       //ros_gateway->transmit(14,ticks);
   }
 
-  void RobotControl::setRightWristPitch(int ticks, int delay){
+  void RobotControl::setRightWristPitch(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_WRIST_YAW_PITCH);
       mb->getMotorByChannel(1)->setDesiredPosition(ticks);
+      mb->getMotorByChannel(1)->setAngularVelocity(omega);
       //ros_gateway->transmit(16,ticks);
   }
 
-  void RobotControl::setRightWristPitchRad(double rads, int delay){
+  void RobotControl::setRightWristPitchRad(double rads, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_R_WRIST_YAW_PITCH)->getMotorByChannel(1);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
+      motor->setAngularVelocity(omega);
       //ros_gateway->transmit(16,ticks);
   }
 
-  void RobotControl::setRightWristYaw(int ticks, int delay){
+  void RobotControl::setRightWristYaw(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_WRIST_YAW_PITCH);
       mb->getMotorByChannel(0)->setDesiredPosition(ticks);
+      mb->getMotorByChannel(0)->setAngularVelocity(omega);
       //ros_gateway->transmit(17,ticks);
   }
 
-  void RobotControl::setRightWristYawRad(double rads, int delay){
+  void RobotControl::setRightWristYawRad(double rads, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_R_WRIST_YAW_PITCH)->getMotorByChannel(0);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
+      motor->setAngularVelocity(omega);
       //ros_gateway->transmit(17,ticks);
   }
 
-  void RobotControl::setLeftHipYaw(int ticks, int delay){
+  void RobotControl::setLeftHipYaw(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_HIP_YAW_ROLL);
       mb->getMotorByChannel(0)->setDesiredPosition(ticks);
+      mb->getMotorByChannel(0)->setAngularVelocity(omega);
       //ros_gateway->transmit(19,ticks);
   }
 
-  void RobotControl::setLeftHipYawRad(double rads, int delay){
+  void RobotControl::setLeftHipYawRad(double rads, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_L_HIP_YAW_ROLL)->getMotorByChannel(0);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
+      motor->setAngularVelocity(omega);
       //ros_gateway->transmit(19,ticks);
   }
 
-  void RobotControl::setLeftHipRoll(int ticks, int delay){
+  void RobotControl::setLeftHipRoll(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_HIP_YAW_ROLL);
       mb->getMotorByChannel(1)->setDesiredPosition(ticks);
+      mb->getMotorByChannel(1)->setAngularVelocity(omega);
       //ros_gateway->transmit(20,ticks);
   }
 
-  void RobotControl::setLeftHipRollRad(double rads, int delay){
+  void RobotControl::setLeftHipRollRad(double rads, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_L_HIP_YAW_ROLL)->getMotorByChannel(1);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
+      motor->setAngularVelocity(omega);
       //ros_gateway->transmit(20,ticks);
   }
 
-  void RobotControl::setLeftHipPitch(int ticks, int delay){
+  void RobotControl::setLeftHipPitch(int ticks, double omega, int delay){
 	  MotorBoard* mb = this->state->getBoardByNumber(BNO_L_HIP_PITCH);
 	  mb->getMotorByChannel(0)->setDesiredPosition(ticks);
+	  mb->getMotorByChannel(0)->setAngularVelocity(omega);
       //ros_gateway->transmit(21,ticks);
   }
 
-  void RobotControl::setLeftHipPitchRad(double rads, int delay){
+  void RobotControl::setLeftHipPitchRad(double rads, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_L_HIP_PITCH)->getMotorByChannel(0);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
+      motor->setAngularVelocity(omega);
   }
 
-  void RobotControl::setLeftKnee(int ticks, int delay){
+  void RobotControl::setLeftKnee(int ticks, double omega, int delay){
 	  MotorBoard* mb = this->state->getBoardByNumber(BNO_L_KNEE);
       mb->getMotorByChannel(0)->setDesiredPosition(ticks);
+      mb->getMotorByChannel(0)->setAngularVelocity(omega);
       //ros_gateway->transmit(22,ticks);
   }
 
-  void RobotControl::setLeftKneeRad(double rads, int delay){
+  void RobotControl::setLeftKneeRad(double rads, double omega, int delay){
 	  HuboMotor* motor = this->state->getBoardByNumber(BNO_L_KNEE)->getMotorByChannel(0);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
+      motor->setAngularVelocity(omega);
       //ros_gateway->transmit(22,ticks);
   }
 
-  void RobotControl::setLeftAnklePitch(int ticks, int delay){
+  void RobotControl::setLeftAnklePitch(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_ANKLE_PITCH_ROLL);
       mb->getMotorByChannel(0)->setDesiredPosition(ticks);
+      mb->getMotorByChannel(0)->setAngularVelocity(omega);
       //ros_gateway->transmit(23,ticks);
   }
 
-  void RobotControl::setLeftAnklePitchRad(double rads, int delay){
+  void RobotControl::setLeftAnklePitchRad(double rads, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_L_ANKLE_PITCH_ROLL)->getMotorByChannel(0);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
+      motor->setAngularVelocity(omega);
       //ros_gateway->transmit(23,ticks);
   }
 
-  void RobotControl::setLeftAnkleRoll(int ticks, int delay){
+  void RobotControl::setLeftAnkleRoll(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_L_ANKLE_PITCH_ROLL);
       mb->getMotorByChannel(1)->setDesiredPosition(ticks);
+      mb->getMotorByChannel(1)->setAngularVelocity(omega);
       //ros_gateway->transmit(24,ticks);
   }
 
-  void RobotControl::setLeftAnkleRollRad(double rads, int delay){
+  void RobotControl::setLeftAnkleRollRad(double rads, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_L_ANKLE_PITCH_ROLL)->getMotorByChannel(1);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
+      motor->setAngularVelocity(omega);
       //ros_gateway->transmit(24,ticks);
   }
 
-  void RobotControl::setRightHipYaw(int ticks, int delay){
+  void RobotControl::setRightHipYaw(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
       mb->getMotorByChannel(0)->setDesiredPosition(ticks);
+      mb->getMotorByChannel(0)->setAngularVelocity(omega);
       //ros_gateway->transmit(26,ticks);
       //this->canDownPort->write(buildCanMessage(out));
   }
 
-  void RobotControl::setRightHipYawRad(double rads, int delay){
+  void RobotControl::setRightHipYawRad(double rads, double omega, int delay){
         HuboMotor* motor = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL)->getMotorByChannel(0);
         motor->setDesiredPosition(motor->radiansToTicks(rads));
+        motor->setAngularVelocity(omega);
   }
 
-  void RobotControl::setRightHipRoll(int ticks, int delay){
+  void RobotControl::setRightHipRoll(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
       mb->getMotorByChannel(1)->setDesiredPosition(ticks);
+      mb->getMotorByChannel(1)->setAngularVelocity(omega);
       //ros_gateway->transmit(27,ticks);
   }
 
-  void RobotControl::setRightHipRollRad(double rads, int delay){
+  void RobotControl::setRightHipRollRad(double rads, double omega, int delay){
 	  HuboMotor* motor = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL)->getMotorByChannel(1);
 	  motor->setDesiredPosition(motor->radiansToTicks(rads));
+	  motor->setAngularVelocity(omega);
   }
 
-  void RobotControl::setRightHipPitch(int ticks, int delay){
+  void RobotControl::setRightHipPitch(int ticks, double omega, int delay){
 	  MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_PITCH);
       mb->getMotorByChannel(0)->setDesiredPosition(ticks);
+      mb->getMotorByChannel(0)->setAngularVelocity(omega);
       //ros_gateway->transmit(28,ticks);
   }
 
-  void RobotControl::setRightHipPitchRad(double rads, int delay){
+  void RobotControl::setRightHipPitchRad(double rads, double omega, int delay){
 	  HuboMotor* motor = this->state->getBoardByNumber(BNO_R_HIP_PITCH)->getMotorByChannel(0);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
+      motor->setAngularVelocity(omega);
       //ros_gateway->transmit(28,ticks);
   }
 
-  void RobotControl::setRightKnee(int ticks, int delay){
+  void RobotControl::setRightKnee(int ticks, double omega, int delay){
 	  MotorBoard* mb = this->state->getBoardByNumber(BNO_R_KNEE);
       mb->getMotorByChannel(0)->setDesiredPosition(ticks);
+      mb->getMotorByChannel(0)->setAngularVelocity(omega);
       //ros_gateway->transmit(29,ticks);
   }
 
-  void RobotControl::setRightKneeRad(double rads, int delay){
+  void RobotControl::setRightKneeRad(double rads, double omega, int delay){
 	  HuboMotor* motor = this->state->getBoardByNumber(BNO_R_KNEE)->getMotorByChannel(0);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
+      motor->setAngularVelocity(omega);
       //ros_gateway->transmit(29,ticks);
   }
 
-  void RobotControl::setRightAnklePitch(int ticks, int delay){
+  void RobotControl::setRightAnklePitch(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_ANKLE_PITCH_ROLL);
       mb->getMotorByChannel(0)->setDesiredPosition(ticks);
+      mb->getMotorByChannel(0)->setAngularVelocity(omega);
       //ros_gateway->transmit(30,ticks);
   }
 
-  void RobotControl::setRightAnklePitchRad(double rads, int delay){
+  void RobotControl::setRightAnklePitchRad(double rads, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_R_ANKLE_PITCH_ROLL)->getMotorByChannel(0);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
+      motor->setAngularVelocity(omega);
       //ros_gateway->transmit(30,ticks);
   }
 
-  void RobotControl::setRightAnkleRoll(int ticks, int delay){
+  void RobotControl::setRightAnkleRoll(int ticks, double omega, int delay){
       MotorBoard* mb = this->state->getBoardByNumber(BNO_R_ANKLE_PITCH_ROLL);
       mb->getMotorByChannel(1)->setDesiredPosition(ticks);
+      mb->getMotorByChannel(1)->setAngularVelocity(omega);
       //ros_gateway->transmit(31,ticks);
   }
 
-  void RobotControl::setRightAnkleRollRad(double rads, int delay){
+  void RobotControl::setRightAnkleRollRad(double rads, double omega, int delay){
       HuboMotor* motor = this->state->getBoardByNumber(BNO_R_ANKLE_PITCH_ROLL)->getMotorByChannel(1);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
+      motor->setAngularVelocity(omega);
       //ros_gateway->transmit(31,ticks);
   }
 
-  void RobotControl::setRightHand(int f0, int f1, int f2, int f3, int f4, int delay){
+  void RobotControl::setRightHand(int f0, int f1, int f2, int f3, int f4, double omega, int delay){
 	  MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HAND);
 	  mb->getMotorByChannel(0)->setDesiredPosition(f0);
 	  mb->getMotorByChannel(1)->setDesiredPosition(f1);
 	  mb->getMotorByChannel(2)->setDesiredPosition(f2);
 	  mb->getMotorByChannel(3)->setDesiredPosition(f3);
 	  mb->getMotorByChannel(4)->setDesiredPosition(f4);
+	  //TODO: FIXME
   }
 
-  void RobotControl::setLeftHand(int f0, int f1, int f2, int f3, int f4, int delay){
+  void RobotControl::setLeftHand(int f0, int f1, int f2, int f3, int f4, double omega, int delay){
 	  MotorBoard* mb = this->state->getBoardByNumber(BNO_L_HAND);
 	  mb->getMotorByChannel(0)->setDesiredPosition(f0);
 	  mb->getMotorByChannel(1)->setDesiredPosition(f1);
 	  mb->getMotorByChannel(2)->setDesiredPosition(f2);
 	  mb->getMotorByChannel(3)->setDesiredPosition(f3);
 	  mb->getMotorByChannel(4)->setDesiredPosition(f4);
+	  //TODO: FIXME
   }
 
   void RobotControl::enable(int board, int delay){
@@ -983,19 +1087,21 @@ vector<float> trajectoryValues(string path){
 	  return motor != NULL ? motor->requiresMotion() : false;
   }
 
-  void RobotControl::setJoint(string name, int ticks, int delay){
+  void RobotControl::setJoint(string name, int ticks, double omega, int delay){
 	  HuboMotor* motor = this->state->getMotorByName(name);
-	  if (motor != NULL)
+	  if (motor != NULL){
 		  motor->setDesiredPosition(ticks);
-	  else
+		  motor->setAngularVelocity(omega);
+	  } else
 		  std::cout << "Error! Joint " << name << " either does not exist, or has not yet been initialized!" << std::endl;
   }
 
-  void RobotControl::setJointRad(string name, double rads, int delay){
+  void RobotControl::setJointRad(string name, double rads, double omega, int delay){
 	  HuboMotor* motor = this->state->getMotorByName(name);
-	  if (motor != NULL)
+	  if (motor != NULL){
 		  motor->setDesiredPosition(motor->radiansToTicks(rads));
-	  else
+		  motor->setAngularVelocity(omega);
+	  } else
 		  std::cout << "Error! Joint " << name << " either does not exist, or has not yet been initialized!" << std::endl;
   }
 
