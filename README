@@ -40,7 +40,7 @@ Run (MAESTRO only):
 A terminal will open which will permit control of the robot.
 Check the Usage section for available commands.
 
-This option is useful for developers who wish to interface with MAESTRO directly. MAESTRO publishes state information on the /Hubo/HuboCommand ROS Topic. There is also an unused channel for simulation input on ROS Topic < >.
+This option is useful for developers who wish to interface with MAESTRO directly. MAESTRO publishes state information on the /Hubo/HuboCommand ROS Topic. There is also an unused channel for simulation input on ROS Topic or_out.
 
 
 Run (MAESTRO & Hubo-ach):
@@ -83,26 +83,28 @@ Enable control:
 This command is required by the Orocos Deployer to connect to the Robot Control portion of MAESTRO. The following commands can only be run in this context.
 
 Initialize Robot:
-	initRobot("/opt/ros/fuerte/stacks/maestro/maestro/models/hubo_default.xml");
+	initRobot("");
+
+The default directory which this method will fall back to if given an empty string is /opt/ros/fuerte/stacks/maestro/maestro/models/hubo_default.xml.
 
 This command loads Robot configuration information from the xml file specified. Before this command, MAESTRO cannot perform any operations which work with actual robot components (Which all of the following commands do.)
 
 Move Joints:
-	set<Joint Name><Axis>([Ticks], [Delay])
+	set<Joint Name><Axis>([Ticks], [Angular Velocity], [Delay])
 Examples:
-	setRightHipYaw(60000,0);
-	setLeftShoulderPitch(-45000,0);
-	setLeftKnee(50000,0);
+	setRightHipYaw(60000, 3.14, 0);
+	setLeftShoulderPitch(-45000, 1, 0);
+	setLeftKnee(50000, 3.14/2, 0);
 
-These commands allow arbitrary movement of single joints in specific directions as specified by their arguments. You can verify the motion in the offered simulation packages. More involved movements may be programmed using gestures.
+These commands allow arbitrary movement of single joints in specific directions with specifid speeds as specified by their arguments. You can verify the motion in the offered simulation packages. More involved movements may be programmed using gestures. Angular velocity is measured in radians per second, despite the fact that the position input is measured in motor ticks.
 
 
 Moving Joints using Radians:
-	set<Joint Name><Axis>Rad([Radians], [Delay])
+	set<Joint Name><Axis>Rad([Radians], [Angular Velocity], [Delay])
 Example:
-	setRightHipYawRad(3.14,0);
+	setRightHipYawRad(3.14, 3.14, 0);
 
-These commands offer the same movement capabilities as the non-radian versions. Each command converts radians to motor ticks using gear ratio conversions specific to each joint and axis.
+These commands offer the same movement capabilities as the non-radian versions. Each command converts radians to motor ticks using gear ratio conversions specific to each joint and axis. Angular velocity is measured in radians per second.
 
 
 Running Gestures:
@@ -114,7 +116,7 @@ Gesture name is the name of the program inside of the .ops file, NOT the name of
 
 
 Uninstallation:
-Navigate to /install/uninstall
+Navigate to <Maestro Install Directory>/install/uninstall
 Run:
 	source uninstall.sh
 
