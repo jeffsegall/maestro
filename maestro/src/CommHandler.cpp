@@ -26,6 +26,7 @@ using namespace std;
 	void CommHandler::update(){
 		hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
 		hubomsg::CanMessage canMessage = hubomsg::CanMessage();
+		hubomsg::HuboState achState = hubomsg::HuboState();
 
 		if (NewData == this->canPort->read(canMessage)){
 			//Received update from CanGateway
