@@ -130,6 +130,7 @@ public:
 
     vector<string> getGestureScripts(string path);
     string getDefaultInitPath(string path);
+    CommHandler* getCommHandler();
 
 private:
 

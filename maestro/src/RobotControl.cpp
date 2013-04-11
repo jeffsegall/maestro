@@ -438,6 +438,8 @@ RobotControl::RobotControl(const std::string& name):
 	    	.arg("Name", "The name of the gesture to load.")
 			.arg("Board", "The board on which to run the gesture.");
 
+    this->addOperation("getCommHandler", &RobotControl::getCommHandler, this, RTT::OwnThread);
+
     this->written = 0;
     this->printNow = false;
     this->enableControl = false;
@@ -1147,6 +1149,10 @@ vector<float> trajectoryValues(string path){
 		std::cout << "Error. Program not running." << std::endl;
 	  if (scripting->inProgramError(name))
 		std::cout << "Error. Program has encountered an error. " << std::endl;
+  }
+
+  CommHandler* RobotControl::getCommHandler(){
+	  return this->commHandler;
   }
 
 ORO_CREATE_COMPONENT_LIBRARY()
