@@ -269,22 +269,22 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightHipYawRad", &RobotControl::setRightHipYawRad, this, RTT::OwnThread)
-		.doc("Set Right Hip Yaw")
-		.arg("Rads", "New radians for right hip yaw.")
-    		.arg("Omega", "Angular Velocity in radians/sec.")
-		.arg("Timestamp", "Timestamp delay (in milliseconds)");
+			.doc("Set Right Hip Yaw")
+			.arg("Rads", "New radians for right hip yaw.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
 	this->addOperation("setRightHipRoll", &RobotControl::setRightHipRoll, this, RTT::OwnThread)
-		.doc("Set Right Hip Roll")
-		.arg("Value", "New ticks for right hip roll.")
-       		.arg("Omega", "Angular Velocity in radians/sec.")
-		.arg("Timestamp", "Timestamp delay (in milliseconds)");
+			.doc("Set Right Hip Roll")
+			.arg("Value", "New ticks for right hip roll.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightHipRollRad", &RobotControl::setRightHipRollRad, this, RTT::OwnThread)
-		.doc("Set Right Hip Yaw")
-		.arg("Rads", "New radians for right hip roll.")
-            	.arg("Omega", "Angular Velocity in radians/sec.")
-		.arg("Timestamp", "Timestamp delay (in milliseconds)");
+			.doc("Set Right Hip Yaw")
+			.arg("Rads", "New radians for right hip roll.")
+            .arg("Omega", "Angular Velocity in radians/sec.")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setRightHipPitch", &RobotControl::setRightHipPitch, this, RTT::OwnThread)
             .doc("Set Right Hip Pitch")
@@ -335,27 +335,27 @@ RobotControl::RobotControl(const std::string& name):
             .arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("setJoint", &RobotControl::setJoint, this, RTT::OwnThread)
-		.doc("Set Joint")
-		.arg("Name", "Name of joint to move.")
-		.arg("Value", "New ticks for given joint.")
+			.doc("Set Joint")
+			.arg("Name", "Name of joint to move.")
+			.arg("Value", "New ticks for given joint.")
             .arg("Omega", "Angular Velocity in radians/sec.")
-		.arg("Timestamp", "Timestamp delay (in milliseconds)");
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
 	this->addOperation("setJointRad", &RobotControl::setJointRad, this, RTT::OwnThread)
-		.doc("Set Joint")
-		.arg("Name", "Name of joint to move.")
-		.arg("Rads", "New radians for given joint.")
+			.doc("Set Joint")
+			.arg("Name", "Name of joint to move.")
+			.arg("Rads", "New radians for given joint.")
             .arg("Omega", "Angular Velocity in radians/sec.")
-		.arg("Timestamp", "Timestamp delay (in milliseconds)");
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
 	this->addOperation("homeJoint", &RobotControl::homeJoint, this, RTT::OwnThread)
-		.doc("Home Joint")
-		.arg("Name", "Name of joint to send to home.")
-		.arg("Timestamp", "Timestamp delay (in milliseconds)");
+			.doc("Home Joint")
+			.arg("Name", "Name of joint to send to home.")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
 	this->addOperation("homeAll", &RobotControl::homeAll, this, RTT::OwnThread)
-		.doc("Home All")
-		.arg("Timestamp", "Timestamp delay (in milliseconds)");
+			.doc("Home All")
+			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("initRobot", &RobotControl::initRobot, this, RTT::OwnThread)
             .doc("Initialize a robot")
@@ -852,6 +852,12 @@ vector<float> trajectoryValues(string path){
 	  HuboMotor* motor = this->state->getBoardByNumber(BNO_L_KNEE)->getMotorByChannel(0);
       motor->setDesiredPosition(motor->radiansToTicks(rads));
       motor->setAngularVelocity(omega);
+      //ros_gateway->transmit(22,ticks);
+  }
+
+  void RobotControl::setLeftAnklePitch(int ticks, double omega, int delay){
+      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_ANKLE_PITCH_ROLL);
+      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
       mb->getMotorByChannel(0)->setAngularVelocity(omega);
       //ros_gateway->transmit(23,ticks);
   }
