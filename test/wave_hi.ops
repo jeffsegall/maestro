@@ -1,0 +1,30 @@
+program wave_hi{
+
+  do setLeftShoulderYawRad(3.14/2,1,0);
+  while RobotControl.requiresMotion(11, 0, 0){do nothing}
+  
+  do setLeftShoulderRollRad(3.14/180*80,1,0);
+  while RobotControl.requiresMotion(10, 1, 0){do nothing}
+  
+  do setLeftElbowRad(-3.14/2,1,0);
+  while RobotControl.requiresMotion(11, 1, 0){do nothing}
+  
+  do setLeftElbowRad(-3.14/180*60,1,0);
+  while RobotControl.requiresMotion(11, 1, 0){do nothing}
+  
+  do setLeftElbowRad(-3.14/2,1,0);
+  while RobotControl.requiresMotion(11, 1, 0){do nothing}
+  
+  do setLeftElbowRad(-3.14/180*60,1,0);
+  while RobotControl.requiresMotion(11, 1, 0){do nothing}
+  
+  do setLeftShoulderRollRad(0,1,0);
+  while RobotControl.requiresMotion(10, 1, 0){do nothing}
+  
+  do setLeftElbowRad(0,1,0);
+  while RobotControl.requiresMotion(11, 1, 0){do nothing}
+  
+  do setLeftShoulderYawRad(0,1,0);
+  while RobotControl.requiresMotion(11, 0, 0){do nothing}
+
+}
