@@ -12,16 +12,21 @@
 
 using namespace std;
 
-	CommHandler::CommHandler (InputPort<hubomsg::CanMessage>* port1, InputPort<hubomsg::HuboCmd>* port2){
+	CommHandler::CommHandler (InputPort<hubomsg::CanMessage>* port1,
+			InputPort<hubomsg::HuboCmd>* port2,
+			InputPort<hubomsg::HuboState>* port3){
 		canPort = port1;
 		orPort = port2;
+		achPort = port3;
 
 		newCanData = false;
+		newAchData = false;
 	}
 
 	void CommHandler::update(){
 		hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
 		hubomsg::CanMessage canMessage = hubomsg::CanMessage();
+		hubomsg::HuboState achState = hubomsg::HuboState();
 
 		if (NewData == this->canPort->read(canMessage)){
 			//Received update from CanGateway
@@ -30,7 +35,12 @@ using namespace std;
 
 		}
 		if (NewData == this->orPort->read(huboCmd)){
+			this->newORData = true;
 			this->currCmd = huboCmd;
+		}
+		if (NewData == this->achPort->read(achState)){
+			this->newAchData = true;
+			this->currState = achState;
 		}
 	}
 
@@ -40,10 +50,24 @@ using namespace std;
 	}
 
 	hubomsg::HuboCmd CommHandler::getCmd(){
+		newORData = false;
 		return currCmd;
 	}
 
-	bool CommHandler::isNew(){
-		return newCanData;
+	hubomsg::HuboState CommHandler::getState(){
+		newAchData = false;
+		return currState;
+	}
+
+	bool CommHandler::isNew(int port){
+		switch (port){
+		case 1:
+			return newCanData;
+		case 2:
+			return newORData;
+		case 3:
+			return newAchData;
+		}
+		return false;
 	}
 

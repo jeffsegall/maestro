@@ -8,11 +8,13 @@ RobotControl::RobotControl(const std::string& name):
     
     this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
     //this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
+    this->huboUpPort = new InputPort<hubomsg::HuboState>("Hubo/HuboState");
 	this->huboDownPort = new OutputPort<hubomsg::HuboCommand>("Hubo/HuboCommand");
 	this->achDownPort = new OutputPort<hubomsg::AchCommand>("Hubo/AchCommand");
+
     this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
     this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
-    this->commHandler = new CommHandler(canUpPort, orOutPort);
+    this->commHandler = new CommHandler(canUpPort, orOutPort, huboUpPort);
 
     //CAN QUEUES
     this->inputQueue = new queue<hubomsg::CanMessage>();
@@ -21,6 +23,7 @@ RobotControl::RobotControl(const std::string& name):
     
     //CAN PORTS 
     this->addEventPort(*canUpPort);
+    this->addEventPort(*huboUpPort);
     this->addPort(*huboDownPort);
     this->addPort(*achDownPort);
 
@@ -435,6 +438,8 @@ RobotControl::RobotControl(const std::string& name):
 	    	.arg("Name", "The name of the gesture to load.")
 			.arg("Board", "The board on which to run the gesture.");
 
+    this->addOperation("getCommHandler", &RobotControl::getCommHandler, this, RTT::OwnThread);
+
     this->written = 0;
     this->printNow = false;
     this->enableControl = false;
@@ -472,30 +477,23 @@ vector<float> trajectoryValues(string path){
     
     hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
     hubomsg::CanMessage canMessage = hubomsg::CanMessage();
+    hubomsg::HuboState huboState = hubomsg::HuboState();
 
-    //commHandler->update();
+    commHandler->update();
 
-    MotorBoard* mb;
-    if (state != NULL)
-    	mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
-
-    if (false /*commHandler->isNew()*/){
+    if (commHandler->isNew(1)){
         //Received update from CanGateway
-
-    	canMessage = commHandler->getMessage();
-
-    	if (canMessage.mType == RX_ENC_VAL+BNO_R_HIP_YAW_ROLL){
-    		long yaw_ticks = canMessage.r1;
-    		long roll_ticks = canMessage.r2;
-    		vector<long> ticks(2);
-    		ticks[0] = yaw_ticks;
-    		ticks[1] = roll_ticks;
-    		std::cout << "Encoder Position value received! ticks: " << std::endl << "yaw: " << yaw_ticks << std::endl << "roll: " << roll_ticks << std::endl;
-    		std::cout << "In Radians: yaw: " << mb->getMotorByChannel(0)->ticksToRadians(ticks[0]) << std::endl << "roll: " << mb->getMotorByChannel(0)->ticksToRadians(ticks[1]) << std::endl;
-    	}
+    	canMessage = commHandler->getMessage(); //Deprecated - Soon to be phased out
     }
-    if (NewData == this->orOutPort->read(huboCmd)){
+    if (commHandler->isNew(2)){
         //Recieved update from openRAVE
+    	huboCmd = commHandler->getCmd();
+    }
+    if (commHandler->isNew(3)){
+    	//Received update from Hubo-Ach
+    	huboState = commHandler->getState();
+
+    	//TODO: Update state across all sensors and values.
     }
 
     if (huboOutputQueue->empty() && state != NULL && !this->state->getBoards().empty()) {
@@ -1151,6 +1149,10 @@ vector<float> trajectoryValues(string path){
 		std::cout << "Error. Program not running." << std::endl;
 	  if (scripting->inProgramError(name))
 		std::cout << "Error. Program has encountered an error. " << std::endl;
+  }
+
+  CommHandler* RobotControl::getCommHandler(){
+	  return this->commHandler;
   }
 
 ORO_CREATE_COMPONENT_LIBRARY()

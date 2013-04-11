@@ -130,6 +130,7 @@ public:
 
     vector<string> getGestureScripts(string path);
     string getDefaultInitPath(string path);
+    CommHandler* getCommHandler();
 
 private:
 
@@ -137,6 +138,7 @@ private:
     //SUBSCRIBE
     InputPort<hubomsg::CanMessage>* canUpPort;
     InputPort<hubomsg::HuboCmd>* orOutPort;
+    InputPort<hubomsg::HuboState>* huboUpPort;
     CommHandler* commHandler;
 
     //PUBLISH
@@ -148,6 +150,7 @@ private:
     HuboState* state;
 
     queue<hubomsg::CanMessage>* inputQueue;
+    queue<hubomsg::HuboState>*	huboInputQueue;
     queue<hubomsg::HuboCommand>* huboOutputQueue;
     queue<hubomsg::AchCommand>* achOutputQueue;
 
