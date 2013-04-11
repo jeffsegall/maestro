@@ -9,6 +9,10 @@
 #include <rtt/Component.hpp>
 #include <hubomsg/typekit/HuboCmd.h>
 #include <hubomsg/typekit/CanMessage.h>
+#include <hubomsg/typekit/HuboJointState.h>
+#include <hubomsg/typekit/HuboState.h>
+#include <hubomsg/typekit/HuboCommand.h>
+#include <hubomsg/typekit/HuboJointCommand.h>
 #include <string>
 #include "huboCan.h"
 #include "ros/ros.h"
@@ -31,19 +35,20 @@ class MotorBoard{// : public RTT::TaskContext {
         vector<HuboMotor*> motors;
 
         //PUBLISH
-        OutputPort<hubomsg::CanMessage>* canDownPort;
+        //OutputPort<hubomsg::CanMessage>* canDownPort;
         OutputPort<hubomsg::HuboCmd>* orInPort;
+        OutputPort<hubomsg::HuboCommand> HuboDownPort;
 
         //SUBSCRIBE
         InputPort<hubomsg::CanMessage>* canUpPort;
         InputPort<hubomsg::HuboCmd>* orOutPort;
 
-        queue<hubomsg::CanMessage>* outQueue;
+        queue<hubomsg::HuboCommand>* outQueue;
  
     public:
         
         MotorBoard();
-        MotorBoard(boardNum BNO, int channels, queue<hubomsg::CanMessage>* outQueue);
+        MotorBoard(boardNum BNO, int channels, queue<hubomsg::HuboCommand>* outQueue);
         MotorBoard(const MotorBoard& rhs);
 
         void addMotor(HuboMotor* motor, int channel);
@@ -52,7 +57,9 @@ class MotorBoard{// : public RTT::TaskContext {
         void setTicksPosition(vector<long> ticks);
         HuboMotor* getMotorByChannel(int channel);
         boardNum getBoardNumber();
+        int getNumChannels();
         bool requiresMotion();
+        bool requiresMotion(int channel);
 
         // PROTOCOL MOTOR COMMANDS
 
@@ -89,7 +96,7 @@ class MotorBoard{// : public RTT::TaskContext {
         //PROTOCOL REFERENCE MESSAGES
 
         canMsg* sendPositionReference(vector<int> REF, int MAX_STEP = 75, int MIN_STEP = 5);
-        canMsg* sendPositionReference(int MAX_STEP = 250, int MIN_STEP = 5);
+        vector<hubomsg::HuboJointCommand> sendPositionReference(int MAX_STEP = 0, int MIN_STEP = 5);
         /*
         canMsg* sendPositionReference(char REF0, char REF1, char REF2);
         canMsg* sendPositionReference(char REF0, char REF1, char REF2, char REF3, char REF4);

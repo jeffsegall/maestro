@@ -1,9 +1,11 @@
 #include "HuboMotor.h"
+#include <string>
 #include <iostream>
 
 HuboMotor::HuboMotor(){
     this->ticks_position = 0;
     this->desired_position = 0;
+    this->omega = MAX_ANGULAR_VELOCITY;
 }
 
 HuboMotor::HuboMotor(long mpos1, long mpos2, long kp, long kd, long ki,
@@ -36,6 +38,7 @@ HuboMotor::HuboMotor(long mpos1, long mpos2, long kp, long kd, long ki,
     this->b_err = b_err;
     this->ticks_position = 0;
     this->desired_position = 0;
+    this->omega = MAX_ANGULAR_VELOCITY;
 }
 
 HuboMotor::HuboMotor(const HuboMotor& rhs){
@@ -64,6 +67,11 @@ HuboMotor::HuboMotor(const HuboMotor& rhs){
     this->b_err = rhs.b_err;
     this->ticks_position = rhs.ticks_position;
     this->desired_position = rhs.desired_position;
+    this->omega = rhs.omega;
+}
+
+void HuboMotor::setName(string name){
+	this->name = name;
 }
 
 void HuboMotor::setUpperLimit(long limit){
@@ -138,6 +146,14 @@ void HuboMotor::setTicksPosition(long ticks){
 
 void HuboMotor::setDesiredPosition(long ticks){
 	this->desired_position = ticks;
+}
+
+void HuboMotor::setAngularVelocity(double omega){
+	this->omega = omega;
+}
+
+string HuboMotor::getName(){
+	return name;
 }
 
 long HuboMotor::getUpperLimit(){
@@ -252,6 +268,10 @@ long HuboMotor::getDesiredPosition(){
 	return this->desired_position;
 }
 
+bool HuboMotor::requiresMotion(){
+	return desired_position - ticks_position != 0;
+}
+
 double HuboMotor::ticksToRadians(long ticks){
 	return (ticks * (double)(this->drive * 2 * M_PI))/(this->driven * this->harm * this->enc);
 }
@@ -262,6 +282,9 @@ long HuboMotor::radiansToTicks(double rad){
 
 long HuboMotor::interpolate(int MAX_STEP, int MIN_STEP){
 	const float LEAP_PERCENTAGE = .5;
+	const int FREQUENCY = 100; //Hertz
+	if (MAX_STEP == 0)
+		MAX_STEP = radiansToTicks(omega) / 100;
 
 	int error = desired_position - ticks_position;
 	int output = desired_position;

@@ -1,0 +1,72 @@
+URDF::
+
+LWY	- Left Wrist Yaw
+LWP - Left Wrist Pitch
+LAR - Left Ankle Roll
+HNR - Head Neck Roll ???
+LKP - Left Knee Pitch
+RWP - Right Wrist Pitch
+RKP - Right Knee Pitch
+LSR - Left Shoulder Roll
+LSP - Left Shoulder Pitch
+RAR - Right Ankle Roll
+REP - Right Elbow Pitch
+LSY - Left Shoulder Yaw
+HPY - Waist
+RAP - Right Ankle Pitch
+LHR - Left Hip Roll
+LHP - Left Hip Pitch
+LHY - Left Hip Yaw
+RHY - Right Hip Yaw
+HNP - Head Neck Pitch ???
+LAP - Left Ankle Pitch
+RHR - Right Hip Roll
+LEP - Left Elbow Pitch
+RSY - Right Shoulder Yaw
+RHP - Right Hip Pitch
+RWY - Right Wrist Yaw
+RSP - Right Shoulder Pitch
+RSR - Right Shoulder Roll
+
+HuboAch::
+WST - Waist						HPY
+NKY - Neck Yaw
+NK1 - Neck 1
+NK2 - Neck 2
+NKP - Neck Pitch
+LSP - Left Shoulder Pitch		LSP
+LSR - Left Shoulder Roll		LSR
+LSY - Left Shoulder Yaw			LSY
+LEB - Left Elbow				LEP
+LWY - Left Wrist Yaw			LWY
+LWP - Left Wrist Pitch			LWP
+LWR - Left Wrist Roll			LWR
+RSP - Right Shoulder Pitch		RSP
+RSR - Right Shoulder Roll		RSR
+RSY - Right Shoulder Yaw		RSY 
+REB - Right Elbow				REP
+RWY - Right Wrist Yaw			RWY
+RWP - Right Wrist Pitch			RWP
+RWR - Right Wrist Roll			RWR
+LHY - Left Hip Yaw				LHY
+LHR - Left Hip Roll				LHR
+LHP - Left Hip Pitch			LHP
+LKN - Left Knee					LKP
+LAP - Left Ankle Pitch			LAP
+LAR - Left Ankle Roll			LAR
+RHY - Right Hip Yaw				RHY
+RHR - Right Hip Roll			RHR
+RHP - Right Hip Pitch			RHP
+RKN - Right Knee				RKP
+RAP - Right Ankle Pitch			RAP
+RAR - Right Ankle Roll			RAR
+RF1 - Right Finger 1
+RF2 - Right Finger 2
+RF3 - Right Finger 3
+RF4 - Right Finger 4
+RF5 - Right Finger 5
+LF1 - Left Finger 1
+LF2 - Left Finger 2
+LF3 - Left Finger 3
+LF4 - Left Finger 4
+LF5 - Left Finger 5

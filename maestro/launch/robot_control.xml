@@ -15,11 +15,17 @@
   <simple name="transport" type="short"><value>3</value></simple><!--3 means ROS-->
   <simple name="name_id" type="string"><value>or_out</value></simple>
 </struct>
-<struct name="CANDown" type="ConnPolicy">
+<struct name="HUBOCommand" type="ConnPolicy">
   <simple name="type" type="short"><value>0</value></simple><!-- type of connection: 0 means Data -->
   <simple name="size" type="short"><value>1000</value></simple><!-- buffer size -->
   <simple name="transport" type="short"><value>3</value></simple><!--3 means ROS-->
-  <simple name="name_id" type="string"><value>can_down</value></simple>
+  <simple name="name_id" type="string"><value>Hubo/HuboCommand</value></simple>
+</struct>
+<struct name="ACHCommand" type="ConnPolicy">
+  <simple name="type" type="short"><value>0</value></simple><!-- type of connection: 0 means Data -->
+  <simple name="size" type="short"><value>1000</value></simple><!-- buffer size -->
+  <simple name="transport" type="short"><value>3</value></simple><!--3 means ROS-->
+  <simple name="name_id" type="string"><value>Hubo/AchCommand</value></simple>
 </struct>
 <struct name="CANUp" type="ConnPolicy">
   <simple name="type" type="short"><value>0</value></simple><!-- type of connection: 0 means Data -->
@@ -27,8 +33,6 @@
   <simple name="transport" type="short"><value>3</value></simple><!--3 means ROS-->
   <simple name="name_id" type="string"><value>can_up</value></simple>
 </struct>
-
-
 
 
 <struct name="RobotControl" type="RobotControl">
@@ -42,7 +46,8 @@
   <struct name="Ports" type="PropertyBag">
     <simple name="or_in" type="string"><value> OpenRaveIn </value></simple>
     <simple name="or_out" type="string"><value> OpenRaveOut </value></simple>
-    <simple name="can_down" type="string"><value> CANDown </value></simple>
+    <simple name="Hubo/HuboCommand" type="string"><value> HUBOCommand </value></simple>
+    <simple name="Hubo/AchCommand" type="string"><value> ACHCommand </value></simple>
     <simple name="can_up" type="string"><value> CANUp </value></simple>
   </struct>
   <simple name="Service" type="string"><value>rosparam</value></simple>

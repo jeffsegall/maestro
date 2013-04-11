@@ -15,7 +15,7 @@ using std::string;
 *
 * @param	path		The file path of the XML representation
 ******************************************************************************/
-void HuboState::initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* outQueue){
+void HuboState::initHuboWithDefaults(string path, queue<hubomsg::HuboCommand>* outQueue){
     pugi::xml_document doc;
     if (!doc.load_file(path.c_str())){
         std::cout << "No such file, " << path.c_str() << std::endl;
@@ -46,13 +46,15 @@ void HuboState::initHuboWithDefaults(string path, queue<hubomsg::CanMessage>* ou
         //hardware.
 
         for (pugi::xml_node motor = board.first_child(); motor; motor = motor.next_sibling()){
-            std::cout << "Motor: " << motor.attribute("name").as_string() << std::endl;
+        	string name = motor.attribute("name").as_string();
+            std::cout << "Motor: " << name << std::endl;
             
             HuboMotor* hm = new HuboMotor();
             int CH = motor.attribute("channel").as_int();
         
             mb->addMotor(hm, CH);
             std::cout << "Added motor to: " << mb->getMotorByChannel(CH) << std::endl;
+            mb->getMotorByChannel(CH)->setName(name);
             mb->resetEncoderToZero(CH);
             mb->initBoard();
             mb->setLowerPosLimit(CH, 3, motor.attribute("mpos1").as_int());
@@ -123,6 +125,16 @@ MotorBoard* HuboState::getBoardByNumber(boardNum number){
 	for (int i = 0; i < boards.size(); i++){
 		if (boards[i]->getBoardNumber() == number){
 			return boards[i];
+		}
+	}
+	return NULL;
+}
+
+HuboMotor* HuboState::getMotorByName(string name){
+	for (vector<MotorBoard*>::iterator it = boards.begin(); it != boards.end(); it++){
+		for (int i = 0; i < (*it)->getNumChannels(); i++){
+			if ((*it)->getMotorByChannel(i)->getName().compare(name) == 0)
+				return (*it)->getMotorByChannel(i);
 		}
 	}
 	return NULL;

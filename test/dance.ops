@@ -1,0 +1,31 @@
+program dance {
+	var double speed = .5;
+	do RobotControl.setRightKneeRad(1.2, speed,0)
+	do RobotControl.setLeftKneeRad(1.2, speed,0)
+
+	do RobotControl.setRightAnklePitchRad(-.77, speed,0)
+	do RobotControl.setLeftAnklePitchRad(-.77, speed,0)
+
+	while (RobotControl.requiresMotion(2, 0, 0)){
+		do nothing
+	} 
+
+	while (RobotControl.requiresMotion(6, 0, 0)){
+		do nothing
+	}
+	
+	while (RobotControl.requiresMotion(3, 0, 0)){
+		do nothing
+	}
+
+	while (RobotControl.requiresMotion(7, 0, 0)){
+		do nothing
+	}
+	
+	do RobotControl.setRightKneeRad(0, speed,0)
+	do RobotControl.setLeftKneeRad(0, speed,0)
+	
+	do RobotControl.setRightAnklePitchRad(0, speed,0)
+	do RobotControl.setLeftAnklePitchRad(0, speed,0)
+	
+}

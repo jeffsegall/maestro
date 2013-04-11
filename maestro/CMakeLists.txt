@@ -12,17 +12,20 @@ set(ROS_BUILD_TYPE RelWithDebInfo)
 rosbuild_init()
 
 rosbuild_find_ros_package(rtt )
-find_package(Orocos-RTT HINTS ${rtt_PACKAGE_PATH}/install )
+find_package(Orocos-RTT HINTS ${rtt_PACKAGE_PATH}/install)
+find_package(Orocos-RTT REQUIRED rtt-scripting)
 
 rosbuild_genmsg()
 # Defines the orocos_* cmake macros. See that file for additional
 # documentation.
+
 include(${OROCOS-RTT_USE_FILE_PATH}/UseOROCOS-RTT.cmake)
+
 
 #common commands for building c++ executables and libraries
 orocos_component(${PROJECT_NAME} src/RobotControl.cpp src/HuboMotor.cpp src/huboCan.cpp src/MotorBoard.cpp src/HuboState.cpp src/pugixml.cpp)
 orocos_component(${PROJECT_NAME} src/CanGateway.cpp src/huboCan.cpp src/CommHandler.cpp)
-#target_link_libraries(${PROJECT_NAME} another_library)
+target_link_libraries(${PROJECT_NAME} ${OROCOS-RTT_RTT-SCRIPTING_LIBRARY})
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
 #rosbuild_add_executable(example examples/example.cpp)

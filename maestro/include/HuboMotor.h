@@ -3,6 +3,11 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <string>
+
+#define MAX_ANGULAR_VELOCITY 2
+
+using namespace std;
 
 /* The HuboMotor class defines some state parameters for a single motor in the HUBO+ */
 
@@ -12,6 +17,7 @@ class HuboMotor {
 	
 	//This is an exhaustive list of parameters supported by the motors and may be overkill
 	//in the initial stages of the system.
+	string name;
 	
 	long mpos1, mpos2;              //Limit positions
 	long Kp, Kd, Ki;                //Position Gain
@@ -28,6 +34,7 @@ class HuboMotor {
 
 	long ticks_position;            //Current position in ticks from zero
 	long desired_position;			//Current goal position in ticks from zero
+	double omega;					//Angular velocity in radians/sec
 	
 	public:
 
@@ -38,6 +45,7 @@ class HuboMotor {
                   long v_max, long a_max, long jam_lim, long jamd,
                   long pwm_lim, long i_err, long b_err);	
         HuboMotor(const HuboMotor& rhs);
+    void setName(string name);
 	void setUpperLimit(long limit);
 	void setLowerLimit(long limit);
 	void setPositionGain(long kp, long kd, long ki);
@@ -52,7 +60,9 @@ class HuboMotor {
 	void setGearRatios(long drive, long driven, long harm, long enc);
 	void setTicksPosition(long ticks);
 	void setDesiredPosition(long ticks);
+	void setAngularVelocity(double omega);
 	
+		string getName();
         long getUpperLimit();
         long getLowerLimit();
         long getKp();
@@ -82,6 +92,7 @@ class HuboMotor {
 	
 	long getTicksPosition();
 	long getDesiredPosition();
+	bool requiresMotion();
 
 	double ticksToRadians(long ticks);
 	long radiansToTicks(double rads);
