@@ -27,6 +27,12 @@
   <simple name="transport" type="short"><value>3</value></simple><!--3 means ROS-->
   <simple name="name_id" type="string"><value>Hubo/AchCommand</value></simple>
 </struct>
+<struct name="HuboState" type="ConnPolicy">
+  <simple name="type" type="short"><value>0</value></simple><!-- type of connection: 0 means Data -->
+  <simple name="size" type="short"><value>1000</value></simple><!-- buffer size -->
+  <simple name="transport" type="short"><value>3</value></simple><!--3 means ROS-->
+  <simple name="name_id" type="string"><value>Hubo/HuboState</value></simple>
+</struct>
 <struct name="CANUp" type="ConnPolicy">
   <simple name="type" type="short"><value>0</value></simple><!-- type of connection: 0 means Data -->
   <simple name="size" type="short"><value>1000</value></simple><!-- buffer size -->
@@ -48,6 +54,7 @@
     <simple name="or_out" type="string"><value> OpenRaveOut </value></simple>
     <simple name="Hubo/HuboCommand" type="string"><value> HUBOCommand </value></simple>
     <simple name="Hubo/AchCommand" type="string"><value> ACHCommand </value></simple>
+    <simple name="Hubo/HuboState" type="string"><value> HuboState </value></simple>
     <simple name="can_up" type="string"><value> CANUp </value></simple>
   </struct>
   <simple name="Service" type="string"><value>rosparam</value></simple>
