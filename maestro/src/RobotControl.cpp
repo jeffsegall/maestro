@@ -14,7 +14,7 @@ RobotControl::RobotControl(const std::string& name):
 
     this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
     this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
-    this->commHandler = new CommHandler(canUpPort, orOutPort);
+    this->commHandler = new CommHandler(canUpPort, orOutPort, huboUpPort);
 
     //CAN QUEUES
     this->inputQueue = new queue<hubomsg::CanMessage>();
