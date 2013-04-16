@@ -220,7 +220,7 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::buildHuboCommandMessage(hubomsg::HuboJointCommand& state, hubomsg::HuboCommand& message){
-	  messagejoints.push_back(state);
+	  message.joints.push_back(state);
 	  message.num_joints = message.joints.size();
   }
 
