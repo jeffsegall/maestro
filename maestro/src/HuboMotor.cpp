@@ -344,7 +344,8 @@ double HuboMotor::interpolate(){
 
 	double error = currGoal - interStep;
 	if (error == 0) return currGoal;
-	std::cout << error;
+	std::cout << MAX_STEP << std::endl;
+	std::cout << error << std::endl;
 	double output = currGoal;
 
 	if((abs(error) > MIN_STEP)){
@@ -358,6 +359,7 @@ double HuboMotor::interpolate(){
 
 	output += interStep;
 	interStep = output;
+	cout << output << std::endl;
 	return interStep;
 }
 
