@@ -53,6 +53,19 @@ HuboMotor::HuboMotor(long mpos1, long mpos2, long kp, long kd, long ki,
     this->ticks_position = 0;
     this->desired_position = 0;
     this->omega = MAX_ANGULAR_VELOCITY;
+
+    currGoal = 0;
+	interStep = 0;
+	interVel = 0;
+
+	currVel = 0;
+	currPos = 0;
+	currCurrent = 0;
+	currTemp = 0;
+
+	enabled = false;
+	homed = false;
+	zeroed = false;
 }
 
 HuboMotor::HuboMotor(const HuboMotor& rhs){
@@ -330,6 +343,8 @@ double HuboMotor::interpolate(){
 	const double MAX_STEP = interVel/100; //Radians per second, divided by our operating frequency.
 
 	double error = currGoal - interStep;
+	if (error == 0) return currGoal;
+	std::cout << error;
 	double output = currGoal;
 
 	if((abs(error) > MIN_STEP)){
