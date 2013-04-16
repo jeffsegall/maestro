@@ -103,7 +103,7 @@ RobotControl::RobotControl(const std::string& name):
     this->enableControl = false;
     this->delay = 0;
     this->state = NULL;
-    this->interpolation = true;	//Interpret all commands as a final destination with given velocity.
+    this->interpolation = false;	//Interpret all commands as a final destination with given velocity.
     //TODO: Disable all motors when this mode is changed.
     this->override = true;		//Force homing before allowing enabling. (currently disabled)
 
@@ -279,30 +279,30 @@ vector<float> trajectoryValues(string path){
 	  map<string, HuboMotor*> motors = state->getBoardMap();
 
 	  if (motors.count(name) == 0){
-		  std::cout << "Error. Motor with name " << name << " is not on record. Aborting.";
+		  std::cout << "Error. Motor with name " << name << " is not on record. Aborting." << std::endl;
 		  return;
 	  }
 	  HuboMotor* motor = motors[name];
 
 	  map<string, PROPERTY> properties = state->getPropertyMap();
 	  if (properties.count(property) == 0){
-		  std::cout << "Error. No property with name " << property << " registered. Aborting.";
+		  std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
 		  return;
 	  }
 
 	  switch (properties[property]){
 	  case POSITION:
-		  std::cout << "Setting position of motor " << name << " to " << value << " .";
+		  std::cout << "Setting position of motor " << name << " to " << value << " ." << std::endl;
 		  motor->setGoalPosition(value);
 		  //TODO: Check flags before doing anything, or check them before enabling...
 		  break;
 	  case VELOCITY:
-		  std::cout << "Setting velocity of motor " << name << " to " << value << " .";
+		  std::cout << "Setting velocity of motor " << name << " to " << value << " ." << std::endl;
 		  motor->setInterVelocity(value);
 		  //TODO: Check whether we are using interpolation and spit out a warning if we're in the wrong mode.
 		  break;
 	  default:
-		  std::cout << "Motor with name " << name << " has no mutable property named " << property << " .";
+		  std::cout << "Motor with name " << name << " has no mutable property named " << property << " ." << std::endl;
 	  }
   }
 
