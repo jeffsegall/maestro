@@ -159,10 +159,10 @@ vector<float> trajectoryValues(string path){
 		for (int i = 0; i < this->state->getBoards().size(); i++){
 			MotorBoard* mb = this->state->getBoards()[i];
 			for (int j = 0; j < mb->getNumChannels(); j++){
-				HuboMotor* motor = mb->getMotorByIndex(j);
+				HuboMotor* motor = mb->getMotorByChannel(j);
 				if (motor->isEnabled()){
 					hubomsg::HuboJointCommand state;
-					state.jointName = motor->getName();
+					state.name = motor->getName();
 					state.position = motor->getGoalPosition();
 					buildHuboCommandMessage(state, message);
 					//TODO: Add back interpolation
@@ -219,7 +219,7 @@ vector<float> trajectoryValues(string path){
       return canMessage;
   }
 
-  void RobotControl::buildHuboCommandMessage(hubomsg::HuboJointCommand& state, hubosg::HuboCommand& message){
+  void RobotControl::buildHuboCommandMessage(hubomsg::HuboJointCommand& state, hubomsg::HuboCommand& message){
 	  messagejoints.push_back(state);
 	  message.num_joints = message.joints.size();
   }
@@ -289,7 +289,7 @@ vector<float> trajectoryValues(string path){
 	  switch (properties[property]){
 	  case POSITION:
 		  std::cout << "Setting position of motor " << name << " to " << value << " .";
-		  motor->setCurrGoal(value);
+		  motor->setGoalPosition(value);
 		  //TODO: Check flags before doing anything, or check them before enabling...
 		  break;
 	  case VELOCITY:
@@ -341,7 +341,7 @@ vector<float> trajectoryValues(string path){
 
 		  motor->setEnabled(false);
 
-	  } else if (name.comapre("DisableAll") == 0){
+	  } else if (name.compare("DisableAll") == 0){
 		  output.commandName = "disableAll";
 
 		  //TODO: Iterate here
@@ -366,7 +366,7 @@ vector<float> trajectoryValues(string path){
 		  return;
 	  }
 
-	  achOutputQueue.push(output);
+	  achOutputQueue->push(output);
   }
 
   void RobotControl::requestEncoderPosition(int board, int delay){
