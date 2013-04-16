@@ -326,8 +326,8 @@ long HuboMotor::interpolate(int MAX_STEP, int MIN_STEP){
 
 double HuboMotor::interpolate(){
 	const float LEAP_PERCENTAGE = .5;
-	const float MIN_STEP = .01;
-	const float MAX_STEP = interVel/100; //Radians per second, divided by our operating frequency.
+	const double MIN_STEP = .0001;
+	const double MAX_STEP = interVel/100; //Radians per second, divided by our operating frequency.
 
 	double error = currGoal - interStep;
 	double output = currGoal;
