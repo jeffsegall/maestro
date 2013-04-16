@@ -35,7 +35,7 @@ RobotControl::RobotControl(const std::string& name):
             .doc("Initialize a robot")
             .arg("Path", "The path to the XML robot representation");
 
-    this->addOperation("set", &RobotControl::set, this, RTT::OwnThread)
+    this->addOperation("setProperty", &RobotControl::set, this, RTT::OwnThread)
     		.doc("Set a property of a robot subsystem")
     		.arg("Name", "The name of the subsystem to set properties for.")
     		.arg("Property", "The name of the property to change. See README for a list of properties and expected values.")
