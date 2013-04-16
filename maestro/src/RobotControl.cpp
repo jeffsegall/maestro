@@ -103,7 +103,7 @@ RobotControl::RobotControl(const std::string& name):
     this->enableControl = false;
     this->delay = 0;
     this->state = NULL;
-    this->interpolation = false;	//Interpret all commands as a final destination with given velocity.
+    this->interpolation = true;	//Interpret all commands as a final destination with given velocity.
     //TODO: Disable all motors when this mode is changed.
     this->override = true;		//Force homing before allowing enabling. (currently disabled)
 
