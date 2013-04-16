@@ -140,7 +140,6 @@ class HuboMotor {
 	long getDesiredPosition();
 	bool requiresMotion();
 
-
 	double ticksToRadians(long ticks);
 	long radiansToTicks(double rads);
 	long interpolate(int MAX_STEP, int MIN_STEP);

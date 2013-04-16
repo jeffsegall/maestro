@@ -103,6 +103,10 @@ RobotControl::RobotControl(const std::string& name):
     this->enableControl = false;
     this->delay = 0;
     this->state = NULL;
+    this->interpolation = true;	//Interpret all commands as a final destination with given velocity.
+    //TODO: Disable all motors when this mode is changed.
+    this->override = true;		//Force homing before allowing enabling. (currently disabled)
+
     tempOutput.open("/opt/ros/fuerte/stacks/maestro/RobotControlLog.txt");
     vector<string> paths = getGestureScripts(CONFIG_PATH);
     for (int i = 0; i < paths.size(); i++){
@@ -163,7 +167,7 @@ vector<float> trajectoryValues(string path){
 				if (motor->isEnabled()){
 					hubomsg::HuboJointCommand state;
 					state.name = motor->getName();
-					state.position = motor->getGoalPosition();
+					state.position = interpolation ? motor->interpolate() : motor->getGoalPosition();
 					buildHuboCommandMessage(state, message);
 					//TODO: Add back interpolation
 				}

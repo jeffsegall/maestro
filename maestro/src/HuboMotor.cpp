@@ -99,8 +99,6 @@ HuboMotor::HuboMotor(const HuboMotor& rhs){
     this->zeroed = rhs.zeroed;
 }
 
-
-
 void HuboMotor::setUpperLimit(long limit){
     this->mpos2 = limit;
 }
@@ -178,8 +176,6 @@ void HuboMotor::setDesiredPosition(long ticks){
 void HuboMotor::setAngularVelocity(double omega){
 	this->omega = omega;
 }
-
-
 
 long HuboMotor::getUpperLimit(){
     return this->mpos2;
@@ -328,6 +324,28 @@ long HuboMotor::interpolate(int MAX_STEP, int MIN_STEP){
 	return output;
 }
 
+double HuboMotor::interpolate(){
+	const float LEAP_PERCENTAGE = .5;
+	const float MIN_STEP = .01;
+	const float MAX_STEP = interVel/100; //Radians per second, divided by our operating frequency.
+
+	double error = currGoal - interStep;
+	double output = currGoal;
+
+	if((abs(error) > MIN_STEP)){
+		output = (int)(LEAP_PERCENTAGE * error);
+
+		if(abs(output) > MAX_STEP)
+			output = output < 0 ? -MAX_STEP : MAX_STEP;
+
+	} else
+		output = error;
+
+	output += interStep;
+	interStep = output;
+	return interStep;
+}
+
 
 void HuboMotor::setName(string name){
 	this->name = name;
@@ -350,6 +368,7 @@ void HuboMotor::update(double position, double velocity, double temperature, dou
 
 void HuboMotor::setEnabled(bool enabled){
 	this->enabled = enabled;
+	interStep = position; //If we have recently changed from non-interpolation to interpolation, the step MUST be updated.
 }
 
 void HuboMotor::setHomed(bool homed){

@@ -99,10 +99,10 @@ private:
     map<boardNum, MotorBoard*>::iterator it;
     ofstream tempOutput;
 
-   
     int written;
     bool printNow, enableControl;
     int delay;
+    bool interpolation, override;
 };
 
 #endif
