@@ -6,6 +6,20 @@ HuboMotor::HuboMotor(){
     this->ticks_position = 0;
     this->desired_position = 0;
     this->omega = MAX_ANGULAR_VELOCITY;
+
+    //NEW_DATA
+    currGoal = 0;
+	interStep = 0;
+	interVel = 0;
+
+	currVelocity = 0;
+	currPos = 0;
+	currCurrent = 0;
+	currTemp = 0;
+
+	enabled = false;
+	homed = false;
+	zeroed = false;
 }
 
 HuboMotor::HuboMotor(long mpos1, long mpos2, long kp, long kd, long ki,
@@ -68,11 +82,24 @@ HuboMotor::HuboMotor(const HuboMotor& rhs){
     this->ticks_position = rhs.ticks_position;
     this->desired_position = rhs.desired_position;
     this->omega = rhs.omega;
+
+    //NEW_DATA
+    this->name = rhs.name;
+    this->currGoal = rhs.currGoal;
+    this->interStep = rhs.interStep;
+    this->interVel = rhs.interVel;
+
+    this->currVelocity = rhs.currVelocity;
+    this->currPos = rhs.currPos;
+    this->currCurrent = rhs.currCurrent;
+    this->currTemp = rhs.currTemp;
+
+    this->enabled = rhs.enabled;
+    this->homed = rhs.homed;
+    this->zeroed = rhs.zeroed;
 }
 
-void HuboMotor::setName(string name){
-	this->name = name;
-}
+
 
 void HuboMotor::setUpperLimit(long limit){
     this->mpos2 = limit;
@@ -152,9 +179,7 @@ void HuboMotor::setAngularVelocity(double omega){
 	this->omega = omega;
 }
 
-string HuboMotor::getName(){
-	return name;
-}
+
 
 long HuboMotor::getUpperLimit(){
     return this->mpos2;
@@ -302,3 +327,73 @@ long HuboMotor::interpolate(int MAX_STEP, int MIN_STEP){
 	ticks_position = output;
 	return output;
 }
+
+
+void HuboMotor::setName(string name){
+	this->name = name;
+}
+
+void HuboMotor::setGoalPosition(double rads){
+	currGoal = rads;
+}
+
+void HuboMotor::setInterVelocity(double omega){
+	interVel = omega;
+}
+
+void HuboMotor::update(double position, double velocity, double temperature, double current){
+	currPos = position;
+	currVel = velocity;
+	currTemp = temperature;
+	currCurrent = current;
+}
+
+void HuboMotor::setEnabled(bool enabled){
+	this->enabled = enabled;
+}
+
+void HuboMotor::setHomed(bool homed){
+	this->homed = homed;
+}
+
+void HuboMotor::setZeroed(bool zeroed){
+	this->zeroed = zeroed;
+}
+
+
+string HuboMotor::getName(){
+	return name;
+}
+
+double HuboMotor::getGoalPosition(){
+	return currGoal;
+}
+
+double HuboMotor::getPosition(){
+	return currPos;
+}
+
+double HuboMotor::getVelocity(){
+	return currVel;
+}
+
+double HuboMotor::getTemperature(){
+	return currTemp;
+}
+
+double HuboMotor::getCurrent(){
+	return currCurrent;
+}
+
+bool HuboMotor::isEnabled(){
+	return enabled;
+}
+
+bool HuboMotor::isHomed(){
+	return homed;
+}
+
+bool HuboMotor::isZeroed(){
+	return zeroed;
+}
+

@@ -16,6 +16,7 @@
 #include <string>
 #include <queue>
 
+
 using namespace std;
 using namespace RTT;
 
@@ -33,11 +34,13 @@ class HuboState{
     private:
     
 	vector<MotorBoard*> boards;
+	map<string, HuboMotor*> motorMap;
+	map<string, PROPERTY> propertyMap;
 	
 	public:
 
-	HuboState(){
-	}
+	HuboState();
+
         HuboState(const HuboState& rhs);	
         void initHuboWithDefaults(string path, queue<hubomsg::HuboCommand>* outQueue);
 
@@ -48,5 +51,7 @@ class HuboState{
         void addBoard(MotorBoard* board);
 
         vector<MotorBoard*> getBoards();
+        map<string, HuboMotor*> getBoardMap();
+        map<string, PROPERTY> getPropertyMap();
 };
 #endif

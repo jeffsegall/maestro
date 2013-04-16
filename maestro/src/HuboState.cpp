@@ -8,6 +8,23 @@
 using std::queue;
 using std::string;
 
+HuboState::HuboState(){
+	propertyMap["position"] = POSITION;
+	propertyMap["velocity"] = VELOCITY;
+	propertyMap["temp"] = TEMPERATURE;
+	propertyMap["homed"] = HOMED;
+	propertyMap["zeroed"] = ZEROED;
+	propertyMap["enabled"] = ENABLED;
+	propertyMap["x_acc"] = X_ACCEL;
+	propertyMap["y_acc"] = Y_ACCEL;
+	propertyMap["z_acc"] = Z_ACCEL;
+	propertyMap["x_rot"] = X_ROTAT;
+	propertyMap["y_rot"] = Y_ROTAT;
+	propertyMap["m_x"] = M_X;
+	propertyMap["m_y"] = M_Y;
+	propertyMap["f_z"] = F_Z;
+}
+
 /******************************************************************************
 * initHuboWithDefaults
 *
@@ -55,6 +72,12 @@ void HuboState::initHuboWithDefaults(string path, queue<hubomsg::HuboCommand>* o
             mb->addMotor(hm, CH);
             std::cout << "Added motor to: " << mb->getMotorByChannel(CH) << std::endl;
             mb->getMotorByChannel(CH)->setName(name);
+
+            assert(motorMap.count(name) == 0); //Multiple motors should not have the same name.
+            motorMap[name] = hm;
+
+            // Remnants of Original CAN Communication. These do nothing now.
+            // Due to be phased out.
             mb->resetEncoderToZero(CH);
             mb->initBoard();
             mb->setLowerPosLimit(CH, 3, motor.attribute("mpos1").as_int());
@@ -154,4 +177,12 @@ void HuboState::addBoard(MotorBoard* board){
 
 vector<MotorBoard*> HuboState::getBoards(){
     return this->boards;
+}
+
+map<string, HuboMotor*> HuboState::getBoardMap(){
+	return this->motorMap;
+}
+
+map<string, PROPERTY> HuboState::getPropertyMap(){
+	return this->propertyMap;
 }
