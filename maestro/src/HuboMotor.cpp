@@ -12,7 +12,7 @@ HuboMotor::HuboMotor(){
 	interStep = 0;
 	interVel = 0;
 
-	currVelocity = 0;
+	currVel = 0;
 	currPos = 0;
 	currCurrent = 0;
 	currTemp = 0;
@@ -89,7 +89,7 @@ HuboMotor::HuboMotor(const HuboMotor& rhs){
     this->interStep = rhs.interStep;
     this->interVel = rhs.interVel;
 
-    this->currVelocity = rhs.currVelocity;
+    this->currVel = rhs.currVel;
     this->currPos = rhs.currPos;
     this->currCurrent = rhs.currCurrent;
     this->currTemp = rhs.currTemp;
