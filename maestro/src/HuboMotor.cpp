@@ -348,10 +348,10 @@ double HuboMotor::interpolate(){
 	std::cout << error << std::endl;
 	double output = currGoal;
 
-	if((abs(error) > MIN_STEP)){
+	if((fabs(error) > MIN_STEP)){
 		output = (LEAP_PERCENTAGE * error);
 
-		if(abs(output) > MAX_STEP)
+		if(fabs(output) > MAX_STEP)
 			output = output < 0 ? -MAX_STEP : MAX_STEP;
 
 	} else
