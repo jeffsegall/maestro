@@ -123,6 +123,7 @@ class HuboMotor {
 	void setEnabled(bool enabled);
 	void setHomed(bool homed);
 	void setZeroed(bool zeroed);
+	double interpolate();
 
 	string getName();
 	double getGoalPosition();
@@ -143,6 +144,7 @@ class HuboMotor {
 	double ticksToRadians(long ticks);
 	long radiansToTicks(double rads);
 	long interpolate(int MAX_STEP, int MIN_STEP);
+
 
 };
 
