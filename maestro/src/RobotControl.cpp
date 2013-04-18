@@ -265,7 +265,7 @@ vector<float> trajectoryValues(string path){
 	  huboState = commHandler->getState();
 	  map<string, HuboMotor*> motors = state->getBoardMap();
 
-	  if (printNow) std::cout << "Updating Robot State..." << std::endl;
+	  if (/*printNow*/ true) std::cout << "Updating Robot State..." << std::endl;
 
 	  for (int i = 0; i < huboState.joints.size(); i++){
 		  if (motors.count(huboState.joints[i].name) != 0){

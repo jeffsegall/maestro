@@ -21,6 +21,10 @@ using namespace std;
 
 		newCanData = false;
 		newAchData = false;
+
+		currCommand = hubomsg::HuboCmd();
+		currMessage = hubomsg::CanMessage();
+		currState = hubomsg::HuboState();
 	}
 
 	void CommHandler::update(){
