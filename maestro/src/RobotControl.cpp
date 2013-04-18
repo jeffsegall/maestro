@@ -272,14 +272,17 @@ vector<float> trajectoryValues(string path){
 			  cout << "Joint with name " << huboState.joints[i].name <<
 					  " not initialized in RobotControl. Skipping update of this motor." << std::endl;
 			  continue;
+			  cout << "After continue." << endl;
 		  }
 
 		  HuboMotor* motor = motors[huboState.joints[i].name];
 
+		  /*
 		  motor->update(huboState.joints[i].position,
 					  huboState.joints[i].velocity,
 					  huboState.joints[i].temperature,
 					  huboState.joints[i].current);
+					  */
 
 	  }
 
