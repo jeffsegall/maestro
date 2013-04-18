@@ -259,6 +259,8 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::updateState(){
+	  if (this->state == NULL) return;
+
 	  hubomsg::HuboState huboState = hubomsg::HuboState();
 	  huboState = commHandler->getState();
 	  map<string, HuboMotor*> motors = state->getBoardMap();
