@@ -382,7 +382,7 @@ void HuboMotor::update(double position, double velocity, double temperature, dou
 
 void HuboMotor::setEnabled(bool enabled){
 	this->enabled = enabled;
-	interStep = currPos; //If we have recently changed from non-interpolation to interpolation, the step MUST be updated.
+	interStep = currGoal; //If we have recently changed from non-interpolation to interpolation, the step MUST be updated.
 }
 
 void HuboMotor::setHomed(bool homed){
@@ -392,7 +392,6 @@ void HuboMotor::setHomed(bool homed){
 void HuboMotor::setZeroed(bool zeroed){
 	this->zeroed = zeroed;
 }
-
 
 string HuboMotor::getName(){
 	return name;

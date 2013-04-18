@@ -63,11 +63,12 @@ public:
     bool requiresMotion(int board, int motor, int delay);
     bool requiresMotionByName(string name, int delay);
     double get(string name, string property);
+    void updateState();
 
     // Parameter Commands
     void setMaxAccVel(int board, int delay, int acc, int vel);
     void setPositionGain(int board, int motor, int kp, int ki, int kd);
-    void setMode();
+    void setMode(string mode, bool value);
 
 
     vector<string> getGestureScripts(string path);

@@ -41,29 +41,15 @@ RobotControl::RobotControl(const std::string& name):
     		.arg("Property", "The name of the property to change. See README for a list of properties and expected values.")
     		.arg("Value", "The value to set the property to.");
 
+    this->addOperation("getProperty", &RobotControl::get, this, RTT::OwnThread)
+    		.doc("Get the value of a property of a robot subsystem.")
+    		.arg("Name", "The name of the subsystem to read values from.")
+    		.arg("Property", "The type of value to read. See README for a list of properties and expected values.");
+
     this->addOperation("command", &RobotControl::command, this, RTT::OwnThread)
     		.doc("Send a command to the robot.")
     		.arg("Name", "The name of the command to send. See README for command list and arguments.")
     		.arg("Target", "The target of the command. Usually a joint name.");
-
-    this->addOperation("requestEncoderPosition", &RobotControl::requestEncoderPosition, this, RTT::OwnThread)
-			.arg("Board", "The board to request encoder data from")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("getCurrentTicks", &RobotControl::getCurrentTicks, this, RTT::OwnThread)
-			.arg("Board", "The board to send commands to")
-			.arg("Motor", "The motor channel to request current perceived position from.")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setCurrentTicks", &RobotControl::setCurrentTicks, this, RTT::OwnThread)
-			.arg("Board", "The board to send commands to")
-			.arg("Motor", "The motor channel to set current perceived position on.")
-			.arg("Ticks", "Desired current perceived position in ticks.");
-
-    this->addOperation("getCurrentGoal", &RobotControl::getCurrentGoal, this, RTT::OwnThread)
-			.arg("Board", "The board to send commands to")
-			.arg("Motor", "The motor channel to request current requested position from.")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
 
     this->addOperation("requiresMotion", &RobotControl::requiresMotion, this, RTT::OwnThread)
 			.arg("Board", "The board to send commands to")
@@ -153,9 +139,7 @@ vector<float> trajectoryValues(string path){
     }
     if (commHandler->isNew(3)){
     	//Received update from Hubo-Ach
-    	huboState = commHandler->getState();
-
-    	//TODO: Update state across all sensors and values.
+    	updateState();
     }
 
     if (huboOutputQueue->empty() && state != NULL && !this->state->getBoards().empty()) {
@@ -169,7 +153,6 @@ vector<float> trajectoryValues(string path){
 					state.name = motor->getName();
 					state.position = interpolation ? motor->interpolate() : motor->getGoalPosition();
 					buildHuboCommandMessage(state, message);
-					//TODO: Add back interpolation
 				}
 			}
 		}
@@ -275,6 +258,33 @@ vector<float> trajectoryValues(string path){
       this->state->initHuboWithDefaults(path, this->huboOutputQueue);
   }
 
+  void RobotControl::updateState(){
+	  hubomsg::HuboState huboState = hubomsg::HuboState();
+	  huboState = commHandler->getState();
+	  map<string, HuboMotor*> motors = state->getBoardMap();
+
+	  if (printNow) std::cout << "Updating Robot State..." << std::endl;
+
+	  for (int i = 0; i < huboState.joints.size(); i++){
+		  if (motors.count(huboState.joints[i].name) != 0){
+			  cout << "Joint with name " << huboState.joints[i].name <<
+					  " not initialized in RobotControl. Skipping update of this motor." << std::endl;
+			  continue;
+		  }
+
+		  HuboMotor* motor = motors[huboState.joints[i].name];
+
+		  motor->update(huboState.joints[i].position,
+					  huboState.joints[i].velocity,
+					  huboState.joints[i].temperature,
+					  huboState.joints[i].current);
+
+	  }
+
+	  //TODO: Add in sensor support
+
+  }
+
   void RobotControl::set(string name, string property, double value){
 	  map<string, HuboMotor*> motors = state->getBoardMap();
 
@@ -299,10 +309,51 @@ vector<float> trajectoryValues(string path){
 	  case VELOCITY:
 		  std::cout << "Setting velocity of motor " << name << " to " << value << " ." << std::endl;
 		  motor->setInterVelocity(value);
-		  //TODO: Check whether we are using interpolation and spit out a warning if we're in the wrong mode.
+		  if (!interpolation)
+			  std::cout << "Warning. RobotControl is not currently handling interpolation. " <<
+					  "This velocity will not be used until interpolation is enabled." << std::endl;
 		  break;
 	  default:
 		  std::cout << "Motor with name " << name << " has no mutable property named " << property << " ." << std::endl;
+	  }
+  }
+
+  double RobotControl::get(string name, string property){
+	  map<string, HuboMotor*> motors = state->getBoardMap();
+
+	  if (motors.count(name) == 0){
+		  std::cout << "Error. Motor with name " << name << " is not on record. Aborting." << std::endl;
+		  return;
+	  }
+	  HuboMotor* motor = motors[name];
+
+	  map<string, PROPERTY> properties = state->getPropertyMap();
+	  if (properties.count(property) == 0){
+		  std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
+		  return;
+	  }
+
+	  switch (properties[property]){
+	  case POSITION:
+		  std::cout << "Position of motor " << name << " is " << motor->getPosition() << "." << std::endl;
+		  return motor->getPosition();
+	  case VELOCITY:
+		  std::cout << "Velocity of motor " << name << " is " << motor->getVelocity() << "." << std::endl;
+		  return motor->getVelocity();
+	  case TEMPERATURE:
+		  std::cout << "Temperature of motor " << name << " is " << motor->getTemperature() << "." << std::endl;
+		  return motor->getTemperature();
+	  case CURRENT:
+		  std::cout << "Current of motor " << name << " is " << motor->getCurrent() << "." << std::endl;
+		  return motor->getCurrent();
+	  case ENABLED:
+		  std::cout << "Motor " << name << " is currently " << (motor->isEnabled() ? "enabled." : "disabled.") << std::endl;
+		  return motor->isEnabled() ? 1 : 0;
+	  case HOMED:
+		  std::cout << "Motor " << name << " has " << (motor->isHomed() ? "" : "not ") << "been homed." << std::endl;
+		  return motor->isHomed() ? 1 : 0;
+	  default:
+		  std::cout << "Motor with name " << name << " has no readable property named " << property << " ." << std::endl;
 	  }
   }
 
@@ -315,23 +366,28 @@ vector<float> trajectoryValues(string path){
 			  std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
 			  return;
 		  }
-
 		  output.commandName = "enableJoint";
 		  output.jointName = target;
 
 		  HuboMotor* motor = motors[target];
 
-		  motor->setEnabled(true);
+		  if (!motor->isHomed()){
+			  std::cout << "Error! Motor " << target << " has not yet been homed. Skipping enabling of this motor." << std::endl;
+			  return;
+		  }
 
-		  //TODO: read in encoder state
-		  //TODO: Check homed before enabling
+		  motor->setEnabled(true);
+		  updateState();
+		  motor->setGoalPosition(motor->getPosition());
 
 	  } else if (name.compare("EnableAll") == 0){
-		  output.commandName = "enableAll";
-
-		  //TODO: Iterate here
-		  //TODO: Change enabled property
-		  //TODO: read in encoder state
+		  for (int i = 0; i < this->state->getBoards().size(); i++){
+			  MotorBoard* mb = this->state->getBoards()[i];
+			  for (int j = 0; j < mb->getNumChannels(); j++){
+			  	  HuboMotor* motor = mb->getMotorByChannel(j);
+			  	  command("Enable", motor->getName());
+			  }
+		  }
 	  } else if (name.compare("Disable") == 0){
 
 		  if (motors.count(target) == 0){
@@ -346,10 +402,13 @@ vector<float> trajectoryValues(string path){
 		  motor->setEnabled(false);
 
 	  } else if (name.compare("DisableAll") == 0){
-		  output.commandName = "disableAll";
-
-		  //TODO: Iterate here
-		  //TODO: Change enabled property
+		  for (int i = 0; i < this->state->getBoards().size(); i++){
+			  MotorBoard* mb = this->state->getBoards()[i];
+			  for (int j = 0; j < mb->getNumChannels(); j++){
+			  	  HuboMotor* motor = mb->getMotorByChannel(j);
+			  	  command("Disable", motor->getName());
+			  }
+		  }
 	  } else if (name.compare("Home") == 0){
 		  if (motors.count(target) == 0){
 			  std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
@@ -359,12 +418,21 @@ vector<float> trajectoryValues(string path){
 		  output.commandName = "homeJoint";
 		  output.jointName = target;
 
+		  HuboMotor* motor = motors[target];
+		  motor->setHomed(true);
 		  set(target, "position", 0);
 
 	  } else if (name.compare("HomeAll") == 0){
-		  output.commandName = "homeAll";
-
-		  //TODO: Iterate here
+		  for (int i = 0; i < this->state->getBoards().size(); i++){
+			  MotorBoard* mb = this->state->getBoards()[i];
+			  for (int j = 0; j < mb->getNumChannels(); j++){
+				  HuboMotor* motor = mb->getMotorByChannel(j);
+				  command("Home", motor->getName());
+			  }
+		  }
+		  //TODO: Find a way to pause for a length of time here.
+	  } else if (name.compare("Update") == 0){
+		  updateState();
 	  } else {
 		  std::cout << "Error. No command with name " << name << " is defined for RobotControl. Aborting.";
 		  return;
@@ -373,8 +441,13 @@ vector<float> trajectoryValues(string path){
 	  achOutputQueue->push(output);
   }
 
-  void RobotControl::requestEncoderPosition(int board, int delay){
-      this->state->getBoardByNumber(board)->requestEncoderPosition(0);
+  void RobotControl::setMode(string mode, bool value){
+	  if (mode.compare("Interpolation") == 0){
+		  std::cout << "Setting interpolation " << (value ? "on." : "off.") << std::endl;
+		  interpolation = value;
+	  } else {
+		  std::cout << "RobotControl does not have a mutable mode with name " << mode << "." << std::endl;
+	  }
   }
 
   void RobotControl::debugControl(int board, int operation){
@@ -405,18 +478,6 @@ vector<float> trajectoryValues(string path){
   void RobotControl::setDelay(int us){
 	  this->delay = us;
   }
-
-  void RobotControl::getCurrentTicks(int board, int motor, int delay){
-	  std::cout << "Motor[" << motor << "] ticks: " << this->state->getBoardByNumber(board)->getMotorByChannel(motor)->getTicksPosition() << std::endl;
-  }
-
-  void RobotControl::setCurrentTicks(int board, int motor, int ticks){
-	  this->state->getBoardByNumber(board)->getMotorByChannel(motor)->setTicksPosition((long)ticks);
-  }
-
-  void RobotControl::getCurrentGoal(int board, int motor, int delay){
-  	  std::cout << "Motor[" << motor << "] goal: " << this->state->getBoardByNumber(board)->getMotorByChannel(motor)->getDesiredPosition() << std::endl;
-   }
 
   bool RobotControl::requiresMotion(int board, int motor, int delay){
 	  return state->getBoardByNumber(board)->requiresMotion(motor);
