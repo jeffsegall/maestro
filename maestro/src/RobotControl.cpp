@@ -265,10 +265,10 @@ vector<float> trajectoryValues(string path){
 	  huboState = commHandler->getState();
 	  map<string, HuboMotor*> motors = state->getBoardMap();
 
-	  if (/*printNow*/ true) std::cout << "Updating Robot State..." << std::endl;
+	  if (printNow) std::cout << "Updating Robot State..." << std::endl;
 
 	  for (int i = 0; i < huboState.joints.size(); i++){
-		  if (motors.count(huboState.joints[i].name) != 0){
+		  if (motors.count(huboState.joints[i].name) == 0){
 			  cout << "Joint with name " << huboState.joints[i].name <<
 					  " not initialized in RobotControl. Skipping update of this motor." << std::endl;
 			  continue;
@@ -276,12 +276,11 @@ vector<float> trajectoryValues(string path){
 
 		  HuboMotor* motor = motors[huboState.joints[i].name];
 
-		  /*
+
 		  motor->update(huboState.joints[i].position,
 					  huboState.joints[i].velocity,
 					  huboState.joints[i].temperature,
 					  huboState.joints[i].current);
-					  */
 
 	  }
 
