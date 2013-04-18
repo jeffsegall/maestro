@@ -323,14 +323,14 @@ vector<float> trajectoryValues(string path){
 
 	  if (motors.count(name) == 0){
 		  std::cout << "Error. Motor with name " << name << " is not on record. Aborting." << std::endl;
-		  return;
+		  return 0;
 	  }
 	  HuboMotor* motor = motors[name];
 
 	  map<string, PROPERTY> properties = state->getPropertyMap();
 	  if (properties.count(property) == 0){
 		  std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
-		  return;
+		  return 0;
 	  }
 
 	  switch (properties[property]){
@@ -354,6 +354,7 @@ vector<float> trajectoryValues(string path){
 		  return motor->isHomed() ? 1 : 0;
 	  default:
 		  std::cout << "Motor with name " << name << " has no readable property named " << property << " ." << std::endl;
+		  return 0;
 	  }
   }
 
