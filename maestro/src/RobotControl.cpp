@@ -128,6 +128,7 @@ vector<float> trajectoryValues(string path){
     hubomsg::HuboState huboState = hubomsg::HuboState();
 
     commHandler->update();
+    if (state == NULL) return;
 
     if (commHandler->isNew(1)){
         //Received update from CanGateway
@@ -142,7 +143,7 @@ vector<float> trajectoryValues(string path){
     	updateState();
     }
 
-    if (huboOutputQueue->empty() && state != NULL && !this->state->getBoards().empty()) {
+    if (huboOutputQueue->empty() && !this->state->getBoards().empty()) {
     	hubomsg::HuboCommand message;
 		for (int i = 0; i < this->state->getBoards().size(); i++){
 			MotorBoard* mb = this->state->getBoards()[i];
@@ -259,7 +260,6 @@ vector<float> trajectoryValues(string path){
   }
 
   void RobotControl::updateState(){
-	  if (this->state == NULL) return;
 
 	  hubomsg::HuboState huboState = hubomsg::HuboState();
 	  huboState = commHandler->getState();
@@ -269,7 +269,8 @@ vector<float> trajectoryValues(string path){
 
 	  for (int i = 0; i < huboState.joints.size(); i++){
 		  if (motors.count(huboState.joints[i].name) == 0){
-			  cout << "Joint with name " << huboState.joints[i].name <<
+			  if (printNow)
+				  cout << "Joint with name " << huboState.joints[i].name <<
 					  " not initialized in RobotControl. Skipping update of this motor." << std::endl;
 			  continue;
 		  }
