@@ -10,7 +10,7 @@ HuboMotor::HuboMotor(){
     //NEW_DATA
     currGoal = 0;
 	interStep = 0;
-	interVel = 0;
+	interVel = .3; //Default 1/3 of a radian per second.
 
 	currVel = 0;
 	currPos = 0;

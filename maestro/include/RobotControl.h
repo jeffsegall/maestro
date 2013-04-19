@@ -48,6 +48,7 @@ public:
 
     //JOINT MOVEMENT API
     void set(string name, string property, double value);
+    void setProperties(string names, string properties, string values);
 
     // Control Commands
     void debugControl(int board, int operation);
@@ -72,6 +73,7 @@ public:
 
 
     vector<string> getGestureScripts(string path);
+    vector<string> splitFields(string input);
     string getDefaultInitPath(string path);
 
 private:

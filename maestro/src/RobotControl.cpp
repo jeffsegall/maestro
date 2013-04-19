@@ -322,6 +322,26 @@ vector<float> trajectoryValues(string path){
 	  }
   }
 
+  void RobotControl::setProperties(string names, string properties, string values){
+	  vector<string> namesList = splitFields(names);
+	  vector<string> propertiesList = splitFields(properties);
+	  vector<string> valuesList = splitFields(values);
+	  if (namesList.size() != propertiesList.size()
+			  || namesList.size() != valuesList.size()
+			  || propertiesList.size() != valuesList.size()){
+		  cout << "Error! Size of entered fields not consistent. Aborting.";
+		  return;
+	  }
+
+	  for (int i = 0; i < namesList.size(); i++){
+		  istringstream data(valuesList[i]);
+		  double value = 0;
+		  data >> value;
+
+		  set(namesList[i], propertiesList[i], value);
+	  }
+  }
+
   double RobotControl::get(string name, string property){
 	  map<string, HuboMotor*> motors = state->getBoardMap();
 
@@ -380,17 +400,24 @@ vector<float> trajectoryValues(string path){
 			  std::cout << "Error! Motor " << target << " has not yet been homed. Skipping enabling of this motor." << std::endl;
 			  return;
 		  }
-
-		  motor->setEnabled(true);
 		  updateState();
 		  motor->setGoalPosition(motor->getPosition());
+		  motor->setEnabled(true);
+
 
 	  } else if (name.compare("EnableAll") == 0){
+		  output.commandName = name;
 		  for (int i = 0; i < this->state->getBoards().size(); i++){
 			  MotorBoard* mb = this->state->getBoards()[i];
 			  for (int j = 0; j < mb->getNumChannels(); j++){
 			  	  HuboMotor* motor = mb->getMotorByChannel(j);
-			  	  command("Enable", motor->getName());
+			  	  if (!motor->isHomed())
+					  std::cout << "Error! Motor " << target << " has not yet been homed. Skipping enabling of this motor." << std::endl;
+			  	  else {
+			  		  updateState();
+					  motor->setGoalPosition(motor->getPosition());
+			  		  motor->setEnabled(true);
+			  	  }
 			  }
 		  }
 	  } else if (name.compare("Disable") == 0){
@@ -407,11 +434,12 @@ vector<float> trajectoryValues(string path){
 		  motor->setEnabled(false);
 
 	  } else if (name.compare("DisableAll") == 0){
+		  output.commandName = name;
 		  for (int i = 0; i < this->state->getBoards().size(); i++){
 			  MotorBoard* mb = this->state->getBoards()[i];
 			  for (int j = 0; j < mb->getNumChannels(); j++){
 			  	  HuboMotor* motor = mb->getMotorByChannel(j);
-			  	  command("Disable", motor->getName());
+			  	  motor->setEnabled(false);
 			  }
 		  }
 	  } else if (name.compare("Home") == 0){
@@ -428,11 +456,13 @@ vector<float> trajectoryValues(string path){
 		  set(target, "position", 0);
 
 	  } else if (name.compare("HomeAll") == 0){
+		  output.commandName = name;
 		  for (int i = 0; i < this->state->getBoards().size(); i++){
 			  MotorBoard* mb = this->state->getBoards()[i];
 			  for (int j = 0; j < mb->getNumChannels(); j++){
 				  HuboMotor* motor = mb->getMotorByChannel(j);
-				  command("Home", motor->getName());
+				  motor->setHomed(true);
+				  set(target, "position", 0);
 			  }
 		  }
 		  //TODO: Find a way to pause for a length of time here.
@@ -453,6 +483,41 @@ vector<float> trajectoryValues(string path){
 	  } else {
 		  std::cout << "RobotControl does not have a mutable mode with name " << mode << "." << std::endl;
 	  }
+  }
+
+  vector<string> RobotControl::splitFields(string input){
+	  vector<string> output;
+	  int whitespaceType = 0;
+	  if (input.find(' ') != string::npos) whitespaceType += 1;
+	  if (input.find('\t') != string::npos) whitespaceType += 2;
+	  if (input.find('\n') != string::npos) whitespaceType += 4;
+
+	  char whitespace;
+	  switch (whitespaceType){
+	  case 1:
+		  whitespace = ' ';
+		  break;
+	  case 2:
+		  whitespace = '\t';
+		  break;
+	  case 3:
+		  whitespace = '\n';
+		  break;
+	  default:
+		  output.push_back(input);
+		  return output;
+	  }
+	  string field;
+	  int pos = 0;
+
+	  do {
+		  pos = input.find(whitespace);
+		  field = input.substr(0, pos);
+		  output.push_back(field);
+		  input = input.substr(pos + 1, input.length() - pos - 1);
+	  } while (input.find(whitespace) != string::npos);
+	  output.push_back(input);
+	  return output;
   }
 
   void RobotControl::debugControl(int board, int operation){
