@@ -412,7 +412,7 @@ vector<float> trajectoryValues(string path){
 			  for (int j = 0; j < mb->getNumChannels(); j++){
 			  	  HuboMotor* motor = mb->getMotorByChannel(j);
 			  	  if (!motor->isHomed())
-					  std::cout << "Error! Motor " << target << " has not yet been homed. Skipping enabling of this motor." << std::endl;
+					  std::cout << "Error! Motor " << motor->getName() << " has not yet been homed. Skipping enabling of this motor." << std::endl;
 			  	  else {
 			  		  updateState();
 					  motor->setGoalPosition(motor->getPosition());
@@ -462,7 +462,7 @@ vector<float> trajectoryValues(string path){
 			  for (int j = 0; j < mb->getNumChannels(); j++){
 				  HuboMotor* motor = mb->getMotorByChannel(j);
 				  motor->setHomed(true);
-				  set(target, "position", 0);
+				  set(motor->getName(), "position", 0);
 			  }
 		  }
 		  //TODO: Find a way to pause for a length of time here.
