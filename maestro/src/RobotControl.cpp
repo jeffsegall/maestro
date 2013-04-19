@@ -41,6 +41,12 @@ RobotControl::RobotControl(const std::string& name):
     		.arg("Property", "The name of the property to change. See README for a list of properties and expected values.")
     		.arg("Value", "The value to set the property to.");
 
+    this->addOperation("setProperties", &RobotControl::setProperties, this, RTT::OwnThread)
+    		.doc("Set multiple properties of a robot subsystem.")
+    		.arg("Names", "The names of the subsystems to set properties for.")
+    		.arg("Properties", "The names of the properties to change. See README for a list of mutable properties.")
+    		.arg("Values", "The values to set these properties to.");
+
     this->addOperation("getProperty", &RobotControl::get, this, RTT::OwnThread)
     		.doc("Get the value of a property of a robot subsystem.")
     		.arg("Name", "The name of the subsystem to read values from.")
