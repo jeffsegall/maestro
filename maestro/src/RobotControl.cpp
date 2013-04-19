@@ -291,7 +291,39 @@ vector<float> trajectoryValues(string path){
 
 	  }
 
-	  //TODO: Add in sensor support
+	  this->state->getIMUSensorMap()["IMU"]->update(huboState.imu.x_acceleration,
+			  huboState.imu.y_acceleration,
+			  huboState.imu.z_acceleration,
+			  huboState.imu.x_rotation,
+			  huboState.imu.y_rotation);
+
+	  this->state->getIMUSensorMap()["LAI"]->update(huboState.left_foot.x_acceleration,
+			  huboState.imu.y_acceleration,
+			  huboState.imu.z_acceleration,
+			  huboState.imu.x_rotation,
+			  huboState.imu.y_rotation);
+
+	  this->state->getIMUSensorMap()["RAI"]->update(huboState.right_foot.x_acceleration,
+			  huboState.imu.y_acceleration,
+			  huboState.imu.z_acceleration,
+			  huboState.imu.x_rotation,
+			  huboState.imu.y_rotation);
+
+	  this->state->getFTSensorMap()["LAT"]->update(huboState.left_ankle.Mx,
+			  huboState.left_ankle.My,
+			  huboState.left_ankle.Fz);
+
+	  this->state->getFTSensorMap()["RAT"]->update(huboState.right_ankle.Mx,
+			  huboState.left_ankle.My,
+			  huboState.left_ankle.Fz);
+
+	  this->state->getFTSensorMap()["LWT"]->update(huboState.left_wrist.Mx,
+			  huboState.left_ankle.My,
+			  huboState.left_ankle.Fz);
+
+	  this->state->getFTSensorMap()["RWT"]->update(huboState.left_wrist.Mx,
+			  huboState.left_ankle.My,
+			  huboState.left_ankle.Fz);
 
   }
 

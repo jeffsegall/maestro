@@ -6,7 +6,7 @@
 * Initializes a FT sensor board with BNO = 0
 ******************************************************************************/
 FTSensorBoard::FTSensorBoard(){
-    FTSensorBoard((boardNum)0);
+    FTSensorBoard((boardNum)0, "ft0");
 }
 
 /******************************************************************************
@@ -16,10 +16,17 @@ FTSensorBoard::FTSensorBoard(){
 *
 * @param	BNO		The BNO of this IMU board
 ******************************************************************************/
-FTSensorBoard::FTSensorBoard(boardNum BNO){
+FTSensorBoard::FTSensorBoard(boardNum BNO, string name){
     this->BNO = BNO;
+    this->name = name;
+
+    //********* OLD *********
     this->huboDownPort = new OutputPort<hubomsg::HuboState>("Hubo/HuboState");
     this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
+
+    mX = 0;
+    mY = 0;
+    fZ = 0;
 }
 
 /******************************************************************************
@@ -145,5 +152,34 @@ void FTSensorBoard::initBoard(){
                              0xAA, 0, 0, 0, 0, 0, 0, 0);
     //this->canDownPort->write(buildCanMessage(out));
 }
+
+
+string FTSensorBoard::getName(){
+	return name;
+}
+
+double FTSensorBoard::getMX(){
+	return mX;
+}
+
+double FTSensorBoard::getMY(){
+	return mY;
+}
+
+double FTSensorBoard::getFZ(){
+	return fZ;
+}
+
+
+void FTSensorBoard::update(double mX, double mY, double fZ){
+	this->mX = mX;
+	this->mY = mY;
+	this->fZ = fZ;
+}
+
+void FTSensorBoard::setName(string name){
+	this->name = name;
+}
+
 
 

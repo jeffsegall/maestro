@@ -17,7 +17,10 @@ class FTSensorBoard {
 
     private:
         boardNum BNO;
+        string name;
         
+        double mX, mY, fZ;
+
         //PUBLISH 
         OutputPort<hubomsg::HuboState>* huboDownPort;
 
@@ -27,7 +30,7 @@ class FTSensorBoard {
     public:
 
         FTSensorBoard();
-        FTSensorBoard(boardNum BNO);
+        FTSensorBoard(boardNum BNO, string name);
    
         //PROTOCOL COMMAND MESSAGES
         void setRequestBoardInfo(char CANR);
@@ -50,10 +53,15 @@ class FTSensorBoard {
         void requestTiltDigit();
         void requestTildScale();
         void requestGyroTempData();
+
+        //NEW DATA
+        string getName();
+        double getMX();
+        double getMY();
+        double getFZ();
+
+        void update(double mX, double mY, double fZ);
+        void setName(string name);
 };
-
-
-
-
 
 #endif

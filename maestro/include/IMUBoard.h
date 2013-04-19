@@ -17,6 +17,10 @@ class IMUBoard {
 
     private:
         boardNum BNO;
+        string name;
+
+        double xAcc, yAcc, zAcc;
+        double xRot, yRot;
         
         //PUBLISH 
         OutputPort<hubomsg::HuboState>* huboDownPort;
@@ -38,6 +42,17 @@ class IMUBoard {
 
         //PROTOCOL READ MESSAGES
         void requestAngleAndRate();
+
+        //NEW DATA
+		string getName();
+		double getXAcc();
+		double getYAcc();
+		double getZAcc();
+		double getXRot();
+		double getYRot();
+
+		void update(double xAcc, double yAcc, double zAcc, double xRot, double yRot);
+		void setName(string name);
 };
 
 

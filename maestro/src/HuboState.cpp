@@ -120,6 +120,23 @@ void HuboState::initHuboWithDefaults(string path, queue<hubomsg::HuboCommand>* o
         }
         this->addBoard(mb);
     }
+
+
+    IMU0 = new IMUBoard(0, "IMU");
+    IMUSensorMap["IMU"] = IMU0;
+    IMU1 = new IMUBoard(1, "LAI");
+    IMUSensorMap["LAI"] = IMU1;
+    IMU2 = new IMUBoard(2, "RAI");
+    IMUSensorMap["RAI"] = IMU2;
+
+    leftAnkle = new FTSensorBoard(0, "LAT");
+    FTSensorMap["LAT"] = leftAnkle;
+    rightAnkle = new FTSensorBoard(1, "RAT");
+    FTSensorMap["RAT"] = rightAnkle;
+    leftWrist = new FTSensorBoard(2, "LWT");
+    FTSensorMap["LWT"] = leftWrist;
+    rightWrist = new FTSensorBoard(3, "RWT");
+    FTSensorMap["RWT"] = rightWrist;
 }
 
 /******************************************************************************
@@ -185,4 +202,12 @@ map<string, HuboMotor*> HuboState::getBoardMap(){
 
 map<string, PROPERTY> HuboState::getPropertyMap(){
 	return this->propertyMap;
+}
+
+map<string, FTSensorBoard*> HuboState::getFTSensorMap(){
+	return FTSensorMap;
+}
+
+map<string, IMUBoard*> HuboState::getIMUSensorMap(){
+	return IMUSensorMap;
 }

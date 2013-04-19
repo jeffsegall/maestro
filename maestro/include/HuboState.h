@@ -11,6 +11,8 @@
 #include "HuboMotor.h"
 #include "huboCan.h"
 #include "MotorBoard.h"
+#include "FTSensorBoard.h"
+#include "IMUBoard.h"
 #include <rtt/Port.hpp>
 #include <map>
 #include <string>
@@ -34,7 +36,11 @@ class HuboState{
     private:
     
 	vector<MotorBoard*> boards;
+	IMUBoard *IMU0, *IMU1, *IMU2;
+	FTSensorBoard *leftWrist, *rightWrist, *leftAnkle, *rightAnkle;
 	map<string, HuboMotor*> motorMap;
+	map<string, FTSensorBoard*> FTSensorMap;
+	map<string, IMUBoard*> IMUSensorMap;
 	map<string, PROPERTY> propertyMap;
 	
 	public:
@@ -53,5 +59,7 @@ class HuboState{
         vector<MotorBoard*> getBoards();
         map<string, HuboMotor*> getBoardMap();
         map<string, PROPERTY> getPropertyMap();
+        map<string, FTSensorBoard*> getFTSensorMap();
+        map<string, IMUBoard*> getIMUSensorMap();
 };
 #endif
