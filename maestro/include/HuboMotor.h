@@ -33,12 +33,6 @@ class HuboMotor {
 	
 	long drive, driven, harm, enc; 	//gear ratios for conversion from radians to ticks
 
-	long ticks_position;            //Current position in ticks from zero
-	long desired_position;			//Current goal position in ticks from zero
-	double omega;					//Angular velocity in radians/sec
-	
-
-
 	//Identification
 	string name;
 
@@ -110,12 +104,6 @@ class HuboMotor {
 	long getIerr();
 	long getBerr();
 
-	// ******* OLD ********
-	void setTicksPosition(long ticks);
-	void setDesiredPosition(long ticks);
-	void setAngularVelocity(double omega);
-
-
 	void setName(string name);
 	void setGoalPosition(double rads);
 	void setInterVelocity(double omega);
@@ -134,17 +122,10 @@ class HuboMotor {
 	bool isEnabled();
 	bool isHomed();
 	bool isZeroed();
-
-
-	// ******** OLD ******
-	long getTicksPosition();
-	long getDesiredPosition();
 	bool requiresMotion();
 
-	double ticksToRadians(long ticks);
-	long radiansToTicks(double rads);
+	//******** OLD **********
 	long interpolate(int MAX_STEP, int MIN_STEP);
-
 
 };
 

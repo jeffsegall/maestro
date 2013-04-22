@@ -4,19 +4,19 @@ program dance {
 									
 	
 
-	while (RobotControl.getProperty("RKP", "position") != 1.2){
+	while (RobotControl.requiresMotion("RKP")){
 		do nothing
 	} 
 
-	while (RobotControl.getProperty("LKP", "position") != 1.2){
+	while (RobotControl.requiresMotion("LKP")){
 		do nothing
 	}
 	
-	while (RobotControl.getProperty("RAP", "position") != -.77){
+	while (RobotControl.requiresMotion("RAP")){
 		do nothing
 	}
 
-	while (RobotControl.getProperty("LAP", "position") != -.77){
+	while (RobotControl.requiresMotion("LAP")){
 		do nothing
 	}
 	

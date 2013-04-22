@@ -58,13 +58,7 @@ RobotControl::RobotControl(const std::string& name):
     		.arg("Target", "The target of the command. Usually a joint name.");
 
     this->addOperation("requiresMotion", &RobotControl::requiresMotion, this, RTT::OwnThread)
-			.arg("Board", "The board to send commands to")
-			.arg("Motor", "The motor channel to check need for motion from.")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("requiresMotionByName", &RobotControl::requiresMotionByName, this, RTT::OwnThread)
-			.arg("Name", "The name of the motor to send commands to")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
+			.arg("Name", "The name of the motor to check for necessary motion on.");
 
     this->addOperation("setMaxAccVel", &RobotControl::setMaxAccVel, this, RTT::OwnThread)
 			.arg("Board", "The board to send commands to")
@@ -663,13 +657,13 @@ vector<float> trajectoryValues(string path){
 	  this->delay = us;
   }
 
-  bool RobotControl::requiresMotion(int board, int motor, int delay){
-	  return state->getBoardByNumber(board)->requiresMotion(motor);
-  }
-
-  bool RobotControl::requiresMotionByName(string name, int delay){
-	  HuboMotor* motor = this->state->getMotorByName(name);
-	  return motor != NULL ? motor->requiresMotion() : false;
+  bool RobotControl::requiresMotion(string name){
+	  map<string, HuboMotor*> motors = state->getBoardMap();
+	  if (motors.count(name)  == 0){
+		  std::cout << "Error. Motor with name " << name << " is not on record. Aborting." << std::endl;
+		  return false;
+	  }
+	  return motors[name]->requiresMotion();
   }
 
   void RobotControl::setMaxAccVel(int board, int motor, int acc, int vel){

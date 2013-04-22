@@ -3,9 +3,6 @@
 #include <iostream>
 
 HuboMotor::HuboMotor(){
-    this->ticks_position = 0;
-    this->desired_position = 0;
-    this->omega = MAX_ANGULAR_VELOCITY;
 
     //NEW_DATA
     currGoal = 0;
@@ -303,15 +300,7 @@ long HuboMotor::getDesiredPosition(){
 }
 
 bool HuboMotor::requiresMotion(){
-	return desired_position - ticks_position != 0;
-}
-
-double HuboMotor::ticksToRadians(long ticks){
-	return (ticks * (double)(this->drive * 2 * M_PI))/(this->driven * this->harm * this->enc);
-}
-
-long HuboMotor::radiansToTicks(double rad){
-	return (long)(rad * ((double)(this->driven * this->harm * this->enc))/(this->drive * 2 * M_PI));
+	return currGoal != interStep;
 }
 
 long HuboMotor::interpolate(int MAX_STEP, int MIN_STEP){
