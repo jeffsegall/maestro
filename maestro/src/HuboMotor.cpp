@@ -169,18 +169,6 @@ void HuboMotor::setGearRatios(long drive, long driven, long harm, long enc){
 	this->enc = enc;
 }
 
-void HuboMotor::setTicksPosition(long ticks){
-    this->ticks_position = ticks;
-}
-
-void HuboMotor::setDesiredPosition(long ticks){
-	this->desired_position = ticks;
-}
-
-void HuboMotor::setAngularVelocity(double omega){
-	this->omega = omega;
-}
-
 long HuboMotor::getUpperLimit(){
     return this->mpos2;
 }
