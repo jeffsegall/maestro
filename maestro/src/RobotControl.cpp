@@ -382,42 +382,99 @@ vector<float> trajectoryValues(string path){
 
   double RobotControl::get(string name, string property){
 	  map<string, HuboMotor*> motors = state->getBoardMap();
+	  map<string, FTSensorBoard*> ftSensors = state->getFTSensorMap();
+	  map<string, IMUBoard*> imuSensors = state->getIMUSensorMap();
 
-	  if (motors.count(name) == 0){
-		  std::cout << "Error. Motor with name " << name << " is not on record. Aborting." << std::endl;
+	  if (motors.count(name) == 1){
+		  HuboMotor* motor = motors[name];
+		  map<string, PROPERTY> properties = state->getPropertyMap();
+
+		  if (properties.count(property) == 0){
+			  std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
+			  return 0;
+		  }
+
+		  switch (properties[property]){
+		  case POSITION:
+			  std::cout << "Position of motor " << name << " is " << motor->getPosition() << "." << std::endl;
+			  return motor->getPosition();
+		  case VELOCITY:
+			  std::cout << "Velocity of motor " << name << " is " << motor->getVelocity() << "." << std::endl;
+			  return motor->getVelocity();
+		  case TEMPERATURE:
+			  std::cout << "Temperature of motor " << name << " is " << motor->getTemperature() << "." << std::endl;
+			  return motor->getTemperature();
+		  case CURRENT:
+			  std::cout << "Current of motor " << name << " is " << motor->getCurrent() << "." << std::endl;
+			  return motor->getCurrent();
+		  case ENABLED:
+			  std::cout << "Motor " << name << " is currently " << (motor->isEnabled() ? "enabled." : "disabled.") << std::endl;
+			  return motor->isEnabled() ? 1 : 0;
+		  case HOMED:
+			  std::cout << "Motor " << name << " has " << (motor->isHomed() ? "" : "not ") << "been homed." << std::endl;
+			  return motor->isHomed() ? 1 : 0;
+		  default:
+			  std::cout << "Motor with name " << name << " has no readable property named " << property << " ." << std::endl;
+			  return 0;
+		  }
+	  } else if (ftSensors.count(name) == 1){
+		  FTSensorBoard* board = ftSensors[name];
+		  map<string, PROPERTY> properties = state->getPropertyMap();
+
+		  if (properties.count(property) == 0){
+			  std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
+			  return 0;
+		  }
+
+		  switch (properties[property]){
+		  case M_X:
+			  std::cout << "M_X of Force Torque Sensor " << name << " is " << board->getMX() << "." << std::endl;
+			  return board->getMX();
+		  case M_Y:
+			  std::cout << "M_Y of Force Torque Sensor " << name << " is " << board->getMY() << "." << std::endl;
+			  return board->getMY();
+		  case F_Z:
+			  std::cout << "F_Z of Force Torque Sensor " << name << " is " << board->getFZ() << "." << std::endl;
+			  return board->getFZ();
+		  default:
+			  std::cout << "Force Torque Sensor with name " << name << " has no readable property named " << property << " ." << std::endl;
+			  return 0;
+		  }
+	  } else if (imuSensors.count(name) == 1){
+		  IMUBoard* board = imuSensors[name];
+		  map<string, PROPERTY> properties = state->getPropertyMap();
+
+		  if (properties.count(property) == 0){
+			  std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
+			  return 0;
+		  }
+
+		  switch (properties[property]){
+		  case X_ACCEL:
+			  std::cout << "X Acceleration of IMU " << name << " is " << board->getXAcc() << "." << std::endl;
+			  return board->getXAcc();
+		  case Y_ACCEL:
+			  std::cout << "Y Acceleration of IMU " << name << " is " << board->getYAcc() << "." << std::endl;
+			  return board->getYAcc();
+		  case Z_ACCEL:
+			  std::cout << "Z Acceleration of IMU " << name << " is " << board->getZAcc() << "." << std::endl;
+			  return board->getZAcc();
+		  case X_ROTAT:
+			  std::cout << "X Rotation of IMU " << name << " is " << board->getXRot() << "." << std::endl;
+			  return board->getXRot();
+		  case Y_ROTAT:
+			  std::cout << "Y Rotation of IMU " << name << " is " << board->getYRot() << "." << std::endl;
+			  return board->getYRot();
+		  default:
+			  std::cout << "IMU with name " << name << " has no readable property named " << property << " ." << std::endl;
+			  return 0;
+		  }
+	  } else {
+		  std::cout << "Error. Readable Object with name " << name << " is not on record. Aborting." << std::endl;
 		  return 0;
 	  }
-	  HuboMotor* motor = motors[name];
 
-	  map<string, PROPERTY> properties = state->getPropertyMap();
-	  if (properties.count(property) == 0){
-		  std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
-		  return 0;
-	  }
 
-	  switch (properties[property]){
-	  case POSITION:
-		  std::cout << "Position of motor " << name << " is " << motor->getPosition() << "." << std::endl;
-		  return motor->getPosition();
-	  case VELOCITY:
-		  std::cout << "Velocity of motor " << name << " is " << motor->getVelocity() << "." << std::endl;
-		  return motor->getVelocity();
-	  case TEMPERATURE:
-		  std::cout << "Temperature of motor " << name << " is " << motor->getTemperature() << "." << std::endl;
-		  return motor->getTemperature();
-	  case CURRENT:
-		  std::cout << "Current of motor " << name << " is " << motor->getCurrent() << "." << std::endl;
-		  return motor->getCurrent();
-	  case ENABLED:
-		  std::cout << "Motor " << name << " is currently " << (motor->isEnabled() ? "enabled." : "disabled.") << std::endl;
-		  return motor->isEnabled() ? 1 : 0;
-	  case HOMED:
-		  std::cout << "Motor " << name << " has " << (motor->isHomed() ? "" : "not ") << "been homed." << std::endl;
-		  return motor->isHomed() ? 1 : 0;
-	  default:
-		  std::cout << "Motor with name " << name << " has no readable property named " << property << " ." << std::endl;
-		  return 0;
-	  }
   }
 
   void RobotControl::command(string name, string target){
@@ -504,6 +561,28 @@ vector<float> trajectoryValues(string path){
 			  }
 		  }
 		  //TODO: Find a way to pause for a length of time here.
+	  } else if (name.compare("ResetJoint") == 0){
+		  if (motors.count(target) == 0){
+			  std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
+			  return;
+		  }
+
+		  output.commandName = name;
+		  output.jointName = target;
+
+		  command("Disable", target);
+		  set(target, "position", 0);
+	  } else if (name.compare("ResetAll") == 0){
+		  for (int i = 0; i < this->state->getBoards().size(); i++){
+			  MotorBoard* mb = this->state->getBoards()[i];
+			  for (int j = 0; j < mb->getNumChannels(); j++){
+				  HuboMotor* motor = mb->getMotorByChannel(j);
+				  command("ResetJoint", motor->getName());
+			  }
+		  }
+		  return;
+	  } else if (name.compare("InitializeSensors") == 0){
+		  output.commandName = name;
 	  } else if (name.compare("Update") == 0){
 		  updateState();
 	  } else {
@@ -538,7 +617,7 @@ vector<float> trajectoryValues(string path){
 	  case 2:
 		  whitespace = '\t';
 		  break;
-	  case 3:
+	  case 4:
 		  whitespace = '\n';
 		  break;
 	  default:
