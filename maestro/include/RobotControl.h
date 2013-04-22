@@ -63,8 +63,7 @@ public:
     void getCurrentTicks(int board, int motor, int delay);
     void setCurrentTicks(int board, int motor, int ticks);
     void getCurrentGoal(int board, int motor, int delay);
-    bool requiresMotion(int board, int motor, int delay);
-    bool requiresMotionByName(string name, int delay);
+    bool requiresMotion(string name);
     double get(string name, string property);
     void updateState();
 
