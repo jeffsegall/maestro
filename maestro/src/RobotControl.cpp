@@ -96,7 +96,6 @@ RobotControl::RobotControl(const std::string& name):
     this->delay = 0;
     this->state = NULL;
     this->interpolation = true;	//Interpret all commands as a final destination with given velocity.
-    //TODO: Disable all motors when this mode is changed.
     this->override = true;		//Force homing before allowing enabling. (currently disabled)
 
     tempOutput.open("/opt/ros/fuerte/stacks/maestro/RobotControlLog.txt");
@@ -473,8 +472,6 @@ vector<float> trajectoryValues(string path){
 		  std::cout << "Error. Readable Object with name " << name << " is not on record. Aborting." << std::endl;
 		  return 0;
 	  }
-
-
   }
 
   void RobotControl::command(string name, string target){
@@ -498,7 +495,6 @@ vector<float> trajectoryValues(string path){
 		  updateState();
 		  motor->setGoalPosition(motor->getPosition());
 		  motor->setEnabled(true);
-
 
 	  } else if (name.compare("EnableAll") == 0){
 		  output.commandName = name;
@@ -596,6 +592,7 @@ vector<float> trajectoryValues(string path){
   void RobotControl::setMode(string mode, bool value){
 	  if (mode.compare("Interpolation") == 0){
 		  std::cout << "Setting interpolation " << (value ? "on." : "off.") << std::endl;
+		  command("DisableAll","");
 		  interpolation = value;
 	  } else {
 		  std::cout << "RobotControl does not have a mutable mode with name " << mode << "." << std::endl;

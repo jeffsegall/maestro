@@ -1,31 +1,29 @@
 program dance {
-	var double speed = .5;
-	do RobotControl.setRightKneeRad(1.2, speed,0)
-	do RobotControl.setLeftKneeRad(1.2, speed,0)
+	
+	do RobotControl.setProperties( "RKP RKP LKP LKP RAP RAP LAP LAP", 
+									"velocity position velocity position velocity position velocity position"
+									".5 1.2 .5 1.2 .5 -.77 .5 -.77");
+									
+	
 
-	do RobotControl.setRightAnklePitchRad(-.77, speed,0)
-	do RobotControl.setLeftAnklePitchRad(-.77, speed,0)
-
-	while (RobotControl.requiresMotion(2, 0, 0)){
+	while (RobotControl.getProperty("RKP", "position") != 1.2){
 		do nothing
 	} 
 
-	while (RobotControl.requiresMotion(6, 0, 0)){
+	while (RobotControl.getProperty("LKP", "position") != 1.2){
 		do nothing
 	}
 	
-	while (RobotControl.requiresMotion(3, 0, 0)){
+	while (RobotControl.getProperty("RAP", "position") != -.77){
 		do nothing
 	}
 
-	while (RobotControl.requiresMotion(7, 0, 0)){
+	while (RobotControl.getProperty("LAP", "position") != -.77){
 		do nothing
 	}
 	
-	do RobotControl.setRightKneeRad(0, speed,0)
-	do RobotControl.setLeftKneeRad(0, speed,0)
-	
-	do RobotControl.setRightAnklePitchRad(0, speed,0)
-	do RobotControl.setLeftAnklePitchRad(0, speed,0)
+	do RobotControl.setProperties( "RKP LKP RAP LAP", 
+									"position position position position"
+									"0 0 0 0");
 	
 }
