@@ -125,7 +125,7 @@ class HuboMotor {
 	bool requiresMotion();
 
 	//******** OLD **********
-	long interpolate(int MAX_STEP, int MIN_STEP);
+	//long interpolate(int MAX_STEP, int MIN_STEP); //DEPRECATED
 
 };
 

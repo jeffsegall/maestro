@@ -47,9 +47,6 @@ HuboMotor::HuboMotor(long mpos1, long mpos2, long kp, long kd, long ki,
     this->pwm_lim = pwm_lim;
     this->i_err = i_err;
     this->b_err = b_err;
-    this->ticks_position = 0;
-    this->desired_position = 0;
-    this->omega = MAX_ANGULAR_VELOCITY;
 
     currGoal = 0;
 	interStep = 0;
@@ -89,9 +86,6 @@ HuboMotor::HuboMotor(const HuboMotor& rhs){
     this->pwm_lim = rhs.pwm_lim;
     this->i_err = rhs.i_err;
     this->b_err = rhs.b_err;
-    this->ticks_position = rhs.ticks_position;
-    this->desired_position = rhs.desired_position;
-    this->omega = rhs.omega;
 
     //NEW_DATA
     this->name = rhs.name;
@@ -303,6 +297,8 @@ bool HuboMotor::requiresMotion(){
 	return currGoal != interStep;
 }
 
+/*
+ * ** DEPRECATED **
 long HuboMotor::interpolate(int MAX_STEP, int MIN_STEP){
 	const float LEAP_PERCENTAGE = .5;
 	const int FREQUENCY = 100; //Hertz
@@ -325,6 +321,7 @@ long HuboMotor::interpolate(int MAX_STEP, int MIN_STEP){
 	ticks_position = output;
 	return output;
 }
+*/
 
 double HuboMotor::interpolate(){
 	const float LEAP_PERCENTAGE = .5;
