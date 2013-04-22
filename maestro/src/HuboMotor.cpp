@@ -285,14 +285,6 @@ long HuboMotor::getBerr(){
     return b_err;
 }
 
-long HuboMotor::getTicksPosition(){
-    return this->ticks_position;
-}
-
-long HuboMotor::getDesiredPosition(){
-	return this->desired_position;
-}
-
 bool HuboMotor::requiresMotion(){
 	return currGoal != interStep;
 }
