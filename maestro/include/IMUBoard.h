@@ -31,7 +31,7 @@ class IMUBoard {
     public:
 
         IMUBoard();
-        IMUBoard(boardNum BNO);
+        IMUBoard(boardNum BNO, string name);
    
         //PROTOCOL COMMAND MESSAGES
         void setRequestBoardInfo(char CANR);

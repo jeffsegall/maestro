@@ -122,20 +122,20 @@ void HuboState::initHuboWithDefaults(string path, queue<hubomsg::HuboCommand>* o
     }
 
 
-    IMU0 = new IMUBoard(0, "IMU");
+    IMU0 = new IMUBoard(BNO_IMU_0, "IMU");
     IMUSensorMap["IMU"] = IMU0;
-    IMU1 = new IMUBoard(1, "LAI");
+    IMU1 = new IMUBoard(BNO_IMU_1, "LAI");
     IMUSensorMap["LAI"] = IMU1;
-    IMU2 = new IMUBoard(2, "RAI");
+    IMU2 = new IMUBoard(BNO_IMU_2, "RAI");
     IMUSensorMap["RAI"] = IMU2;
 
-    leftAnkle = new FTSensorBoard(0, "LAT");
+    leftAnkle = new FTSensorBoard(BNO_L_FOOT_FT, "LAT");
     FTSensorMap["LAT"] = leftAnkle;
-    rightAnkle = new FTSensorBoard(1, "RAT");
+    rightAnkle = new FTSensorBoard(BNO_R_FOOT_FT, "RAT");
     FTSensorMap["RAT"] = rightAnkle;
-    leftWrist = new FTSensorBoard(2, "LWT");
+    leftWrist = new FTSensorBoard(BNO_L_WRIST_FT, "LWT");
     FTSensorMap["LWT"] = leftWrist;
-    rightWrist = new FTSensorBoard(3, "RWT");
+    rightWrist = new FTSensorBoard(BNO_R_WRIST_FT, "RWT");
     FTSensorMap["RWT"] = rightWrist;
 }
 
