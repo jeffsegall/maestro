@@ -28,6 +28,8 @@
 #include "HuboState.h"
 #include "HuboMotor.h"
 #include "MotorBoard.h"
+#include "IMUBoard.h"
+#include "FTSensorBoard.h"
 #include "Property.h"
 #include <fstream>
 
