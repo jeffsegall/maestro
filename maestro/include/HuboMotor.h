@@ -125,7 +125,7 @@ class HuboMotor {
 	bool isHomed();
 	bool isZeroed();
 	bool hasError();
-	bool hasError(Property error);
+	bool hasError(PROPERTY error);
 	bool requiresMotion();
 
 	//******** OLD **********

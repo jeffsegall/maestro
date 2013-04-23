@@ -403,7 +403,7 @@ bool HuboMotor::hasError(){
 	return errors != 0;
 }
 
-bool HuboMotor::hasError(Property error){
+bool HuboMotor::hasError(PROPERTY error){
 	switch (error){
 	case JAM_ERROR:
 		return (bool)(errors & 0x200); 	// 1000000000
