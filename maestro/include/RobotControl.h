@@ -56,7 +56,7 @@ public:
     void debugControl(int board, int operation);
 	void setDelay(int us);
 	void runGesture(string name, int board);
-	int testFunction(int param1, int param2, int param3, int param4, int param5, int param6);
+	int testFunction(int param1, int param2, int param3, int param4);
 	void command(string name, string target);
 
     // Feedback Commands
