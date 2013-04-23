@@ -587,6 +587,18 @@ vector<float> trajectoryValues(string path){
 	  if (mode.compare("Interpolation") == 0){
 		  std::cout << "Setting interpolation " << (value ? "on." : "off.") << std::endl;
 		  command("DisableAll","");
+		  //If we are switching to interpolation, the internal step of each motor must be updated.
+		  if (value){
+			  hubomsg::HuboState huboState = hubomsg::HuboState();
+			  huboState = commHandler->getState();
+			  map<string, HuboMotor*> motors = state->getBoardMap();
+			  for (int i = 0; i < huboState.joints.size(); i++){
+				  if (motors.count(huboState.joints[i].name) == 1){
+					  HuboMotor* motor = motors[huboState.joints[i].name];
+					  motor->setInterStep(huboState.joints[i].commanded);
+				  }
+			  }
+		  }
 		  interpolation = value;
 	  } else {
 		  std::cout << "RobotControl does not have a mutable mode with name " << mode << "." << std::endl;

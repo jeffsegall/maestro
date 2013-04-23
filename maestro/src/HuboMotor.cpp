@@ -348,7 +348,13 @@ void HuboMotor::update(double position, double velocity, double temperature, dou
 
 void HuboMotor::setEnabled(bool enabled){
 	this->enabled = enabled;
-	interStep = currGoal; //If we have recently changed from non-interpolation to interpolation, the step MUST be updated.
+	//interStep = currGoal; //If we have recently changed from non-interpolation to interpolation, the step MUST be updated.
+}
+
+void HuboMotor::setInterStep(double rads){
+	//This method should ONLY be used when switching control mode to interpolation.
+	//The argument to this method should be the current actual position of the motor.
+	this->interStep = rads;
 }
 
 void HuboMotor::setHomed(bool homed){

@@ -106,6 +106,7 @@ class HuboMotor {
 
 	void setName(string name);
 	void setGoalPosition(double rads);
+	void setInterStep(double rads);
 	void setInterVelocity(double omega);
 	void update(double position, double velocity, double temperature, double current);
 	void setEnabled(bool enabled);
