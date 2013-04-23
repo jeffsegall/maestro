@@ -491,7 +491,7 @@ vector<float> trajectoryValues(string path){
 		  motor->setEnabled(true);
 
 	  } else if (name.compare("EnableAll") == 0){
-		  output.commandName = name;
+		  output.commandName = "enableAll";
 		  for (int i = 0; i < this->state->getBoards().size(); i++){
 			  MotorBoard* mb = this->state->getBoards()[i];
 			  for (int j = 0; j < mb->getNumChannels(); j++){
@@ -519,7 +519,7 @@ vector<float> trajectoryValues(string path){
 		  motor->setEnabled(false);
 
 	  } else if (name.compare("DisableAll") == 0){
-		  output.commandName = name;
+		  output.commandName = "disableAll";
 		  for (int i = 0; i < this->state->getBoards().size(); i++){
 			  MotorBoard* mb = this->state->getBoards()[i];
 			  for (int j = 0; j < mb->getNumChannels(); j++){
@@ -541,7 +541,7 @@ vector<float> trajectoryValues(string path){
 		  set(target, "position", 0);
 
 	  } else if (name.compare("HomeAll") == 0){
-		  output.commandName = name;
+		  output.commandName = "homeAll";
 		  for (int i = 0; i < this->state->getBoards().size(); i++){
 			  MotorBoard* mb = this->state->getBoards()[i];
 			  for (int j = 0; j < mb->getNumChannels(); j++){
@@ -557,7 +557,7 @@ vector<float> trajectoryValues(string path){
 			  return;
 		  }
 
-		  output.commandName = name;
+		  output.commandName = "resetJoint";
 		  output.jointName = target;
 
 		  command("Disable", target);
@@ -572,7 +572,7 @@ vector<float> trajectoryValues(string path){
 		  }
 		  return;
 	  } else if (name.compare("InitializeSensors") == 0){
-		  output.commandName = name;
+		  output.commandName = "initializeSensors";
 	  } else if (name.compare("Update") == 0){
 		  updateState();
 	  } else {
