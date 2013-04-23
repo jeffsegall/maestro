@@ -2,6 +2,8 @@
 #define ROBOTCONTROL_H
 
 #define CONFIG_PATH "/opt/ros/fuerte/stacks/maestro/test/config.txt"
+#define HARDWARE true
+#define SIMULATION false
 
 #include <rtt/TaskContext.hpp>
 #include <rtt/Port.hpp>
@@ -72,10 +74,11 @@ public:
     void setPositionGain(int board, int motor, int kp, int ki, int kd);
     void setMode(string mode, bool value);
 
-
+    bool getRunType(string path);
     vector<string> getGestureScripts(string path);
     vector<string> splitFields(string input);
     string getDefaultInitPath(string path);
+
 
 private:
 
@@ -107,6 +110,7 @@ private:
     bool printNow, enableControl;
     int delay;
     bool interpolation, override;
+    bool RUN_TYPE;
 };
 
 #endif

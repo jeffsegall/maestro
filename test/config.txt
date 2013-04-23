@@ -1,3 +1,5 @@
+RunType:
+Simulation
 Init File:
 /opt/ros/fuerte/stacks/maestro/maestro/models/hubo_default.xml
 Scripts:

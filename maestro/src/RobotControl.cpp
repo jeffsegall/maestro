@@ -99,6 +99,8 @@ RobotControl::RobotControl(const std::string& name):
 		this->getProvider<Scripting>("scripting")->loadPrograms(paths[i]);
     }
 
+    runType = getRunType(CONFIG_PATH);
+
 }
   
   RobotControl::~RobotControl(){}
@@ -232,6 +234,29 @@ vector<float> trajectoryValues(string path){
 	  return files;
   }
 
+  bool RobotControl::getRunType(string path){
+	  ifstream is;
+	  is.open(path.c_str());
+	  string temp;
+	  if (is.is_open()){
+		  do {
+			  getline(is, temp, '\n');
+		  } while (temp.compare("RunType:") != 0);
+		  getline(is, temp, '\n');
+		  if (temp.compare("Hardware") == 0){
+			  return HARDWARE;
+		  } else if (temp.compare("Simulation") == 0){
+			  return SIMULATION;
+		  } else {
+			  cout << "Error! Unknown RunType specified in config file! Assuming Simulation.";
+			  return SIMULATION;
+		  }
+	  } else
+		  std::cout << "Error. Config file nonexistent. Aborting." << std::endl;
+
+	  return SIMULATION;
+  }
+
   string RobotControl::getDefaultInitPath(string path){
 	  	  ifstream is;
 	  	  is.open(path.c_str());
@@ -275,7 +300,6 @@ vector<float> trajectoryValues(string path){
 		  }
 
 		  HuboMotor* motor = motors[huboState.joints[i].name];
-
 
 		  motor->update(huboState.joints[i].position,
 					  huboState.joints[i].velocity,
@@ -517,12 +541,13 @@ vector<float> trajectoryValues(string path){
 
 		  HuboMotor* motor = motors[target];
 
-		  if (!motor->isHomed()){
-			  std::cout << "Error! Motor " << target << " has not yet been homed. Skipping enabling of this motor." << std::endl;
-			  return;
-		  }
 		  updateState();
-		  motor->setGoalPosition(motor->getPosition());
+		  if (RUN_TYPE == HARDWARE && !motor->isHomed()){
+		  			  std::cout << "Warning! Motor " << target << " has not yet been homed. Skipping enabling of this motor." << std::endl;
+		  			  return;
+		  		  }
+		  		  if (RUN_TYPE == HARDWARE)
+		  			  motor->setGoalPosition(motor->getPosition());
 		  motor->setEnabled(true);
 
 	  } else if (name.compare("EnableAll") == 0){
@@ -531,13 +556,14 @@ vector<float> trajectoryValues(string path){
 			  MotorBoard* mb = this->state->getBoards()[i];
 			  for (int j = 0; j < mb->getNumChannels(); j++){
 			  	  HuboMotor* motor = mb->getMotorByChannel(j);
-			  	  if (!motor->isHomed())
-					  std::cout << "Error! Motor " << motor->getName() << " has not yet been homed. Skipping enabling of this motor." << std::endl;
-			  	  else {
-			  		  updateState();
+			  	  updateState();
+			  	  if (RUN_TYPE == HARDWARE && !motor->isHomed()){
+					  std::cout << "Warning! Motor " << target << " has not yet been homed. Skipping enabling of this motor." << std::endl;
+					  return;
+				  }
+				  if (RUN_TYPE == HARDWARE)
 					  motor->setGoalPosition(motor->getPosition());
-			  		  motor->setEnabled(true);
-			  	  }
+				  motor->setEnabled(true);
 			  }
 		  }
 	  } else if (name.compare("Disable") == 0){
@@ -628,7 +654,7 @@ vector<float> trajectoryValues(string path){
 			  for (int i = 0; i < huboState.joints.size(); i++){
 				  if (motors.count(huboState.joints[i].name) == 1){
 					  HuboMotor* motor = motors[huboState.joints[i].name];
-					  motor->setInterStep(huboState.joints[i].commanded);
+					  motor->setInterStep(RUN_TYPE == SIMULATION ? huboState.joints[i].commanded : huboState.joints[i].position);
 				  }
 			  }
 		  }
