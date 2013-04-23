@@ -83,13 +83,6 @@ RobotControl::RobotControl(const std::string& name):
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
 	    	.arg("Name", "The name of the gesture to load.")
 			.arg("Board", "The board on which to run the gesture.");
-    this->addOperation("testFunction", &RobotControl::testFunction, this, RTT::OwnThread)
-    		.arg("param1", "")
-    		.arg("param2", "")
-    		.arg("param3", "")
-    		.arg("param4", "")
-    		.arg("param5", "")
-    		.arg("param6", "");
 
     this->written = 0;
     this->printNow = false;
