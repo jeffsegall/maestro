@@ -417,28 +417,28 @@ vector<float> trajectoryValues(string path){
 		  case PWM_SATURATED_ERROR:
 			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a PWM Saturated error.";
 			  return motor->hasError(properties[property]);
-		  case JAM_ERROR:
+		  case BIG_ERROR:
 			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a big error.";
 			  return motor->hasError(properties[property]);
-		  case JAM_ERROR:
+		  case ENC_ERROR:
 			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing an encoder error.";
 			  return motor->hasError(properties[property]);
-		  case JAM_ERROR:
+		  case DRIVE_FAULT_ERROR:
 			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a drive fault.";
 			  return motor->hasError(properties[property]);
-		  case JAM_ERROR:
+		  case POS_MIN_ERROR:
 			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a minimum position error.";
 			  return motor->hasError(properties[property]);
-		  case JAM_ERROR:
+		  case POS_MAX_ERROR:
 			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a maximum position error.";
 			  return motor->hasError(properties[property]);
-		  case JAM_ERROR:
+		  case VELOCITY_ERROR:
 			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a velocity error.";
 			  return motor->hasError(properties[property]);
-		  case JAM_ERROR:
+		  case ACCELERATION_ERROR:
 			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing an acceleration error.";
 			  return motor->hasError(properties[property]);
-		  case JAM_ERROR:
+		  case TEMP_ERROR:
 			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a temperature error.";
 			  return motor->hasError(properties[property]);
 		  default:
