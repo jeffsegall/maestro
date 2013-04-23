@@ -84,6 +84,12 @@ RobotControl::RobotControl(const std::string& name):
 	    	.arg("Name", "The name of the gesture to load.")
 			.arg("Board", "The board on which to run the gesture.");
 
+    this->addOperation("testFunction", &RobotControl::testFunction, this, RTT::OwnThread)
+    	    	.arg("param1", "The name of the gesture to load.")
+    			.arg("param2", "The board on which to run the gesture.")
+    			.arg("param1", "The name of the gesture to load.")
+				.arg("param2", "The board on which to run the gesture.");
+
     this->written = 0;
     this->printNow = false;
     this->enableControl = false;
@@ -695,8 +701,8 @@ vector<float> trajectoryValues(string path){
 		std::cout << "Error. Program has encountered an error. " << std::endl;
   }
 
-  int RobotControl::testFunction(int param1, int param2, int param3, int param4, int param5, int param6){
-	  return param1 | (param2 << 1) | (param3 << 2) | (param4 << 3) | (param5 << 4) | (param6 << 5);
+  int RobotControl::testFunction(int param1, int param2, int param3, int param4){
+	  return param1 | (param2 << 1) | (param3 << 2) | (param4 << 3);
   }
 
 ORO_CREATE_COMPONENT_LIBRARY()
