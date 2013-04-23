@@ -15,6 +15,17 @@ HuboState::HuboState(){
 	propertyMap["homed"] = HOMED;
 	propertyMap["zeroed"] = ZEROED;
 	propertyMap["enabled"] = ENABLED;
+	propertyMap["errored"] = ERRORED;
+	propertyMap["jamError"] = JAM_ERROR;
+	propertyMap["PWMSaturatedError"] = PWM_SATURATED_ERROR;
+	propertyMap["bigError"] = BIG_ERROR;
+	propertyMap["encoderError"] = ENC_ERROR;
+	propertyMap["driveFaultError"] = DRIVE_FAULT_ERROR;
+	propertyMap["posMinError"] = POS_MIN_ERROR;
+	propertyMap["posMaxError"] = POS_MAX_ERROR;
+	propertyMap["velocityError"] = VELOCITY_ERROR;
+	propertyMap["accelerationError"] = ACCELERATION_ERROR;
+	propertyMap["tempError"] = TEMP_ERROR;
 	propertyMap["x_acc"] = X_ACCEL;
 	propertyMap["y_acc"] = Y_ACCEL;
 	propertyMap["z_acc"] = Z_ACCEL;

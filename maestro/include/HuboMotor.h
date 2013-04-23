@@ -51,6 +51,7 @@ class HuboMotor {
 	bool enabled;					//Whether the motor has motion enabled
 	bool homed;						//Whether the motor has been homed or not
 	bool zeroed;					//Whether the sensors have been zeroed or not
+	int errors;						//Collection of error flags
 
 	public:
 
@@ -108,7 +109,7 @@ class HuboMotor {
 	void setGoalPosition(double rads);
 	void setInterStep(double rads);
 	void setInterVelocity(double omega);
-	void update(double position, double velocity, double temperature, double current);
+	void update(double position, double velocity, double temperature, double current, bool homed, int errors);
 	void setEnabled(bool enabled);
 	void setHomed(bool homed);
 	void setZeroed(bool zeroed);
@@ -123,6 +124,8 @@ class HuboMotor {
 	bool isEnabled();
 	bool isHomed();
 	bool isZeroed();
+	bool hasError();
+	bool hasError(Property error);
 	bool requiresMotion();
 
 	//******** OLD **********

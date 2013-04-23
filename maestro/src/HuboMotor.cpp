@@ -339,11 +339,13 @@ void HuboMotor::setInterVelocity(double omega){
 	interVel = omega;
 }
 
-void HuboMotor::update(double position, double velocity, double temperature, double current){
+void HuboMotor::update(double position, double velocity, double temperature, double current, bool homed, int errors){
 	currPos = position;
 	currVel = velocity;
 	currTemp = temperature;
 	currCurrent = current;
+	this->homed = homed;
+	this->errors = errors;
 }
 
 void HuboMotor::setEnabled(bool enabled){
@@ -355,10 +357,6 @@ void HuboMotor::setInterStep(double rads){
 	//This method should ONLY be used when switching control mode to interpolation.
 	//The argument to this method should be the current actual position of the motor.
 	this->interStep = rads;
-}
-
-void HuboMotor::setHomed(bool homed){
-	this->homed = homed;
 }
 
 void HuboMotor::setZeroed(bool zeroed){
@@ -401,3 +399,33 @@ bool HuboMotor::isZeroed(){
 	return zeroed;
 }
 
+bool HuboMotor::hasError(){
+	return errors != 0;
+}
+
+bool HuboMotor::hasError(Property error){
+	switch (error){
+	case JAM_ERROR:
+		return (bool)(errors & 0x200); 	// 1000000000
+	case PWM_SATURATED_ERROR:
+		return (bool)(errors & 0x100); 	// 0100000000
+	case BIG_ERROR:
+		return (bool)(errors & 0x80);  	// 0010000000
+	case ENC_ERROR:
+		return (bool)(errors & 0x40);	// 0001000000
+	case DRIVE_FAULT_ERROR:
+		return (bool)(errors & 0x20);	// 0000100000
+	case POS_MIN_ERROR:
+		return (bool)(errors & 0x10);	// 0000010000
+	case POS_MAX_ERROR:
+		return (bool)(errors & 0x8);	// 0000001000
+	case VELOCITY_ERROR:
+		return (bool)(errors & 0x4);	// 0000000100
+	case ACCELERATION_ERROR:
+		return (bool)(errors & 0x2);	// 0000000010
+	case TEMP_ERROR:
+		return (bool)(errors & 0x1);	// 0000000001
+	default:
+		return false;
+	}
+}

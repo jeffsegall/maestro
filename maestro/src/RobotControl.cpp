@@ -84,12 +84,6 @@ RobotControl::RobotControl(const std::string& name):
 	    	.arg("Name", "The name of the gesture to load.")
 			.arg("Board", "The board on which to run the gesture.");
 
-    this->addOperation("testFunction", &RobotControl::testFunction, this, RTT::OwnThread)
-    	    	.arg("param1", "The name of the gesture to load.")
-    			.arg("param2", "The board on which to run the gesture.")
-    			.arg("param1", "The name of the gesture to load.")
-				.arg("param2", "The board on which to run the gesture.");
-
     this->written = 0;
     this->printNow = false;
     this->enableControl = false;
@@ -286,7 +280,9 @@ vector<float> trajectoryValues(string path){
 		  motor->update(huboState.joints[i].position,
 					  huboState.joints[i].velocity,
 					  huboState.joints[i].temperature,
-					  huboState.joints[i].current);
+					  huboState.joints[i].current,
+					  huboState.joints[i].homed,
+					  huboState.joints[i].status);
 
 	  }
 
@@ -412,6 +408,39 @@ vector<float> trajectoryValues(string path){
 		  case HOMED:
 			  std::cout << "Motor " << name << " has " << (motor->isHomed() ? "" : "not ") << "been homed." << std::endl;
 			  return motor->isHomed() ? 1 : 0;
+		  case ERRORED:
+			  std::cout << "Motor " << name << " is currently " << (motor->hasError() ? "" : "not ") << "in an error condition.";
+			  return motor->hasError();
+		  case JAM_ERROR:
+			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a jam error.";
+			  return motor->hasError(properties[property]);
+		  case PWM_SATURATED_ERROR:
+			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a PWM Saturated error.";
+			  return motor->hasError(properties[property]);
+		  case JAM_ERROR:
+			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a big error.";
+			  return motor->hasError(properties[property]);
+		  case JAM_ERROR:
+			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing an encoder error.";
+			  return motor->hasError(properties[property]);
+		  case JAM_ERROR:
+			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a drive fault.";
+			  return motor->hasError(properties[property]);
+		  case JAM_ERROR:
+			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a minimum position error.";
+			  return motor->hasError(properties[property]);
+		  case JAM_ERROR:
+			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a maximum position error.";
+			  return motor->hasError(properties[property]);
+		  case JAM_ERROR:
+			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a velocity error.";
+			  return motor->hasError(properties[property]);
+		  case JAM_ERROR:
+			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing an acceleration error.";
+			  return motor->hasError(properties[property]);
+		  case JAM_ERROR:
+			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a temperature error.";
+			  return motor->hasError(properties[property]);
 		  default:
 			  std::cout << "Motor with name " << name << " has no readable property named " << property << " ." << std::endl;
 			  return 0;
@@ -543,7 +572,6 @@ vector<float> trajectoryValues(string path){
 		  output.jointName = target;
 
 		  HuboMotor* motor = motors[target];
-		  motor->setHomed(true);
 		  set(target, "position", 0);
 
 	  } else if (name.compare("HomeAll") == 0){
@@ -552,7 +580,6 @@ vector<float> trajectoryValues(string path){
 			  MotorBoard* mb = this->state->getBoards()[i];
 			  for (int j = 0; j < mb->getNumChannels(); j++){
 				  HuboMotor* motor = mb->getMotorByChannel(j);
-				  motor->setHomed(true);
 				  set(motor->getName(), "position", 0);
 			  }
 		  }
@@ -701,9 +728,6 @@ vector<float> trajectoryValues(string path){
 		std::cout << "Error. Program has encountered an error. " << std::endl;
   }
 
-  int RobotControl::testFunction(int param1, int param2, int param3, int param4){
-	  return param1 | (param2 << 1) | (param3 << 2) | (param4 << 3);
-  }
 
 ORO_CREATE_COMPONENT_LIBRARY()
 ORO_LIST_COMPONENT_TYPE(RobotControl)
