@@ -99,7 +99,7 @@ RobotControl::RobotControl(const std::string& name):
 		this->getProvider<Scripting>("scripting")->loadPrograms(paths[i]);
     }
 
-    runType = getRunType(CONFIG_PATH);
+    RUN_TYPE = getRunType(CONFIG_PATH);
 
 }
   
