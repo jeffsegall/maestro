@@ -1,6 +1,5 @@
 program doSomethingElse {
-	var double speed = .5;
-	do RobotControl.setRightShoulderPitch(0, speed, 0)
-	do RobotControl.setRightAnkleRoll(0 speed,,0)
-	do RobotControl.setRightHipRoll(0, speed,0)
+	
+	do RobotControl.setProperties("RSP RSP RAR RAR RHR RHR", "velocity position velocity position velocity position", ".5 0 .5 0 .5 0");
+
 }

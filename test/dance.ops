@@ -1,6 +1,6 @@
 program dance {
 	
-	do RobotControl.setProperties( "RKP RKP LKP LKP RAP RAP LAP LAP", "velocity position velocity position velocity position velocity position", ".5 1.2 .5 1.2 .5 -.77 .5 -.77");
+	do RobotControl.setProperties( "RKP RKP LKP LKP RAP RAP LAP LAP", "velocity position velocity position velocity position velocity position", ".75 1.2 .75 1.2 .5 -.77 .5 -.77");
 									
 	
 

@@ -1,16 +1,14 @@
 program gesture
 {
-	do RobotControl.debugControl(0, speed,5)
-	do RobotControl.setRightHipYaw(60000, speed,0)
+	do RobotControl.setProperties("RHY RHY", "velocity position", ".3 1.49");	
 
-	while (RobotControl.requiresMotion(0,0,0)){
+	while (RobotControl.requiresMotion("RHY")){
 		do nothing
 	}	
 
-	do RobotControl.setRightHipYaw(0, speed,0)
-	while (RobotControl.requiresMotion(0,0,0)){
+	do RobotControl.setProperty("RHY", "position", 0)
+	while (RobotControl.requiresMotion("RHY")){
 		do nothing
 	}
-	do RobotControl.debugControl(0, speed,6)
 	
 }
