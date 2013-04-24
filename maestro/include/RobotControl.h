@@ -70,10 +70,9 @@ public:
     void updateState();
 
     // Parameter Commands
-    void setMaxAccVel(int board, int delay, int acc, int vel);
-    void setPositionGain(int board, int motor, int kp, int ki, int kd);
     void setMode(string mode, bool value);
 
+    // Configuration Commands
     bool getRunType(string path);
     vector<string> getGestureScripts(string path);
     vector<string> splitFields(string input);
@@ -103,7 +102,6 @@ private:
     queue<hubomsg::AchCommand>* achOutputQueue;
 
     map< string, vector<float> > gestures;
-    map<boardNum, MotorBoard*>::iterator it;
     ofstream tempOutput;
 
     int written;
