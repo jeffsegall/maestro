@@ -177,13 +177,13 @@
                        dz="90" off="0" hlim="30" hld="1" hv1="2" hv2="2"
                        hma="1" sm="1" ers="128" as="1" md="1" v_max="-4000"
                        a_max="4000" jam_lim="40" jamd="100" pwm_lim="0"
-                       i_err="0" b_err="30" channel="0" name="NKP"
+                       i_err="0" b_err="30" channel="0" name="NKY"
                        drive="1" driven="1" harm="100" enc="128"/>
 		<motor mpos1="-1300" mpos2="1500" kp="40" kd="100" ki="0"
                        dz="90" off="-1470" hlim="30" hld="1" hv1="2" hv2="2"
                        hma="1" sm="2" ers="128" as="1" md="0" v_max="-1300"
                        a_max="1050" jam_lim="40" jamd="100" pwm_lim="0"
-                       i_err="-1470" b_err="30" channel="1" name="NKR"
+                       i_err="-1470" b_err="30" channel="1" name="NK1"
                        drive="1" driven="1" harm="100" enc="128"/>
 		<motor mpos1="-1300" mpos2="1500" kp="40" kd="100" ki="0"
                        dz="90" off="-1470" hlim="30" hld="1" hv1="2" hv2="2"
@@ -197,7 +197,7 @@
                        dz="44" off="0" hlim="20" hld="0" hv1="40" hv2="50"
                        hma="0.1" sm="0" ers="4000" as="1" md="0" v_max="-170000"
                        a_max="170000" jam_lim="200" jamd="500" pwm_lim="0"
-                       i_err="0" b_err="20" channel="0" name="HPY"
+                       i_err="0" b_err="20" channel="0" name="WST"
                        drive="10" driven="25" harm="100" enc="4000"/>
 	</board>
  	<board number="36" channels="5" name="R_HAND">
@@ -205,31 +205,31 @@
                        dz="0" off="-5000" hlim="100" hld="1" hv1="20" hv2="20"
                        hma="1" sm="2" ers="64" as="1" md="0" v_max="-4800"
                        a_max="4400" jam_lim="50" jamd="100" pwm_lim="0"
-                       i_err="-5000" b_err="100" channel="0" name="RH0"
+                       i_err="-5000" b_err="100" channel="0" name="RH1"
                        drive="1" driven="1" harm="256" enc="128"/>
 		<motor mpos1="-4800" mpos2="4400" kp="50" kd="100" ki="0"
                        dz="0" off="-5000" hlim="100" hld="1" hv1="20" hv2="20"
                        hma="1" sm="2" ers="64" as="1" md="1" v_max="-4800"
                        a_max="4400" jam_lim="50" jamd="100" pwm_lim="0"
-                       i_err="-5000" b_err="100" channel="1" name="RH1"
+                       i_err="-5000" b_err="100" channel="1" name="RH2"
                        drive="1" driven="1" harm="256" enc="128"/>
 		<motor mpos1="-4800" mpos2="4400" kp="50" kd="100" ki="0"
                        dz="0" off="-5000" hlim="100" hld="1" hv1="20" hv2="20"
                        hma="1" sm="2" ers="64" as="1" md="1" v_max="-4800"
                        a_max="4400" jam_lim="50" jamd="100" pwm_lim="0"
-                       i_err="-5000" b_err="100" channel="2" name="RH2"
+                       i_err="-5000" b_err="100" channel="2" name="RH3"
                        drive="1" driven="1" harm="256" enc="128"/>
 		<motor mpos1="-4800" mpos2="4400" kp="50" kd="100" ki="0"
                        dz="0" off="-5000" hlim="100" hld="1" hv1="20" hv2="20"
                        hma="1" sm="2" ers="64" as="1" md="0" v_max="-4800"
                        a_max="4400" jam_lim="50" jamd="100" pwm_lim="0"
-                       i_err="-5000" b_err="100" channel="3" name="RH3"
+                       i_err="-5000" b_err="100" channel="3" name="RH4"
                        drive="1" driven="1" harm="256" enc="128"/>
 		<motor mpos1="-4800" mpos2="4400" kp="50" kd="100" ki="0"
                        dz="0" off="-5000" hlim="100" hld="1" hv1="20" hv2="20"
                        hma="1" sm="2" ers="64" as="1" md="0" v_max="-4800"
                        a_max="4400" jam_lim="50" jamd="100" pwm_lim="0"
-                       i_err="-5000" b_err="100" channel="4" name="RH4"
+                       i_err="-5000" b_err="100" channel="4" name="RH5"
                        drive="1" driven="1" harm="256" enc="128"/>
 	</board>
  	<board number="37" channels="5" name="L_HAND">
@@ -237,31 +237,31 @@
                        dz="0" off="-5000" hlim="100" hld="1" hv1="20" hv2="20"
                        hma="1" sm="2" ers="64" as="1" md="1" v_max="-4800"
                        a_max="4400" jam_lim="50" jamd="100" pwm_lim="0"
-                       i_err="-5000" b_err="100" channel="0" name="LH0"
+                       i_err="-5000" b_err="100" channel="0" name="LH1"
                        drive="1" driven="1" harm="256" enc="128"/>
 		<motor mpos1="-4800" mpos2="4400" kp="50" kd="100" ki="0"
                        dz="0" off="-5000" hlim="100" hld="1" hv1="20" hv2="20"
                        hma="1" sm="2" ers="64" as="1" md="0" v_max="-4800"
                        a_max="4400" jam_lim="50" jamd="100" pwm_lim="0"
-                       i_err="-5000" b_err="100" channel="1" name="LH1"
+                       i_err="-5000" b_err="100" channel="1" name="LH2"
                        drive="1" driven="1" harm="256" enc="128"/>
 		<motor mpos1="-4800" mpos2="4400" kp="50" kd="100" ki="0"
                        dz="0" off="-5000" hlim="100" hld="1" hv1="20" hv2="20"
                        hma="1" sm="2" ers="64" as="1" md="0" v_max="-4800"
                        a_max="4400" jam_lim="50" jamd="100" pwm_lim="0"
-                       i_err="-5000" b_err="100" channel="2" name="LH2"
+                       i_err="-5000" b_err="100" channel="2" name="LH3"
                        drive="1" driven="1" harm="256" enc="128"/>
 		<motor mpos1="-4800" mpos2="4400" kp="50" kd="100" ki="0"
                        dz="0" off="-5000" hlim="100" hld="1" hv1="20" hv2="20"
                        hma="1" sm="2" ers="64" as="1" md="1" v_max="-4800"
                        a_max="4400" jam_lim="50" jamd="100" pwm_lim="0"
-                       i_err="-5000" b_err="100" channel="3" name="LH3"
+                       i_err="-5000" b_err="100" channel="3" name="LH4"
                        drive="1" driven="1" harm="256" enc="128"/>
 		<motor mpos1="-4800" mpos2="4400" kp="50" kd="100" ki="0"
                        dz="0" off="-5000" hlim="100" hld="1" hv1="20" hv2="20"
                        hma="1" sm="2" ers="64" as="1" md="1" v_max="-4800"
                        a_max="4400" jam_lim="50" jamd="100" pwm_lim="0"
-                       i_err="-5000" b_err="100" channel="4" name="LH4"
+                       i_err="-5000" b_err="100" channel="4" name="LH5"
                        drive="1" driven="1" harm="256" enc="128"/>
 	</board>
 </robot>
