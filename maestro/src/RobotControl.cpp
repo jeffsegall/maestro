@@ -2,9 +2,7 @@
 #include <iostream>
 using namespace std;
 
-RobotControl::RobotControl(const std::string& name):
-    TaskContext(name)
-  {
+RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     
     this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
     //this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
@@ -68,8 +66,7 @@ RobotControl::RobotControl(const std::string& name):
 			.arg("Microseconds", "Delay amount in microseconds.");
 
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
-	    	.arg("Name", "The name of the gesture to load.")
-			.arg("Board", "The board on which to run the gesture.");
+	    	.arg("Name", "The name of the gesture to load.");
 
     this->written = 0;
     this->printNow = false;
@@ -87,10 +84,9 @@ RobotControl::RobotControl(const std::string& name):
     }
 
     RUN_TYPE = getRunType(CONFIG_PATH);
-
 }
   
-  RobotControl::~RobotControl(){}
+RobotControl::~RobotControl(){}
 
 vector<float> trajectoryValues(string path){
 	vector<float> val;
@@ -109,30 +105,30 @@ vector<float> trajectoryValues(string path){
 	return val;
 }
 
-  void RobotControl::updateHook(){
-    
-    hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
-    hubomsg::CanMessage canMessage = hubomsg::CanMessage();
-    //hubomsg::HuboState huboState = hubomsg::HuboState();
+void RobotControl::updateHook(){
 
-    commHandler->update();
-    if (state == NULL) return;
+	hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
+	hubomsg::CanMessage canMessage = hubomsg::CanMessage();
+	//hubomsg::HuboState huboState = hubomsg::HuboState();
 
-    if (commHandler->isNew(1)){
-        //Received update from CanGateway
-    	canMessage = commHandler->getMessage(); //Deprecated - Soon to be phased out
-    }
-    if (commHandler->isNew(2)){
-        //Recieved update from openRAVE
-    	huboCmd = commHandler->getCmd();
-    }
-    if (commHandler->isNew(3)){
-    	//Received update from Hubo-Ach
-    	updateState();
-    }
+	commHandler->update();
+	if (state == NULL) return;
 
-    if (huboOutputQueue->empty() && !this->state->getBoards().empty()) {
-    	hubomsg::HuboCommand message;
+	if (commHandler->isNew(1)){
+		//Received update from CanGateway
+		canMessage = commHandler->getMessage(); //Deprecated - Soon to be phased out
+	}
+	if (commHandler->isNew(2)){
+		//Recieved update from openRAVE
+		huboCmd = commHandler->getCmd();
+	}
+	if (commHandler->isNew(3)){
+		//Received update from Hubo-Ach
+		updateState();
+	}
+
+	if (huboOutputQueue->empty() && !this->state->getBoards().empty()) {
+		hubomsg::HuboCommand message;
 		for (int i = 0; i < this->state->getBoards().size(); i++){
 			MotorBoard* mb = this->state->getBoards()[i];
 			for (int j = 0; j < mb->getNumChannels(); j++){
@@ -148,582 +144,582 @@ vector<float> trajectoryValues(string path){
 		huboOutputQueue->push(message);
 
 	}
-   
-    //Write out a message if we have one
 
-    if (!huboOutputQueue->empty()){
-    	hubomsg::HuboCommand output = huboOutputQueue->front();
-    	if (printNow)
-    		tempOutput << "Writing message to " << output.num_joints << " motors." << std::endl;
+	//Write out a message if we have one
+
+	if (!huboOutputQueue->empty()){
+		hubomsg::HuboCommand output = huboOutputQueue->front();
+		if (printNow)
+			tempOutput << "Writing message to " << output.num_joints << " motors." << std::endl;
 
 		this->huboDownPort->write(output);
-        huboOutputQueue->pop();
-    }
+		huboOutputQueue->pop();
+	}
 
-    if (!achOutputQueue->empty()){
-    	hubomsg::AchCommand output = achOutputQueue->front();
-    	if (printNow)
-    		tempOutput << "Writing command " << output.commandName << " to ach." << std::endl;
+	if (!achOutputQueue->empty()){
+		hubomsg::AchCommand output = achOutputQueue->front();
+		if (printNow)
+			tempOutput << "Writing command " << output.commandName << " to ach." << std::endl;
 
 		this->achDownPort->write(output);
-        achOutputQueue->pop();
-    }
-    usleep(delay);
-  }
+		achOutputQueue->pop();
+	}
+	usleep(delay);
+}
 
-  hubomsg::CanMessage RobotControl::buildCanMessage(canMsg* msg){
-      hubomsg::CanMessage canMessage;
+hubomsg::CanMessage RobotControl::buildCanMessage(canMsg* msg){
+	hubomsg::CanMessage canMessage;
 
-      canMessage.bno = msg->getBNO();
-      canMessage.mType = msg->getType();
-      canMessage.cmdType = msg->getCmd();
-      canMessage.r1 = msg->getR1();
-      canMessage.r2 = msg->getR2();
-      canMessage.r3 = msg->getR3();
-      canMessage.r4 = msg->getR4();
-      canMessage.r5 = msg->getR5();
-      canMessage.r6 = msg->getR6();
-      canMessage.r7 = msg->getR7();
-      canMessage.r8 = msg->getR8();
+	canMessage.bno = msg->getBNO();
+	canMessage.mType = msg->getType();
+	canMessage.cmdType = msg->getCmd();
+	canMessage.r1 = msg->getR1();
+	canMessage.r2 = msg->getR2();
+	canMessage.r3 = msg->getR3();
+	canMessage.r4 = msg->getR4();
+	canMessage.r5 = msg->getR5();
+	canMessage.r6 = msg->getR6();
+	canMessage.r7 = msg->getR7();
+	canMessage.r8 = msg->getR8();
 
-      return canMessage;
-  }
+	return canMessage;
+}
 
-  void RobotControl::buildHuboCommandMessage(hubomsg::HuboJointCommand& state, hubomsg::HuboCommand& message){
-	  message.joints.push_back(state);
-	  message.num_joints = message.joints.size();
-  }
+void RobotControl::buildHuboCommandMessage(hubomsg::HuboJointCommand& state, hubomsg::HuboCommand& message){
+	message.joints.push_back(state);
+	message.num_joints = message.joints.size();
+}
 
-  vector<string> RobotControl::getGestureScripts(string path){
-	  vector<string> files;
+vector<string> RobotControl::getGestureScripts(string path){
+	vector<string> files;
 
-	  ifstream is;
-	  is.open(path.c_str());
-	  string temp;
-	  if (is.is_open()){
-		  do {
-			  getline(is, temp, '\n');
-		  } while (temp.compare("Scripts:") != 0);
-		  do {
-			  getline(is, temp, '\n');
-			  if (temp.compare("") != 0) files.push_back(temp);
-		  } while (!is.eof());
-		  is.close();
-	  } else
-		  std::cout << "Error. Config file nonexistent. Aborting." << std::endl;
+	ifstream is;
+	is.open(path.c_str());
+	string temp;
+	if (is.is_open()){
+		do {
+			getline(is, temp, '\n');
+		} while (temp.compare("Scripts:") != 0);
+		do {
+			getline(is, temp, '\n');
+			if (temp.compare("") != 0) files.push_back(temp);
+		} while (!is.eof());
+		is.close();
+	} else
+		std::cout << "Error. Config file nonexistent. Aborting." << std::endl;
 
-	  return files;
-  }
+	return files;
+}
 
-  bool RobotControl::getRunType(string path){
-	  ifstream is;
-	  is.open(path.c_str());
-	  string temp;
-	  if (is.is_open()){
-		  do {
-			  getline(is, temp, '\n');
-		  } while (temp.compare("RunType:") != 0);
-		  getline(is, temp, '\n');
-		  if (temp.compare("Hardware") == 0){
-			  return HARDWARE;
-		  } else if (temp.compare("Simulation") == 0){
-			  return SIMULATION;
-		  } else {
-			  cout << "Error! Unknown RunType specified in config file! Assuming Simulation.";
-			  return SIMULATION;
-		  }
-	  } else
-		  std::cout << "Error. Config file nonexistent. Aborting." << std::endl;
-
-	  return SIMULATION;
-  }
-
-  string RobotControl::getDefaultInitPath(string path){
-	  	  ifstream is;
-	  	  is.open(path.c_str());
-	  	  string temp;
-	  	  if (is.is_open()){
-	  		  do {
-	  			  getline(is, temp, '\n');
-	  		  } while (temp.compare("Init File:") != 0);
-
-	  		  getline(is, temp, '\n');
-	  		  is.close();
-	  	  } else
-	  		  std::cout << "Error. Config file nonexistent. Aborting." << std::endl;
-
-	  	  return temp;
-  }
-
-  void RobotControl::initRobot(string path){
-      this->state = new HuboState();
-      if (strcmp(path.c_str(), "") == 0)
-          path = getDefaultInitPath(CONFIG_PATH);
-      
-      //@TODO: Check for file existence before initializing.
-      this->state->initHuboWithDefaults(path, this->huboOutputQueue);
-  }
-
-  void RobotControl::updateState(){
-
-	  hubomsg::HuboState huboState = commHandler->getState();
-	  map<string, HuboMotor*> motors = state->getBoardMap();
-
-	  if (printNow) std::cout << "Updating Robot State..." << std::endl;
-
-	  for (int i = 0; i < huboState.joints.size(); i++){
-		  if (motors.count(huboState.joints[i].name) == 0){
-			  if (printNow)
-				  cout << "Joint with name " << huboState.joints[i].name <<
-					  " not initialized in RobotControl. Skipping update of this motor." << std::endl;
-			  continue;
-		  }
-
-		  HuboMotor* motor = motors[huboState.joints[i].name];
-
-		  motor->update(huboState.joints[i].position,
-					  huboState.joints[i].velocity,
-					  huboState.joints[i].temperature,
-					  huboState.joints[i].current,
-					  huboState.joints[i].homed,
-					  huboState.joints[i].status);
-
-	  }
-
-	  this->state->getIMUSensorMap()["IMU"]->update(huboState.imu.x_acceleration,
-			  huboState.imu.y_acceleration,
-			  huboState.imu.z_acceleration,
-			  huboState.imu.x_rotation,
-			  huboState.imu.y_rotation);
-
-	  this->state->getIMUSensorMap()["LAI"]->update(huboState.left_foot.x_acceleration,
-			  huboState.imu.y_acceleration,
-			  huboState.imu.z_acceleration,
-			  huboState.imu.x_rotation,
-			  huboState.imu.y_rotation);
-
-	  this->state->getIMUSensorMap()["RAI"]->update(huboState.right_foot.x_acceleration,
-			  huboState.imu.y_acceleration,
-			  huboState.imu.z_acceleration,
-			  huboState.imu.x_rotation,
-			  huboState.imu.y_rotation);
-
-	  this->state->getFTSensorMap()["LAT"]->update(huboState.left_ankle.Mx,
-			  huboState.left_ankle.My,
-			  huboState.left_ankle.Fz);
-
-	  this->state->getFTSensorMap()["RAT"]->update(huboState.right_ankle.Mx,
-			  huboState.left_ankle.My,
-			  huboState.left_ankle.Fz);
-
-	  this->state->getFTSensorMap()["LWT"]->update(huboState.left_wrist.Mx,
-			  huboState.left_ankle.My,
-			  huboState.left_ankle.Fz);
-
-	  this->state->getFTSensorMap()["RWT"]->update(huboState.left_wrist.Mx,
-			  huboState.left_ankle.My,
-			  huboState.left_ankle.Fz);
-
-  }
-
-  void RobotControl::set(string name, string property, double value){
-	  map<string, HuboMotor*> motors = state->getBoardMap();
-
-	  if (motors.count(name) == 0){
-		  std::cout << "Error. Motor with name " << name << " is not on record. Aborting." << std::endl;
-		  return;
-	  }
-	  HuboMotor* motor = motors[name];
-
-	  map<string, PROPERTY> properties = state->getPropertyMap();
-	  if (properties.count(property) == 0){
-		  std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
-		  return;
-	  }
-
-	  switch (properties[property]){
-	  case POSITION:
-		  std::cout << "Setting position of motor " << name << " to " << value << " ." << std::endl;
-		  motor->setGoalPosition(value);
-		  break;
-	  case VELOCITY:
-		  std::cout << "Setting velocity of motor " << name << " to " << value << " ." << std::endl;
-		  motor->setInterVelocity(value);
-		  if (!interpolation)
-			  std::cout << "Warning. RobotControl is not currently handling interpolation. " <<
-					  "This velocity will not be used until interpolation is enabled." << std::endl;
-		  break;
-	  default:
-		  std::cout << "Motor with name " << name << " has no mutable property named " << property << " ." << std::endl;
-		  return;
-	  }
-  }
-
-  void RobotControl::setProperties(string names, string properties, string values){
-	  vector<string> namesList = splitFields(names);
-	  vector<string> propertiesList = splitFields(properties);
-	  vector<string> valuesList = splitFields(values);
-	  if (namesList.size() != propertiesList.size()
-			  || namesList.size() != valuesList.size()
-			  || propertiesList.size() != valuesList.size()){
-		  cout << "Error! Size of entered fields not consistent. Aborting.";
-		  return;
-	  }
-
-	  for (int i = 0; i < namesList.size(); i++){
-		  istringstream data(valuesList[i]);
-		  double value = 0;
-		  data >> value;
-
-		  set(namesList[i], propertiesList[i], value);
-	  }
-  }
-
-  double RobotControl::get(string name, string property){
-	  map<string, HuboMotor*> motors = state->getBoardMap();
-	  map<string, FTSensorBoard*> ftSensors = state->getFTSensorMap();
-	  map<string, IMUBoard*> imuSensors = state->getIMUSensorMap();
-
-	  if (motors.count(name) == 1){
-		  HuboMotor* motor = motors[name];
-		  map<string, PROPERTY> properties = state->getPropertyMap();
-
-		  if (properties.count(property) == 0){
-			  std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
-			  return 0;
-		  }
-
-		  switch (properties[property]){
-		  case POSITION:
-			  std::cout << "Position of motor " << name << " is " << motor->getPosition() << "." << std::endl;
-			  return motor->getPosition();
-		  case VELOCITY:
-			  std::cout << "Velocity of motor " << name << " is " << motor->getVelocity() << "." << std::endl;
-			  return motor->getVelocity();
-		  case TEMPERATURE:
-			  std::cout << "Temperature of motor " << name << " is " << motor->getTemperature() << "." << std::endl;
-			  return motor->getTemperature();
-		  case CURRENT:
-			  std::cout << "Current of motor " << name << " is " << motor->getCurrent() << "." << std::endl;
-			  return motor->getCurrent();
-		  case ENABLED:
-			  std::cout << "Motor " << name << " is currently " << (motor->isEnabled() ? "enabled." : "disabled.") << std::endl;
-			  return motor->isEnabled() ? 1 : 0;
-		  case HOMED:
-			  std::cout << "Motor " << name << " has " << (motor->isHomed() ? "" : "not ") << "been homed." << std::endl;
-			  return motor->isHomed() ? 1 : 0;
-		  case ERRORED:
-			  std::cout << "Motor " << name << " is currently " << (motor->hasError() ? "" : "not ") << "in an error condition.";
-			  return motor->hasError() ? 1 : 0;
-		  case JAM_ERROR:
-			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a jam error.";
-			  return motor->hasError(properties[property]) ? 1 : 0;
-		  case PWM_SATURATED_ERROR:
-			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a PWM Saturated error.";
-			  return motor->hasError(properties[property]) ? 1 : 0;
-		  case BIG_ERROR:
-			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a big error.";
-			  return motor->hasError(properties[property]) ? 1 : 0;
-		  case ENC_ERROR:
-			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing an encoder error.";
-			  return motor->hasError(properties[property]) ? 1 : 0;
-		  case DRIVE_FAULT_ERROR:
-			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a drive fault.";
-			  return motor->hasError(properties[property]) ? 1 : 0;
-		  case POS_MIN_ERROR:
-			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a minimum position error.";
-			  return motor->hasError(properties[property]) ? 1 : 0;
-		  case POS_MAX_ERROR:
-			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a maximum position error.";
-			  return motor->hasError(properties[property]) ? 1 : 0;
-		  case VELOCITY_ERROR:
-			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a velocity error.";
-			  return motor->hasError(properties[property]) ? 1 : 0;
-		  case ACCELERATION_ERROR:
-			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing an acceleration error.";
-			  return motor->hasError(properties[property]) ? 1 : 0;
-		  case TEMP_ERROR:
-			  std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a temperature error.";
-			  return motor->hasError(properties[property]) ? 1 : 0;
-		  default:
-			  std::cout << "Motor with name " << name << " has no readable property named " << property << " ." << std::endl;
-			  return 0;
-		  }
-	  } else if (ftSensors.count(name) == 1){
-		  FTSensorBoard* board = ftSensors[name];
-		  map<string, PROPERTY> properties = state->getPropertyMap();
-
-		  if (properties.count(property) == 0){
-			  std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
-			  return 0;
-		  }
-
-		  switch (properties[property]){
-		  case M_X:
-			  std::cout << "M_X of Force Torque Sensor " << name << " is " << board->getMX() << "." << std::endl;
-			  return board->getMX();
-		  case M_Y:
-			  std::cout << "M_Y of Force Torque Sensor " << name << " is " << board->getMY() << "." << std::endl;
-			  return board->getMY();
-		  case F_Z:
-			  std::cout << "F_Z of Force Torque Sensor " << name << " is " << board->getFZ() << "." << std::endl;
-			  return board->getFZ();
-		  default:
-			  std::cout << "Force Torque Sensor with name " << name << " has no readable property named " << property << " ." << std::endl;
-			  return 0;
-		  }
-	  } else if (imuSensors.count(name) == 1){
-		  IMUBoard* board = imuSensors[name];
-		  map<string, PROPERTY> properties = state->getPropertyMap();
-
-		  if (properties.count(property) == 0){
-			  std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
-			  return 0;
-		  }
-
-		  switch (properties[property]){
-		  case X_ACCEL:
-			  std::cout << "X Acceleration of IMU " << name << " is " << board->getXAcc() << "." << std::endl;
-			  return board->getXAcc();
-		  case Y_ACCEL:
-			  std::cout << "Y Acceleration of IMU " << name << " is " << board->getYAcc() << "." << std::endl;
-			  return board->getYAcc();
-		  case Z_ACCEL:
-			  std::cout << "Z Acceleration of IMU " << name << " is " << board->getZAcc() << "." << std::endl;
-			  return board->getZAcc();
-		  case X_ROTAT:
-			  std::cout << "X Rotation of IMU " << name << " is " << board->getXRot() << "." << std::endl;
-			  return board->getXRot();
-		  case Y_ROTAT:
-			  std::cout << "Y Rotation of IMU " << name << " is " << board->getYRot() << "." << std::endl;
-			  return board->getYRot();
-		  default:
-			  std::cout << "IMU with name " << name << " has no readable property named " << property << " ." << std::endl;
-			  return 0;
-		  }
-	  } else {
-		  std::cout << "Error. Readable Object with name " << name << " is not on record. Aborting." << std::endl;
-		  return 0;
-	  }
-  }
-
-  void RobotControl::command(string name, string target){
-	  map<string, HuboMotor*> motors = state->getBoardMap();
-	  hubomsg::AchCommand output;
-
-	  if (name.compare("Enable") == 0){
-		  if (motors.count(target) == 0){
-			  std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
-			  return;
-		  }
-		  output.commandName = "enableJoint";
-		  output.jointName = target;
-
-		  HuboMotor* motor = motors[target];
-		  updateState();
-		  if (RUN_TYPE == HARDWARE && !motor->isHomed()){
-			  std::cout << "Warning! Motor " << target << " has not yet been homed. Skipping enabling of this motor." << std::endl;
-			  return;
-		  }
-		  if (RUN_TYPE == HARDWARE)
-			  motor->setGoalPosition(motor->getPosition());
-		  motor->setEnabled(true);
-
-	  } else if (name.compare("EnableAll") == 0){
-		  output.commandName = "enableAll";
-		  for (int i = 0; i < this->state->getBoards().size(); i++){
-			  MotorBoard* mb = this->state->getBoards()[i];
-			  for (int j = 0; j < mb->getNumChannels(); j++){
-			  	  HuboMotor* motor = mb->getMotorByChannel(j);
-			  	  updateState();
-			  	  if (RUN_TYPE == HARDWARE && !motor->isHomed()){
-					  std::cout << "Warning! Motor " << target << " has not yet been homed. Skipping enabling of this motor." << std::endl;
-					  return;
-				  }
-				  if (RUN_TYPE == HARDWARE)
-					  motor->setGoalPosition(motor->getPosition());
-				  motor->setEnabled(true);
-			  }
-		  }
-	  } else if (name.compare("Disable") == 0){
-		  if (motors.count(target) == 0){
-			  std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
-			  return;
-		  }
-		  output.commandName = "disableJoint";
-		  output.jointName = target;
-
-		  HuboMotor* motor = motors[target];
-		  motor->setEnabled(false);
-
-	  } else if (name.compare("DisableAll") == 0){
-		  output.commandName = "disableAll";
-		  for (int i = 0; i < this->state->getBoards().size(); i++){
-			  MotorBoard* mb = this->state->getBoards()[i];
-			  for (int j = 0; j < mb->getNumChannels(); j++){
-			  	  HuboMotor* motor = mb->getMotorByChannel(j);
-			  	  motor->setEnabled(false);
-			  }
-		  }
-	  } else if (name.compare("Home") == 0){
-		  if (motors.count(target) == 0){
-			  std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
-			  return;
-		  }
-
-		  output.commandName = "homeJoint";
-		  output.jointName = target;
-
-		  HuboMotor* motor = motors[target];
-		  set(target, "position", 0);
-
-	  } else if (name.compare("HomeAll") == 0){
-		  output.commandName = "homeAll";
-		  for (int i = 0; i < this->state->getBoards().size(); i++){
-			  MotorBoard* mb = this->state->getBoards()[i];
-			  for (int j = 0; j < mb->getNumChannels(); j++){
-				  HuboMotor* motor = mb->getMotorByChannel(j);
-				  set(motor->getName(), "position", 0);
-			  }
-		  }
-		  //TODO: Find a way to pause for a length of time here.
-	  } else if (name.compare("ResetJoint") == 0){
-		  if (motors.count(target) == 0){
-			  std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
-			  return;
-		  }
-
-		  output.commandName = "resetJoint";
-		  output.jointName = target;
-
-		  command("Disable", target);
-		  set(target, "position", 0);
-		  HuboMotor* motor = motors[target];
-		  motor->setInterStep(0); // We will now assume we are at 0, because the encoders have been reset.
-	  } else if (name.compare("ResetAll") == 0){
-		  for (int i = 0; i < this->state->getBoards().size(); i++){
-			  MotorBoard* mb = this->state->getBoards()[i];
-			  for (int j = 0; j < mb->getNumChannels(); j++){
-				  HuboMotor* motor = mb->getMotorByChannel(j);
-				  command("ResetJoint", motor->getName());
-			  }
-		  }
-		  return;
-	  } else if (name.compare("InitializeSensors") == 0){
-		  output.commandName = "initializeSensors";
-	  } else if (name.compare("Update") == 0){
-		  updateState();
-	  } else {
-		  std::cout << "Error. No command with name " << name << " is defined for RobotControl. Aborting.";
-		  return;
-	  }
-
-	  achOutputQueue->push(output);
-  }
-
-  void RobotControl::setMode(string mode, bool value){
-	  if (mode.compare("Interpolation") == 0){
-		  std::cout << "Setting interpolation " << (value ? "on." : "off.") << std::endl;
-		  command("DisableAll","");
-		  //If we are switching to interpolation, the internal step of each motor must be updated.
-		  if (value){
-			  hubomsg::HuboState huboState = hubomsg::HuboState();
-			  huboState = commHandler->getState();
-			  map<string, HuboMotor*> motors = state->getBoardMap();
-			  for (int i = 0; i < huboState.joints.size(); i++){
-				  if (motors.count(huboState.joints[i].name) == 1){
-					  HuboMotor* motor = motors[huboState.joints[i].name];
-					  motor->setInterStep(RUN_TYPE == SIMULATION ? huboState.joints[i].commanded : huboState.joints[i].position);
-				  }
-			  }
-		  }
-		  interpolation = value;
-	  } else {
-		  std::cout << "RobotControl does not have a mutable mode with name " << mode << "." << std::endl;
-	  }
-  }
-
-  vector<string> RobotControl::splitFields(string input){
-	  vector<string> output;
-	  int whitespaceType = 0;
-	  if (input.find(' ') != string::npos) whitespaceType += 1;
-	  if (input.find('\t') != string::npos) whitespaceType += 2;
-	  if (input.find('\n') != string::npos) whitespaceType += 4;
-
-	  char whitespace;
-	  switch (whitespaceType){
-	  case 1:
-		  whitespace = ' ';
-		  break;
-	  case 2:
-		  whitespace = '\t';
-		  break;
-	  case 4:
-		  whitespace = '\n';
-		  break;
-	  default:
-		  output.push_back(input);
-		  return output;
-	  }
-	  string field;
-	  int pos = 0;
-
+bool RobotControl::getRunType(string path){
+	ifstream is;
+	is.open(path.c_str());
+	string temp;
+	if (is.is_open()){
 	  do {
-		  pos = input.find(whitespace);
-		  field = input.substr(0, pos);
-		  output.push_back(field);
-		  input = input.substr(pos + 1, input.length() - pos - 1);
-	  } while (input.find(whitespace) != string::npos);
-	  output.push_back(input);
-	  return output;
-  }
-
-  void RobotControl::debugControl(int board, int operation){
-	  switch (operation) {
-	  case 1:
-		  this->state->getBoardByNumber(board)->setHIP(0);
-		  break;
-	  case 2:
-		  this->state->getBoardByNumber(board)->disableController();
-		  break;
-	  case 3:
-		  this->state->getBoardByNumber(board)->setHIP(1);
-		  break;
-	  case 4:
-		  this->state->getBoardByNumber(board)->enableController();
-		  break;
-	  case 5:
-		  this->printNow = true;
-		  break;
-	  case 6:
-		  this->printNow = false;
-		  break;
-	  default:
-		  std::cout << "Operations: " << std::endl << "1: disable (step 1)    2: disable (step 2)    3: enable (step 1)    4: enable (step 2)    5: enable printing     6: disable printing";
+		  getline(is, temp, '\n');
+	  } while (temp.compare("RunType:") != 0);
+	  getline(is, temp, '\n');
+	  if (temp.compare("Hardware") == 0){
+		  return HARDWARE;
+	  } else if (temp.compare("Simulation") == 0){
+		  return SIMULATION;
+	  } else {
+		  cout << "Error! Unknown RunType specified in config file! Assuming Simulation.";
+		  return SIMULATION;
 	  }
-  }
+	} else
+	  std::cout << "Error. Config file nonexistent. Aborting." << std::endl;
 
-  void RobotControl::setDelay(int us){
-	  this->delay = us;
-  }
+	return SIMULATION;
+}
 
-  bool RobotControl::requiresMotion(string name){
-	  map<string, HuboMotor*> motors = state->getBoardMap();
-	  if (motors.count(name)  == 0){
-		  std::cout << "Error. Motor with name " << name << " is not on record. Aborting." << std::endl;
-		  return false;
-	  }
-	  return motors[name]->requiresMotion();
-  }
+string RobotControl::getDefaultInitPath(string path){
+	ifstream is;
+	is.open(path.c_str());
+	string temp;
+	if (is.is_open()){
+		do {
+			getline(is, temp, '\n');
+		} while (temp.compare("Init File:") != 0);
 
-  void RobotControl::runGesture(string name, int board){
-	  boost::shared_ptr<Scripting> scripting = this->getProvider<Scripting>("scripting");
-	  scripting->startProgram(name);
-	  if (!scripting->isProgramRunning(name))
+		getline(is, temp, '\n');
+		is.close();
+	} else
+	std::cout << "Error. Config file nonexistent. Aborting." << std::endl;
+
+	return temp;
+}
+
+void RobotControl::initRobot(string path){
+	this->state = new HuboState();
+	if (strcmp(path.c_str(), "") == 0)
+		path = getDefaultInitPath(CONFIG_PATH);
+
+	//@TODO: Check for file existence before initializing.
+	this->state->initHuboWithDefaults(path, this->huboOutputQueue);
+}
+
+void RobotControl::updateState(){
+
+	hubomsg::HuboState huboState = commHandler->getState();
+	map<string, HuboMotor*> motors = state->getBoardMap();
+
+	if (printNow) std::cout << "Updating Robot State..." << std::endl;
+
+		for (int i = 0; i < huboState.joints.size(); i++){
+			if (motors.count(huboState.joints[i].name) == 0){
+				if (printNow)
+					cout << "Joint with name " << huboState.joints[i].name <<
+						" not initialized in RobotControl. Skipping update of this motor." << std::endl;
+				continue;
+			}
+
+			HuboMotor* motor = motors[huboState.joints[i].name];
+
+			motor->update(huboState.joints[i].position,
+						huboState.joints[i].velocity,
+						huboState.joints[i].temperature,
+						huboState.joints[i].current,
+						huboState.joints[i].homed,
+						huboState.joints[i].status);
+
+		}
+
+		this->state->getIMUSensorMap()["IMU"]->update(huboState.imu.x_acceleration,
+													huboState.imu.y_acceleration,
+													huboState.imu.z_acceleration,
+													huboState.imu.x_rotation,
+													huboState.imu.y_rotation);
+
+		this->state->getIMUSensorMap()["LAI"]->update(huboState.left_foot.x_acceleration,
+													huboState.imu.y_acceleration,
+													huboState.imu.z_acceleration,
+													huboState.imu.x_rotation,
+													huboState.imu.y_rotation);
+
+		this->state->getIMUSensorMap()["RAI"]->update(huboState.right_foot.x_acceleration,
+													huboState.imu.y_acceleration,
+													huboState.imu.z_acceleration,
+													huboState.imu.x_rotation,
+													huboState.imu.y_rotation);
+
+		this->state->getFTSensorMap()["LAT"]->update(huboState.left_ankle.Mx,
+													huboState.left_ankle.My,
+													huboState.left_ankle.Fz);
+
+		this->state->getFTSensorMap()["RAT"]->update(huboState.right_ankle.Mx,
+													huboState.left_ankle.My,
+													huboState.left_ankle.Fz);
+
+		this->state->getFTSensorMap()["LWT"]->update(huboState.left_wrist.Mx,
+													huboState.left_ankle.My,
+													huboState.left_ankle.Fz);
+
+		this->state->getFTSensorMap()["RWT"]->update(huboState.left_wrist.Mx,
+													huboState.left_ankle.My,
+													huboState.left_ankle.Fz);
+
+}
+
+void RobotControl::set(string name, string property, double value){
+	map<string, HuboMotor*> motors = state->getBoardMap();
+
+	if (motors.count(name) == 0){
+		std::cout << "Error. Motor with name " << name << " is not on record. Aborting." << std::endl;
+		return;
+	}
+	HuboMotor* motor = motors[name];
+
+	map<string, PROPERTY> properties = state->getPropertyMap();
+	if (properties.count(property) == 0){
+		std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
+		return;
+	}
+
+	switch (properties[property]){
+	case POSITION:
+		std::cout << "Setting position of motor " << name << " to " << value << " ." << std::endl;
+		motor->setGoalPosition(value);
+		break;
+	case VELOCITY:
+		std::cout << "Setting velocity of motor " << name << " to " << value << " ." << std::endl;
+		motor->setInterVelocity(value);
+		if (!interpolation)
+			std::cout << "Warning. RobotControl is not currently handling interpolation. " <<
+					"This velocity will not be used until interpolation is enabled." << std::endl;
+		break;
+	default:
+		std::cout << "Motor with name " << name << " has no mutable property named " << property << " ." << std::endl;
+		return;
+	}
+}
+
+void RobotControl::setProperties(string names, string properties, string values){
+	vector<string> namesList = splitFields(names);
+	vector<string> propertiesList = splitFields(properties);
+	vector<string> valuesList = splitFields(values);
+	if (namesList.size() != propertiesList.size()
+			|| namesList.size() != valuesList.size()
+			|| propertiesList.size() != valuesList.size()){
+		cout << "Error! Size of entered fields not consistent. Aborting.";
+		return;
+	}
+
+	for (int i = 0; i < namesList.size(); i++){
+		istringstream data(valuesList[i]);
+		double value = 0;
+		data >> value;
+
+		set(namesList[i], propertiesList[i], value);
+	}
+}
+
+double RobotControl::get(string name, string property){
+	map<string, HuboMotor*> motors = state->getBoardMap();
+	map<string, FTSensorBoard*> ftSensors = state->getFTSensorMap();
+	map<string, IMUBoard*> imuSensors = state->getIMUSensorMap();
+
+	if (motors.count(name) == 1){
+		HuboMotor* motor = motors[name];
+		map<string, PROPERTY> properties = state->getPropertyMap();
+
+		if (properties.count(property) == 0){
+			std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
+			return 0;
+		}
+
+		switch (properties[property]){
+		case POSITION:
+			std::cout << "Position of motor " << name << " is " << motor->getPosition() << "." << std::endl;
+			return motor->getPosition();
+		case VELOCITY:
+			std::cout << "Velocity of motor " << name << " is " << motor->getVelocity() << "." << std::endl;
+			return motor->getVelocity();
+		case TEMPERATURE:
+			std::cout << "Temperature of motor " << name << " is " << motor->getTemperature() << "." << std::endl;
+			return motor->getTemperature();
+		case CURRENT:
+			std::cout << "Current of motor " << name << " is " << motor->getCurrent() << "." << std::endl;
+			return motor->getCurrent();
+		case ENABLED:
+			std::cout << "Motor " << name << " is currently " << (motor->isEnabled() ? "enabled." : "disabled.") << std::endl;
+			return motor->isEnabled() ? 1 : 0;
+		case HOMED:
+			std::cout << "Motor " << name << " has " << (motor->isHomed() ? "" : "not ") << "been homed." << std::endl;
+			return motor->isHomed() ? 1 : 0;
+		case ERRORED:
+			std::cout << "Motor " << name << " is currently " << (motor->hasError() ? "" : "not ") << "in an error condition.";
+			return motor->hasError() ? 1 : 0;
+		case JAM_ERROR:
+			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a jam error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case PWM_SATURATED_ERROR:
+			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a PWM Saturated error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case BIG_ERROR:
+			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a big error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case ENC_ERROR:
+			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing an encoder error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case DRIVE_FAULT_ERROR:
+			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a drive fault.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case POS_MIN_ERROR:
+			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a minimum position error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case POS_MAX_ERROR:
+			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a maximum position error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case VELOCITY_ERROR:
+			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a velocity error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case ACCELERATION_ERROR:
+			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing an acceleration error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case TEMP_ERROR:
+			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a temperature error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		default:
+			std::cout << "Motor with name " << name << " has no readable property named " << property << " ." << std::endl;
+			return 0;
+		}
+	} else if (ftSensors.count(name) == 1){
+		FTSensorBoard* board = ftSensors[name];
+		map<string, PROPERTY> properties = state->getPropertyMap();
+
+		if (properties.count(property) == 0){
+			std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
+			return 0;
+		}
+
+		switch (properties[property]){
+		case M_X:
+			std::cout << "M_X of Force Torque Sensor " << name << " is " << board->getMX() << "." << std::endl;
+			return board->getMX();
+		case M_Y:
+			std::cout << "M_Y of Force Torque Sensor " << name << " is " << board->getMY() << "." << std::endl;
+			return board->getMY();
+		case F_Z:
+			std::cout << "F_Z of Force Torque Sensor " << name << " is " << board->getFZ() << "." << std::endl;
+			return board->getFZ();
+		default:
+			std::cout << "Force Torque Sensor with name " << name << " has no readable property named " << property << " ." << std::endl;
+			return 0;
+		}
+	} else if (imuSensors.count(name) == 1){
+		IMUBoard* board = imuSensors[name];
+		map<string, PROPERTY> properties = state->getPropertyMap();
+
+		if (properties.count(property) == 0){
+			std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
+			return 0;
+		}
+
+		switch (properties[property]){
+		case X_ACCEL:
+			std::cout << "X Acceleration of IMU " << name << " is " << board->getXAcc() << "." << std::endl;
+			return board->getXAcc();
+		case Y_ACCEL:
+			std::cout << "Y Acceleration of IMU " << name << " is " << board->getYAcc() << "." << std::endl;
+			return board->getYAcc();
+		case Z_ACCEL:
+			std::cout << "Z Acceleration of IMU " << name << " is " << board->getZAcc() << "." << std::endl;
+			return board->getZAcc();
+		case X_ROTAT:
+			std::cout << "X Rotation of IMU " << name << " is " << board->getXRot() << "." << std::endl;
+			return board->getXRot();
+		case Y_ROTAT:
+			std::cout << "Y Rotation of IMU " << name << " is " << board->getYRot() << "." << std::endl;
+			return board->getYRot();
+		default:
+			std::cout << "IMU with name " << name << " has no readable property named " << property << " ." << std::endl;
+			return 0;
+		}
+	} else {
+		std::cout << "Error. Readable Object with name " << name << " is not on record. Aborting." << std::endl;
+		return 0;
+	}
+}
+
+void RobotControl::command(string name, string target){
+	map<string, HuboMotor*> motors = state->getBoardMap();
+	hubomsg::AchCommand output;
+
+	if (name.compare("Enable") == 0){
+		if (motors.count(target) == 0){
+			std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
+			return;
+		}
+		output.commandName = "enableJoint";
+		output.jointName = target;
+
+		HuboMotor* motor = motors[target];
+		updateState();
+		if (RUN_TYPE == HARDWARE && !motor->isHomed()){
+			std::cout << "Warning! Motor " << target << " has not yet been homed. Skipping enabling of this motor." << std::endl;
+			return;
+		}
+		if (RUN_TYPE == HARDWARE)
+			motor->setGoalPosition(motor->getPosition());
+		motor->setEnabled(true);
+
+	} else if (name.compare("EnableAll") == 0){
+		output.commandName = "enableAll";
+		for (int i = 0; i < this->state->getBoards().size(); i++){
+			MotorBoard* mb = this->state->getBoards()[i];
+			for (int j = 0; j < mb->getNumChannels(); j++){
+				HuboMotor* motor = mb->getMotorByChannel(j);
+				updateState();
+				if (RUN_TYPE == HARDWARE && !motor->isHomed()){
+					std::cout << "Warning! Motor " << target << " has not yet been homed. Skipping enabling of this motor." << std::endl;
+					return;
+				}
+				if (RUN_TYPE == HARDWARE)
+					motor->setGoalPosition(motor->getPosition());
+				motor->setEnabled(true);
+			}
+		}
+	} else if (name.compare("Disable") == 0){
+		if (motors.count(target) == 0){
+			std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
+			return;
+		}
+		output.commandName = "disableJoint";
+		output.jointName = target;
+
+		HuboMotor* motor = motors[target];
+		motor->setEnabled(false);
+
+	} else if (name.compare("DisableAll") == 0){
+		output.commandName = "disableAll";
+		for (int i = 0; i < this->state->getBoards().size(); i++){
+			MotorBoard* mb = this->state->getBoards()[i];
+			for (int j = 0; j < mb->getNumChannels(); j++){
+				HuboMotor* motor = mb->getMotorByChannel(j);
+				motor->setEnabled(false);
+			}
+		}
+	} else if (name.compare("Home") == 0){
+		if (motors.count(target) == 0){
+			std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
+			return;
+		}
+
+		output.commandName = "homeJoint";
+		output.jointName = target;
+
+		HuboMotor* motor = motors[target];
+		set(target, "position", 0);
+
+	} else if (name.compare("HomeAll") == 0){
+		output.commandName = "homeAll";
+		for (int i = 0; i < this->state->getBoards().size(); i++){
+			MotorBoard* mb = this->state->getBoards()[i];
+			for (int j = 0; j < mb->getNumChannels(); j++){
+				HuboMotor* motor = mb->getMotorByChannel(j);
+				set(motor->getName(), "position", 0);
+			}
+		}
+		//TODO: Find a way to pause for a length of time here.
+	} else if (name.compare("ResetJoint") == 0){
+		if (motors.count(target) == 0){
+			std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
+			return;
+		}
+
+		output.commandName = "resetJoint";
+		output.jointName = target;
+
+		command("Disable", target);
+		set(target, "position", 0);
+		HuboMotor* motor = motors[target];
+		motor->setInterStep(0); // We will now assume we are at 0, because the encoders have been reset.
+	} else if (name.compare("ResetAll") == 0){
+		for (int i = 0; i < this->state->getBoards().size(); i++){
+			MotorBoard* mb = this->state->getBoards()[i];
+			for (int j = 0; j < mb->getNumChannels(); j++){
+				HuboMotor* motor = mb->getMotorByChannel(j);
+				command("ResetJoint", motor->getName());
+			}
+		}
+		return;
+	} else if (name.compare("InitializeSensors") == 0){
+		output.commandName = "initializeSensors";
+	} else if (name.compare("Update") == 0){
+		updateState();
+	} else {
+		std::cout << "Error. No command with name " << name << " is defined for RobotControl. Aborting.";
+		return;
+	}
+
+	achOutputQueue->push(output);
+}
+
+void RobotControl::setMode(string mode, bool value){
+	if (mode.compare("Interpolation") == 0){
+		std::cout << "Setting interpolation " << (value ? "on." : "off.") << std::endl;
+		command("DisableAll","");
+		//If we are switching to interpolation, the internal step of each motor must be updated.
+		if (value){
+			hubomsg::HuboState huboState = hubomsg::HuboState();
+			huboState = commHandler->getState();
+			map<string, HuboMotor*> motors = state->getBoardMap();
+			for (int i = 0; i < huboState.joints.size(); i++){
+				if (motors.count(huboState.joints[i].name) == 1){
+					HuboMotor* motor = motors[huboState.joints[i].name];
+					motor->setInterStep(RUN_TYPE == SIMULATION ? huboState.joints[i].commanded : huboState.joints[i].position);
+				}
+			}
+		}
+		interpolation = value;
+	} else {
+		std::cout << "RobotControl does not have a mutable mode with name " << mode << "." << std::endl;
+	}
+}
+
+vector<string> RobotControl::splitFields(string input){
+	vector<string> output;
+	int whitespaceType = 0;
+	if (input.find(' ') != string::npos) whitespaceType += 1;
+	if (input.find('\t') != string::npos) whitespaceType += 2;
+	if (input.find('\n') != string::npos) whitespaceType += 4;
+
+	char whitespace;
+	switch (whitespaceType){
+	case 1:
+		whitespace = ' ';
+		break;
+	case 2:
+		whitespace = '\t';
+		break;
+	case 4:
+		whitespace = '\n';
+		break;
+	default:
+		output.push_back(input);
+		return output;
+	}
+	string field;
+	int pos = 0;
+
+	do {
+		pos = input.find(whitespace);
+		field = input.substr(0, pos);
+		output.push_back(field);
+		input = input.substr(pos + 1, input.length() - pos - 1);
+	} while (input.find(whitespace) != string::npos);
+	output.push_back(input);
+	return output;
+}
+
+void RobotControl::debugControl(int board, int operation){
+	switch (operation) {
+	case 1:
+		this->state->getBoardByNumber(board)->setHIP(0);
+		break;
+	case 2:
+		this->state->getBoardByNumber(board)->disableController();
+		break;
+	case 3:
+		this->state->getBoardByNumber(board)->setHIP(1);
+		break;
+	case 4:
+		this->state->getBoardByNumber(board)->enableController();
+		break;
+	case 5:
+		this->printNow = true;
+		break;
+	case 6:
+		this->printNow = false;
+		break;
+	default:
+		std::cout << "Operations: " << std::endl << "1: disable (step 1)    2: disable (step 2)    3: enable (step 1)    4: enable (step 2)    5: enable printing     6: disable printing";
+	}
+}
+
+void RobotControl::setDelay(int us){
+	this->delay = us;
+}
+
+bool RobotControl::requiresMotion(string name){
+	map<string, HuboMotor*> motors = state->getBoardMap();
+	if (motors.count(name)  == 0){
+		std::cout << "Error. Motor with name " << name << " is not on record. Aborting." << std::endl;
+		return false;
+	}
+	return motors[name]->requiresMotion();
+}
+
+void RobotControl::runGesture(string name){
+	boost::shared_ptr<Scripting> scripting = this->getProvider<Scripting>("scripting");
+	scripting->startProgram(name);
+	if (!scripting->isProgramRunning(name))
 		std::cout << "Error. Program not running." << std::endl;
-	  if (scripting->inProgramError(name))
+	if (scripting->inProgramError(name))
 		std::cout << "Error. Program has encountered an error. " << std::endl;
-  }
+}
 
 ORO_CREATE_COMPONENT_LIBRARY()
 ORO_LIST_COMPONENT_TYPE(RobotControl)

@@ -57,14 +57,10 @@ public:
     // Control Commands
     void debugControl(int board, int operation);
 	void setDelay(int us);
-	void runGesture(string name, int board);
+	void runGesture(string name);
 	void command(string name, string target);
 
     // Feedback Commands
-    void requestEncoderPosition(int board, int delay);
-    void getCurrentTicks(int board, int motor, int delay);
-    void setCurrentTicks(int board, int motor, int ticks);
-    void getCurrentGoal(int board, int motor, int delay);
     bool requiresMotion(string name);
     double get(string name, string property);
     void updateState();

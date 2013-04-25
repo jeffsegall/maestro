@@ -1,18 +1,30 @@
+****************************************************
+**************       INTRODUCTION      *************
+****************************************************
+
 This repository contains the MAchine and Environment Software
 Translation to ROs (MAESTRO) software project.
-Included are install scripts to generate the execution environment required for MAESTRO, as well as an install script to generate the execution environment for virtualization and visualization of the HUBO robot.
+Included are install scripts to generate the execution environment required for MAESTRO, 
+as well as an install script to generate the execution environment for virtualization and visualization of the HUBO robot.
 
-Requirements:
-* ROS Diamondback
+****************************************************
+**************       REQUIREMENTS      *************
+****************************************************
+
+- ROS Diamondback
 or
-* ROS Fuerte
+- ROS Fuerte
 
-* Orocos Toolchain (ROS stack)
-* OpenRAVE (ROS stack)
+- Orocos Toolchain (ROS stack)
+- OpenRAVE (ROS stack)
 
-* Ubuntu 10.04 LTS
+- Ubuntu 10.04 LTS
 or
-* Ubuntu 12.04 LTS
+- Ubuntu 12.04 LTS
+
+****************************************************
+**************       INSTALLATION      *************
+****************************************************
 
 Installation scripts exist to install dependencies such as ROS, Orocos, and OpenRAVE, as well as complementary packages such as Hubo-Ach and OpenHUBO.
 
@@ -33,6 +45,25 @@ Installation of ROS, Orocos, and OpenRAVE:
 
 Installation of Hubo-Ach, Hubo-Ach-Ros, Hubo-Ach-Ros-Visualization:
 	sudo ./install-hubo-ach.sh
+	
+****************************************************
+**************      UNINSTALLATION     *************
+****************************************************
+
+Navigate to <Maestro Install Directory>/install/uninstall
+Run:
+	source uninstall.sh
+
+You will be prompted to uninstall each of the separate components installed by the install scripts. 
+NOTE: Using source to call the script is necessary because otherwise it will unable to read the OPENHUBO_DIR environment variable.
+	
+****************************************************
+**************        INTERFACE        *************
+****************************************************
+
+****************************
+**********  RUN  ***********
+****************************
 
 Run (MAESTRO only):
 	./run.sh
@@ -40,7 +71,9 @@ Run (MAESTRO only):
 A terminal will open which will permit control of the robot.
 Check the Usage section for available commands.
 
-This option is useful for developers who wish to interface with MAESTRO directly. MAESTRO publishes state information on the /Hubo/HuboCommand ROS Topic. There is also an unused channel for simulation input on ROS Topic or_out.
+This option is useful for developers who wish to interface with MAESTRO directly. 
+MAESTRO publishes state information on the /Hubo/HuboCommand ROS Topic. 
+There is also an unused channel for simulation input on ROS Topic or_out.
 
 
 Run (MAESTRO & Hubo-ach):
@@ -53,7 +86,11 @@ hubo-ros-feedforward (hubo-ach interface)
 hubo-ros-feedback (visualization interface)
 hubo-ach-ros-visualization (rViz visualization of the HUBO Robot)
 
-This option allows a user to visualize the HUBO Robot's motion as commanded by MAESTRO. The visualization package utilizes rViz to display the simulation, and accepts input on the ROS Topic Hubo/HuboState. Hubo-Ros-Feedback publishes information on this topic, which it obtains through an interface with Hubo-Ach. Hubo-Ach controls raw communication with the Robot and simulation, and accepts commands over the Hubo-Ros-Feedforward interface, which listens on the ROS topic Hubo/HuboCommand. MAESTRO publishes on this topic, and thus, MAESTRO commands are funneled to the simulation.
+This option allows a user to visualize the HUBO Robot's motion as commanded by MAESTRO. 
+The visualization package utilizes rViz to display the simulation, and accepts input on the ROS Topic Hubo/HuboState. 
+Hubo-Ros-Feedback publishes information on this topic, which it obtains through an interface with Hubo-Ach. 
+Hubo-Ach controls raw communication with the Robot and simulation, and accepts commands over the Hubo-Ros-Feedforward interface, 
+which listens on the ROS topic Hubo/HuboCommand. MAESTRO publishes on this topic, and thus, MAESTRO commands are funneled to the simulation.
 The downside of using this package is that the HUBO model in rViz is not strictly verified to an actual robot. OpenHUBO is the more accurate simulation.
 
 
@@ -62,9 +99,10 @@ Run (MAESTRO & OpenHUBO):
 
 Usage : ./run-openHubo.sh <Mode>
 <Mode>:
-	virtual : Runs Hubo-Ach in Virtual (No Hardware) Mode
-	sim	: Runs Hubo-Ach in Simulation (Hardware) Mode
-	real	: Runs Hubo-Ach in Robot Comm (Hardware) Mode
+	virtual : 	Runs Hubo-Ach in Virtual (No Hardware) Mode
+	sim	: 		Runs Hubo-Ach in Simulation (Software) Mode
+	sim-real : 	Runs Hubo-ach in Simulation (Hardware) Mode
+	real : 		Runs Hubo-Ach in Robot Comm (Hardware) Mode
 
 Terminals will open which hold the following packages:
 MAESTRO
@@ -73,51 +111,117 @@ hubo-ros-feedforward (hubo-ach interface)
 hubo-ros-feedback (visualization interface)
 openHUBO (OpenRAVE Visualization of the HUBO Robot)
 
-This option allows a user to visualize the HUBO Robot's motion as commanded by MAESTRO. The visualization package utilizes an OpenRAVE plugin simulation environment called OpenHUBO to display the simulation, and accepts input on the ROS Topic Hubo/HuboState. Hubo-Ros-Feedback publishes information on this topic, which it obtains through an interface with Hubo-Ach. Hubo-Ach controls raw communication with the Robot and simulation, and accepts commands over the Hubo-Ros-Feedforward interface, which listens on the ROS topic Hubo/HuboCommand. MAESTRO publishes on this topic, and thus, MAESTRO commands are funneled to the simulation.
+This option allows a user to visualize the HUBO Robot's motion as commanded by MAESTRO. 
+The visualization package utilizes an OpenRAVE plugin simulation environment called OpenHUBO to display the simulation, 
+and accepts input on the ROS Topic Hubo/HuboState. Hubo-Ros-Feedback publishes information on this topic, 
+which it obtains through an interface with Hubo-Ach. Hubo-Ach controls raw communication with the Robot and simulation, 
+and accepts commands over the Hubo-Ros-Feedforward interface, which listens on the ROS topic Hubo/HuboCommand. 
+MAESTRO publishes on this topic, and thus, MAESTRO commands are funneled to the simulation.
 
+****************************
+*********  USAGE  **********
+****************************
 
-MAESTRO Usage:
-Enable control:
+******************
+**INITIALIZATION**
+******************
+
+Switch Into Control Mode:
 	cd RobotControl
 
-This command is required by the Orocos Deployer to connect to the Robot Control portion of MAESTRO. The following commands can only be run in this context.
+This command is required by the Orocos Deployer to connect to the Robot Control portion of MAESTRO. 
+The following commands can only be run in this context.
 
 Initialize Robot:
-	initRobot("");
+	initRobot("<Init File Path>");
 
-The default directory which this method will fall back to if given an empty string is /opt/ros/fuerte/stacks/maestro/maestro/models/hubo_default.xml.
+The default directory which this method will fall back to if given an empty string is 
+/opt/ros/fuerte/stacks/maestro/maestro/models/hubo_default.xml.
 
-This command loads Robot configuration information from the xml file specified. Before this command, MAESTRO cannot perform any operations which work with actual robot components (Which all of the following commands do.)
+This command loads Robot configuration information from the xml file specified. 
+Before this command, MAESTRO cannot perform any operations which work with actual robot components (Which all of the following commands do.)
 
-Move Joints:
-	set<Joint Name><Axis>([Ticks], [Angular Velocity], [Delay])
+Home All Joints:
+	command("HomeAll", "");
+
+Home A Single Joint:
+	command("Home", "<Joint Name>");
+	
+This command will send the homing command down on the Ach channel, causing the joints to move to their home positions. Before this
+command is run, no joints can move, nor should they. Each joint should move toward the "home" position on their respective axis, until
+their physical parts hit a limit switch which lets them know that they have hit their home position.
+
+Reset All Joints:
+	command("ResetAll", "");
+	
+Reset A Single Joint:
+	command("ResetJoint", "<Joint Name");
+	
+This command will reset the encoder value of the given joint or joints. This should usually be done as part of initialization once the 
+motors have reached their home position. In addition, this command will reset Big Error, Encoder Error, and Homing Error on the given joints
+as well.
+
+Initialize Sensors:
+	command("InitializeSensors", "");
+	
+This command will initialize all of the sensors on the robot, including the FT and IMU sensors. The robot should be off the ground and not
+moving when this command is run. This command should be run as part of initialization.
+
+******************
+**   MOVEMENT   **
+******************
+
+Move A Single Joint:
+	setProperty("<Joint Name>", "Property", value);
 Examples:
-	setRightHipYaw(60000, 3.14, 0);
-	setLeftShoulderPitch(-45000, 1, 0);
-	setLeftKnee(50000, 3.14/2, 0);
+	setProperty("RHY", "position", 3.14);
+	setProperty("RHR", "velocity", .2);
 
-These commands allow arbitrary movement of single joints in specific directions with specifid speeds as specified by their arguments. You can verify the motion in the offered simulation packages. More involved movements may be programmed using gestures. Angular velocity is measured in radians per second, despite the fact that the position input is measured in motor ticks.
+The setProperty command allows the user to set the values of certain properties of joints. Currently, the only properties that are mutable
+are position and velocity. These are measured in radians and radians per second, respectively.
+In addition, a user can set multiple properties of joints at once, by delimiting joints, positions, and values by either tabs, spaces, or newlines.
 
+Examples:
+	setProperties("RHY RHR LHY LHR", "position position position position", "1.49 1.49 1.49 1.49");
+	setProperties("RHY RHY LHY LHY", "position velocity position velocity", ".2 1.49 .2 1.49");
+	
+******************
+**   FEEDBACK   **
+******************
 
-Moving Joints using Radians:
-	set<Joint Name><Axis>Rad([Radians], [Angular Velocity], [Delay])
-Example:
-	setRightHipYawRad(3.14, 3.14, 0);
+Read Values from a Joint:
+	getProperty("<Joint Name>", "Property");
+	
+The getProperty command allows the user to get the values of certain properties of robot objects. The following values can be retrieved:
 
-These commands offer the same movement capabilities as the non-radian versions. Each command converts radians to motor ticks using gear ratio conversions specific to each joint and axis. Angular velocity is measured in radians per second.
+From Joints:
+position			- Position, in radians
+velocity			- Velocity, in radians/sec
+current				- Current
+temperature			- Temperature
+enabled				- Will return 1 if this joint has motion enabled
+homed				- Will return 1 if this joint has been homed
+errored				- Will return 1 if this joint has an error condition
+jamError			- Will return 1 if this joint is experiencing a jam error
+PWMSaturatedError	- Will return 1 if this joint is experiencing a PWM Saturated error
+bigError			- Will return 1 if this joint is experiencing a big error
+encoderError		- Will return 1 if this joint is experiencing an encoder error
+driveFaultError		- Will return 1 if this joint is experiencing a Drive Fault error
+posMinError			- Will return 1 if this joint is experiencing a pos (min) error
+posMaxError			- Will return 1 if this joint is experiencing a pos (max) error
+velocityError		- Will return 1 if this joint is experiencing a velocity error
+accelerationError	- Will return 1 if this joint is experiencing an acceleration error
+tempError			- Will return 1 if this joint is experiencing a temperature error
+
+From FT Sensors:
+m_x					- Will return the moment of the x axis
 
 
 Running Gestures:
-Gestures may be created using Orocos Program Script (.ops). There are example scripts in the test folder. Scripts can be executed using the following command:
+Gestures may be created using Orocos Program Script (.ops). There are example scripts in the test folder. 
+Scripts can be executed using the following command:
 	runGesture([Gesture Name], [Board Number])
 
 Board Number is useless. Ignore it.
 Gesture name is the name of the program inside of the .ops file, NOT the name of the file.
 
-
-Uninstallation:
-Navigate to <Maestro Install Directory>/install/uninstall
-Run:
-	source uninstall.sh
-
-You will be prompted to uninstall each of the separate components installed by the install scripts. NOTE: Using source to call the script is necessary because otherwise it will unable to read the OPENHUBO_DIR environment variable.
