@@ -9,3 +9,4 @@ Scripts:
 /opt/ros/fuerte/stacks/maestro/test/dance.ops
 /opt/ros/fuerte/stacks/maestro/test/fold.ops
 /opt/ros/fuerte/stacks/maestro/test/testure.ops
+/opt/ros/fuerte/stacks/maestro/test/wave_hi.ops
