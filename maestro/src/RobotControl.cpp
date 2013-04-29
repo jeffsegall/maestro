@@ -220,6 +220,7 @@ bool RobotControl::getRunType(string path){
 		  getline(is, temp, '\n');
 	  } while (temp.compare("RunType:") != 0);
 	  getline(is, temp, '\n');
+	  is.close();
 	  if (temp.compare("Hardware") == 0){
 		  return HARDWARE;
 	  } else if (temp.compare("Simulation") == 0){
@@ -534,7 +535,7 @@ void RobotControl::command(string name, string target){
 				updateState();
 				if (RUN_TYPE == HARDWARE && !motor->isHomed()){
 					std::cout << "Warning! Motor " << target << " has not yet been homed. Skipping enabling of this motor." << std::endl;
-					return;
+					continue;
 				}
 				if (RUN_TYPE == HARDWARE)
 					motor->setGoalPosition(motor->getPosition());
