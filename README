@@ -72,11 +72,14 @@ A terminal will open which will permit control of the robot.
 Check the Usage section for available commands.
 
 This option is useful for developers who wish to interface with MAESTRO directly. 
+Alternatively, if you need to make a quick modification to a gesture script, you may simply break out of the
+terminal running maestro, and run this script to restart MAESTRO alone. All complementary packages should work
+of their own accord in the meantime.
 MAESTRO publishes state information on the /Hubo/HuboCommand ROS Topic. 
 There is also an unused channel for simulation input on ROS Topic or_out.
 
 
-Run (MAESTRO & Hubo-ach):
+Run (MAESTRO & rViz):
 	./run-hubo-ach.sh
 
 Terminals will open which hold the following packages:
@@ -117,6 +120,12 @@ and accepts input on the ROS Topic Hubo/HuboState. Hubo-Ros-Feedback publishes i
 which it obtains through an interface with Hubo-Ach. Hubo-Ach controls raw communication with the Robot and simulation, 
 and accepts commands over the Hubo-Ros-Feedforward interface, which listens on the ROS topic Hubo/HuboCommand. 
 MAESTRO publishes on this topic, and thus, MAESTRO commands are funneled to the simulation.
+
+The differences between each mode of operation are as follows:
+	Virtual: Hubo-Ach runs in non-hardware mode. No hardware is simulated. No simulation is run. A separate OpenHUBO instance is opened.
+	Sim: Hubo-Ach runs in simulation mode. Physics are enabled - positions of motors can be polled. Hubo-Ach opens its own OpenHUBO instance.
+	Sim-real: Hubo-Ach runs in simulation mode. Physics are disabled - motions of the robot can be previewed on simulation.
+	real: Hubo-Ach runs in hardware mode. Direct robot communication is supported.
 
 ****************************
 *********  USAGE  **********
@@ -214,14 +223,28 @@ accelerationError	- Will return 1 if this joint is experiencing an acceleration 
 tempError			- Will return 1 if this joint is experiencing a temperature error
 
 From FT Sensors:
-m_x					- Will return the moment of the x axis
+m_x					- Will return the moment in the x-axis
+m_y					- Will return the moment in the y-axis
+f_z					- Will return the force in the z-axis
 
+From IMU Sensors:
+x_acc				- Will return the acceleration in the x-axis
+y_acc				- Will return the acceleration in the y-axis
+z_acc				- Will return the acceleration in the z-axis
+x_rot				- Will return the rotation angle in the x direction?
+y_rot				- Will rethrn the rotation angle in the y direction?
 
-Running Gestures:
+******************
+**   GESTURES   **
+******************
+
 Gestures may be created using Orocos Program Script (.ops). There are example scripts in the test folder. 
+Each gesture has the same functional interface as the Orocos Deployer. This means that you can only use methods
+in the orocos program script that you would be able to use from the deployer.
+At the time of this writing, each script must be loaded at MAESTRO startup. Each script that will be loaded is specified
+in a config file in <Maestro Install Dir>/test/config.txt
+
 Scripts can be executed using the following command:
-	runGesture([Gesture Name], [Board Number])
+	runGesture("<Gesture Name>")
 
-Board Number is useless. Ignore it.
 Gesture name is the name of the program inside of the .ops file, NOT the name of the file.
-
