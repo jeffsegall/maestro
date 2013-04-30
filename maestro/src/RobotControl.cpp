@@ -340,11 +340,11 @@ void RobotControl::set(string name, string property, double value){
 
 	switch (properties[property]){
 	case POSITION:
-		std::cout << "Setting position of motor " << name << " to " << value << " ." << std::endl;
+		if (printNow) std::cout << "Setting position of motor " << name << " to " << value << " ." << std::endl;
 		motor->setGoalPosition(value);
 		break;
 	case VELOCITY:
-		std::cout << "Setting velocity of motor " << name << " to " << value << " ." << std::endl;
+		if (printNow) std::cout << "Setting velocity of motor " << name << " to " << value << " ." << std::endl;
 		motor->setInterVelocity(value);
 		if (!interpolation)
 			std::cout << "Warning. RobotControl is not currently handling interpolation. " <<
@@ -534,7 +534,7 @@ void RobotControl::command(string name, string target){
 				HuboMotor* motor = mb->getMotorByChannel(j);
 				updateState();
 				if (RUN_TYPE == HARDWARE && !motor->isHomed()){
-					std::cout << "Warning! Motor " << target << " has not yet been homed. Skipping enabling of this motor." << std::endl;
+					std::cout << "Warning! Motor " << motor->getName() << " has not yet been homed. Skipping enabling of this motor." << std::endl;
 					continue;
 				}
 				if (RUN_TYPE == HARDWARE)
