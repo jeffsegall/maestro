@@ -2,8 +2,7 @@
 **************       INTRODUCTION      *************
 ****************************************************
 
-This repository contains the MAchine and Environment Software
-Translation to ROs (MAESTRO) software project.
+This repository contains the MAchine and Environment Software Translation to ROs (MAESTRO) software project.
 Included are install scripts to generate the execution environment required for MAESTRO, 
 as well as an install script to generate the execution environment for virtualization and visualization of the HUBO robot.
 
@@ -11,16 +10,10 @@ as well as an install script to generate the execution environment for virtualiz
 **************       REQUIREMENTS      *************
 ****************************************************
 
-- ROS Diamondback
-or
+- Ubuntu 12.04 LTS
 - ROS Fuerte
-
 - Orocos Toolchain (ROS stack)
 - OpenRAVE (ROS stack)
-
-- Ubuntu 10.04 LTS
-or
-- Ubuntu 12.04 LTS
 
 ****************************************************
 **************       INSTALLATION      *************
@@ -28,13 +21,7 @@ or
 
 Installation scripts exist to install dependencies such as ROS, Orocos, and OpenRAVE, as well as complementary packages such as Hubo-Ach and OpenHUBO.
 
-Installation:
-In 10.04 Lucid:
-Append the full maestro path to the /opt/ros/diamondback/setup.sh file
-under the ROS_PACKAGE_PATH variable.
-	sudo ./install.sh
-
-In 12.04 Precise:
+To install all dependencies and complementary packages.
 	./install-all.sh
 
 Alternatively, you can install some components individually:
@@ -248,3 +235,63 @@ Scripts can be executed using the following command:
 	runGesture("<Gesture Name>")
 
 Gesture name is the name of the program inside of the .ops file, NOT the name of the file.
+
+
+****************************************************
+**************          LEGACY         *************
+****************************************************
+
+There is legacy MAESTRO code which actively controls communication to the HUBO Robot over the CAN protocol. This version
+runs on Ubuntu 10.04 LTS.
+
+****************************
+*****  REQUIREMENTS  *******
+****************************
+
+- Ubuntu 10.04 LTS
+- ROS Diamondback
+- Orocos Toolchian (ROS stack)
+- OpenRAVE (ROS stack)
+
+****************************
+*****  INSTALLATION  *******
+****************************
+
+Installation scripts exist to install dependencies such as ROS, Orocos, and OpenRAVE.
+
+Clone the master repository:
+	git clone https://github.com/jeffsegall/maestro.git
+	
+Checkout Version 1.0
+	git checkout v1.0-Lucid
+
+Install ROS Diamondback
+	sudo ./install.sh
+	
+Append the full maestro path to the /opt/ros/diamondback/setup.sh file
+under the ROS_PACKAGE_PATH variable.
+
+****************************
+**********  RUN  ***********
+****************************
+
+Start Maestro (CAN Communication)
+	./run.sh
+
+A terminal will open which will permit control of the robot.
+In order to see available commands, run the following commands:
+	cd RobotControl
+	ls
+	
+This will print all available commands for RobotControl. Most should be self explanatory. If you need a more
+detailed description of how to run, email the developers. Contact information is in the Contact Us section.
+
+
+****************************************************
+*************          SUPPORT          ************
+****************************************************
+
+Contact us with any questions you have:
+
+Jeff Segall: js572@drexel.edu
+Jacky Speck: jas522@drexel.edu
