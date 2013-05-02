@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 echo "Maestro OpenHUBO Robot Control Run Script"
 if [[ $# -lt 1 && ! "$HUBO_ACH_RUNNING" ]]
 then
@@ -14,7 +13,8 @@ then
 fi
 
 source /opt/ros/fuerte/setup.bash 
-SKIP_OPEN_HUBO=""
+USE_OPEN_HUBO=""
+NO_X=""
 HUBO_ACH_RUNNING="$(pgrep hubo-daemon)"
 
 if [ "$HUBO_ACH_RUNNING" ]; then
@@ -25,24 +25,26 @@ fi
 
 case $1 in
 	virtual ) 
-		xterm -e "hubo-ach virtual" &;;
+		USE_OPEN_HUBO=true
+		xterm -e "hubo-ach virtual" &
+		;;	
 	sim ) 
-		SKIP_OPEN_HUBO=yes;
 		export PYTHONPATH="$PYTHONPATH:/usr/lib/python2.7/dist-packages" 
-		xterm -e "hubo-ach sim openhubo physics" &;;
+		xterm -e "hubo-ach sim openhubo physics" &
+		;;
 	sim-real ) 
-		SKIP_OPEN_HUBO=yes; 
 		export PYTHONPATH="$PYTHONPATH:/usr/lib/python2.7/dist-packages" 
-		xterm -e "hubo-ach sim openhubo nodynamics" &;;
+		xterm -e "hubo-ach sim openhubo nodynamics" &
+		;;
 	real ) 
-		xterm -e "hubo-ach start" &;;
+		NO_X=true
+		sudo openvt -v  -- "`pwd`/hubo-ach.sh"
+		;;
 esac
 
 sleep 3
-xterm -e ./run.sh &
-sleep 1
 
-if [ -z "$SKIP_OPEN_HUBO" ]; then
+if [ ! -z "$USE_OPEN_HUBO" ]; then
 	source "$OPENHUBO_DIR/env.sh"
 	cd "$OPENHUBO_DIR"/examples
 	xterm -e python -i achread.py &
@@ -51,7 +53,20 @@ fi
 
 roscd hubo_ros
 
-xterm -e ./run-feedback.sh &
-sleep 1
-xterm -e ./run-feedforward.sh &
-sleep 1
+if [[ -z "$NO_X" ]]; then
+	xterm -e "./run-feedback.sh" &
+	sleep 1
+	xterm -e "./run-feedforward.sh" &
+	sleep 1
+
+else
+	echo "Opening feedback channel..."
+	sudo openvt -v  -- "`pwd`/run-feedback.sh"
+	sleep 2 
+	echo "Opening interface channel..."
+	sudo openvt -v  -- "`pwd`/run-feedforward.sh"
+	sleep 2 
+fi
+
+roscd maestro/../run
+./run.sh 
