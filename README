@@ -151,7 +151,7 @@ Reset All Joints:
 	command("ResetAll", "");
 	
 Reset A Single Joint:
-	command("ResetJoint", "<Joint Name");
+	command("ResetJoint", "<Joint Name>");
 	
 This command will reset the encoder value of the given joint or joints. This should usually be done as part of initialization once the 
 motors have reached their home position. In addition, this command will reset Big Error, Encoder Error, and Homing Error on the given joints
@@ -162,6 +162,14 @@ Initialize Sensors:
 	
 This command will initialize all of the sensors on the robot, including the FT and IMU sensors. The robot should be off the ground and not
 moving when this command is run. This command should be run as part of initialization.
+
+Set an alias:
+	alias("<Entity Name>", "<New Name>");
+	
+This command will set an alias for some motor, sensor, property, or command. This will allow you to specify your own names for direct control,
+or you can shorten the names programmatically to shorten the lengths of written scripts. An excellent use of this feature would be to have
+a gesture created for initialization tasks that aliases your commands to the chosen values at the start.
+Note: This command should be performed after running initRobot.
 
 ******************
 **   MOVEMENT   **

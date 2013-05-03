@@ -55,6 +55,11 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     		.arg("Name", "The name of the command to send. See README for command list and arguments.")
     		.arg("Target", "The target of the command. Usually a joint name.");
 
+    this->addOperation("alias", &RobotControl::setAlias, this, RTT::OwnThread)
+			.doc("Create an alternate name for a motor, property, sensor, or command.")
+			.arg("Name", "The name of said entity currently recognized")
+			.arg("Alias", "An alias for said name. The old name will not be overwritten. You can not have the same name for different entities.");
+
     this->addOperation("requiresMotion", &RobotControl::requiresMotion, this, RTT::OwnThread)
 			.arg("Name", "The name of the motor to check for necessary motion on.");
 
@@ -75,6 +80,17 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     this->state = NULL;
     this->interpolation = true;	//Interpret all commands as a final destination with given velocity.
     this->override = true;		//Force homing before allowing enabling. (currently disabled)
+
+    commands["Enable"] = ENABLE;
+    commands["EnableAll"] = ENABLEALL;
+    commands["Disable"] = DISABLE;
+    commands["DisableAll"] = DISABLEALL;
+    commands["ResetJoint"] = RESET;
+    commands["ResetAll"] = RESETALL;
+    commands["Home"] = HOME;
+    commands["HomeAll"] = HOMEALL;
+    commands["InitializeSensors"] = INITSENSORS;
+    commands["Update"] = UPDATE;
 
     tempOutput.open("/opt/ros/fuerte/stacks/maestro/RobotControlLog.txt");
     vector<string> paths = getGestureScripts(CONFIG_PATH);
@@ -508,7 +524,13 @@ void RobotControl::command(string name, string target){
 	map<string, HuboMotor*> motors = state->getBoardMap();
 	hubomsg::AchCommand output;
 
-	if (name.compare("Enable") == 0){
+	if (commands.count(name) == 0){
+		std::cout << "Error. No command with name " << name << " is defined for RobotControl. Aborting.";
+		return;
+	}
+
+	switch (commands[name]){
+	case ENABLE:
 		if (motors.count(target) == 0){
 			std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
 			return;
@@ -525,8 +547,8 @@ void RobotControl::command(string name, string target){
 		if (RUN_TYPE == HARDWARE)
 			motor->setGoalPosition(motor->getPosition());
 		motor->setEnabled(true);
-
-	} else if (name.compare("EnableAll") == 0){
+		break;
+	case ENABLEALL:
 		output.commandName = "enableAll";
 		for (int i = 0; i < this->state->getBoards().size(); i++){
 			MotorBoard* mb = this->state->getBoards()[i];
@@ -542,7 +564,8 @@ void RobotControl::command(string name, string target){
 				motor->setEnabled(true);
 			}
 		}
-	} else if (name.compare("Disable") == 0){
+		break;
+	case DISABLE:
 		if (motors.count(target) == 0){
 			std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
 			return;
@@ -552,8 +575,8 @@ void RobotControl::command(string name, string target){
 
 		HuboMotor* motor = motors[target];
 		motor->setEnabled(false);
-
-	} else if (name.compare("DisableAll") == 0){
+		break;
+	case DISABLEALL:
 		output.commandName = "disableAll";
 		for (int i = 0; i < this->state->getBoards().size(); i++){
 			MotorBoard* mb = this->state->getBoards()[i];
@@ -562,29 +585,8 @@ void RobotControl::command(string name, string target){
 				motor->setEnabled(false);
 			}
 		}
-	} else if (name.compare("Home") == 0){
-		if (motors.count(target) == 0){
-			std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
-			return;
-		}
-
-		output.commandName = "homeJoint";
-		output.jointName = target;
-
-		HuboMotor* motor = motors[target];
-		set(target, "position", 0);
-
-	} else if (name.compare("HomeAll") == 0){
-		output.commandName = "homeAll";
-		for (int i = 0; i < this->state->getBoards().size(); i++){
-			MotorBoard* mb = this->state->getBoards()[i];
-			for (int j = 0; j < mb->getNumChannels(); j++){
-				HuboMotor* motor = mb->getMotorByChannel(j);
-				set(motor->getName(), "position", 0);
-			}
-		}
-		//TODO: Find a way to pause for a length of time here.
-	} else if (name.compare("ResetJoint") == 0){
+		break;
+	case RESET:
 		if (motors.count(target) == 0){
 			std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
 			return;
@@ -597,7 +599,7 @@ void RobotControl::command(string name, string target){
 		set(target, "position", 0);
 		HuboMotor* motor = motors[target];
 		motor->setInterStep(0); // We will now assume we are at 0, because the encoders have been reset.
-	} else if (name.compare("ResetAll") == 0){
+	case RESETALL:
 		for (int i = 0; i < this->state->getBoards().size(); i++){
 			MotorBoard* mb = this->state->getBoards()[i];
 			for (int j = 0; j < mb->getNumChannels(); j++){
@@ -606,13 +608,32 @@ void RobotControl::command(string name, string target){
 			}
 		}
 		return;
-	} else if (name.compare("InitializeSensors") == 0){
+	case HOME:
+		if (motors.count(target) == 0){
+			std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
+			return;
+		}
+
+		output.commandName = "homeJoint";
+		output.jointName = target;
+
+		HuboMotor* motor = motors[target];
+		set(target, "position", 0);
+		break;
+	case HOMEALL:
+		output.commandName = "homeAll";
+		for (int i = 0; i < this->state->getBoards().size(); i++){
+			MotorBoard* mb = this->state->getBoards()[i];
+			for (int j = 0; j < mb->getNumChannels(); j++){
+				HuboMotor* motor = mb->getMotorByChannel(j);
+				set(motor->getName(), "position", 0);
+			}
+		}
+		//TODO: Find a way to pause for a length of time here.
+	case INITSENSORS:
 		output.commandName = "initializeSensors";
-	} else if (name.compare("Update") == 0){
+	case UPDATE:
 		updateState();
-	} else {
-		std::cout << "Error. No command with name " << name << " is defined for RobotControl. Aborting.";
-		return;
 	}
 
 	achOutputQueue->push(output);
@@ -638,6 +659,37 @@ void RobotControl::setMode(string mode, bool value){
 	} else {
 		std::cout << "RobotControl does not have a mutable mode with name " << mode << "." << std::endl;
 	}
+}
+
+bool RobotControl::setAlias(string name, string alias){
+	map<string, HuboMotor*> motors = state->getBoardMap();
+	map<string, FTSensorBoard*> ftSensors = state->getFTSensorMap();
+	map<string, IMUBoard*> imuSensors = state->getIMUSensorMap();
+	map<string, PROPERTY> properties = state->getPropertyMap();
+
+	int entries = 0;
+
+	entries += motors.count(name);
+	entries += ftSensors.count(name);
+	entries += imuSensors.count(name);
+	entries += properties.count(name);
+	entries += commands.count(name);
+
+	if (entries > 0){
+		std::cout << "There already exists an entity named " << name << " in RobotControl.";
+		return false;
+	} else if (motors.count(name) == 1)
+		motors[alias] = motors[name];
+	else if (ftSensors.count(name) == 1)
+		ftSensors[alias] = ftSensors[name];
+	else if (imuSensors.count(name) == 1)
+		imuSensors[alias] = imuSensors[name];
+	else if (properties.count(name) == 1)
+		properties[alias] = properties[name];
+	else if (commands.count(name) == 1)
+		commands[alias] = commands[name];
+
+	return true;
 }
 
 vector<string> RobotControl::splitFields(string input){

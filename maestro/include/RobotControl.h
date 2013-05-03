@@ -32,7 +32,7 @@
 #include "MotorBoard.h"
 #include "IMUBoard.h"
 #include "FTSensorBoard.h"
-#include "Property.h"
+#include "Names.h"
 #include <fstream>
 
 using std::queue;
@@ -70,6 +70,7 @@ public:
 
     // Configuration Commands
     bool getRunType(string path);
+    bool setAlias(string name, string alias);
     vector<string> getGestureScripts(string path);
     vector<string> splitFields(string input);
     string getDefaultInitPath(string path);
@@ -98,6 +99,7 @@ private:
     queue<hubomsg::AchCommand>* achOutputQueue;
 
     map< string, vector<float> > gestures;
+    map<string, COMMAND> commands;
     ofstream tempOutput;
 
     int written;

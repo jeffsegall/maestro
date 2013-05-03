@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string>
 
-#include "Property.h"
+#include "Names.h"
 
 #define MAX_ANGULAR_VELOCITY 2
 

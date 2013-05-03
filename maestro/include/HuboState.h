@@ -13,6 +13,7 @@
 #include "MotorBoard.h"
 #include "FTSensorBoard.h"
 #include "IMUBoard.h"
+#include "Names.h"
 #include <rtt/Port.hpp>
 #include <map>
 #include <string>
