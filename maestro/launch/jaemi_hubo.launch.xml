@@ -1,4 +1,4 @@
 <launch>
     <machine name="maestro" address="localhost"/>
-    <node name="maestro_api" pkg="ocl" type="deployer-gnulinux" launch-prefix="xterm -e" args="-s $(find maestro)/launch/robot_control.xml --" output="screen"/>
+    <node name="maestro_api" pkg="ocl" type="deployer-gnulinux" launch-prefix="" args="-s $(find maestro)/launch/robot_control.xml --" output="screen"/>
 </launch>
