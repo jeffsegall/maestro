@@ -81,6 +81,11 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     		.arg("Name", "The name of the command to send. See README for command list and arguments.")
     		.arg("Target", "The target of the command. Usually a joint name.");
 
+    this->addOperation("setMode", &RobotControl::setMode, this, RTT::OwnThread)
+    		.doc("Modify the mode of operation of RobotControl.")
+    		.arg("Mode", "The mode to be modified. Not yet documented.")
+    		.arg("Value", "New value for mode to take on. Not yet documented.");
+
     this->addOperation("setAlias", &RobotControl::setAlias, this, RTT::OwnThread)
 			.doc("Create an alternate name for a motor, property, sensor, or command.")
 			.arg("Name", "The name of said entity currently recognized")
