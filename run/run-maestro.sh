@@ -38,7 +38,7 @@ case $1 in
 		;;
 	real ) 
 		NO_X=true
-		sudo openvt -v  -- "`pwd`/hubo-ach.sh"
+		sudo openvt -v -- "/home/hubo/maestro/run/hubo-ach.sh"
 		;;
 esac
 
@@ -51,7 +51,11 @@ if [ ! -z "$USE_OPEN_HUBO" ]; then
 	sleep 1
 fi
 
+pwd
+sleep 1
 roscd hubo_ros
+pwd
+sleep 1
 
 if [[ -z "$NO_X" ]]; then
 	xterm -e "./run-feedback.sh" &
@@ -61,7 +65,7 @@ if [[ -z "$NO_X" ]]; then
 
 else
 	echo "Opening feedback channel..."
-	sudo openvt -v  -- "`pwd`/run-feedback.sh"
+	sudo openvt -v  -- "./run-feedback.sh"
 	sleep 2 
 	echo "Opening interface channel..."
 	sudo openvt -v  -- "`pwd`/run-feedforward.sh"
