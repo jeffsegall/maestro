@@ -822,7 +822,7 @@ bool RobotControl::roundTripTest(string joint, double position){
 
 	clock_gettime(CLOCK_REALTIME, &start);
 
-	while(get(joint, "position") < position);
+	while(get(joint, "position") < position) usleep(1);
 
 	clock_gettime(CLOCK_REALTIME, &finish);
 
