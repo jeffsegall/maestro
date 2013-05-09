@@ -818,6 +818,8 @@ bool roundTripTest(string joint, double position){
 	clock_gettime(CLOCK_REALTIME, &finish);
 
 	tempOutput << "Round trip completed. Time elapsed: " << (finish.tv_nsec - start.tv_nsec) << std::endl;
+
+	return true;
 }
 
 void RobotControl::runGesture(string name){
