@@ -96,6 +96,10 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     this->addOperation("setDelay", &RobotControl::setDelay, this, RTT::OwnThread)
 			.arg("Microseconds", "Delay amount in microseconds.");
 
+    this->addOperation("roundTripTest", &RobotControl::roundTripTest, this, RTT::OwnThread)
+    		.arg("Joint Name:", "Name of joint to move")
+    		.arg("Position", "small distance to travel. DO NOT INTERPOLATE.");
+
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
 	    	.arg("Name", "The name of the gesture to load.");
 
