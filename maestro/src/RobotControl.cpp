@@ -689,7 +689,7 @@ bool RobotControl::setAlias(string name, string alias){
 	entries += commands.count(alias);
 
 	if (entries > 0){
-		std::cout << "There already exists an entity named " << name << " in RobotControl.";
+		std::cout << "There already exists an entity named " << alias << " in RobotControl." << std::cout;
 		return false;
 	} else if (motors.count(name) == 1)
 		motors[alias] = motors[name];
