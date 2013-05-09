@@ -55,7 +55,7 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     		.arg("Name", "The name of the command to send. See README for command list and arguments.")
     		.arg("Target", "The target of the command. Usually a joint name.");
 
-    this->addOperation("alias", &RobotControl::setAlias, this, RTT::OwnThread)
+    this->addOperation("setAlias", &RobotControl::setAlias, this, RTT::OwnThread)
 			.doc("Create an alternate name for a motor, property, sensor, or command.")
 			.arg("Name", "The name of said entity currently recognized")
 			.arg("Alias", "An alias for said name. The old name will not be overwritten. You can not have the same name for different entities.");
@@ -650,8 +650,6 @@ void RobotControl::command(string name, string target){
 		updateState();
 		break;
 	}
-
-
 }
 
 void RobotControl::setMode(string mode, bool value){
