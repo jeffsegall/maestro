@@ -524,6 +524,9 @@ void RobotControl::command(string name, string target){
 	map<string, HuboMotor*> motors = state->getBoardMap();
 	hubomsg::AchCommand output;
 
+	HuboMotor* motor;
+	MotorBoard* mb;
+
 	if (commands.count(name) == 0){
 		std::cout << "Error. No command with name " << name << " is defined for RobotControl. Aborting.";
 		return;
@@ -537,8 +540,9 @@ void RobotControl::command(string name, string target){
 		}
 		output.commandName = "enableJoint";
 		output.jointName = target;
+		achOutputQueue->push(output);
 
-		HuboMotor* motor = motors[target];
+		motor = motors[target];
 		updateState();
 		if (RUN_TYPE == HARDWARE && !motor->isHomed()){
 			std::cout << "Warning! Motor " << target << " has not yet been homed. Skipping enabling of this motor." << std::endl;
@@ -550,10 +554,11 @@ void RobotControl::command(string name, string target){
 		break;
 	case ENABLEALL:
 		output.commandName = "enableAll";
+		achOutputQueue->push(output);
 		for (int i = 0; i < this->state->getBoards().size(); i++){
-			MotorBoard* mb = this->state->getBoards()[i];
+			mb = this->state->getBoards()[i];
 			for (int j = 0; j < mb->getNumChannels(); j++){
-				HuboMotor* motor = mb->getMotorByChannel(j);
+				motor = mb->getMotorByChannel(j);
 				updateState();
 				if (RUN_TYPE == HARDWARE && !motor->isHomed()){
 					std::cout << "Warning! Motor " << motor->getName() << " has not yet been homed. Skipping enabling of this motor." << std::endl;
@@ -572,16 +577,18 @@ void RobotControl::command(string name, string target){
 		}
 		output.commandName = "disableJoint";
 		output.jointName = target;
+		achOutputQueue->push(output);
 
-		HuboMotor* motor = motors[target];
+		motor = motors[target];
 		motor->setEnabled(false);
 		break;
 	case DISABLEALL:
 		output.commandName = "disableAll";
+		achOutputQueue->push(output);
 		for (int i = 0; i < this->state->getBoards().size(); i++){
-			MotorBoard* mb = this->state->getBoards()[i];
+			mb = this->state->getBoards()[i];
 			for (int j = 0; j < mb->getNumChannels(); j++){
-				HuboMotor* motor = mb->getMotorByChannel(j);
+				motor = mb->getMotorByChannel(j);
 				motor->setEnabled(false);
 			}
 		}
@@ -594,16 +601,18 @@ void RobotControl::command(string name, string target){
 
 		output.commandName = "resetJoint";
 		output.jointName = target;
+		achOutputQueue->push(output);
 
 		command("Disable", target);
 		set(target, "position", 0);
-		HuboMotor* motor = motors[target];
+		motor = motors[target];
 		motor->setInterStep(0); // We will now assume we are at 0, because the encoders have been reset.
+		break;
 	case RESETALL:
 		for (int i = 0; i < this->state->getBoards().size(); i++){
-			MotorBoard* mb = this->state->getBoards()[i];
+			mb = this->state->getBoards()[i];
 			for (int j = 0; j < mb->getNumChannels(); j++){
-				HuboMotor* motor = mb->getMotorByChannel(j);
+				motor = mb->getMotorByChannel(j);
 				command("ResetJoint", motor->getName());
 			}
 		}
@@ -616,27 +625,33 @@ void RobotControl::command(string name, string target){
 
 		output.commandName = "homeJoint";
 		output.jointName = target;
+		achOutputQueue->push(output);
 
-		HuboMotor* motor = motors[target];
+		motor = motors[target];
 		set(target, "position", 0);
 		break;
 	case HOMEALL:
 		output.commandName = "homeAll";
+		achOutputQueue->push(output);
 		for (int i = 0; i < this->state->getBoards().size(); i++){
-			MotorBoard* mb = this->state->getBoards()[i];
+			mb = this->state->getBoards()[i];
 			for (int j = 0; j < mb->getNumChannels(); j++){
-				HuboMotor* motor = mb->getMotorByChannel(j);
+				motor = mb->getMotorByChannel(j);
 				set(motor->getName(), "position", 0);
 			}
 		}
+		break;
 		//TODO: Find a way to pause for a length of time here.
 	case INITSENSORS:
 		output.commandName = "initializeSensors";
+		achOutputQueue->push(output);
+		break;
 	case UPDATE:
 		updateState();
+		break;
 	}
 
-	achOutputQueue->push(output);
+
 }
 
 void RobotControl::setMode(string mode, bool value){
