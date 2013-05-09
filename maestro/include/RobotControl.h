@@ -62,6 +62,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Names.h"
 #include <fstream>
 #include <sstream>
+#include <sys/time.h>
 
 using std::queue;
 using std::vector;
@@ -102,6 +103,9 @@ public:
     vector<string> getGestureScripts(string path);
     vector<string> splitFields(string input);
     string getDefaultInitPath(string path);
+
+    // Testing Commands
+    bool roundTripTest(string joint, double position);
 
 
 private:

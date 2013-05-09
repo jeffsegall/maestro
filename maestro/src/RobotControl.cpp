@@ -321,8 +321,8 @@ void RobotControl::updateState(){
 			}
 
 			HuboMotor* motor = motors[huboState.joints[i].name];
-
-			motor->update(huboState.joints[i].position,
+			double position = (RUN_TYPE == HARDWARE) ? huboState.joints[i].position : huboState.joints[i].commanded;
+			motor->update(position,
 						huboState.joints[i].velocity,
 						huboState.joints[i].temperature,
 						huboState.joints[i].current,
@@ -804,6 +804,20 @@ bool RobotControl::requiresMotion(string name){
 		return false;
 	}
 	return motors[name]->requiresMotion();
+}
+
+bool roundTripTest(string joint, double position){
+	timespec start;
+	timespec finish;
+	set(joint, "position", position);
+
+	clock_gettime(CLOCK_REALTIME, &start);
+
+	while(get(joint, "position") < position);
+
+	clock_gettime(CLOCK_REALTIME, &finish);
+
+	tempOutput << "Round trip completed. Time elapsed: " << (finish.tv_nsec - start.tv_nsec) << std::endl;
 }
 
 void RobotControl::runGesture(string name){
