@@ -1,0 +1,11 @@
+RunType:
+Simulation
+Init File:
+/opt/ros/fuerte/stacks/maestro/maestro/models/hubo_default.xml
+Scripts:
+/opt/ros/fuerte/stacks/maestro/maestro/gestures/harmonic.ops
+/opt/ros/fuerte/stacks/maestro/maestro/gestures/newscript.ops
+/opt/ros/fuerte/stacks/maestro/maestro/gestures/otherscript.ops
+/opt/ros/fuerte/stacks/maestro/maestro/gestures/dance.ops
+/opt/ros/fuerte/stacks/maestro/maestro/gestures/fold.ops
+/opt/ros/fuerte/stacks/maestro/maestro/gestures/testure.ops

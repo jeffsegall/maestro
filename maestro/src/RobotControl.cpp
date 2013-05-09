@@ -92,7 +92,9 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     commands["InitializeSensors"] = INITSENSORS;
     commands["Update"] = UPDATE;
 
-    tempOutput.open("/opt/ros/fuerte/stacks/maestro/RobotControlLog.txt");
+    ostringstream logFile;
+	logfile << LOG_PATH << "RobotControl.log";
+    tempOutput.open(logfile.str());
     vector<string> paths = getGestureScripts(CONFIG_PATH);
     for (int i = 0; i < paths.size(); i++){
 		std::cout << "Adding gestures from path: " << paths[i] << std::endl;

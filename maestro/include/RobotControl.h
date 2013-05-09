@@ -1,7 +1,8 @@
 #ifndef ROBOTCONTROL_H
 #define ROBOTCONTROL_H
 
-#define CONFIG_PATH "/opt/ros/fuerte/stacks/maestro/test/config.txt"
+#define CONFIG_PATH "/opt/ros/fuerte/stacks/maestro/maestro/config/config.txt"
+#define LOG_PATH "/opt/ros/fuerte/stacks/maestro/maestro/logs/"
 #define HARDWARE true
 #define SIMULATION false
 
@@ -34,6 +35,7 @@
 #include "FTSensorBoard.h"
 #include "Names.h"
 #include <fstream>
+#include <sstream>
 
 using std::queue;
 using std::vector;
