@@ -43,7 +43,55 @@ Run:
 
 You will be prompted to uninstall each of the separate components installed by the install scripts. 
 NOTE: Using source to call the script is necessary because otherwise it will unable to read the OPENHUBO_DIR environment variable.
+
+****************************************************
+**************        QUICK START      *************
+****************************************************
+
+If you want to get started immediately, and read about the full interface later, follow these steps:
+
+	- Navigate to the Maestro run directory: <Maestro Install Dir>/run
 	
+	- Choose your run type. If running on hardware, use "real". If you just want a simulation, choose "sim".
+	
+	- Run the maestro run script: ./run-maestro <run type>
+		Example: ./run-maestro real
+		
+	- If you chose "real" as your run type:
+	
+		- Terminals should have opened on tty7, tty8, and tty9 (These may be different if there are already processes running on these terminals.)
+		
+		- Open tty7 (Ctrl - Alt - F7) and make sure the hubo-ach console is running (It may require elevated privileges.)
+
+	- If you chose "sim" as your run type:
+		
+		- X Terminals should have opened with hubo ach and its interfaces. Hubo-Ach's terminal may require elevated privileges. Give them.
+		
+	- Once everything has finished starting up, the terminal you ran the run script from should now have the following prompt:
+		Deployer [s]> 
+	
+	- From there, type in the following commands:
+	
+		Deployer [s]> cd RobotControl
+
+		RobotControl [R]> initRobot("");
+		
+		RobotControl [R]> command("HomeAll","");
+
+	- At this point the robot's joints should all move through their homing routines. Now it's time to enable them:
+	
+		RobotControl [R]> command("EnableAll","");
+		
+	- Nothing should happen, but now the motors should be able to be controlled.
+	
+	- Make sure the robot has enough space to move its right arm and run the following command:
+	
+		RobotConrol [R]> runGesture("testure");
+		
+	- The robot should move its arm with a robotic greeting. This should give you an indication of what Maestro can do.
+		For more information, please visit the Interface section.
+	
+		
 ****************************************************
 **************        INTERFACE        *************
 ****************************************************
@@ -84,8 +132,8 @@ which listens on the ROS topic Hubo/HuboCommand. MAESTRO publishes on this topic
 The downside of using this package is that the HUBO model in rViz is not strictly verified to an actual robot. OpenHUBO is the more accurate simulation.
 
 
-Run (MAESTRO & OpenHUBO):
-	./run-openHubo.sh <Mode>
+Run (MAESTRO With Hubo-Ach Interface, Open-HUBO Optional):
+	./run-maestro.sh <Mode>
 
 Usage : ./run-openHubo.sh <Mode>
 <Mode>:
@@ -99,9 +147,9 @@ MAESTRO
 hubo-ach (Will require privilege escalation)
 hubo-ros-feedforward (hubo-ach interface)
 hubo-ros-feedback (visualization interface)
-openHUBO (OpenRAVE Visualization of the HUBO Robot)
+openHUBO (OpenRAVE Visualization of the HUBO Robot, optional)
 
-This option allows a user to visualize the HUBO Robot's motion as commanded by MAESTRO. 
+This option allows a user to visualize the HUBO Robot's motion as commanded by MAESTRO, or directly control the robot on robot hardware.
 The visualization package utilizes an OpenRAVE plugin simulation environment called OpenHUBO to display the simulation, 
 and accepts input on the ROS Topic Hubo/HuboState. Hubo-Ros-Feedback publishes information on this topic, 
 which it obtains through an interface with Hubo-Ach. Hubo-Ach controls raw communication with the Robot and simulation, 
@@ -109,10 +157,10 @@ and accepts commands over the Hubo-Ros-Feedforward interface, which listens on t
 MAESTRO publishes on this topic, and thus, MAESTRO commands are funneled to the simulation.
 
 The differences between each mode of operation are as follows:
-	Virtual: Hubo-Ach runs in non-hardware mode. No hardware is simulated. No simulation is run. A separate OpenHUBO instance is opened.
+	Virtual: Hubo-Ach runs in non-hardware mode. Hubo-Ach simulates can interfaces. A separate OpenHUBO simulation appears, with no physics.
 	Sim: Hubo-Ach runs in simulation mode. Physics are enabled - positions of motors can be polled. Hubo-Ach opens its own OpenHUBO instance.
-	Sim-real: Hubo-Ach runs in simulation mode. Physics are disabled - motions of the robot can be previewed on simulation.
-	real: Hubo-Ach runs in hardware mode. Direct robot communication is supported.
+	Sim-real: Hubo-Ach runs in simulation mode. Physics are disabled - this option is meant for previewing robot motion while still communicating with a robot.
+	real: Hubo-Ach runs in hardware mode. This option is meant for an environment with no X-Server installed. Simulation is not run.
 
 ****************************
 *********  USAGE  **********
@@ -145,7 +193,8 @@ Home A Single Joint:
 	
 This command will send the homing command down on the Ach channel, causing the joints to move to their home positions. Before this
 command is run, no joints can move, nor should they. Each joint should move toward the "home" position on their respective axis, until
-their physical parts hit a limit switch which lets them know that they have hit their home position.
+their physical parts hit a limit switch which lets them know that they have hit their home position. If, after running a homing command,
+it appears that a joint has not correctl homed, it is advisable to reset that joint and try homing again:
 
 Reset All Joints:
 	command("ResetAll", "");
@@ -153,8 +202,8 @@ Reset All Joints:
 Reset A Single Joint:
 	command("ResetJoint", "<Joint Name>");
 	
-This command will reset the encoder value of the given joint or joints. This should usually be done as part of initialization once the 
-motors have reached their home position. In addition, this command will reset Big Error, Encoder Error, and Homing Error on the given joints
+This command will reset the internal state of the encoder in the given joint or joints. This should fix any issues that arise while homing joints,
+or correct a joint's miscalibration. In addition, this command should reset Big Error, Encoder Error, and Homing Error on the given joints
 as well.
 
 Initialize Sensors:
@@ -164,12 +213,12 @@ This command will initialize all of the sensors on the robot, including the FT a
 moving when this command is run. This command should be run as part of initialization.
 
 Set an alias:
-	alias("<Entity Name>", "<New Name>");
+	setAlias("<Entity Name>", "<New Name>");
 	
 This command will set an alias for some motor, sensor, property, or command. This will allow you to specify your own names for direct control,
 or you can shorten the names programmatically to shorten the lengths of written scripts. An excellent use of this feature would be to have
 a gesture created for initialization tasks that aliases your commands to the chosen values at the start.
-Note: This command should be performed after running initRobot.
+Note: This command should be performed after running initRobot, so all entity names will be available to alias.
 
 ******************
 **   MOVEMENT   **
@@ -226,8 +275,8 @@ From IMU Sensors:
 x_acc				- Will return the acceleration in the x-axis
 y_acc				- Will return the acceleration in the y-axis
 z_acc				- Will return the acceleration in the z-axis
-x_rot				- Will return the rotation angle in the x direction?
-y_rot				- Will rethrn the rotation angle in the y direction?
+x_rot				- Will return the rotation angle in the x direction
+y_rot				- Will rethrn the rotation angle in the y direction
 
 ******************
 **   GESTURES   **
@@ -237,19 +286,20 @@ Gestures may be created using Orocos Program Script (.ops). There are example sc
 Each gesture has the same functional interface as the Orocos Deployer. This means that you can only use methods
 in the orocos program script that you would be able to use from the deployer.
 At the time of this writing, each script must be loaded at MAESTRO startup. Each script that will be loaded is specified
-in a config file in <Maestro Install Dir>/test/config.txt
+in a config file in <Maestro Install Dir>/maestro/config/config.txt
 
 Scripts can be executed using the following command:
 	runGesture("<Gesture Name>")
 
 Gesture name is the name of the program inside of the .ops file, NOT the name of the file.
+There are sample gestures you may use to construct your own gestures in <Maestro Install Dir>/maestro/gestures
 
 
 ****************************************************
 **************          LEGACY         *************
 ****************************************************
 
-There is legacy MAESTRO code which actively controls communication to the HUBO Robot over the CAN protocol. This version
+There is legacy MAESTRO code which actively controls communication to the HUBO Robot over CAN protocol. This version
 runs on Ubuntu 10.04 LTS.
 
 ****************************
@@ -292,7 +342,7 @@ In order to see available commands, run the following commands:
 	ls
 	
 This will print all available commands for RobotControl. Most should be self explanatory. If you need a more
-detailed description of how to run, email the developers. Contact information is in the Contact Us section.
+detailed description of how to run, email the developers. Contact information is in the Support section.
 
 
 ****************************************************
