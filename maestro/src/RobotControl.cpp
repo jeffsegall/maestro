@@ -810,7 +810,7 @@ bool RobotControl::requiresMotion(string name){
 	return motors[name]->requiresMotion();
 }
 
-bool roundTripTest(string joint, double position){
+bool RobotControl::roundTripTest(string joint, double position){
 	timespec start;
 	timespec finish;
 	set(joint, "position", position);
