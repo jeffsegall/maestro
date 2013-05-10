@@ -837,6 +837,7 @@ bool RobotControl::roundTripTest(string joint, double position){
 	set(joint, "position", position);
 
 	clock_gettime(CLOCK_REALTIME, &start);
+	startTime = start.tv_nsec;
 
 	testStarted = true;
 	return true;
