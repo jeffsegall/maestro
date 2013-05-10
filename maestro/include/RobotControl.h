@@ -106,6 +106,7 @@ public:
 
     // Testing Commands
     bool roundTripTest(string joint, double position);
+    bool testFinished();
 
 
 private:
@@ -139,6 +140,10 @@ private:
     int delay;
     bool interpolation, override;
     bool RUN_TYPE;
+
+    bool testStarted;
+    double testGoal;
+    long startTime, finishTime;
 };
 
 #endif

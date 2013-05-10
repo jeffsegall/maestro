@@ -105,6 +105,8 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     		.arg("Joint Name:", "Name of joint to move")
     		.arg("Position", "small distance to travel. DO NOT INTERPOLATE.");
 
+    this->addOperation("testFinished", &RobotControl::testFinished, this, RTT::OwnThread);
+
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
 	    	.arg("Name", "The name of the gesture to load.");
 
@@ -137,6 +139,11 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     }
 
     RUN_TYPE = getRunType(CONFIG_PATH);
+
+    testStarted = false;
+    testGoal = 0;
+    startTime = 0;
+    finishTime = 0;
 }
   
 RobotControl::~RobotControl(){}
@@ -178,6 +185,15 @@ void RobotControl::updateHook(){
 	if (commHandler->isNew(3)){
 		//Received update from Hubo-Ach
 		updateState();
+
+		if (testStarted && get("RHY", "position") == testGoal){
+			testStarted = false;
+			timespec finish;
+			clock_gettime(CLOCK_REALTIME, &finish);
+			finishTime = finish.tv_nsec;
+
+			tempOutput << "Test Finished. Time Span: " << finishTime - startTime << std::endl;
+		}
 	}
 
 	if (huboOutputQueue->empty() && !this->state->getBoards().empty()) {
@@ -817,18 +833,17 @@ bool RobotControl::requiresMotion(string name){
 
 bool RobotControl::roundTripTest(string joint, double position){
 	timespec start;
-	timespec finish;
+	testGoal = position;
 	set(joint, "position", position);
 
 	clock_gettime(CLOCK_REALTIME, &start);
 
-	while(get(joint, "position") < position) command("Update","");
-
-	clock_gettime(CLOCK_REALTIME, &finish);
-
-	tempOutput << "Round trip completed. Time elapsed: " << (finish.tv_nsec - start.tv_nsec) << std::endl;
-
+	testStarted = true;
 	return true;
+}
+
+bool RobotControl::testFinished(){
+	return !testStarted;
 }
 
 void RobotControl::runGesture(string name){
