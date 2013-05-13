@@ -21,7 +21,7 @@ apt-get update
 apt-get install -y --no-remove mercurial
 apt-get install -y --no-remove ros-fuerte-desktop-full
 
-if [[ `grep 'source /opt/ros/fuerte/setup.bash ~/.bashrc' | wc -l` == 0 && $QUIET == false ]]; then
+if [[ `grep 'source /opt/ros/fuerte/setup.bash' ~/.bashrc | wc -l` == 0 && $QUIET == false ]]; then
 	echo ""
 	echo ""
 	echo "Would you like to add a source line to your bashrc file?"
