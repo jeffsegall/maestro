@@ -167,9 +167,6 @@ vector<float> trajectoryValues(string path){
 }
 
 void RobotControl::updateHook(){
-	timespec start;
-	clock_gettime(CLOCK_REALTIME, &start);
-
 	hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
 	hubomsg::CanMessage canMessage = hubomsg::CanMessage();
 	//hubomsg::HuboState huboState = hubomsg::HuboState();
@@ -186,6 +183,10 @@ void RobotControl::updateHook(){
 		huboCmd = commHandler->getCmd();
 	}
 	if (commHandler->isNew(3)){
+		timespec receipt;
+		clock_gettime(CLOCK_REALTIME, &receipt);
+
+		if (logTiming) tempOutput << (receipt.tv_nsec - commHandler->getState().nsec) << std::endl;
 		//Received update from Hubo-Ach
 		updateState();
 
@@ -240,11 +241,6 @@ void RobotControl::updateHook(){
 		achOutputQueue->pop();
 	}
 	usleep(delay);
-
-	timespec finish;
-	clock_gettime(CLOCK_REALTIME, &finish);
-
-	if (logTiming) tempOutput << finish.tv_nsec - start.tv_nsec << std::endl;
 }
 
 hubomsg::CanMessage RobotControl::buildCanMessage(canMsg* msg){
