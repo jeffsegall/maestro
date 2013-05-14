@@ -192,7 +192,7 @@ void RobotControl::updateHook(){
 			clock_gettime(CLOCK_REALTIME, &finish);
 			finishTime = finish.tv_nsec;
 
-			tempOutput << "Test Finished. Time Span: " << finishTime - startTime << std::endl;
+			tempOutput << std::endl;
 		}
 	}
 
