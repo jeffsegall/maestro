@@ -220,6 +220,9 @@ void RobotControl::updateHook(){
 		hubomsg::HuboCommand output = huboOutputQueue->front();
 		if (printNow)
 			tempOutput << "Writing message to " << output.num_joints << " motors." << std::endl;
+		timespec outputTime;
+		clock_gettime(CLOCK_REALTIME, &outputTime);
+		output.nsec = outputTime.tv_nsec;
 
 		this->huboDownPort->write(output);
 		huboOutputQueue->pop();
