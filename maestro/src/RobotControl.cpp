@@ -461,58 +461,58 @@ double RobotControl::get(string name, string property){
 
 		switch (properties[property]){
 		case POSITION:
-			std::cout << "Position of motor " << name << " is " << motor->getPosition() << "." << std::endl;
+			if (printNow) std::cout << "Position of motor " << name << " is " << motor->getPosition() << "." << std::endl;
 			return motor->getPosition();
 		case VELOCITY:
-			std::cout << "Velocity of motor " << name << " is " << motor->getVelocity() << "." << std::endl;
+			if (printNow) std::cout << "Velocity of motor " << name << " is " << motor->getVelocity() << "." << std::endl;
 			return motor->getVelocity();
 		case TEMPERATURE:
-			std::cout << "Temperature of motor " << name << " is " << motor->getTemperature() << "." << std::endl;
+			if (printNow) std::cout << "Temperature of motor " << name << " is " << motor->getTemperature() << "." << std::endl;
 			return motor->getTemperature();
 		case CURRENT:
-			std::cout << "Current of motor " << name << " is " << motor->getCurrent() << "." << std::endl;
+			if (printNow) std::cout << "Current of motor " << name << " is " << motor->getCurrent() << "." << std::endl;
 			return motor->getCurrent();
 		case ENABLED:
-			std::cout << "Motor " << name << " is currently " << (motor->isEnabled() ? "enabled." : "disabled.") << std::endl;
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->isEnabled() ? "enabled." : "disabled.") << std::endl;
 			return motor->isEnabled() ? 1 : 0;
 		case HOMED:
-			std::cout << "Motor " << name << " has " << (motor->isHomed() ? "" : "not ") << "been homed." << std::endl;
+			if (printNow) std::cout << "Motor " << name << " has " << (motor->isHomed() ? "" : "not ") << "been homed." << std::endl;
 			return motor->isHomed() ? 1 : 0;
 		case ERRORED:
-			std::cout << "Motor " << name << " is currently " << (motor->hasError() ? "" : "not ") << "in an error condition.";
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError() ? "" : "not ") << "in an error condition.";
 			return motor->hasError() ? 1 : 0;
 		case JAM_ERROR:
-			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a jam error.";
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a jam error.";
 			return motor->hasError(properties[property]) ? 1 : 0;
 		case PWM_SATURATED_ERROR:
-			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a PWM Saturated error.";
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a PWM Saturated error.";
 			return motor->hasError(properties[property]) ? 1 : 0;
 		case BIG_ERROR:
-			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a big error.";
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a big error.";
 			return motor->hasError(properties[property]) ? 1 : 0;
 		case ENC_ERROR:
-			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing an encoder error.";
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing an encoder error.";
 			return motor->hasError(properties[property]) ? 1 : 0;
 		case DRIVE_FAULT_ERROR:
-			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a drive fault.";
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a drive fault.";
 			return motor->hasError(properties[property]) ? 1 : 0;
 		case POS_MIN_ERROR:
-			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a minimum position error.";
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a minimum position error.";
 			return motor->hasError(properties[property]) ? 1 : 0;
 		case POS_MAX_ERROR:
-			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a maximum position error.";
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a maximum position error.";
 			return motor->hasError(properties[property]) ? 1 : 0;
 		case VELOCITY_ERROR:
-			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a velocity error.";
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a velocity error.";
 			return motor->hasError(properties[property]) ? 1 : 0;
 		case ACCELERATION_ERROR:
-			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing an acceleration error.";
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing an acceleration error.";
 			return motor->hasError(properties[property]) ? 1 : 0;
 		case TEMP_ERROR:
-			std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a temperature error.";
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a temperature error.";
 			return motor->hasError(properties[property]) ? 1 : 0;
 		default:
-			std::cout << "Motor with name " << name << " has no readable property named " << property << " ." << std::endl;
+			if (printNow) std::cout << "Motor with name " << name << " has no readable property named " << property << " ." << std::endl;
 			return 0;
 		}
 	} else if (ftSensors.count(name) == 1){
@@ -526,16 +526,16 @@ double RobotControl::get(string name, string property){
 
 		switch (properties[property]){
 		case M_X:
-			std::cout << "M_X of Force Torque Sensor " << name << " is " << board->getMX() << "." << std::endl;
+			if (printNow) std::cout << "M_X of Force Torque Sensor " << name << " is " << board->getMX() << "." << std::endl;
 			return board->getMX();
 		case M_Y:
-			std::cout << "M_Y of Force Torque Sensor " << name << " is " << board->getMY() << "." << std::endl;
+			if (printNow) std::cout << "M_Y of Force Torque Sensor " << name << " is " << board->getMY() << "." << std::endl;
 			return board->getMY();
 		case F_Z:
-			std::cout << "F_Z of Force Torque Sensor " << name << " is " << board->getFZ() << "." << std::endl;
+			if (printNow) std::cout << "F_Z of Force Torque Sensor " << name << " is " << board->getFZ() << "." << std::endl;
 			return board->getFZ();
 		default:
-			std::cout << "Force Torque Sensor with name " << name << " has no readable property named " << property << " ." << std::endl;
+			if (printNow) std::cout << "Force Torque Sensor with name " << name << " has no readable property named " << property << " ." << std::endl;
 			return 0;
 		}
 	} else if (imuSensors.count(name) == 1){
@@ -549,22 +549,22 @@ double RobotControl::get(string name, string property){
 
 		switch (properties[property]){
 		case X_ACCEL:
-			std::cout << "X Acceleration of IMU " << name << " is " << board->getXAcc() << "." << std::endl;
+			if (printNow) std::cout << "X Acceleration of IMU " << name << " is " << board->getXAcc() << "." << std::endl;
 			return board->getXAcc();
 		case Y_ACCEL:
-			std::cout << "Y Acceleration of IMU " << name << " is " << board->getYAcc() << "." << std::endl;
+			if (printNow) std::cout << "Y Acceleration of IMU " << name << " is " << board->getYAcc() << "." << std::endl;
 			return board->getYAcc();
 		case Z_ACCEL:
-			std::cout << "Z Acceleration of IMU " << name << " is " << board->getZAcc() << "." << std::endl;
+			if (printNow) std::cout << "Z Acceleration of IMU " << name << " is " << board->getZAcc() << "." << std::endl;
 			return board->getZAcc();
 		case X_ROTAT:
-			std::cout << "X Rotation of IMU " << name << " is " << board->getXRot() << "." << std::endl;
+			if (printNow) std::cout << "X Rotation of IMU " << name << " is " << board->getXRot() << "." << std::endl;
 			return board->getXRot();
 		case Y_ROTAT:
-			std::cout << "Y Rotation of IMU " << name << " is " << board->getYRot() << "." << std::endl;
+			if (printNow) std::cout << "Y Rotation of IMU " << name << " is " << board->getYRot() << "." << std::endl;
 			return board->getYRot();
 		default:
-			std::cout << "IMU with name " << name << " has no readable property named " << property << " ." << std::endl;
+			if (printNow) std::cout << "IMU with name " << name << " has no readable property named " << property << " ." << std::endl;
 			return 0;
 		}
 	} else {
@@ -655,11 +655,6 @@ void RobotControl::command(string name, string target){
 		output.commandName = "resetJoint";
 		output.jointName = target;
 		achOutputQueue->push(output);
-
-		command("Disable", target);
-		set(target, "position", 0);
-		motor = motors[target];
-		motor->setInterStep(0); // We will now assume we are at 0, because the encoders have been reset.
 		break;
 	case RESETALL:
 		for (int i = 0; i < this->state->getBoards().size(); i++){
@@ -707,7 +702,7 @@ void RobotControl::command(string name, string target){
 
 void RobotControl::setMode(string mode, bool value){
 	if (mode.compare("Interpolation") == 0){
-		std::cout << "Setting interpolation " << (value ? "on." : "off.") << std::endl;
+		if (printNow) std::cout << "Setting interpolation " << (value ? "on." : "off.") << std::endl;
 		command("DisableAll","");
 		//If we are switching to interpolation, the internal step of each motor must be updated.
 		if (value){
