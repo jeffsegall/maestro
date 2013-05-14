@@ -141,6 +141,7 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     RUN_TYPE = getRunType(CONFIG_PATH);
 
     testStarted = false;
+    logTiming = false;
     testGoal = 0;
     startTime = 0;
     finishTime = 0;
@@ -166,6 +167,8 @@ vector<float> trajectoryValues(string path){
 }
 
 void RobotControl::updateHook(){
+	timespec start;
+	clock_gettime(CLOCK_REALTIME, &start);
 
 	hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
 	hubomsg::CanMessage canMessage = hubomsg::CanMessage();
@@ -237,6 +240,11 @@ void RobotControl::updateHook(){
 		achOutputQueue->pop();
 	}
 	usleep(delay);
+
+	timespec finish;
+	clock_gettime(CLOCK_REALTIME, &finish);
+
+	if (logTiming) tempOutput << finish.tv_nsec - start.tv_nsec << std::endl;
 }
 
 hubomsg::CanMessage RobotControl::buildCanMessage(canMsg* msg){
@@ -811,6 +819,10 @@ void RobotControl::debugControl(int board, int operation){
 	case 6:
 		this->printNow = false;
 		break;
+	case 7:
+		this->logTiming = true;
+	case 8:
+		this->logTiming = false;
 	default:
 		std::cout << "Operations: " << std::endl << "1: disable (step 1)    2: disable (step 2)    3: enable (step 1)    4: enable (step 2)    5: enable printing     6: disable printing";
 	}

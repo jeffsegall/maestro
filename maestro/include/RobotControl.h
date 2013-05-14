@@ -142,6 +142,7 @@ private:
     bool RUN_TYPE;
 
     bool testStarted;
+    bool logTiming;
     double testGoal;
     long startTime, finishTime;
 };
