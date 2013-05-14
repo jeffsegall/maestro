@@ -191,8 +191,8 @@ void RobotControl::updateHook(){
 			clock_gettime(CLOCK_REALTIME, &finish);
 			finishTime = finish.tv_nsec;
 
+			tempOutput << finishTime - startTime << std::endl;
 			testStarted = false;
-			tempOutput << std::endl;
 		}
 	}
 
