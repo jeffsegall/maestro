@@ -95,9 +95,9 @@ fi
 #OPENRAVE
 add-apt-repository -y ppa:openrave/testing
 apt-get update
-apt-get install openrave
+apt-get install -y --no-remove openrave
 cd /opt/ros/fuerte/stacks
-svn co https://svn.code.sf.net/p/jsk-ros-pkg/trunk .
+svn co https://svn.code.sf.net/p/jsk-ros-pkg/code/trunk .
 hg clone https://kforge.ros.org/armnavigation/armnavigation
 svn co https://code.ros.org/svn/wg-ros-pkg/stacks/pr2_controllers/branches/pr2_controllers-1.4/pr2_controllers_msgs
 svn co https://code.ros.org/svn/wg-ros-pkg/stacks/pr2_common/trunk/pr2_msgs
