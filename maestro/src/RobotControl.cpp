@@ -187,11 +187,11 @@ void RobotControl::updateHook(){
 		updateState();
 
 		if (testStarted && get("RHY", "position") == testGoal){
-			testStarted = false;
 			timespec finish;
 			clock_gettime(CLOCK_REALTIME, &finish);
 			finishTime = finish.tv_nsec;
 
+			testStarted = false;
 			tempOutput << std::endl;
 		}
 	}
