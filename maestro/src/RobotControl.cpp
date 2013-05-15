@@ -101,12 +101,6 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     this->addOperation("setDelay", &RobotControl::setDelay, this, RTT::OwnThread)
 			.arg("Microseconds", "Delay amount in microseconds.");
 
-    this->addOperation("roundTripTest", &RobotControl::roundTripTest, this, RTT::OwnThread)
-    		.arg("Joint Name:", "Name of joint to move")
-    		.arg("Position", "small distance to travel. DO NOT INTERPOLATE.");
-
-    this->addOperation("testFinished", &RobotControl::testFinished, this, RTT::OwnThread);
-
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
 	    	.arg("Name", "The name of the gesture to load.");
 
@@ -139,12 +133,6 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     }
 
     RUN_TYPE = getRunType(CONFIG_PATH);
-
-    testStarted = false;
-    logTiming = false;
-    testGoal = 0;
-    startTime = 0;
-    finishTime = 0;
 }
   
 RobotControl::~RobotControl(){}
@@ -183,10 +171,6 @@ void RobotControl::updateHook(){
 		huboCmd = commHandler->getCmd();
 	}
 	if (commHandler->isNew(3)){
-		timespec receipt;
-		clock_gettime(CLOCK_REALTIME, &receipt);
-
-		if (logTiming) tempOutput << (receipt.tv_nsec - commHandler->getState().nsec) << std::endl;
 		//Received update from Hubo-Ach
 		updateState();
 
@@ -834,22 +818,6 @@ bool RobotControl::requiresMotion(string name){
 		return false;
 	}
 	return motors[name]->requiresMotion();
-}
-
-bool RobotControl::roundTripTest(string joint, double position){
-	timespec start;
-	testGoal = position;
-	set(joint, "position", position);
-
-	clock_gettime(CLOCK_REALTIME, &start);
-	startTime = start.tv_nsec;
-
-	testStarted = true;
-	return true;
-}
-
-bool RobotControl::testFinished(){
-	return !testStarted;
 }
 
 void RobotControl::runGesture(string name){
