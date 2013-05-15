@@ -8,7 +8,7 @@ if [[ $# > 0 && $1 == "-y" ]]; then
 fi
 
 if [[ -z "$QUIET" ]]; then
-	read -p "Please enter installation directory: " installDir
+	read -p "Please enter installation directory (No trailing '/' Please): " installDir
 else
 	installDir=~/
 fi
