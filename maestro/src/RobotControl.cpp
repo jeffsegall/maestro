@@ -173,15 +173,6 @@ void RobotControl::updateHook(){
 	if (commHandler->isNew(3)){
 		//Received update from Hubo-Ach
 		updateState();
-
-		if (testStarted && get("RHY", "position") == testGoal){
-			timespec finish;
-			clock_gettime(CLOCK_REALTIME, &finish);
-			finishTime = finish.tv_nsec;
-
-			tempOutput << finishTime - startTime << std::endl;
-			testStarted = false;
-		}
 	}
 
 	if (huboOutputQueue->empty() && !this->state->getBoards().empty()) {
