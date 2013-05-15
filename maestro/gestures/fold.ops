@@ -1,0 +1,35 @@
+program fold {
+	var double speed = .5;
+	do RobotControl.setProperties("RSP RSP LSP LSP", "velocity position velocity position", ".5 -1.75 .5 -1.4");
+
+	while RobotControl.requiresMotion("RSP") {
+		do nothing
+	}
+
+	while RobotControl.requiresMotion("LSP") {
+		do nothing
+	}
+
+	do RobotControl.setProperties("RSY RSY LSY LSY", "velocity position velocity position", ".5 1.57 .5 -1.57");
+
+	while RobotControl.requiresMotion("RSY") {
+		do nothing
+	}
+
+	while RobotControl.requiresMotion("LSY") {
+		do nothing
+	}
+
+	do RobotControl.setProperties("REP REP LEP LEP", "velocity position velocity position", ".5 -1.8 .5 -1.8");
+
+	while (RobotControl.requiresMotion("REP")){
+		do nothing
+	}
+
+	while (RobotControl.requiresMotion("LEP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("RSY LSY REP LEP RSP LSP", "position position position position position position", "0 0 0 0 0 0");
+
+}

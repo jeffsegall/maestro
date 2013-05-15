@@ -1,0 +1,25 @@
+program dance {
+	
+	do RobotControl.setProperties( "RKP RKP LKP LKP RAP RAP LAP LAP", "velocity position velocity position velocity position velocity position", ".75 1.2 .75 1.2 .5 -.77 .5 -.77");
+									
+	
+
+	while (RobotControl.requiresMotion("RKP")){
+		do nothing
+	} 
+
+	while (RobotControl.requiresMotion("LKP")){
+		do nothing
+	}
+	
+	while (RobotControl.requiresMotion("RAP")){
+		do nothing
+	}
+
+	while (RobotControl.requiresMotion("LAP")){
+		do nothing
+	}
+	
+	do RobotControl.setProperties( "RKP LKP RAP LAP", "position position position position", "0 0 0 0");
+	
+}

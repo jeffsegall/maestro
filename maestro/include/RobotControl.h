@@ -1,7 +1,36 @@
+/*
+Copyright (c) 2013, Drexel University, iSchool, Applied Informatics Group
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the <organization> nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 #ifndef ROBOTCONTROL_H
 #define ROBOTCONTROL_H
 
-#define CONFIG_PATH "/opt/ros/fuerte/stacks/maestro/test/config.txt"
+#define CONFIG_PATH "/opt/ros/fuerte/stacks/maestro/maestro/config/config.txt"
+#define LOG_PATH "/opt/ros/fuerte/stacks/maestro/maestro/logs/"
+#define HARDWARE true
+#define SIMULATION false
 
 #include <rtt/TaskContext.hpp>
 #include <rtt/Port.hpp>
@@ -28,7 +57,11 @@
 #include "HuboState.h"
 #include "HuboMotor.h"
 #include "MotorBoard.h"
+#include "IMUBoard.h"
+#include "FTSensorBoard.h"
+#include "Names.h"
 #include <fstream>
+#include <sstream>
 
 using std::queue;
 using std::vector;
@@ -42,93 +75,32 @@ public:
 
     void updateHook(); 
     hubomsg::CanMessage buildCanMessage(canMsg* msg);
-    void buildHuboCommandMessage(vector<hubomsg::HuboJointCommand>& states, hubomsg::HuboCommand& message);
+    void buildHuboCommandMessage(hubomsg::HuboJointCommand& state, hubomsg::HuboCommand& message);
     void initRobot(string path);
 
     //JOINT MOVEMENT API
-    void setRightHipYaw(int ticks, double omega, int delay);
-    void setRightHipYawRad(double rads, double omega, int delay);
-    void setRightHipRoll(int ticks, double omega, int delay);
-    void setRightHipRollRad(double rads, double omega, int delay);
-    void setRightHipPitch(int ticks, double omega, int delay);
-    void setRightHipPitchRad(double rads, double omega, int delay);
-    void setRightKnee(int ticks, double omega, int delay);
-    void setRightKneeRad(double rads, double omega, int delay);
-    void setRightAnklePitch(int ticks, double omega, int delay);
-    void setRightAnklePitchRad(double rads, double omega, int delay);
-    void setRightAnkleRoll(int ticks, double omega, int delay);
-    void setRightAnkleRollRad(double rads, double omega, int delay);
-    void setLeftHipYaw(int ticks, double omega, int delay);
-    void setLeftHipYawRad(double rads, double omega, int delay);
-    void setLeftHipRoll(int ticks, double omega, int delay);
-    void setLeftHipRollRad(double rads, double omega, int delay);
-    void setLeftHipPitch(int ticks, double omega, int delay);
-    void setLeftHipPitchRad(double rads, double omega, int delay);
-    void setLeftKnee(int ticks, double omega, int delay);
-    void setLeftKneeRad(double rads, double omega, int delay);
-    void setLeftAnklePitch(int ticks, double omega, int delay);
-    void setLeftAnklePitchRad(double rads, double omega, int delay);
-    void setLeftAnkleRoll(int ticks, double omega, int delay);
-    void setLeftAnkleRollRad(double rads, double omega, int delay);
-    void setRightShoulderPitch(int ticks, double omega, int delay);
-    void setRightShoulderPitchRad(double rads, double omega, int delay);
-    void setRightShoulderRoll(int ticks, double omega, int delay);
-    void setRightShoulderRollRad(double rads, double omega, int delay);
-    void setRightShoulderYaw(int ticks, double omega, int delay);
-    void setRightShoulderYawRad(double rads, double omega, int delay);
-    void setRightElbow(int ticks, double omega, int delay);
-    void setRightElbowRad(double rads, double omega, int delay);
-    void setLeftShoulderPitch(int ticks, double omega, int delay);
-    void setLeftShoulderPitchRad(double rads, double omega, int delay);
-    void setLeftShoulderRoll(int ticks, double omega, int delay);
-    void setLeftShoulderRollRad(double rads, double omega, int delay);
-    void setLeftShoulderYaw(int ticks, double omega, int delay);
-    void setLeftShoulderYawRad(double rads, double omega, int delay);
-    void setLeftElbow(int ticks, double omega, int delay);
-    void setLeftElbowRad(double rads, double omega, int delay);
-    void setRightWristYaw(int ticks, double omega, int delay);
-    void setRightWristYawRad(double rads, double omega, int delay);
-    void setRightWristPitch(int ticks, double omega, int delay);
-    void setRightWristPitchRad(double rads, double omega, int delay);
-    void setLeftWristYaw(int ticks, double omega, int delay);
-    void setLeftWristYawRad(double rads, double omega, int delay);
-    void setLeftWristPitch(int ticks, double omega, int delay);
-    void setLeftWristPitchRad(double rads, double omega, int delay);
-    void setNeck(int yaw, int one, int two, double omega, int delay);
-    void setWaist(int ticks, double omega, int delay);
-    void setWaistRad(double rads, double omega, int delay);
-    void setRightHand(int f0, int f1, int f2, int f3, int f4, double omega, int delay);
-    void setLeftHand(int f0, int f1, int f2, int f3, int f4, double omega, int delay);
-    void setJoint(string name, int ticks, double omega, int delay);
-    void setJointRad(string name, double rads, double omega, int delay);
-    void homeJoint(string name, int delay);
-    void homeAll(int delay);
+    void set(string name, string property, double value);
+    void setProperties(string names, string properties, string values);
 
     // Control Commands
-    void enable(int board, int delay);
-    void disable(int board, int delay);
-    void enableJoint(string name, int delay);
-    void disableJoint(string name, int delay);
-    void enableAll(int delay);
-    void disableAll(int delay);
     void debugControl(int board, int operation);
 	void setDelay(int us);
-	void runGesture(string name, int board);
+	void runGesture(string name);
+	void command(string name, string target);
 
     // Feedback Commands
-    void requestEncoderPosition(int board, int delay);
-    void getCurrentTicks(int board, int motor, int delay);
-    void setCurrentTicks(int board, int motor, int ticks);
-    void getCurrentGoal(int board, int motor, int delay);
-    bool requiresMotion(int board, int motor, int delay);
-    bool requiresMotionByName(string name, int delay);
+    bool requiresMotion(string name);
+    double get(string name, string property);
+    void updateState();
 
     // Parameter Commands
-    void setMaxAccVel(int board, int delay, int acc, int vel);
-    void setPositionGain(int board, int motor, int kp, int ki, int kd);
+    void setMode(string mode, bool value);
 
-
+    // Configuration Commands
+    bool getRunType(string path);
+    bool setAlias(string name, string alias);
     vector<string> getGestureScripts(string path);
+    vector<string> splitFields(string input);
     string getDefaultInitPath(string path);
 
 private:
@@ -137,6 +109,7 @@ private:
     //SUBSCRIBE
     InputPort<hubomsg::CanMessage>* canUpPort;
     InputPort<hubomsg::HuboCmd>* orOutPort;
+    InputPort<hubomsg::HuboState>* huboUpPort;
     CommHandler* commHandler;
 
     //PUBLISH
@@ -148,17 +121,19 @@ private:
     HuboState* state;
 
     queue<hubomsg::CanMessage>* inputQueue;
+    queue<hubomsg::HuboState>*	huboInputQueue;
     queue<hubomsg::HuboCommand>* huboOutputQueue;
     queue<hubomsg::AchCommand>* achOutputQueue;
 
     map< string, vector<float> > gestures;
-    map<boardNum, MotorBoard*>::iterator it;
+    map<string, COMMAND> commands;
     ofstream tempOutput;
 
-   
     int written;
     bool printNow, enableControl;
     int delay;
+    bool interpolation, override;
+    bool RUN_TYPE;
 };
 
 #endif

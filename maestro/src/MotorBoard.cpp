@@ -1,3 +1,29 @@
+/*
+Copyright (c) 2013, Drexel University, iSchool, Applied Informatics Group
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the <organization> nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 #include "MotorBoard.h"
 #include <iostream>
 
@@ -151,11 +177,15 @@ int MotorBoard::getNumChannels(){
 * @param	ticks1		position of motor 2
 * @return	The motor in the given channel
 ******************************************************************************/
+//DEPRECATED
+/*
 void MotorBoard::setTicksPosition(vector<long> ticks){
 	if (ticks.size() <= channels)
 		for (int i = 0; i < ticks.size(); i++)
 			this->motors[i]->setTicksPosition(ticks[i]);
 }
+*/
+
 
 
 /******************************************************************************
@@ -720,14 +750,14 @@ canMsg* MotorBoard::initBoard(){
 * @param	REF0		Reference position for channel 0
 * @param	REF1		Reference position for channel 1
 ******************************************************************************/
+// DEPRECATED
+/*
 canMsg* MotorBoard::sendPositionReference(vector<int> REF, int MAX_STEP, int MIN_STEP){
 	assert(REF.size()>= this->channels); //We need at least enough data to send positions to every channel on our board.
     canMsg* out;
 
 
-    /** Constant Decay Interpolation */
-    //TODO:  Goals for next week: Smoother multiple-command interpolation (less precise)
-    //TODO: Goals for next week: Integrate packets to the same board.
+    // Constant Decay Interpolation
     //const int MAX_STEP = 100;
     //const int MIN_STEP = 5;
     const float LEAP_PERCENTAGE = .5;
@@ -818,7 +848,10 @@ canMsg* MotorBoard::sendPositionReference(vector<int> REF, int MAX_STEP, int MIN
     	getMotorByChannel(i)->setDesiredPosition(REF[i]);
     return out;
 }
+*/
 
+// DEPRECATED
+/*
 vector<hubomsg::HuboJointCommand> MotorBoard::sendPositionReference(int MAX_STEP, int MIN_STEP){
 	vector<hubomsg::HuboJointCommand> commands;
 	for (int i = 0; i < channels; i++){
@@ -848,8 +881,9 @@ vector<hubomsg::HuboJointCommand> MotorBoard::sendPositionReference(int MAX_STEP
 	default:
 		break;
 	}
-	*/
+	*
 }
+*/
 
 bool MotorBoard::requiresMotion(){
 	for (int i = 0; i < channels; i++)
@@ -914,13 +948,18 @@ canMsg* MotorBoard::sendPositionReference(char REF0, char REF1, char REF2, char 
 }
 */
 
+// DEPRECATED
+/*
 canMsg* MotorBoard::sendPositionReferenceRadians(double rad0, double rad1){
 	vector<int> ticks(2);
 	ticks[0] = getMotorByChannel(0)->radiansToTicks(rad0);
 	ticks[1] = getMotorByChannel(1)->radiansToTicks(rad1);
 	return sendPositionReference(ticks);
 }
+*/
 
+// DEPRECATED
+/*
 canMsg* MotorBoard::sendPositionReferenceRadians(double rad0, double rad1, double rad2){
 	vector<int> ticks(2);
 	ticks[0] = getMotorByChannel(0)->radiansToTicks(rad0);
@@ -928,7 +967,10 @@ canMsg* MotorBoard::sendPositionReferenceRadians(double rad0, double rad1, doubl
 	ticks[2] = getMotorByChannel(2)->radiansToTicks(rad2);
 	return sendPositionReference(ticks);
 }
+*/
 
+// DEPRECATED
+/*
 canMsg* MotorBoard::sendPositionReferenceRadians(double rad0, double rad1, double rad2, double rad3, double rad4){
 	vector<int> ticks(2);
 	ticks[0] = getMotorByChannel(0)->radiansToTicks(rad0);
@@ -938,3 +980,4 @@ canMsg* MotorBoard::sendPositionReferenceRadians(double rad0, double rad1, doubl
 	ticks[4] = getMotorByChannel(4)->radiansToTicks(rad4);
 	return sendPositionReference(ticks);
 }
+*/

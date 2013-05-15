@@ -1,7 +1,0 @@
-program doSomething {
-	var double speed = .5;
-	do RobotControl.setRightShoulderPitch (-60000, speed, 0)
-	do RobotControl.setRightAnkleRoll(-50000, speed, 0)
-	do RobotControl.setRightHipRoll(160000,speed, 0)
-
-}

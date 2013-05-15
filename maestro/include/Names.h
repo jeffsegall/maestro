@@ -24,40 +24,24 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#include "RosGateway.h"
+#ifndef _NAMES_H
+#define _NAMES_H
 
-using namespace RTT;
+enum PROPERTY {
+	POSITION, VELOCITY, TEMPERATURE, CURRENT, HOMED, ZEROED, ENABLED,
+	ERRORED, JAM_ERROR, PWM_SATURATED_ERROR, BIG_ERROR, ENC_ERROR, DRIVE_FAULT_ERROR,
+	POS_MIN_ERROR, POS_MAX_ERROR, VELOCITY_ERROR, ACCELERATION_ERROR, TEMP_ERROR,
+	X_ACCEL, Y_ACCEL, Z_ACCEL, X_ROTAT, Y_ROTAT,
+	M_X, M_Y, F_Z
+};
 
-RosGateway::RosGateway(std::string inPortName, std::string outPortName){
-    this->inPort = new InputPort<hubomsg::HuboCmd>(inPortName);
-    this->outPort = new OutputPort<hubomsg::HuboCmd>(outPortName);
-}
+enum COMMAND {
+	ENABLE, ENABLEALL,
+	DISABLE, DISABLEALL,
+	RESET, RESETALL,
+	HOME, HOMEALL,
+	INITSENSORS,
+	UPDATE
+};
 
-bool RosGateway::transmit(int joint, float angle){
-    hubomsg::HuboCmd outCommand = hubomsg::HuboCmd();
-    outCommand.joint = joint;
-    outCommand.angle = angle;
-    outCommand.msg = "cmd";
-    this->outPort->write(outCommand);
-    return true;
-}
-
-bool RosGateway::recv(){
-    hubomsg::HuboCmd inCommand = hubomsg::HuboCmd();
-
-    //If a command message comes in from an external source, rebroadcast it.
-    if(NewData==this->inPort->read(inCommand)){
-        if (inCommand.msg == "cmd")
-	    transmit(inCommand.joint, inCommand.angle);
-        return true;
-    }
-    return false;
-}
-
-InputPort<hubomsg::HuboCmd>* RosGateway::getInputPort(){
-    return this->inPort;
-}
-
-OutputPort<hubomsg::HuboCmd>* RosGateway::getOutputPort(){
-    return this->outPort;
-}
+#endif

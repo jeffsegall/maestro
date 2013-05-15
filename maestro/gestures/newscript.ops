@@ -1,0 +1,5 @@
+program doSomething {
+	
+	do RobotControl.setProperties("RSP RSP RAR RAR RHR RHR", "velocity position velocity position velocity position", ".5 -1.49 .5 -1.49 .5 3.14");
+
+}

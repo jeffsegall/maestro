@@ -22,6 +22,8 @@ void serialize(Archive& a,  ::hubomsg::HuboJointState_<ContainerAllocator>  & m,
     a & make_nvp("temperature",m.temperature);
     a & make_nvp("active",m.active);
     a & make_nvp("zeroed",m.zeroed);
+    a & make_nvp("homed",m.homed);
+    a & make_nvp("status",m.status);
 }
 
 } // namespace serialization

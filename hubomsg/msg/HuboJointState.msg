@@ -6,3 +6,5 @@ float64 current
 float64 temperature
 int32 active
 int32 zeroed
+int32 homed
+int32 status

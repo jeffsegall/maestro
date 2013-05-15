@@ -1,3 +1,29 @@
+/*
+Copyright (c) 2013, Drexel University, iSchool, Applied Informatics Group
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the <organization> nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 #include "HuboState.h"
 #include <string>
 #include <iostream>
@@ -7,6 +33,34 @@
 
 using std::queue;
 using std::string;
+
+HuboState::HuboState(){
+	propertyMap["position"] = POSITION;
+	propertyMap["velocity"] = VELOCITY;
+	propertyMap["temp"] = TEMPERATURE;
+	propertyMap["homed"] = HOMED;
+	propertyMap["zeroed"] = ZEROED;
+	propertyMap["enabled"] = ENABLED;
+	propertyMap["errored"] = ERRORED;
+	propertyMap["jamError"] = JAM_ERROR;
+	propertyMap["PWMSaturatedError"] = PWM_SATURATED_ERROR;
+	propertyMap["bigError"] = BIG_ERROR;
+	propertyMap["encoderError"] = ENC_ERROR;
+	propertyMap["driveFaultError"] = DRIVE_FAULT_ERROR;
+	propertyMap["posMinError"] = POS_MIN_ERROR;
+	propertyMap["posMaxError"] = POS_MAX_ERROR;
+	propertyMap["velocityError"] = VELOCITY_ERROR;
+	propertyMap["accelerationError"] = ACCELERATION_ERROR;
+	propertyMap["tempError"] = TEMP_ERROR;
+	propertyMap["x_acc"] = X_ACCEL;
+	propertyMap["y_acc"] = Y_ACCEL;
+	propertyMap["z_acc"] = Z_ACCEL;
+	propertyMap["x_rot"] = X_ROTAT;
+	propertyMap["y_rot"] = Y_ROTAT;
+	propertyMap["m_x"] = M_X;
+	propertyMap["m_y"] = M_Y;
+	propertyMap["f_z"] = F_Z;
+}
 
 /******************************************************************************
 * initHuboWithDefaults
@@ -55,6 +109,12 @@ void HuboState::initHuboWithDefaults(string path, queue<hubomsg::HuboCommand>* o
             mb->addMotor(hm, CH);
             std::cout << "Added motor to: " << mb->getMotorByChannel(CH) << std::endl;
             mb->getMotorByChannel(CH)->setName(name);
+
+            assert(motorMap.count(name) == 0); //Multiple motors should not have the same name.
+            motorMap[name] = hm;
+
+            // Remnants of Original CAN Communication. These do nothing now.
+            // Due to be phased out.
             mb->resetEncoderToZero(CH);
             mb->initBoard();
             mb->setLowerPosLimit(CH, 3, motor.attribute("mpos1").as_int());
@@ -97,6 +157,23 @@ void HuboState::initHuboWithDefaults(string path, queue<hubomsg::HuboCommand>* o
         }
         this->addBoard(mb);
     }
+
+
+    IMU0 = new IMUBoard(BNO_IMU_0, "IMU");
+    IMUSensorMap["IMU"] = IMU0;
+    IMU1 = new IMUBoard(BNO_IMU_1, "LAI");
+    IMUSensorMap["LAI"] = IMU1;
+    IMU2 = new IMUBoard(BNO_IMU_2, "RAI");
+    IMUSensorMap["RAI"] = IMU2;
+
+    leftAnkle = new FTSensorBoard(BNO_L_FOOT_FT, "LAT");
+    FTSensorMap["LAT"] = leftAnkle;
+    rightAnkle = new FTSensorBoard(BNO_R_FOOT_FT, "RAT");
+    FTSensorMap["RAT"] = rightAnkle;
+    leftWrist = new FTSensorBoard(BNO_L_WRIST_FT, "LWT");
+    FTSensorMap["LWT"] = leftWrist;
+    rightWrist = new FTSensorBoard(BNO_R_WRIST_FT, "RWT");
+    FTSensorMap["RWT"] = rightWrist;
 }
 
 /******************************************************************************
@@ -154,4 +231,20 @@ void HuboState::addBoard(MotorBoard* board){
 
 vector<MotorBoard*> HuboState::getBoards(){
     return this->boards;
+}
+
+map<string, HuboMotor*> HuboState::getBoardMap(){
+	return this->motorMap;
+}
+
+map<string, PROPERTY> HuboState::getPropertyMap(){
+	return this->propertyMap;
+}
+
+map<string, FTSensorBoard*> HuboState::getFTSensorMap(){
+	return FTSensorMap;
+}
+
+map<string, IMUBoard*> HuboState::getIMUSensorMap(){
+	return IMUSensorMap;
 }

@@ -1,0 +1,123 @@
+program testure{
+	var double speed = 1.5;
+	
+	do RobotControl.setProperties("RSR RSR", "velocity position", "1.5 -1.35");	
+
+	while RobotControl.requiresMotion("RSR"){
+		do nothing
+	}
+
+	do RobotControl.setProperties("RSY RSY", "velocity position", "1.5 1.57");
+
+        while RobotControl.requiresMotion("RSY"){
+                do nothing
+        }
+	
+	do RobotControl.setProperties("REP REP", "velocity position", "1.5 -1.7")
+
+	while (RobotControl.requiresMotion("REP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("REP", "position", "0")
+
+	while (RobotControl.requiresMotion("REP")){
+		do nothing
+	}
+	
+	do RobotControl.setProperties("REP", "position", "-1.7")
+
+	while (RobotControl.requiresMotion("REP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("REP", "position", "0")
+
+	while (RobotControl.requiresMotion("REP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("REP", "position", "-1.7")
+
+	while (RobotControl.requiresMotion("REP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("REP", "position", "0")
+
+	while (RobotControl.requiresMotion("REP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("REP", "position", "-1.7")
+
+	while (RobotControl.requiresMotion("REP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("REP", "position", "0")
+
+	while (RobotControl.requiresMotion("REP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("RSY RSY", "velocity position", "1.5 -1.57");
+
+	while RobotControl.requiresMotion("RSY"){
+		do nothing
+	}
+
+	do RobotControl.setProperties("REP", "position", "-1.7")
+
+	while (RobotControl.requiresMotion("REP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("REP", "position", "0")
+
+	while (RobotControl.requiresMotion("REP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("REP", "position", "-1.7")
+
+	while (RobotControl.requiresMotion("REP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("REP", "position", "0")
+
+	while (RobotControl.requiresMotion("REP")){
+		do nothing
+	}
+
+	
+	do RobotControl.setProperties("REP", "position", "-1.7")
+
+	while (RobotControl.requiresMotion("REP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("REP", "position", "0")
+
+	while (RobotControl.requiresMotion("REP")){
+		do nothing
+	}
+	
+	do RobotControl.setProperties("REP", "position", "-1.7")
+
+	while (RobotControl.requiresMotion("REP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("REP", "position", "0")
+
+	while (RobotControl.requiresMotion("REP")){
+		do nothing
+	}
+
+	
+	do RobotControl.setProperties("RSY RSR", "position position", "0 0");
+
+
+}

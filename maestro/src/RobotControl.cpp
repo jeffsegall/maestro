@@ -1,18 +1,44 @@
+/*
+Copyright (c) 2013, Drexel University, iSchool, Applied Informatics Group
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the <organization> nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 #include "RobotControl.h"
 #include <iostream>
 using namespace std;
 
-RobotControl::RobotControl(const std::string& name):
-    TaskContext(name)
-  {
+RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     
     this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
     //this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
+    this->huboUpPort = new InputPort<hubomsg::HuboState>("Hubo/HuboState");
 	this->huboDownPort = new OutputPort<hubomsg::HuboCommand>("Hubo/HuboCommand");
 	this->achDownPort = new OutputPort<hubomsg::AchCommand>("Hubo/AchCommand");
+
     this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
     this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
-    this->commHandler = new CommHandler(canUpPort, orOutPort);
+    this->commHandler = new CommHandler(canUpPort, orOutPort, huboUpPort);
 
     //CAN QUEUES
     this->inputQueue = new queue<hubomsg::CanMessage>();
@@ -21,6 +47,7 @@ RobotControl::RobotControl(const std::string& name):
     
     //CAN PORTS 
     this->addEventPort(*canUpPort);
+    this->addEventPort(*huboUpPort);
     this->addPort(*huboDownPort);
     this->addPort(*achDownPort);
 
@@ -28,401 +55,44 @@ RobotControl::RobotControl(const std::string& name):
     this->addEventPort(*orOutPort);
     this->addPort(*orInPort);
 
-    this->addOperation("setWaist", &RobotControl::setWaist, this, RTT::OwnThread)
-            .doc("Set Torso Yaw")
-            .arg("Value", "New ticks for torso yaw.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setWaistRad", &RobotControl::setWaistRad, this, RTT::OwnThread)
-                .doc("Set Torso Yaw")
-                .arg("Rads", "New radians for torso yaw.")
-                .arg("Timestamp", "Timestamp delay (in milliseconds)");
-  
-    this->addOperation("setNeck", &RobotControl::setNeck, this, RTT::OwnThread)
-            .doc("Set Neck positions")
-            .arg("Neck", "New ticks for neck.")
-            .arg("One", "New ticks for one.")
-            .arg("Two", "New ticks for two.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
- 
-    this->addOperation("setLeftShoulderRoll", &RobotControl::setLeftShoulderRoll, this, RTT::OwnThread)
-            .doc("Set Left Shoulder Roll")
-            .arg("Value", "New ticks for left shoulder roll.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-    
-    this->addOperation("setLeftShoulderRollRad", &RobotControl::setLeftShoulderRollRad, this, RTT::OwnThread)
-            .doc("Set Left Shoulder Roll")
-            .arg("Rads", "New radians for left shoulder roll.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftShoulderPitch", &RobotControl::setLeftShoulderPitch, this, RTT::OwnThread)
-            .doc("Set Left Shoulder Pitch")
-            .arg("Value", "New ticks for left shoulder pitch.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftShoulderPitchRad", &RobotControl::setLeftShoulderPitchRad, this, RTT::OwnThread)
-            .doc("Set Left Shoulder Pitch")
-            .arg("Rads", "New radians for left shoulder pitch.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-   
-    this->addOperation("setLeftShoulderYaw", &RobotControl::setLeftShoulderYaw, this, RTT::OwnThread)
-            .doc("Set Left Shoulder Yaw")
-            .arg("Value", "New ticks for left shoulder yaw.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftShoulderYawRad", &RobotControl::setLeftShoulderYawRad, this, RTT::OwnThread)
-            .doc("Set Left Shoulder Yaw")
-            .arg("Rads", "New radians for left shoulder yaw.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-   
-    this->addOperation("setLeftElbow", &RobotControl::setLeftElbow, this, RTT::OwnThread)
-            .doc("Set Left Elbow")
-            .arg("Value", "New ticks for left elbow.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftElbowRad", &RobotControl::setLeftElbowRad, this, RTT::OwnThread)
-            .doc("Set Left Elbow")
-            .arg("Rads", "New radians for left elbow.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftWristPitch", &RobotControl::setLeftWristPitch, this, RTT::OwnThread)
-            .doc("Set Left Wrist Pitch")
-            .arg("Value", "New ticks for left wrist pitch.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftWristPitchRad", &RobotControl::setLeftWristPitchRad, this, RTT::OwnThread)
-            .doc("Set Left Wrist Pitch")
-            .arg("Rads", "New radians for left wrist pitch.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftWristYaw", &RobotControl::setLeftWristYaw, this, RTT::OwnThread)
-            .doc("Set Left Wrist Yaw")
-            .arg("Value", "New ticks for left Wrist Yaw.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftWristYawRad", &RobotControl::setLeftWristYawRad, this, RTT::OwnThread)
-            .doc("Set Left Wrist Yaw")
-            .arg("Rads", "New radians for left Wrist Yaw.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightShoulderRoll", &RobotControl::setRightShoulderRoll, this, RTT::OwnThread)
-            .doc("Set Right Shoulder Roll")
-            .arg("Value", "New ticks for right shoulder roll.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightShoulderRollRad", &RobotControl::setRightShoulderRollRad, this, RTT::OwnThread)
-            .doc("Set Right Shoulder Roll")
-            .arg("Rads", "New radians for right shoulder roll.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightShoulderPitch", &RobotControl::setRightShoulderPitch, this, RTT::OwnThread)
-            .doc("Set Right Shoulder Pitch")
-            .arg("Value", "New ticks for right shoulder pitch.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightShoulderPitchRad", &RobotControl::setRightShoulderPitchRad, this, RTT::OwnThread)
-            .doc("Set Right Shoulder Pitch")
-            .arg("Rads", "New radians for right shoulder pitch.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightShoulderYaw", &RobotControl::setRightShoulderYaw, this, RTT::OwnThread)
-            .doc("Set Right Shoulder Yaw")
-            .arg("Value", "New ticks for right shoulder yaw.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightShoulderYawRad", &RobotControl::setRightShoulderYawRad, this, RTT::OwnThread)
-            .doc("Set Right Shoulder Yaw")
-            .arg("Rads", "New radians for right shoulder yaw.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-			
-    this->addOperation("setRightElbow", &RobotControl::setRightElbow, this, RTT::OwnThread)
-            .doc("Set Right Elbow")
-            .arg("Value", "New ticks for right elbow.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightElbowRad", &RobotControl::setRightElbowRad, this, RTT::OwnThread)
-            .doc("Set Right Elbow")
-            .arg("Rads", "New radians for right elbow.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightWristPitch", &RobotControl::setRightWristPitch, this, RTT::OwnThread)
-            .doc("Set Right Wrist Pitch")
-            .arg("Value", "New ticks for right wrist pitch.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightWristPitchRad", &RobotControl::setRightWristPitchRad, this, RTT::OwnThread)
-            .doc("Set Right Wrist Pitch")
-            .arg("Rads", "New radians for right wrist pitch.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightWristYaw", &RobotControl::setRightWristYaw, this, RTT::OwnThread)
-            .doc("Set Right Wrist Yaw")
-            .arg("Value", "New ticks for right wrist yaw.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightWristYawRad", &RobotControl::setRightWristYawRad, this, RTT::OwnThread)
-            .doc("Set Right Wrist Yaw")
-            .arg("Rads", "New radians for right wrist yaw.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftHipYaw", &RobotControl::setLeftHipYaw, this, RTT::OwnThread)
-            .doc("Set Left Hip Yaw")
-            .arg("Value", "New ticks for left hip yaw.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftHipYawRad", &RobotControl::setLeftHipYawRad, this, RTT::OwnThread)
-            .doc("Set Left Hip Yaw")
-            .arg("Rads", "New radians for left hip yaw.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftHipRoll", &RobotControl::setLeftHipRoll, this, RTT::OwnThread)
-            .doc("Set Left Hip Roll")
-            .arg("Value", "New ticks for left hip roll.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftHipRollRad", &RobotControl::setLeftHipRollRad, this, RTT::OwnThread)
-            .doc("Set Left Hip Roll")
-            .arg("Rads", "New radians for left hip roll.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftHipPitch", &RobotControl::setLeftHipPitch, this, RTT::OwnThread)
-            .doc("Set Left Hip Pitch")
-            .arg("Value", "New ticks for left hip pitch.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftHipPitchRad", &RobotControl::setLeftHipPitchRad, this, RTT::OwnThread)
-            .doc("Set Left Hip Pitch")
-            .arg("Rads", "New radians for left hip pitch.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftKnee", &RobotControl::setLeftKnee, this, RTT::OwnThread)
-            .doc("Set Left Knee")
-            .arg("Value", "New ticks for left knee.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftKneeRad", &RobotControl::setLeftKneeRad, this, RTT::OwnThread)
-            .doc("Set Left Knee")
-            .arg("Rads", "New radians for left knee.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftAnklePitch", &RobotControl::setLeftAnklePitch, this, RTT::OwnThread)
-            .doc("Set Left Ankle Pitch")
-            .arg("Value", "New ticks for left ankle pitch.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftAnklePitchRad", &RobotControl::setLeftAnklePitchRad, this, RTT::OwnThread)
-            .doc("Set Left Ankle Pitch")
-            .arg("Rads", "New radians for left ankle pitch.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftAnkleRoll", &RobotControl::setLeftAnkleRoll, this, RTT::OwnThread)
-            .doc("Set Left Ankle Roll")
-            .arg("Value", "New ticks for left ankle roll.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setLeftAnkleRollRad", &RobotControl::setLeftAnkleRollRad, this, RTT::OwnThread)
-            .doc("Set Left Ankle Roll")
-            .arg("Rads", "New radians for left ankle roll.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightHipYaw", &RobotControl::setRightHipYaw, this, RTT::OwnThread)
-            .doc("Set Right Hip Yaw")
-            .arg("Value", "New ticks for right hip yaw.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightHipYawRad", &RobotControl::setRightHipYawRad, this, RTT::OwnThread)
-			.doc("Set Right Hip Yaw")
-			.arg("Rads", "New radians for right hip yaw.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-	this->addOperation("setRightHipRoll", &RobotControl::setRightHipRoll, this, RTT::OwnThread)
-			.doc("Set Right Hip Roll")
-			.arg("Value", "New ticks for right hip roll.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightHipRollRad", &RobotControl::setRightHipRollRad, this, RTT::OwnThread)
-			.doc("Set Right Hip Yaw")
-			.arg("Rads", "New radians for right hip roll.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightHipPitch", &RobotControl::setRightHipPitch, this, RTT::OwnThread)
-            .doc("Set Right Hip Pitch")
-            .arg("Value", "New ticks for right hip pitch.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightHipPitchRad", &RobotControl::setRightHipPitchRad, this, RTT::OwnThread)
-            .doc("Set Right Hip Pitch")
-            .arg("Rads", "New radians for right hip pitch.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightKnee", &RobotControl::setRightKnee, this, RTT::OwnThread)
-            .doc("Set Right Knee")
-            .arg("Value", "New ticks for right knee.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightKneeRad", &RobotControl::setRightKneeRad, this, RTT::OwnThread)
-            .doc("Set Right Knee")
-            .arg("Rads", "New radians for right knee.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightAnklePitch", &RobotControl::setRightAnklePitch, this, RTT::OwnThread)
-            .doc("Set Right Ankle Pitch")
-            .arg("Value", "New ticks for right ankle pitch.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightAnklePitchRad", &RobotControl::setRightAnklePitchRad, this, RTT::OwnThread)
-            .doc("Set Right Ankle Pitch")
-            .arg("Rads", "New radians for right ankle pitch.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightAnkleRoll", &RobotControl::setRightAnkleRoll, this, RTT::OwnThread)
-            .doc("Set Right Ankle Roll")
-            .arg("Value", "New ticks for right ankle roll.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setRightAnkleRollRad", &RobotControl::setRightAnkleRollRad, this, RTT::OwnThread)
-            .doc("Set Right Ankle Roll")
-            .arg("Rads", "New radians for right ankle roll.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setJoint", &RobotControl::setJoint, this, RTT::OwnThread)
-			.doc("Set Joint")
-			.arg("Name", "Name of joint to move.")
-			.arg("Value", "New ticks for given joint.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-	this->addOperation("setJointRad", &RobotControl::setJointRad, this, RTT::OwnThread)
-			.doc("Set Joint")
-			.arg("Name", "Name of joint to move.")
-			.arg("Rads", "New radians for given joint.")
-            .arg("Omega", "Angular Velocity in radians/sec.")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-	this->addOperation("homeJoint", &RobotControl::homeJoint, this, RTT::OwnThread)
-			.doc("Home Joint")
-			.arg("Name", "Name of joint to send to home.")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-	this->addOperation("homeAll", &RobotControl::homeAll, this, RTT::OwnThread)
-			.doc("Home All")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
-
     this->addOperation("initRobot", &RobotControl::initRobot, this, RTT::OwnThread)
             .doc("Initialize a robot")
             .arg("Path", "The path to the XML robot representation");
 
-    this->addOperation("enable", &RobotControl::enable, this, RTT::OwnThread)
-            .arg("Board", "The board to enable")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+    this->addOperation("setProperty", &RobotControl::set, this, RTT::OwnThread)
+    		.doc("Set a property of a robot subsystem")
+    		.arg("Name", "The name of the subsystem to set properties for.")
+    		.arg("Property", "The name of the property to change. See README for a list of properties and expected values.")
+    		.arg("Value", "The value to set the property to.");
 
-    this->addOperation("disable", &RobotControl::disable, this, RTT::OwnThread)
-            .arg("Board", "The board to disable")
-            .arg("Timestamp", "Timestamp delay (in milliseconds)");
+    this->addOperation("setProperties", &RobotControl::setProperties, this, RTT::OwnThread)
+    		.doc("Set multiple properties of a robot subsystem.")
+    		.arg("Names", "The names of the subsystems to set properties for.")
+    		.arg("Properties", "The names of the properties to change. See README for a list of mutable properties.")
+    		.arg("Values", "The values to set these properties to.");
 
-    this->addOperation("enableJoint", &RobotControl::enableJoint, this, RTT::OwnThread)
-			.arg("Name", "The name of the joint to enable")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
+    this->addOperation("getProperty", &RobotControl::get, this, RTT::OwnThread)
+    		.doc("Get the value of a property of a robot subsystem.")
+    		.arg("Name", "The name of the subsystem to read values from.")
+    		.arg("Property", "The type of value to read. See README for a list of properties and expected values.");
 
-	this->addOperation("disableJoint", &RobotControl::disableJoint, this, RTT::OwnThread)
-			.arg("Name", "The name of the joint to disable")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
+    this->addOperation("command", &RobotControl::command, this, RTT::OwnThread)
+    		.doc("Send a command to the robot.")
+    		.arg("Name", "The name of the command to send. See README for command list and arguments.")
+    		.arg("Target", "The target of the command. Usually a joint name.");
 
-	this->addOperation("enableAll", &RobotControl::enableAll, this, RTT::OwnThread)
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
+    this->addOperation("setMode", &RobotControl::setMode, this, RTT::OwnThread)
+    		.doc("Modify the mode of operation of RobotControl.")
+    		.arg("Mode", "The mode to be modified. Not yet documented.")
+    		.arg("Value", "New value for mode to take on. Not yet documented.");
 
-	this->addOperation("disableAll", &RobotControl::disableAll, this, RTT::OwnThread)
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("requestEncoderPosition", &RobotControl::requestEncoderPosition, this, RTT::OwnThread)
-			.arg("Board", "The board to request encoder data from")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("getCurrentTicks", &RobotControl::getCurrentTicks, this, RTT::OwnThread)
-			.arg("Board", "The board to send commands to")
-			.arg("Motor", "The motor channel to request current perceived position from.")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setCurrentTicks", &RobotControl::setCurrentTicks, this, RTT::OwnThread)
-			.arg("Board", "The board to send commands to")
-			.arg("Motor", "The motor channel to set current perceived position on.")
-			.arg("Ticks", "Desired current perceived position in ticks.");
-
-    this->addOperation("getCurrentGoal", &RobotControl::getCurrentGoal, this, RTT::OwnThread)
-			.arg("Board", "The board to send commands to")
-			.arg("Motor", "The motor channel to request current requested position from.")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
+    this->addOperation("setAlias", &RobotControl::setAlias, this, RTT::OwnThread)
+			.doc("Create an alternate name for a motor, property, sensor, or command.")
+			.arg("Name", "The name of said entity currently recognized")
+			.arg("Alias", "An alias for said name. The old name will not be overwritten. You can not have the same name for different entities.");
 
     this->addOperation("requiresMotion", &RobotControl::requiresMotion, this, RTT::OwnThread)
-			.arg("Board", "The board to send commands to")
-			.arg("Motor", "The motor channel to check need for motion from.")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("requiresMotionByName", &RobotControl::requiresMotionByName, this, RTT::OwnThread)
-			.arg("Name", "The name of the motor to send commands to")
-			.arg("Timestamp", "Timestamp delay (in milliseconds)");
-
-    this->addOperation("setMaxAccVel", &RobotControl::setMaxAccVel, this, RTT::OwnThread)
-			.arg("Board", "The board to send commands to")
-			.arg("Motor", "The motor channel to set maximum velocity and acceleration on.")
-			.arg("Max Accel", "Maximum Acceleration in unknown units.")
-			.arg("Max Vel", "Maximum Velocity in unknown units.");
-
-    this->addOperation("setPositionGain", &RobotControl::setPositionGain, this, RTT::OwnThread)
-			.arg("Board", "The board to send commands to")
-			.arg("Motor", "The motor channel to set gains on.")
-			.arg("kP", "Proportion gain.")
-			.arg("kI", "Integral gain.")
-			.arg("kD", "Derivative gain");
+			.arg("Name", "The name of the motor to check for necessary motion on.");
 
     this->addOperation("debugControl", &RobotControl::debugControl, this, RTT::OwnThread)
 			.arg("Board", "The board to send commands to")
@@ -432,24 +102,40 @@ RobotControl::RobotControl(const std::string& name):
 			.arg("Microseconds", "Delay amount in microseconds.");
 
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
-	    	.arg("Name", "The name of the gesture to load.")
-			.arg("Board", "The board on which to run the gesture.");
+	    	.arg("Name", "The name of the gesture to load.");
 
     this->written = 0;
     this->printNow = false;
     this->enableControl = false;
     this->delay = 0;
     this->state = NULL;
-    tempOutput.open("/opt/ros/fuerte/stacks/maestro/RobotControlLog.txt");
+    this->interpolation = true;	//Interpret all commands as a final destination with given velocity.
+    this->override = true;		//Force homing before allowing enabling. (currently disabled)
+
+    commands["Enable"] = ENABLE;
+    commands["EnableAll"] = ENABLEALL;
+    commands["Disable"] = DISABLE;
+    commands["DisableAll"] = DISABLEALL;
+    commands["ResetJoint"] = RESET;
+    commands["ResetAll"] = RESETALL;
+    commands["Home"] = HOME;
+    commands["HomeAll"] = HOMEALL;
+    commands["InitializeSensors"] = INITSENSORS;
+    commands["Update"] = UPDATE;
+
+    ostringstream logfile;
+	logfile << LOG_PATH << "RobotControl.log";
+    tempOutput.open(logfile.str().c_str());
     vector<string> paths = getGestureScripts(CONFIG_PATH);
     for (int i = 0; i < paths.size(); i++){
 		std::cout << "Adding gestures from path: " << paths[i] << std::endl;
 		this->getProvider<Scripting>("scripting")->loadPrograms(paths[i]);
     }
 
+    RUN_TYPE = getRunType(CONFIG_PATH);
 }
   
-  RobotControl::~RobotControl(){}
+RobotControl::~RobotControl(){}
 
 vector<float> trajectoryValues(string path){
 	vector<float> val;
@@ -468,690 +154,665 @@ vector<float> trajectoryValues(string path){
 	return val;
 }
 
-  void RobotControl::updateHook(){
-    
-    hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
-    hubomsg::CanMessage canMessage = hubomsg::CanMessage();
+void RobotControl::updateHook(){
+	hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
+	hubomsg::CanMessage canMessage = hubomsg::CanMessage();
+	//hubomsg::HuboState huboState = hubomsg::HuboState();
 
-    //commHandler->update();
+	commHandler->update();
+	if (state == NULL) return;
 
-    MotorBoard* mb;
-    if (state != NULL)
-    	mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
+	if (commHandler->isNew(1)){
+		//Received update from CanGateway
+		canMessage = commHandler->getMessage(); //Deprecated - Soon to be phased out
+	}
+	if (commHandler->isNew(2)){
+		//Recieved update from openRAVE
+		huboCmd = commHandler->getCmd();
+	}
+	if (commHandler->isNew(3)){
+		//Received update from Hubo-Ach
+		updateState();
+	}
 
-    if (false /*commHandler->isNew()*/){
-        //Received update from CanGateway
-
-    	canMessage = commHandler->getMessage();
-
-    	if (canMessage.mType == RX_ENC_VAL+BNO_R_HIP_YAW_ROLL){
-    		long yaw_ticks = canMessage.r1;
-    		long roll_ticks = canMessage.r2;
-    		vector<long> ticks(2);
-    		ticks[0] = yaw_ticks;
-    		ticks[1] = roll_ticks;
-    		std::cout << "Encoder Position value received! ticks: " << std::endl << "yaw: " << yaw_ticks << std::endl << "roll: " << roll_ticks << std::endl;
-    		std::cout << "In Radians: yaw: " << mb->getMotorByChannel(0)->ticksToRadians(ticks[0]) << std::endl << "roll: " << mb->getMotorByChannel(0)->ticksToRadians(ticks[1]) << std::endl;
-    	}
-    }
-    if (NewData == this->orOutPort->read(huboCmd)){
-        //Recieved update from openRAVE
-    }
-
-    if (huboOutputQueue->empty() && state != NULL && !this->state->getBoards().empty()) {
-		//tempOutput << "Boards not empty. Map size: " << this->state->getBoards().size() << std::endl;
-    	hubomsg::HuboCommand message;
+	if (huboOutputQueue->empty() && !this->state->getBoards().empty()) {
+		hubomsg::HuboCommand message;
 		for (int i = 0; i < this->state->getBoards().size(); i++){
-			//if (this->state->getBoards()[i]->requiresMotion()){
-				//tempOutput << "Attempting to build message for :" << this->state->getBoards()[i]->getBoardNumber() << std::endl;
-				vector<hubomsg::HuboJointCommand> states = this->state->getBoards()[i]->sendPositionReference();
-				buildHuboCommandMessage(states, message);
-
-			//}
+			MotorBoard* mb = this->state->getBoards()[i];
+			for (int j = 0; j < mb->getNumChannels(); j++){
+				HuboMotor* motor = mb->getMotorByChannel(j);
+				if (motor->isEnabled()){
+					hubomsg::HuboJointCommand state;
+					state.name = motor->getName();
+					state.position = interpolation ? motor->interpolate() : motor->getGoalPosition();
+					buildHuboCommandMessage(state, message);
+				}
+			}
 		}
 		huboOutputQueue->push(message);
 
 	}
-   
-    //Write out a message if we have one
 
-    if (!huboOutputQueue->empty()){
+	//Write out a message if we have one
 
-    	hubomsg::HuboCommand output = huboOutputQueue->front();
-    	if (printNow){
-    		tempOutput << "Writing message to " << output.num_joints << " motors." << std::endl;
-    	}
+	if (!huboOutputQueue->empty()){
+		hubomsg::HuboCommand output = huboOutputQueue->front();
+		if (printNow)
+			tempOutput << "Writing message to " << output.num_joints << " motors." << std::endl;
 
 		this->huboDownPort->write(output);
+		huboOutputQueue->pop();
+	}
 
-        huboOutputQueue->pop();
-    }
-
-    if (!achOutputQueue->empty()){
-
-    	hubomsg::AchCommand output = achOutputQueue->front();
-    	if (printNow){
-    		tempOutput << "Writing command " << output.commandName << " to ach." << std::endl;
-    	}
+	if (!achOutputQueue->empty()){
+		hubomsg::AchCommand output = achOutputQueue->front();
+		if (printNow)
+			tempOutput << "Writing command " << output.commandName << " to ach." << std::endl;
 
 		this->achDownPort->write(output);
-
-        achOutputQueue->pop();
-    }
-    usleep(delay);
-  }
-
-  hubomsg::CanMessage RobotControl::buildCanMessage(canMsg* msg){
-      hubomsg::CanMessage canMessage;
-
-      canMessage.bno = msg->getBNO();
-      canMessage.mType = msg->getType();
-      canMessage.cmdType = msg->getCmd();
-      canMessage.r1 = msg->getR1();
-      canMessage.r2 = msg->getR2();
-      canMessage.r3 = msg->getR3();
-      canMessage.r4 = msg->getR4();
-      canMessage.r5 = msg->getR5();
-      canMessage.r6 = msg->getR6();
-      canMessage.r7 = msg->getR7();
-      canMessage.r8 = msg->getR8();
-
-      return canMessage;
-  }
-
-  void RobotControl::buildHuboCommandMessage(vector<hubomsg::HuboJointCommand>& states, hubomsg::HuboCommand& message){
-      for (int i = 0; i < states.size(); i++)
-    	  message.joints.push_back(states[i]);
-      message.num_joints = message.joints.size();
-  }
-
-  vector<string> RobotControl::getGestureScripts(string path){
-	  vector<string> files;
-
-	  ifstream is;
-	  is.open(path.c_str());
-	  string temp;
-	  if (is.is_open()){
-		  do {
-			  getline(is, temp, '\n');
-		  } while (temp.compare("Scripts:") != 0);
-		  do {
-			  getline(is, temp, '\n');
-			  if (temp.compare("") != 0) files.push_back(temp);
-		  } while (!is.eof());
-		  is.close();
-	  } else
-		  std::cout << "Error. Config file nonexistent. Aborting." << std::endl;
-
-	  return files;
-  }
-
-  string RobotControl::getDefaultInitPath(string path){
-	  	  ifstream is;
-	  	  is.open(path.c_str());
-	  	  string temp;
-	  	  if (is.is_open()){
-	  		  do {
-	  			  getline(is, temp, '\n');
-	  		  } while (temp.compare("Init File:") != 0);
-
-	  		  getline(is, temp, '\n');
-	  		  is.close();
-	  	  } else
-	  		  std::cout << "Error. Config file nonexistent. Aborting." << std::endl;
-
-	  	  return temp;
-  }
-
-  void RobotControl::initRobot(string path){
-      this->state = new HuboState();
-      if (strcmp(path.c_str(), "") == 0)
-          path = getDefaultInitPath(CONFIG_PATH);
-      
-      //@TODO: Check for file existence before initializing.
-      this->state->initHuboWithDefaults(path, this->huboOutputQueue);
-  }
-
-  void RobotControl::setWaist(int ticks, double omega, int delay){
-      //ros_gateway->transmit(0,ticks);
-	  MotorBoard* mb = this->state->getBoardByNumber(BNO_WAIST);
-	  mb->getMotorByChannel(0)->setDesiredPosition(ticks);
-	  mb->getMotorByChannel(0)->setAngularVelocity(omega);
-  }
-
-  void RobotControl::setWaistRad(double rads, double omega, int delay){
-        //ros_gateway->transmit(0,ticks);
-  	  HuboMotor* motor = this->state->getBoardByNumber(BNO_WAIST)->getMotorByChannel(0);
-  	  motor->setDesiredPosition(motor->radiansToTicks(rads));
-  	  motor->setAngularVelocity(omega);
-  }
-
-  void RobotControl::setNeck(int ticks, int one, int two, double omega, int delay){
-	  this->state->getBoardByNumber(BNO_NECK_YAW_1_2)->getMotorByChannel(0)->setDesiredPosition(ticks);
-	  this->state->getBoardByNumber(BNO_NECK_YAW_1_2)->getMotorByChannel(1)->setDesiredPosition(one);
-	  this->state->getBoardByNumber(BNO_NECK_YAW_1_2)->getMotorByChannel(1)->setDesiredPosition(two);
-	  //TODO: FIX THIS METHOD
-     //ros_gateway->transmit(1,ticks);
-  }
-
-  void RobotControl::setLeftShoulderRoll(int ticks, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL)->getMotorByChannel(1);
-      motor->setDesiredPosition(ticks);
-      motor->setAngularVelocity(omega);
-     //ros_gateway->transmit(3,ticks);
-  }
-
-  void RobotControl::setLeftShoulderRollRad(double rads, double omega, int delay){
-	  HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL)->getMotorByChannel(1);
-      motor->setDesiredPosition(motor->radiansToTicks(rads));
-      motor->setAngularVelocity(omega);
-       //ros_gateway->transmit(3,ticks);
-  }
-
-  void RobotControl::setLeftShoulderPitch(int ticks, double omega, int delay){
-	  HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL)->getMotorByChannel(0);
-      motor->setDesiredPosition(ticks);
-      motor->setAngularVelocity(omega);
-     //ros_gateway->transmit(4,ticks);
-  }
-
-  void RobotControl::setLeftShoulderPitchRad(double rads, double omega, int delay){
-	  HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_PITCH_ROLL)->getMotorByChannel(0);
-      motor->setDesiredPosition(motor->radiansToTicks(rads));
-      motor->setAngularVelocity(omega);
-       //ros_gateway->transmit(4,ticks);
-  }
-  
-  void RobotControl::setLeftShoulderYaw(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_SHOULDER_YAW_ELBOW);
-	  mb->getMotorByChannel(0)->setDesiredPosition(ticks);
-	  mb->getMotorByChannel(0)->setAngularVelocity(omega);
-     //ros_gateway->transmit(6,ticks);
-  }
-
-  void RobotControl::setLeftShoulderYawRad(double rads, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_YAW_ELBOW)->getMotorByChannel(0);
-  	  motor->setDesiredPosition(motor->radiansToTicks(rads));
-  	  motor->setAngularVelocity(omega);
-       //ros_gateway->transmit(6,ticks);
-  }
-
-  void RobotControl::setLeftElbow(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_SHOULDER_YAW_ELBOW);
-	  mb->getMotorByChannel(1)->setDesiredPosition(ticks);
-	  mb->getMotorByChannel(1)->setAngularVelocity(omega);
-     //ros_gateway->transmit(6,ticks);
-  }
-
-  void RobotControl::setLeftElbowRad(double rads, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_SHOULDER_YAW_ELBOW)->getMotorByChannel(1);
-  	  motor->setDesiredPosition(motor->radiansToTicks(rads));
-  	  motor->setAngularVelocity(omega);
-       //ros_gateway->transmit(6,ticks);
-  }
-
-  void RobotControl::setLeftWristPitch(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_WRIST_YAW_PITCH);
-	  mb->getMotorByChannel(1)->setDesiredPosition(ticks);
-	  mb->getMotorByChannel(1)->setAngularVelocity(omega);
-     //ros_gateway->transmit(8,ticks);
-  }
-
-  void RobotControl::setLeftWristPitchRad(double rads, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_WRIST_YAW_PITCH)->getMotorByChannel(1);
-	  motor->setDesiredPosition(motor->radiansToTicks(rads));
-	  motor->setAngularVelocity(omega);
-     //ros_gateway->transmit(8,ticks);
-  }
-
-  void RobotControl::setLeftWristYaw(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_WRIST_YAW_PITCH);
-      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
-      mb->getMotorByChannel(0)->setAngularVelocity(omega);
-      //ros_gateway->transmit(9,ticks);
-  }
-
-  void RobotControl::setLeftWristYawRad(double rads, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_WRIST_YAW_PITCH)->getMotorByChannel(0);
-      motor->setDesiredPosition(motor->radiansToTicks(rads));
-      motor->setAngularVelocity(omega);
-      //ros_gateway->transmit(9,ticks);
-  }
-
-  void RobotControl::setRightShoulderRoll(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_SHOULDER_PITCH_ROLL);
-	  mb->getMotorByChannel(1)->setDesiredPosition(ticks);
-	  mb->getMotorByChannel(1)->setAngularVelocity(omega);
-      //ros_gateway->transmit(11,ticks);
-  }
-
-  void RobotControl::setRightShoulderRollRad(double rads, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_R_SHOULDER_PITCH_ROLL)->getMotorByChannel(1);
-	  motor->setDesiredPosition(motor->radiansToTicks(rads));
-	  motor->setAngularVelocity(omega);
-      //ros_gateway->transmit(11,ticks);
-  }
-
-  void RobotControl::setRightShoulderPitch(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_SHOULDER_PITCH_ROLL);
-      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
-      mb->getMotorByChannel(0)->setAngularVelocity(omega);
-      //ros_gateway->transmit(12,ticks);
-  }
-
-  void RobotControl::setRightShoulderPitchRad(double rads, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_R_SHOULDER_PITCH_ROLL)->getMotorByChannel(0);
-      motor->setDesiredPosition(motor->radiansToTicks(rads));
-      motor->setAngularVelocity(omega);
-      //ros_gateway->transmit(12,ticks);
-  }
-
-  void RobotControl::setRightShoulderYaw(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_SHOULDER_YAW_ELBOW);
-	  mb->getMotorByChannel(0)->setDesiredPosition(ticks);
-	  mb->getMotorByChannel(0)->setAngularVelocity(omega);
-  }
-  
-  void RobotControl::setRightShoulderYawRad(double rads, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_R_SHOULDER_YAW_ELBOW)->getMotorByChannel(0);
-	  motor->setDesiredPosition(motor->radiansToTicks(rads));
-	  motor->setAngularVelocity(omega);
-  }
-
-  void RobotControl::setRightElbow(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_SHOULDER_YAW_ELBOW);
-      mb->getMotorByChannel(1)->setDesiredPosition(ticks);
-      mb->getMotorByChannel(1)->setAngularVelocity(omega);
-      //ros_gateway->transmit(14,ticks);
-  }
-
-  void RobotControl::setRightElbowRad(double rads, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_R_SHOULDER_YAW_ELBOW)->getMotorByChannel(1);
-      motor->setDesiredPosition(motor->radiansToTicks(rads));
-      motor->setAngularVelocity(omega);
-      //ros_gateway->transmit(14,ticks);
-  }
-
-  void RobotControl::setRightWristPitch(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_WRIST_YAW_PITCH);
-      mb->getMotorByChannel(1)->setDesiredPosition(ticks);
-      mb->getMotorByChannel(1)->setAngularVelocity(omega);
-      //ros_gateway->transmit(16,ticks);
-  }
-
-  void RobotControl::setRightWristPitchRad(double rads, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_R_WRIST_YAW_PITCH)->getMotorByChannel(1);
-      motor->setDesiredPosition(motor->radiansToTicks(rads));
-      motor->setAngularVelocity(omega);
-      //ros_gateway->transmit(16,ticks);
-  }
-
-  void RobotControl::setRightWristYaw(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_WRIST_YAW_PITCH);
-      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
-      mb->getMotorByChannel(0)->setAngularVelocity(omega);
-      //ros_gateway->transmit(17,ticks);
-  }
-
-  void RobotControl::setRightWristYawRad(double rads, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_R_WRIST_YAW_PITCH)->getMotorByChannel(0);
-      motor->setDesiredPosition(motor->radiansToTicks(rads));
-      motor->setAngularVelocity(omega);
-      //ros_gateway->transmit(17,ticks);
-  }
-
-  void RobotControl::setLeftHipYaw(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_HIP_YAW_ROLL);
-      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
-      mb->getMotorByChannel(0)->setAngularVelocity(omega);
-      //ros_gateway->transmit(19,ticks);
-  }
-
-  void RobotControl::setLeftHipYawRad(double rads, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_HIP_YAW_ROLL)->getMotorByChannel(0);
-      motor->setDesiredPosition(motor->radiansToTicks(rads));
-      motor->setAngularVelocity(omega);
-      //ros_gateway->transmit(19,ticks);
-  }
-
-  void RobotControl::setLeftHipRoll(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_HIP_YAW_ROLL);
-      mb->getMotorByChannel(1)->setDesiredPosition(ticks);
-      mb->getMotorByChannel(1)->setAngularVelocity(omega);
-      //ros_gateway->transmit(20,ticks);
-  }
-
-  void RobotControl::setLeftHipRollRad(double rads, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_HIP_YAW_ROLL)->getMotorByChannel(1);
-      motor->setDesiredPosition(motor->radiansToTicks(rads));
-      motor->setAngularVelocity(omega);
-      //ros_gateway->transmit(20,ticks);
-  }
-
-  void RobotControl::setLeftHipPitch(int ticks, double omega, int delay){
-	  MotorBoard* mb = this->state->getBoardByNumber(BNO_L_HIP_PITCH);
-	  mb->getMotorByChannel(0)->setDesiredPosition(ticks);
-	  mb->getMotorByChannel(0)->setAngularVelocity(omega);
-      //ros_gateway->transmit(21,ticks);
-  }
-
-  void RobotControl::setLeftHipPitchRad(double rads, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_HIP_PITCH)->getMotorByChannel(0);
-      motor->setDesiredPosition(motor->radiansToTicks(rads));
-      motor->setAngularVelocity(omega);
-  }
-
-  void RobotControl::setLeftKnee(int ticks, double omega, int delay){
-	  MotorBoard* mb = this->state->getBoardByNumber(BNO_L_KNEE);
-      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
-      mb->getMotorByChannel(0)->setAngularVelocity(omega);
-      //ros_gateway->transmit(22,ticks);
-  }
-
-  void RobotControl::setLeftKneeRad(double rads, double omega, int delay){
-	  HuboMotor* motor = this->state->getBoardByNumber(BNO_L_KNEE)->getMotorByChannel(0);
-      motor->setDesiredPosition(motor->radiansToTicks(rads));
-      motor->setAngularVelocity(omega);
-      //ros_gateway->transmit(22,ticks);
-  }
-
-  void RobotControl::setLeftAnklePitch(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_ANKLE_PITCH_ROLL);
-      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
-      mb->getMotorByChannel(0)->setAngularVelocity(omega);
-      //ros_gateway->transmit(23,ticks);
-  }
-
-  void RobotControl::setLeftAnklePitchRad(double rads, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_ANKLE_PITCH_ROLL)->getMotorByChannel(0);
-      motor->setDesiredPosition(motor->radiansToTicks(rads));
-      motor->setAngularVelocity(omega);
-      //ros_gateway->transmit(23,ticks);
-  }
-
-  void RobotControl::setLeftAnkleRoll(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_L_ANKLE_PITCH_ROLL);
-      mb->getMotorByChannel(1)->setDesiredPosition(ticks);
-      mb->getMotorByChannel(1)->setAngularVelocity(omega);
-      //ros_gateway->transmit(24,ticks);
-  }
-
-  void RobotControl::setLeftAnkleRollRad(double rads, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_L_ANKLE_PITCH_ROLL)->getMotorByChannel(1);
-      motor->setDesiredPosition(motor->radiansToTicks(rads));
-      motor->setAngularVelocity(omega);
-      //ros_gateway->transmit(24,ticks);
-  }
-
-  void RobotControl::setRightHipYaw(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
-      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
-      mb->getMotorByChannel(0)->setAngularVelocity(omega);
-      //ros_gateway->transmit(26,ticks);
-      //this->canDownPort->write(buildCanMessage(out));
-  }
-
-  void RobotControl::setRightHipYawRad(double rads, double omega, int delay){
-        HuboMotor* motor = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL)->getMotorByChannel(0);
-        motor->setDesiredPosition(motor->radiansToTicks(rads));
-        motor->setAngularVelocity(omega);
-  }
-
-  void RobotControl::setRightHipRoll(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL);
-      mb->getMotorByChannel(1)->setDesiredPosition(ticks);
-      mb->getMotorByChannel(1)->setAngularVelocity(omega);
-      //ros_gateway->transmit(27,ticks);
-  }
-
-  void RobotControl::setRightHipRollRad(double rads, double omega, int delay){
-	  HuboMotor* motor = this->state->getBoardByNumber(BNO_R_HIP_YAW_ROLL)->getMotorByChannel(1);
-	  motor->setDesiredPosition(motor->radiansToTicks(rads));
-	  motor->setAngularVelocity(omega);
-  }
-
-  void RobotControl::setRightHipPitch(int ticks, double omega, int delay){
-	  MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HIP_PITCH);
-      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
-      mb->getMotorByChannel(0)->setAngularVelocity(omega);
-      //ros_gateway->transmit(28,ticks);
-  }
-
-  void RobotControl::setRightHipPitchRad(double rads, double omega, int delay){
-	  HuboMotor* motor = this->state->getBoardByNumber(BNO_R_HIP_PITCH)->getMotorByChannel(0);
-      motor->setDesiredPosition(motor->radiansToTicks(rads));
-      motor->setAngularVelocity(omega);
-      //ros_gateway->transmit(28,ticks);
-  }
-
-  void RobotControl::setRightKnee(int ticks, double omega, int delay){
-	  MotorBoard* mb = this->state->getBoardByNumber(BNO_R_KNEE);
-      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
-      mb->getMotorByChannel(0)->setAngularVelocity(omega);
-      //ros_gateway->transmit(29,ticks);
-  }
-
-  void RobotControl::setRightKneeRad(double rads, double omega, int delay){
-	  HuboMotor* motor = this->state->getBoardByNumber(BNO_R_KNEE)->getMotorByChannel(0);
-      motor->setDesiredPosition(motor->radiansToTicks(rads));
-      motor->setAngularVelocity(omega);
-      //ros_gateway->transmit(29,ticks);
-  }
-
-  void RobotControl::setRightAnklePitch(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_ANKLE_PITCH_ROLL);
-      mb->getMotorByChannel(0)->setDesiredPosition(ticks);
-      mb->getMotorByChannel(0)->setAngularVelocity(omega);
-      //ros_gateway->transmit(30,ticks);
-  }
-
-  void RobotControl::setRightAnklePitchRad(double rads, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_R_ANKLE_PITCH_ROLL)->getMotorByChannel(0);
-      motor->setDesiredPosition(motor->radiansToTicks(rads));
-      motor->setAngularVelocity(omega);
-      //ros_gateway->transmit(30,ticks);
-  }
-
-  void RobotControl::setRightAnkleRoll(int ticks, double omega, int delay){
-      MotorBoard* mb = this->state->getBoardByNumber(BNO_R_ANKLE_PITCH_ROLL);
-      mb->getMotorByChannel(1)->setDesiredPosition(ticks);
-      mb->getMotorByChannel(1)->setAngularVelocity(omega);
-      //ros_gateway->transmit(31,ticks);
-  }
-
-  void RobotControl::setRightAnkleRollRad(double rads, double omega, int delay){
-      HuboMotor* motor = this->state->getBoardByNumber(BNO_R_ANKLE_PITCH_ROLL)->getMotorByChannel(1);
-      motor->setDesiredPosition(motor->radiansToTicks(rads));
-      motor->setAngularVelocity(omega);
-      //ros_gateway->transmit(31,ticks);
-  }
-
-  void RobotControl::setRightHand(int f0, int f1, int f2, int f3, int f4, double omega, int delay){
-	  MotorBoard* mb = this->state->getBoardByNumber(BNO_R_HAND);
-	  mb->getMotorByChannel(0)->setDesiredPosition(f0);
-	  mb->getMotorByChannel(1)->setDesiredPosition(f1);
-	  mb->getMotorByChannel(2)->setDesiredPosition(f2);
-	  mb->getMotorByChannel(3)->setDesiredPosition(f3);
-	  mb->getMotorByChannel(4)->setDesiredPosition(f4);
-	  //TODO: FIXME
-  }
-
-  void RobotControl::setLeftHand(int f0, int f1, int f2, int f3, int f4, double omega, int delay){
-	  MotorBoard* mb = this->state->getBoardByNumber(BNO_L_HAND);
-	  mb->getMotorByChannel(0)->setDesiredPosition(f0);
-	  mb->getMotorByChannel(1)->setDesiredPosition(f1);
-	  mb->getMotorByChannel(2)->setDesiredPosition(f2);
-	  mb->getMotorByChannel(3)->setDesiredPosition(f3);
-	  mb->getMotorByChannel(4)->setDesiredPosition(f4);
-	  //TODO: FIXME
-  }
-
-  void RobotControl::enable(int board, int delay){
-      this->state->getBoardByNumber(board)->setHIP(1);
-      this->state->getBoardByNumber(board)->enableController();
-      enableControl = true;
-  }
-
-  void RobotControl::disable(int board, int delay){
-      this->state->getBoardByNumber(board)->setHIP(0);
-      this->state->getBoardByNumber(board)->disableController();
-      enableControl = false;
-  }
-
-  void RobotControl::enableJoint(string name, int delay){
-	  HuboMotor* motor = this->state->getMotorByName(name);
-	  if (motor != NULL){
-		  hubomsg::AchCommand output;
-		  output.commandName = "enableJoint";
-		  output.jointName = name;
-		  achOutputQueue->push(output);
-	  } else
-		  std::cout << "Error! Joint " << name << " either does not exist, or has not yet been initialized!" << std::endl;
-
-  }
-
-  void RobotControl::disableJoint(string name, int delay){
-	  HuboMotor* motor = this->state->getMotorByName(name);
-	  if (motor != NULL){
-		  hubomsg::AchCommand output;
-		  output.commandName = "disableJoint";
-		  output.jointName = name;
-		  achOutputQueue->push(output);
-	  } else
-		  std::cout << "Error! Joint " << name << " either does not exist, or has not yet been initialized!" << std::endl;
-  }
-
-  void RobotControl::enableAll(int delay){
-	  hubomsg::AchCommand output;
-	  output.commandName = "enableAll";
-	  achOutputQueue->push(output);
-  }
-
-  void RobotControl::disableAll(int delay){
-	  hubomsg::AchCommand output;
-	  output.commandName = "disableAll";
-	  achOutputQueue->push(output);
-  }
-
-  void RobotControl::requestEncoderPosition(int board, int delay){
-      this->state->getBoardByNumber(board)->requestEncoderPosition(0);
-  }
-
-  void RobotControl::debugControl(int board, int operation){
-	  switch (operation) {
-	  case 1:
-		  this->state->getBoardByNumber(board)->setHIP(0);
-		  break;
-	  case 2:
-		  this->state->getBoardByNumber(board)->disableController();
-		  break;
-	  case 3:
-		  this->state->getBoardByNumber(board)->setHIP(1);
-		  break;
-	  case 4:
-		  this->state->getBoardByNumber(board)->enableController();
-		  break;
-	  case 5:
-		  this->printNow = true;
-		  break;
-	  case 6:
-		  this->printNow = false;
-		  break;
-	  default:
-		  std::cout << "Operations: " << std::endl << "1: disable (step 1)    2: disable (step 2)    3: enable (step 1)    4: enable (step 2)    5: enable printing     6: disable printing";
+		achOutputQueue->pop();
+	}
+	usleep(delay);
+}
+
+hubomsg::CanMessage RobotControl::buildCanMessage(canMsg* msg){
+	hubomsg::CanMessage canMessage;
+
+	canMessage.bno = msg->getBNO();
+	canMessage.mType = msg->getType();
+	canMessage.cmdType = msg->getCmd();
+	canMessage.r1 = msg->getR1();
+	canMessage.r2 = msg->getR2();
+	canMessage.r3 = msg->getR3();
+	canMessage.r4 = msg->getR4();
+	canMessage.r5 = msg->getR5();
+	canMessage.r6 = msg->getR6();
+	canMessage.r7 = msg->getR7();
+	canMessage.r8 = msg->getR8();
+
+	return canMessage;
+}
+
+void RobotControl::buildHuboCommandMessage(hubomsg::HuboJointCommand& state, hubomsg::HuboCommand& message){
+	message.joints.push_back(state);
+	message.num_joints = message.joints.size();
+}
+
+vector<string> RobotControl::getGestureScripts(string path){
+	vector<string> files;
+
+	ifstream is;
+	is.open(path.c_str());
+	string temp;
+	if (is.is_open()){
+		do {
+			getline(is, temp, '\n');
+		} while (temp.compare("Scripts:") != 0);
+		do {
+			getline(is, temp, '\n');
+			if (temp.compare("") != 0) files.push_back(temp);
+		} while (!is.eof());
+		is.close();
+	} else
+		std::cout << "Error. Config file nonexistent. Aborting." << std::endl;
+
+	return files;
+}
+
+bool RobotControl::getRunType(string path){
+	ifstream is;
+	is.open(path.c_str());
+	string temp;
+	if (is.is_open()){
+	  do {
+		  getline(is, temp, '\n');
+	  } while (temp.compare("RunType:") != 0);
+	  getline(is, temp, '\n');
+	  is.close();
+	  if (temp.compare("Hardware") == 0){
+		  return HARDWARE;
+	  } else if (temp.compare("Simulation") == 0){
+		  return SIMULATION;
+	  } else {
+		  cout << "Error! Unknown RunType specified in config file! Assuming Simulation.";
+		  return SIMULATION;
 	  }
-  }
+	} else
+	  std::cout << "Error. Config file nonexistent. Aborting." << std::endl;
 
-  void RobotControl::setDelay(int us){
-	  this->delay = us;
-  }
+	return SIMULATION;
+}
 
-  void RobotControl::getCurrentTicks(int board, int motor, int delay){
-	  std::cout << "Motor[" << motor << "] ticks: " << this->state->getBoardByNumber(board)->getMotorByChannel(motor)->getTicksPosition() << std::endl;
-  }
+string RobotControl::getDefaultInitPath(string path){
+	ifstream is;
+	is.open(path.c_str());
+	string temp;
+	if (is.is_open()){
+		do {
+			getline(is, temp, '\n');
+		} while (temp.compare("Init File:") != 0);
 
-  void RobotControl::setCurrentTicks(int board, int motor, int ticks){
-	  this->state->getBoardByNumber(board)->getMotorByChannel(motor)->setTicksPosition((long)ticks);
-  }
+		getline(is, temp, '\n');
+		is.close();
+	} else
+	std::cout << "Error. Config file nonexistent. Aborting." << std::endl;
 
-  void RobotControl::getCurrentGoal(int board, int motor, int delay){
-  	  std::cout << "Motor[" << motor << "] goal: " << this->state->getBoardByNumber(board)->getMotorByChannel(motor)->getDesiredPosition() << std::endl;
-   }
+	return temp;
+}
 
-  bool RobotControl::requiresMotion(int board, int motor, int delay){
-	  return state->getBoardByNumber(board)->requiresMotion(motor);
-  }
+void RobotControl::initRobot(string path){
+	this->state = new HuboState();
+	if (strcmp(path.c_str(), "") == 0)
+		path = getDefaultInitPath(CONFIG_PATH);
 
-  bool RobotControl::requiresMotionByName(string name, int delay){
-	  HuboMotor* motor = this->state->getMotorByName(name);
-	  return motor != NULL ? motor->requiresMotion() : false;
-  }
+	//@TODO: Check for file existence before initializing.
+	this->state->initHuboWithDefaults(path, this->huboOutputQueue);
+}
 
-  void RobotControl::setJoint(string name, int ticks, double omega, int delay){
-	  HuboMotor* motor = this->state->getMotorByName(name);
-	  if (motor != NULL){
-		  motor->setDesiredPosition(ticks);
-		  motor->setAngularVelocity(omega);
-	  } else
-		  std::cout << "Error! Joint " << name << " either does not exist, or has not yet been initialized!" << std::endl;
-  }
+void RobotControl::updateState(){
 
-  void RobotControl::setJointRad(string name, double rads, double omega, int delay){
-	  HuboMotor* motor = this->state->getMotorByName(name);
-	  if (motor != NULL){
-		  motor->setDesiredPosition(motor->radiansToTicks(rads));
-		  motor->setAngularVelocity(omega);
-	  } else
-		  std::cout << "Error! Joint " << name << " either does not exist, or has not yet been initialized!" << std::endl;
-  }
+	hubomsg::HuboState huboState = commHandler->getState();
+	map<string, HuboMotor*> motors = state->getBoardMap();
 
-  void RobotControl::homeJoint(string name, int delay){
-	  HuboMotor* motor = this->state->getMotorByName(name);
-	  if (motor != NULL) {
-		  hubomsg::AchCommand output;
-		  output.commandName = "homeJoint";
-		  output.jointName = name;
-		  achOutputQueue->push(output);
+	if (printNow) std::cout << "Updating Robot State..." << std::endl;
 
-		  //Send our software joint home so we have an accurate picture.
-		  motor->setDesiredPosition(0);
-		  motor->setTicksPosition(0);
-	  } else
-		  std::cout << "Error! Joint " << name << " either does not exist, or has not yet been initialized!" << std::endl;
-  }
+		for (int i = 0; i < huboState.joints.size(); i++){
+			if (motors.count(huboState.joints[i].name) == 0){
+				if (printNow)
+					cout << "Joint with name " << huboState.joints[i].name <<
+						" not initialized in RobotControl. Skipping update of this motor." << std::endl;
+				continue;
+			}
 
-  void RobotControl::homeAll(int delay){
-	  hubomsg::AchCommand output;
-	  output.commandName = "homeAll";
-	  achOutputQueue->push(output);
+			HuboMotor* motor = motors[huboState.joints[i].name];
+			double position = (RUN_TYPE == HARDWARE) ? huboState.joints[i].position : huboState.joints[i].commanded;
+			motor->update(position,
+						huboState.joints[i].velocity,
+						huboState.joints[i].temperature,
+						huboState.joints[i].current,
+						huboState.joints[i].homed,
+						huboState.joints[i].status);
 
-	  //Send out software joints home so we have an accurate picture.
-	  vector<MotorBoard*> boards = state->getBoards();
-	  for (vector<MotorBoard*>::iterator it = boards.begin(); it != boards.end(); it++){
-		  for (int i = 0; i < (*it)->getNumChannels(); i++){
-			  HuboMotor* motor = (*it)->getMotorByChannel(i);
-			  motor->setDesiredPosition(0);
-			  motor->setTicksPosition(0);
-		  }
-	  }
-  }
+		}
 
-  void RobotControl::setMaxAccVel(int board, int motor, int acc, int vel){
-	  this->state->getBoardByNumber(board)->setMaxAccVel((char)motor, acc, vel);
-  }
+		this->state->getIMUSensorMap()["IMU"]->update(huboState.imu.x_acceleration,
+													huboState.imu.y_acceleration,
+													huboState.imu.z_acceleration,
+													huboState.imu.x_rotation,
+													huboState.imu.y_rotation);
 
-  void RobotControl::setPositionGain(int board, int motor, int kp, int ki, int kd){
-	  this->state->getBoardByNumber(board)->setPositionGain(motor, kp, ki, kd);
-  }
+		this->state->getIMUSensorMap()["LAI"]->update(huboState.left_foot.x_acceleration,
+													huboState.imu.y_acceleration,
+													huboState.imu.z_acceleration,
+													huboState.imu.x_rotation,
+													huboState.imu.y_rotation);
 
-  void RobotControl::runGesture(string name, int board){
-	  boost::shared_ptr<Scripting> scripting = this->getProvider<Scripting>("scripting");
-	  scripting->startProgram(name);
-	  if (!scripting->isProgramRunning(name))
+		this->state->getIMUSensorMap()["RAI"]->update(huboState.right_foot.x_acceleration,
+													huboState.imu.y_acceleration,
+													huboState.imu.z_acceleration,
+													huboState.imu.x_rotation,
+													huboState.imu.y_rotation);
+
+		this->state->getFTSensorMap()["LAT"]->update(huboState.left_ankle.Mx,
+													huboState.left_ankle.My,
+													huboState.left_ankle.Fz);
+
+		this->state->getFTSensorMap()["RAT"]->update(huboState.right_ankle.Mx,
+													huboState.left_ankle.My,
+													huboState.left_ankle.Fz);
+
+		this->state->getFTSensorMap()["LWT"]->update(huboState.left_wrist.Mx,
+													huboState.left_ankle.My,
+													huboState.left_ankle.Fz);
+
+		this->state->getFTSensorMap()["RWT"]->update(huboState.left_wrist.Mx,
+													huboState.left_ankle.My,
+													huboState.left_ankle.Fz);
+
+}
+
+void RobotControl::set(string name, string property, double value){
+	map<string, HuboMotor*> motors = state->getBoardMap();
+
+	if (motors.count(name) == 0){
+		std::cout << "Error. Motor with name " << name << " is not on record. Aborting." << std::endl;
+		return;
+	}
+	HuboMotor* motor = motors[name];
+
+	map<string, PROPERTY> properties = state->getPropertyMap();
+	if (properties.count(property) == 0){
+		std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
+		return;
+	}
+
+	switch (properties[property]){
+	case POSITION:
+		if (printNow) std::cout << "Setting position of motor " << name << " to " << value << " ." << std::endl;
+		motor->setGoalPosition(value);
+		break;
+	case VELOCITY:
+		if (printNow) std::cout << "Setting velocity of motor " << name << " to " << value << " ." << std::endl;
+		motor->setInterVelocity(value);
+		if (!interpolation)
+			std::cout << "Warning. RobotControl is not currently handling interpolation. " <<
+					"This velocity will not be used until interpolation is enabled." << std::endl;
+		break;
+	default:
+		std::cout << "Motor with name " << name << " has no mutable property named " << property << " ." << std::endl;
+		return;
+	}
+}
+
+void RobotControl::setProperties(string names, string properties, string values){
+	vector<string> namesList = splitFields(names);
+	vector<string> propertiesList = splitFields(properties);
+	vector<string> valuesList = splitFields(values);
+	if (namesList.size() != propertiesList.size()
+			|| namesList.size() != valuesList.size()
+			|| propertiesList.size() != valuesList.size()){
+		cout << "Error! Size of entered fields not consistent. Aborting.";
+		return;
+	}
+
+	for (int i = 0; i < namesList.size(); i++){
+		istringstream data(valuesList[i]);
+		double value = 0;
+		data >> value;
+
+		set(namesList[i], propertiesList[i], value);
+	}
+}
+
+double RobotControl::get(string name, string property){
+	map<string, HuboMotor*> motors = state->getBoardMap();
+	map<string, FTSensorBoard*> ftSensors = state->getFTSensorMap();
+	map<string, IMUBoard*> imuSensors = state->getIMUSensorMap();
+
+	if (motors.count(name) == 1){
+		HuboMotor* motor = motors[name];
+		map<string, PROPERTY> properties = state->getPropertyMap();
+
+		if (properties.count(property) == 0){
+			std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
+			return 0;
+		}
+
+		switch (properties[property]){
+		case POSITION:
+			if (printNow) std::cout << "Position of motor " << name << " is " << motor->getPosition() << "." << std::endl;
+			return motor->getPosition();
+		case VELOCITY:
+			if (printNow) std::cout << "Velocity of motor " << name << " is " << motor->getVelocity() << "." << std::endl;
+			return motor->getVelocity();
+		case TEMPERATURE:
+			if (printNow) std::cout << "Temperature of motor " << name << " is " << motor->getTemperature() << "." << std::endl;
+			return motor->getTemperature();
+		case CURRENT:
+			if (printNow) std::cout << "Current of motor " << name << " is " << motor->getCurrent() << "." << std::endl;
+			return motor->getCurrent();
+		case ENABLED:
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->isEnabled() ? "enabled." : "disabled.") << std::endl;
+			return motor->isEnabled() ? 1 : 0;
+		case HOMED:
+			if (printNow) std::cout << "Motor " << name << " has " << (motor->isHomed() ? "" : "not ") << "been homed." << std::endl;
+			return motor->isHomed() ? 1 : 0;
+		case ERRORED:
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError() ? "" : "not ") << "in an error condition.";
+			return motor->hasError() ? 1 : 0;
+		case JAM_ERROR:
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a jam error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case PWM_SATURATED_ERROR:
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a PWM Saturated error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case BIG_ERROR:
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a big error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case ENC_ERROR:
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing an encoder error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case DRIVE_FAULT_ERROR:
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a drive fault.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case POS_MIN_ERROR:
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a minimum position error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case POS_MAX_ERROR:
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a maximum position error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case VELOCITY_ERROR:
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a velocity error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case ACCELERATION_ERROR:
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing an acceleration error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		case TEMP_ERROR:
+			if (printNow) std::cout << "Motor " << name << " is currently " << (motor->hasError(properties[property]) ? "" : "not ") << "experiencing a temperature error.";
+			return motor->hasError(properties[property]) ? 1 : 0;
+		default:
+			if (printNow) std::cout << "Motor with name " << name << " has no readable property named " << property << " ." << std::endl;
+			return 0;
+		}
+	} else if (ftSensors.count(name) == 1){
+		FTSensorBoard* board = ftSensors[name];
+		map<string, PROPERTY> properties = state->getPropertyMap();
+
+		if (properties.count(property) == 0){
+			std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
+			return 0;
+		}
+
+		switch (properties[property]){
+		case M_X:
+			if (printNow) std::cout << "M_X of Force Torque Sensor " << name << " is " << board->getMX() << "." << std::endl;
+			return board->getMX();
+		case M_Y:
+			if (printNow) std::cout << "M_Y of Force Torque Sensor " << name << " is " << board->getMY() << "." << std::endl;
+			return board->getMY();
+		case F_Z:
+			if (printNow) std::cout << "F_Z of Force Torque Sensor " << name << " is " << board->getFZ() << "." << std::endl;
+			return board->getFZ();
+		default:
+			if (printNow) std::cout << "Force Torque Sensor with name " << name << " has no readable property named " << property << " ." << std::endl;
+			return 0;
+		}
+	} else if (imuSensors.count(name) == 1){
+		IMUBoard* board = imuSensors[name];
+		map<string, PROPERTY> properties = state->getPropertyMap();
+
+		if (properties.count(property) == 0){
+			std::cout << "Error. No property with name " << property << " registered. Aborting." << std::endl;
+			return 0;
+		}
+
+		switch (properties[property]){
+		case X_ACCEL:
+			if (printNow) std::cout << "X Acceleration of IMU " << name << " is " << board->getXAcc() << "." << std::endl;
+			return board->getXAcc();
+		case Y_ACCEL:
+			if (printNow) std::cout << "Y Acceleration of IMU " << name << " is " << board->getYAcc() << "." << std::endl;
+			return board->getYAcc();
+		case Z_ACCEL:
+			if (printNow) std::cout << "Z Acceleration of IMU " << name << " is " << board->getZAcc() << "." << std::endl;
+			return board->getZAcc();
+		case X_ROTAT:
+			if (printNow) std::cout << "X Rotation of IMU " << name << " is " << board->getXRot() << "." << std::endl;
+			return board->getXRot();
+		case Y_ROTAT:
+			if (printNow) std::cout << "Y Rotation of IMU " << name << " is " << board->getYRot() << "." << std::endl;
+			return board->getYRot();
+		default:
+			if (printNow) std::cout << "IMU with name " << name << " has no readable property named " << property << " ." << std::endl;
+			return 0;
+		}
+	} else {
+		std::cout << "Error. Readable Object with name " << name << " is not on record. Aborting." << std::endl;
+		return 0;
+	}
+}
+
+void RobotControl::command(string name, string target){
+	map<string, HuboMotor*> motors = state->getBoardMap();
+	hubomsg::AchCommand output;
+
+	HuboMotor* motor;
+	MotorBoard* mb;
+
+	if (commands.count(name) == 0){
+		std::cout << "Error. No command with name " << name << " is defined for RobotControl. Aborting.";
+		return;
+	}
+
+	switch (commands[name]){
+	case ENABLE:
+		if (motors.count(target) == 0){
+			std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
+			return;
+		}
+		output.commandName = "enableJoint";
+		output.jointName = target;
+		achOutputQueue->push(output);
+
+		motor = motors[target];
+		updateState();
+		if (RUN_TYPE == HARDWARE && !motor->isHomed()){
+			std::cout << "Warning! Motor " << target << " has not yet been homed. Skipping enabling of this motor." << std::endl;
+			return;
+		}
+		if (RUN_TYPE == HARDWARE)
+			motor->setGoalPosition(motor->getPosition());
+		motor->setEnabled(true);
+		break;
+	case ENABLEALL:
+		output.commandName = "enableAll";
+		achOutputQueue->push(output);
+		for (int i = 0; i < this->state->getBoards().size(); i++){
+			mb = this->state->getBoards()[i];
+			for (int j = 0; j < mb->getNumChannels(); j++){
+				motor = mb->getMotorByChannel(j);
+				updateState();
+				if (RUN_TYPE == HARDWARE && !motor->isHomed()){
+					std::cout << "Warning! Motor " << motor->getName() << " has not yet been homed. Skipping enabling of this motor." << std::endl;
+					continue;
+				}
+				if (RUN_TYPE == HARDWARE)
+					motor->setGoalPosition(motor->getPosition());
+				motor->setEnabled(true);
+			}
+		}
+		break;
+	case DISABLE:
+		if (motors.count(target) == 0){
+			std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
+			return;
+		}
+		output.commandName = "disableJoint";
+		output.jointName = target;
+		achOutputQueue->push(output);
+
+		motor = motors[target];
+		motor->setEnabled(false);
+		break;
+	case DISABLEALL:
+		output.commandName = "disableAll";
+		achOutputQueue->push(output);
+		for (int i = 0; i < this->state->getBoards().size(); i++){
+			mb = this->state->getBoards()[i];
+			for (int j = 0; j < mb->getNumChannels(); j++){
+				motor = mb->getMotorByChannel(j);
+				motor->setEnabled(false);
+			}
+		}
+		break;
+	case RESET:
+		if (motors.count(target) == 0){
+			std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
+			return;
+		}
+
+		output.commandName = "resetJoint";
+		output.jointName = target;
+		achOutputQueue->push(output);
+		break;
+	case RESETALL:
+		for (int i = 0; i < this->state->getBoards().size(); i++){
+			mb = this->state->getBoards()[i];
+			for (int j = 0; j < mb->getNumChannels(); j++){
+				motor = mb->getMotorByChannel(j);
+				command("ResetJoint", motor->getName());
+			}
+		}
+		return;
+	case HOME:
+		if (motors.count(target) == 0){
+			std::cout << "Error. Motor with name " << target << " is not on record. Aborting.";
+			return;
+		}
+
+		output.commandName = "homeJoint";
+		output.jointName = target;
+		achOutputQueue->push(output);
+
+		motor = motors[target];
+		set(target, "position", 0);
+		break;
+	case HOMEALL:
+		output.commandName = "homeAll";
+		achOutputQueue->push(output);
+		for (int i = 0; i < this->state->getBoards().size(); i++){
+			mb = this->state->getBoards()[i];
+			for (int j = 0; j < mb->getNumChannels(); j++){
+				motor = mb->getMotorByChannel(j);
+				set(motor->getName(), "position", 0);
+			}
+		}
+		break;
+		//TODO: Find a way to pause for a length of time here.
+	case INITSENSORS:
+		output.commandName = "initializeSensors";
+		achOutputQueue->push(output);
+		break;
+	case UPDATE:
+		updateState();
+		break;
+	}
+}
+
+void RobotControl::setMode(string mode, bool value){
+	if (mode.compare("Interpolation") == 0){
+		if (printNow) std::cout << "Setting interpolation " << (value ? "on." : "off.") << std::endl;
+		command("DisableAll","");
+		//If we are switching to interpolation, the internal step of each motor must be updated.
+		if (value){
+			hubomsg::HuboState huboState = hubomsg::HuboState();
+			huboState = commHandler->getState();
+			map<string, HuboMotor*> motors = state->getBoardMap();
+			for (int i = 0; i < huboState.joints.size(); i++){
+				if (motors.count(huboState.joints[i].name) == 1){
+					HuboMotor* motor = motors[huboState.joints[i].name];
+					motor->setInterStep(RUN_TYPE == SIMULATION ? huboState.joints[i].commanded : huboState.joints[i].position);
+				}
+			}
+		}
+		interpolation = value;
+	} else {
+		std::cout << "RobotControl does not have a mutable mode with name " << mode << "." << std::endl;
+	}
+}
+
+bool RobotControl::setAlias(string name, string alias){
+	map<string, HuboMotor*> motors = state->getBoardMap();
+	map<string, FTSensorBoard*> ftSensors = state->getFTSensorMap();
+	map<string, IMUBoard*> imuSensors = state->getIMUSensorMap();
+	map<string, PROPERTY> properties = state->getPropertyMap();
+
+	int entries = 0;
+
+	entries += motors.count(alias);
+	entries += ftSensors.count(alias);
+	entries += imuSensors.count(alias);
+	entries += properties.count(alias);
+	entries += commands.count(alias);
+
+	if (entries > 0){
+		std::cout << "There already exists an entity named " << alias << " in RobotControl." << std::cout;
+		return false;
+	} else if (motors.count(name) == 1)
+		motors[alias] = motors[name];
+	else if (ftSensors.count(name) == 1)
+		ftSensors[alias] = ftSensors[name];
+	else if (imuSensors.count(name) == 1)
+		imuSensors[alias] = imuSensors[name];
+	else if (properties.count(name) == 1)
+		properties[alias] = properties[name];
+	else if (commands.count(name) == 1)
+		commands[alias] = commands[name];
+
+	return true;
+}
+
+vector<string> RobotControl::splitFields(string input){
+	vector<string> output;
+	int whitespaceType = 0;
+	if (input.find(' ') != string::npos) whitespaceType += 1;
+	if (input.find('\t') != string::npos) whitespaceType += 2;
+	if (input.find('\n') != string::npos) whitespaceType += 4;
+
+	char whitespace;
+	switch (whitespaceType){
+	case 1:
+		whitespace = ' ';
+		break;
+	case 2:
+		whitespace = '\t';
+		break;
+	case 4:
+		whitespace = '\n';
+		break;
+	default:
+		output.push_back(input);
+		return output;
+	}
+	string field;
+	int pos = 0;
+
+	do {
+		pos = input.find(whitespace);
+		field = input.substr(0, pos);
+		output.push_back(field);
+		input = input.substr(pos + 1, input.length() - pos - 1);
+	} while (input.find(whitespace) != string::npos);
+	output.push_back(input);
+	return output;
+}
+
+void RobotControl::debugControl(int board, int operation){
+	switch (operation) {
+	case 1:
+		this->state->getBoardByNumber(board)->setHIP(0);
+		break;
+	case 2:
+		this->state->getBoardByNumber(board)->disableController();
+		break;
+	case 3:
+		this->state->getBoardByNumber(board)->setHIP(1);
+		break;
+	case 4:
+		this->state->getBoardByNumber(board)->enableController();
+		break;
+	case 5:
+		this->printNow = true;
+		break;
+	case 6:
+		this->printNow = false;
+		break;
+	default:
+		std::cout << "Operations: " << std::endl << "1: disable (step 1)    2: disable (step 2)    3: enable (step 1)    4: enable (step 2)    5: enable printing     6: disable printing";
+	}
+}
+
+void RobotControl::setDelay(int us){
+	this->delay = us;
+}
+
+bool RobotControl::requiresMotion(string name){
+	map<string, HuboMotor*> motors = state->getBoardMap();
+	if (motors.count(name)  == 0){
+		std::cout << "Error. Motor with name " << name << " is not on record. Aborting." << std::endl;
+		return false;
+	}
+	return motors[name]->requiresMotion();
+}
+
+void RobotControl::runGesture(string name){
+	boost::shared_ptr<Scripting> scripting = this->getProvider<Scripting>("scripting");
+	scripting->startProgram(name);
+	if (!scripting->isProgramRunning(name))
 		std::cout << "Error. Program not running." << std::endl;
-	  if (scripting->inProgramError(name))
+	if (scripting->inProgramError(name))
 		std::cout << "Error. Program has encountered an error. " << std::endl;
-  }
+}
 
 ORO_CREATE_COMPONENT_LIBRARY()
 ORO_LIST_COMPONENT_TYPE(RobotControl)
