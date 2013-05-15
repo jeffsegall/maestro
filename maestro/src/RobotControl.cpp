@@ -796,12 +796,6 @@ void RobotControl::debugControl(int board, int operation){
 	case 6:
 		this->printNow = false;
 		break;
-	case 7:
-		this->logTiming = true;
-		break;
-	case 8:
-		this->logTiming = false;
-		break;
 	default:
 		std::cout << "Operations: " << std::endl << "1: disable (step 1)    2: disable (step 2)    3: enable (step 1)    4: enable (step 2)    5: enable printing     6: disable printing";
 	}
