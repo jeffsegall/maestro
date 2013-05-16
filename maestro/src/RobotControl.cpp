@@ -181,8 +181,8 @@ void RobotControl::updateHook(){
 	}
 	if (commHandler->isNew(3)){
 		//Received update from Hubo-Ach
+		updateState();
 		if (testing){
-			testCycles++;
 			if (get("RHY","position") == this->target){
 				timespec finish;
 				clock_gettime(CLOCK_REALTIME, &finish);
@@ -190,8 +190,6 @@ void RobotControl::updateHook(){
 				tempOutput << (finish.tv_nsec - startTime) << '\t' << testCycles << std::endl;
 			}
 		}
-
-		updateState();
 
 	}
 
