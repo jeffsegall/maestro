@@ -139,7 +139,6 @@ RobotControl::~RobotControl(){}
 
 vector<float> trajectoryValues(string path){
 	vector<float> val;
-
 	float f;
 
 	ifstream is;
