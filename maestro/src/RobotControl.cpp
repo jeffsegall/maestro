@@ -177,11 +177,14 @@ void RobotControl::updateHook(){
 	}
 	if (commHandler->isNew(3)){
 		//Received update from Hubo-Ach
-		if (testing && get("RHY","position") == this->target){
-			timespec finish;
-			clock_gettime(REALTIME, finish);
-			testing = false;
-			tempOutput << (finish.tv_nsec - startTime) << std::endl;
+		if (testing){
+			testCycles++;
+			if (get("RHY","position") == this->target){
+				timespec finish;
+				clock_gettime(REALTIME, finish);
+				testing = false;
+				tempOutput << (finish.tv_nsec - startTime) << '\t' << testCycles << std::endl;
+			}
 		}
 
 		updateState();
@@ -825,6 +828,7 @@ bool RobotControl::testStarted(){
 void RobotControl::startTest(double target){
 	timespec start;
 	this->target = target;
+	testCycles = 0;
 	this->testing = true;
 	set("RHY", "position", target);
 	clock_gettime(REALTIME, start);

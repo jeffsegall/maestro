@@ -142,7 +142,8 @@ private:
     bool RUN_TYPE;
 
     bool testing;
-    long startTime, finishTime;
+    long startTime;
+    int testCycles;
     double target;
 };
 
