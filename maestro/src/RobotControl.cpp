@@ -166,7 +166,7 @@ void RobotControl::updateHook(){
 	if (lastTime != 0){
 		timespec start;
 		clock_gettime(CLOCK_REALTIME, &start);
-		tempOutput << start.tv_nsec - lastTime << std::endl;
+		tempOutput << (start.tv_nsec - lastTime) << std::endl;
 	}
 
 	hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
