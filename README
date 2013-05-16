@@ -218,7 +218,13 @@ Set an alias:
 This command will set an alias for some motor, sensor, property, or command. This will allow you to specify your own names for direct control,
 or you can shorten the names programmatically to shorten the lengths of written scripts. An excellent use of this feature would be to have
 a gesture created for initialization tasks that aliases your commands to the chosen values at the start.
+
+A list of all default joint and sensor names is listed under the Default Names section. 
+Properties are listed in the "GetProperty" method entry in the Feedback section.
+The names of every command listed above can also be aliased.
+
 Note: This command should be performed after running initRobot, so all entity names will be available to alias.
+
 
 ******************
 **   MOVEMENT   **
@@ -343,6 +349,64 @@ In order to see available commands, run the following commands:
 	
 This will print all available commands for RobotControl. Most should be self explanatory. If you need a more
 detailed description of how to run, email the developers. Contact information is in the Support section.
+
+****************************
+*****  DEFAULT NAMING  *****
+****************************
+
+Joints:
+
+WST		Waist
+NKY		Neck Yaw
+NK1		Neck Tilt 1
+NK2		Neck Tilt 2
+LSP		Left Shoulder Pitch
+LSR		Left Shoulder Roll
+LSY		Left Shoulder Yaw
+LEP		Left Elbow Pitch
+LWY		Left Wrist Yaw
+LWP		Left Wrist Pitch
+RSP		Right Shoulder Pitch
+RSR		Right Shoulder Roll
+RSY		Right Shoulder Yaw
+REP		Right Elbow Pitch
+RWY		Right Wrist Yaw
+RWP		Right Wrist Pitch
+LHY		Left Hip Yaw
+LHR		Left Hip Roll
+LHP		Left Hip Pitch
+LKP		Left Knee Pitch
+LAP		Left Ankle Pitch
+LAR		Left Ankle Roll
+RHY		Right Hip Yaw
+RHR		Right Hip Roll
+RHP		Right Hip Pitch
+RKP		Right Knee Pitch
+RAP		Right Ankle Pitch
+RAR		Right Ankle Roll
+RF1		Right Finger 1
+RF2		Right Finger 2
+RF3		Right Finger 3
+RF4		Right Finger 4
+RF5		Right Finger 5
+LF1		Left Finger 1
+LF2		Left Finger 2
+LF3		Left Finger 3
+LF4		Left Finger 4
+LF5		Left Finger 5
+
+Sensors:
+
+IMU		Body IMU
+LAI		Left Ankle IMU
+RAI		Right Ankle IMU
+
+LAT		Left Ankle Force Torque
+RAT		Right Ankle Force Torque
+LWT		Left Wrist Force Torque
+RWT		Right Wrist Force Torque
+
+These names can be changed by aliasing them during runtime. See the Initialization section for details.
 
 
 ****************************************************
