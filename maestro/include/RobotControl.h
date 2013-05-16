@@ -105,6 +105,10 @@ public:
     vector<string> splitFields(string input);
     string getDefaultInitPath(string path);
 
+    // TEsting Commands
+    bool testStarted();
+    void startTest(double target);
+
 private:
 
 
@@ -136,6 +140,10 @@ private:
     int delay;
     bool interpolation, override;
     bool RUN_TYPE;
+
+    bool testing;
+    long startTime, finishTime;
+    double target;
 };
 
 #endif
