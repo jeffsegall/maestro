@@ -163,11 +163,9 @@ vector<float> trajectoryValues(string path){
 }
 
 void RobotControl::updateHook(){
-	if (lastTime != 0){
-		timespec start;
-		clock_gettime(CLOCK_REALTIME, &start);
-		tempOutput << (start.tv_nsec - lastTime) << std::endl;
-	}
+
+	timespec start;
+	clock_gettime(CLOCK_REALTIME, &start);
 
 	hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
 	hubomsg::CanMessage canMessage = hubomsg::CanMessage();
@@ -239,9 +237,10 @@ void RobotControl::updateHook(){
 	}
 	usleep(delay);
 
-	timespec last;
-	clock_gettime(CLOCK_REALTIME, &last);
-	lastTime = last.tv_nsec;
+	timespec end;
+	clock_gettime(CLOCK_REALTIME, &end);
+	//lastTime = last.tv_nsec;
+	if (logTiming) tempOutput << end.tv_nsec - start.tv_nsec << std::endl;
 }
 
 hubomsg::CanMessage RobotControl::buildCanMessage(canMsg* msg){
@@ -839,6 +838,7 @@ bool RobotControl::testStarted(){
 }
 
 void RobotControl::startTest(double target){
+	/*
 	timespec start;
 	this->target = target;
 	testCycles = 0;
@@ -846,6 +846,10 @@ void RobotControl::startTest(double target){
 	set("RHY", "position", target);
 	clock_gettime(CLOCK_REALTIME, &start);
 	startTime = start.tv_nsec;
+	*/
+	logTiming = true;
+	testing = true;
+	this->target = target;
 }
 
 void RobotControl::runGesture(string name){
