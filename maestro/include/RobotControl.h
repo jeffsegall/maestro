@@ -145,6 +145,8 @@ private:
     long startTime;
     int testCycles;
     double target;
+
+    long lastTime;
 };
 
 #endif

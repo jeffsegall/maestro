@@ -138,6 +138,9 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     }
 
     RUN_TYPE = getRunType(CONFIG_PATH);
+
+
+    lastTime = 0;
 }
   
 RobotControl::~RobotControl(){}
@@ -160,6 +163,12 @@ vector<float> trajectoryValues(string path){
 }
 
 void RobotControl::updateHook(){
+	if (lastTime != 0){
+		timespec start;
+		clock_gettime(CLOCK_REALTIME, &start);
+		tempOutput << start.tv_nsec - lastTime << std::endl;
+	}
+
 	hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
 	hubomsg::CanMessage canMessage = hubomsg::CanMessage();
 	//hubomsg::HuboState huboState = hubomsg::HuboState();
@@ -229,6 +238,10 @@ void RobotControl::updateHook(){
 		achOutputQueue->pop();
 	}
 	usleep(delay);
+
+	timespec last;
+	clock_gettime(CLOCK_REALTIME, &last);
+	lastTime = last.tv_nsec;
 }
 
 hubomsg::CanMessage RobotControl::buildCanMessage(canMsg* msg){
