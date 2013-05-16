@@ -181,7 +181,7 @@ void RobotControl::updateHook(){
 			testCycles++;
 			if (get("RHY","position") == this->target){
 				timespec finish;
-				clock_gettime(REALTIME, finish);
+				clock_gettime(CLOCK_REALTIME, finish);
 				testing = false;
 				tempOutput << (finish.tv_nsec - startTime) << '\t' << testCycles << std::endl;
 			}
@@ -831,7 +831,7 @@ void RobotControl::startTest(double target){
 	testCycles = 0;
 	this->testing = true;
 	set("RHY", "position", target);
-	clock_gettime(REALTIME, start);
+	clock_gettime(CLOCK_REALTIME, start);
 	startTime = start.tv_nsec;
 }
 
