@@ -188,6 +188,7 @@ void RobotControl::updateHook(){
 		//Received update from Hubo-Ach
 		updateState();
 		if (testing){
+			std::cout << "Target: " << target << std::endl;
 			if (get("RHY","position") == this->target){
 				timespec finish;
 				clock_gettime(CLOCK_REALTIME, &finish);
