@@ -141,6 +141,11 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
 
 
     lastTime = 0;
+    testing = false;
+	logTiming = false;
+	startTime = 0;
+	testCycles = 0;
+	target = 0;
 }
   
 RobotControl::~RobotControl(){}
