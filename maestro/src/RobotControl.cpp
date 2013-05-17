@@ -188,7 +188,6 @@ void RobotControl::updateHook(){
 		//Received update from Hubo-Ach
 		updateState();
 		if (testing){
-			std::cout << "Testing!" << std::endl;
 			if (get("RHY","position") == this->target){
 				timespec finish;
 				clock_gettime(CLOCK_REALTIME, &finish);
@@ -464,7 +463,7 @@ double RobotControl::get(string name, string property){
 
 		switch (properties[property]){
 		case POSITION:
-			if (printNow) std::cout << "Position of motor " << name << " is " << motor->getPosition() << "." << std::endl;
+			/*if (printNow)*/ std::cout << "Position of motor " << name << " is " << motor->getPosition() << "." << std::endl;
 			return motor->getPosition();
 		case VELOCITY:
 			if (printNow) std::cout << "Velocity of motor " << name << " is " << motor->getVelocity() << "." << std::endl;
