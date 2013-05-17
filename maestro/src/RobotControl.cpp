@@ -189,7 +189,7 @@ void RobotControl::updateHook(){
 		updateState();
 		if (testing){
 			std::cout << "Target: " << target << std::endl;
-			if (get("RHY","position") == this->target){
+			if (fabs(get("RHY","position") - this->target) < .000001){
 				timespec finish;
 				clock_gettime(CLOCK_REALTIME, &finish);
 				testing = false;
