@@ -104,7 +104,7 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
 	    	.arg("Name", "The name of the gesture to load.");
 
-    this->addOperation("testFinished", &RobotControl::testStarted, this, RTT::OwnThread);
+    this->addOperation("testFinished", &RobotControl::testFinished, this, RTT::OwnThread);
 
     this->addOperation("startTest", &RobotControl::startTest, this, RTT::OwnThread)
     		.arg("Target", "Target for test.");
