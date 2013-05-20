@@ -106,7 +106,7 @@ public:
     string getDefaultInitPath(string path);
 
     // TEsting Commands
-    bool testFinisheds();
+    bool testFinished();
     void startTest(double target);
 
 private:
