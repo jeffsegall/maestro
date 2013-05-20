@@ -829,7 +829,7 @@ bool RobotControl::requiresMotion(string name){
 }
 
 bool RobotControl::testFinished(){
-	return fabs(get("RHY","position") - (target + .0001)) < .0000001;
+	return get("RHY","position") == (target + .0001);
 }
 
 void RobotControl::startTest(double target){
