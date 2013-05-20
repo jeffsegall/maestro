@@ -829,7 +829,7 @@ bool RobotControl::requiresMotion(string name){
 }
 
 bool RobotControl::testFinished(){
-	return get("RHY","position") == (target + 1);
+	return get("RHY","position") == (target + .2);
 }
 
 void RobotControl::startTest(double target){
@@ -837,7 +837,7 @@ void RobotControl::startTest(double target){
 	this->target = target;
 	testCycles = 0;
 	this->testing = true;
-	set("RHY", "position", target + 1);
+	set("RHY", "position", target + .2);
 	clock_gettime(CLOCK_REALTIME, &start);
 	startTime = start.tv_nsec;
 }
