@@ -463,7 +463,7 @@ double RobotControl::get(string name, string property){
 
 		switch (properties[property]){
 		case POSITION:
-			/*if (printNow)*/ std::cout << "Position of motor " << name << " is " << motor->getPosition() << "." << std::endl;
+			if (printNow) std::cout << "Position of motor " << name << " is " << motor->getPosition() << "." << std::endl;
 			return motor->getPosition();
 		case VELOCITY:
 			if (printNow) std::cout << "Velocity of motor " << name << " is " << motor->getVelocity() << "." << std::endl;
@@ -829,7 +829,7 @@ bool RobotControl::requiresMotion(string name){
 }
 
 bool RobotControl::testFinished(){
-	return get("RHY","position") == (target + .0001);
+	return get("RHY","position") == (target + 1);
 }
 
 void RobotControl::startTest(double target){
@@ -837,7 +837,7 @@ void RobotControl::startTest(double target){
 	this->target = target;
 	testCycles = 0;
 	this->testing = true;
-	set("RHY", "position", target + .0001);
+	set("RHY", "position", target + 1);
 	clock_gettime(CLOCK_REALTIME, &start);
 	startTime = start.tv_nsec;
 }
