@@ -104,7 +104,7 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
 	    	.arg("Name", "The name of the gesture to load.");
 
-    this->addOperation("testFinished", &RobotControl::testFinished, this, RTT::OwnThread);
+    this->addOperation("testStarted", &RobotControl::testStarted, this, RTT::OwnThread);
 
     this->addOperation("startTest", &RobotControl::startTest, this, RTT::OwnThread)
     		.arg("Target", "Target for test.");
@@ -188,7 +188,7 @@ void RobotControl::updateHook(){
 		//Received update from Hubo-Ach
 		updateState();
 		if (testing){
-			if (get("RHY","position") != target){
+			if (get("RHY","position") == target){
 				timespec finish;
 				clock_gettime(CLOCK_REALTIME, &finish);
 				testing = false;
@@ -828,8 +828,8 @@ bool RobotControl::requiresMotion(string name){
 	return motors[name]->requiresMotion();
 }
 
-bool RobotControl::testFinished(){
-	return get("RHY","position") == (target + .2);
+bool RobotControl::testStarted(){
+	return testing;
 }
 
 void RobotControl::startTest(double target){
@@ -837,7 +837,7 @@ void RobotControl::startTest(double target){
 	this->target = target;
 	testCycles = 0;
 	this->testing = true;
-	set("RHY", "position", target + .2);
+	set("RHY", "position", target);
 	clock_gettime(CLOCK_REALTIME, &start);
 	startTime = start.tv_nsec;
 }
