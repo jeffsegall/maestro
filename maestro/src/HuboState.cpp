@@ -69,7 +69,7 @@ HuboState::HuboState(){
 *
 * @param	path		The file path of the XML representation
 ******************************************************************************/
-void HuboState::initHuboWithDefaults(string path, queue<hubomsg::HuboCommand>* outQueue){
+void HuboState::initHuboWithDefaults(string path, double frequency, queue<hubomsg::HuboCommand>* outQueue){
     pugi::xml_document doc;
     if (!doc.load_file(path.c_str())){
         std::cout << "No such file, " << path.c_str() << std::endl;
@@ -109,6 +109,7 @@ void HuboState::initHuboWithDefaults(string path, queue<hubomsg::HuboCommand>* o
             mb->addMotor(hm, CH);
             std::cout << "Added motor to: " << mb->getMotorByChannel(CH) << std::endl;
             mb->getMotorByChannel(CH)->setName(name);
+            mb->getMotorByChannel(CH)->setFrequency(frequency);
 
             assert(motorMap.count(name) == 0); //Multiple motors should not have the same name.
             motorMap[name] = hm;
