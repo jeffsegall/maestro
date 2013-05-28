@@ -139,7 +139,6 @@ RobotControl::~RobotControl(){}
 
 vector<float> trajectoryValues(string path){
 	vector<float> val;
-
 	float f;
 
 	ifstream is;
@@ -306,7 +305,7 @@ void RobotControl::initRobot(string path){
 		path = getDefaultInitPath(CONFIG_PATH);
 
 	//@TODO: Check for file existence before initializing.
-	this->state->initHuboWithDefaults(path, this->huboOutputQueue);
+	this->state->initHuboWithDefaults(path, 1/this->getPeriod(), this->huboOutputQueue);
 }
 
 void RobotControl::updateState(){
