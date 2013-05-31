@@ -50,3 +50,7 @@ if [[ -z $(grep "source $installDir/openHubo/env.sh" ~/.bashrc)  ]]; then
 fi
 source $installDir/openHubo/env.sh
 
+# Ach Python Bindings
+sudo apt-get install python-pip
+sudo pip install http://code.golems.org/src/ach/py_ach-latest.tar.gz
+
