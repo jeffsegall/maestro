@@ -139,13 +139,7 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
 
     RUN_TYPE = getRunType(CONFIG_PATH);
 
-
-    lastTime = 0;
-    testing = false;
-	logTiming = false;
-	startTime = 0;
-	testCycles = 0;
-	target = 0;
+    receipts = 0;
 }
   
 RobotControl::~RobotControl(){}
@@ -186,16 +180,18 @@ void RobotControl::updateHook(){
 	}
 	if (commHandler->isNew(3)){
 		//Received update from Hubo-Ach
-		updateState();
-		if (testing){
-			if (get("RHY","position") == target){
-				timespec finish;
-				clock_gettime(CLOCK_REALTIME, &finish);
-				testing = false;
-				tempOutput << (finish.tv_nsec - startTime) << '\t' << testCycles << std::endl;
-			}
+
+		timespec receipt;
+		clock_gettime(CLOCK_REALTIME, &receipt);
+		long time = receipt.tv_nsec;
+		hubomsg::HuboState huboState = commHandler->getState();
+		if (time - huboState.nsec > 0 && receipts < 10000){
+			tempOutput << time - huboState.nsec << std::endl;
+
+			receipts++;
 		}
 
+		updateState();
 	}
 
 	if (huboOutputQueue->empty() && !this->state->getBoards().empty()) {
@@ -826,20 +822,6 @@ bool RobotControl::requiresMotion(string name){
 		return false;
 	}
 	return motors[name]->requiresMotion();
-}
-
-bool RobotControl::testStarted(){
-	return testing;
-}
-
-void RobotControl::startTest(double target){
-	timespec start;
-	this->target = target;
-	testCycles = 0;
-	this->testing = true;
-	set("RHY", "position", target);
-	clock_gettime(CLOCK_REALTIME, &start);
-	startTime = start.tv_nsec;
 }
 
 void RobotControl::runGesture(string name){
