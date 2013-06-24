@@ -39,7 +39,7 @@ Installation of Hubo-Ach, Hubo-Ach-Ros, Hubo-Ach-Ros-Visualization:
 	sudo ./install-hubo-ach.sh
 	
 Installation of OpenHUBO:
-	./install-openRave.sh
+	./install-openHubo.sh
 	
 ******
  Note
