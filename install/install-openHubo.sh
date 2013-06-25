@@ -27,6 +27,8 @@ git clone https://github.com/daslrobotics/openHubo
 
 cd openHubo
 
+git checkout release/0.7.0
+
 sh -c './setup'
 
 if [[ -z $(grep "source $installDir/openHubo/env.sh" ~/.bashrc)  ]]; then
