@@ -21,6 +21,11 @@ as well as an install script to generate the execution environment for virtualiz
 
 Installation scripts exist to install dependencies such as ROS, Orocos, and OpenRAVE, as well as complementary packages such as Hubo-Ach and OpenHUBO.
 
+****** 
+ Note
+******
+ Pay strict attention to permissions for all scripts. Some require superuser access, and some mandate non-superuser access. ****
+
 To install all dependencies and complementary packages.
 	./install-all.sh
 
@@ -32,6 +37,17 @@ Installation of ROS, Orocos, and OpenRAVE:
 
 Installation of Hubo-Ach, Hubo-Ach-Ros, Hubo-Ach-Ros-Visualization:
 	sudo ./install-hubo-ach.sh
+	
+Installation of OpenHUBO:
+	./install-openHubo.sh
+	
+******
+ Note
+******
+After installation, it is recommended for the user to interact with these packages in a new terminal, in order to 
+ensure that environment variables are properly loaded. If any errors occur, please reboot the operating system and try again,
+to confirm that the errors are not related to unloaded environment variables.
+
 	
 ****************************************************
 **************      UNINSTALLATION     *************

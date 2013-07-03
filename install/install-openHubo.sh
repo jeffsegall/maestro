@@ -27,6 +27,8 @@ git clone https://github.com/daslrobotics/openHubo
 
 cd openHubo
 
+git checkout release/0.7.0
+
 sh -c './setup'
 
 if [[ -z $(grep "source $installDir/openHubo/env.sh" ~/.bashrc)  ]]; then
@@ -49,4 +51,8 @@ if [[ -z $(grep "source $installDir/openHubo/env.sh" ~/.bashrc)  ]]; then
 	fi
 fi
 source $installDir/openHubo/env.sh
+
+# Ach Python Bindings
+sudo apt-get install python-pip
+sudo pip install http://code.golems.org/src/ach/py_ach-latest.tar.gz
 

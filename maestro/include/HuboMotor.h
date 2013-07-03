@@ -65,6 +65,7 @@ class HuboMotor {
 	//Output Data
 	double currGoal;				//Goal position in radians
 	double interStep;				//Current interpolated step in radians
+	double frequency;				//Interpolation Frequency
 	double interVel;				//Current interpolated velocity in rad/sec
 
 	//Sensor Data
@@ -135,6 +136,7 @@ class HuboMotor {
 	void setGoalPosition(double rads);
 	void setInterStep(double rads);
 	void setInterVelocity(double omega);
+	void setFrequency(double frequency);
 	void update(double position, double velocity, double temperature, double current, bool homed, int errors);
 	void setEnabled(bool enabled);
 	void setHomed(bool homed);
