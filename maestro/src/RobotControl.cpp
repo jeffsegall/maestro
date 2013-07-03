@@ -224,7 +224,7 @@ void RobotControl::updateHook(){
 			tempOutput << "Writing message to " << output.num_joints << " motors." << std::endl;
 
 		timespec sent;
-		clock_gettime(CLOCK_REALTIME, sent);
+		clock_gettime(CLOCK_REALTIME, &sent);
 		output.nsec = sent.tv_nsec;
 
 		this->huboDownPort->write(output);
