@@ -104,10 +104,6 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
 	    	.arg("Name", "The name of the gesture to load.");
 
-    this->addOperation("testStarted", &RobotControl::testStarted, this, RTT::OwnThread);
-
-    this->addOperation("startTest", &RobotControl::startTest, this, RTT::OwnThread)
-    		.arg("Target", "Target for test.");
 
     this->written = 0;
     this->printNow = false;
@@ -161,7 +157,6 @@ vector<float> trajectoryValues(string path){
 }
 
 void RobotControl::updateHook(){
-	testCycles++;
 	hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
 	hubomsg::CanMessage canMessage = hubomsg::CanMessage();
 	//hubomsg::HuboState huboState = hubomsg::HuboState();

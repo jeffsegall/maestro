@@ -6,4 +6,4 @@ HuboFT left_wrist
 HuboFT right_wrist
 HuboFT left_ankle
 HuboFT right_ankle
-int64 nsec;
+int64 nsec
