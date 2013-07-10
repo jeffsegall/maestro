@@ -39,6 +39,7 @@ HuboMotor::HuboMotor(){
 	currPos = 0;
 	currCurrent = 0;
 	currTemp = 0;
+	frequency = 0;
 
 	enabled = false;
 	homed = false;
@@ -330,9 +331,11 @@ long HuboMotor::interpolate(int MAX_STEP, int MIN_STEP){
 */
 
 double HuboMotor::interpolate(){
+	if (frequency == 0) return interStep; //If the frequency is 0, no motion occurs.
+
 	const float LEAP_PERCENTAGE = .5;
 	const double MIN_STEP = .00001;
-	const double MAX_STEP = interVel/100; //Radians per second, divided by our operating frequency.
+	const double MAX_STEP = interVel/frequency; //Radians per second, divided by our operating frequency.
 
 	double error = currGoal - interStep;
 	if (error == 0) return currGoal;
@@ -363,6 +366,10 @@ void HuboMotor::setGoalPosition(double rads){
 
 void HuboMotor::setInterVelocity(double omega){
 	interVel = omega;
+}
+
+void HuboMotor::setFrequency(double frequency){
+	this->frequency = frequency;
 }
 
 void HuboMotor::update(double position, double velocity, double temperature, double current, bool homed, int errors){
