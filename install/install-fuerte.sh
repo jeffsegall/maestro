@@ -1,11 +1,42 @@
 #!/bin/bash
+#
 # This script installs ROS Fuerte with the Orocos Toolchain and
 # openRAVE stacks.
+#
+# Options:
+# 	-y		: Quiet install. Answers yes to any prompts.
+#	--auto-yes	: See -y
+#
+# Dependencies:
+#	
+#
+#
+#
+
+# Exit Error Codes
+WRONG_NUMBER_ARGUMENTS=1
+BAD_ARGUMENTS=2
+NOT_FOUND=3
+BLACKLIST_VIOLATED=4
+
+# Change directory to the script's directory.
+cd ${0%/*}
+
+# Stop execution on any significant error.
 set -e
+
 echo "ROS-Fuerte Maestro installation Script"
 echo "Version 1.0"
 echo ""
+
+DEPENDENCY_DIRS="/etc /etc/apt /etc/apt/sources.list.d"
+DEPENDENCY_FILES="~/.bashrc"
+BLACKLISTED_DIRS="/opt/ros/fuerte/stacks/armnavigation"
+BLACKLISTED_FILES=""
+
+
 installDir=`pwd`
+
 if [[ $# -lt 1 ]]; then
 	QUIET=false
 elif [[ "$1" == "-y" || "$1" == "--auto-yes" ]]; then
