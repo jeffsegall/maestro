@@ -62,6 +62,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Names.h"
 #include <fstream>
 #include <sstream>
+#include <sys/time.h>
+
 
 using std::queue;
 using std::vector;
@@ -103,6 +105,10 @@ public:
     vector<string> splitFields(string input);
     string getDefaultInitPath(string path);
 
+    // TEsting Commands
+    bool testStarted();
+    void startTest(double target);
+
 private:
 
 
@@ -134,6 +140,14 @@ private:
     int delay;
     bool interpolation, override;
     bool RUN_TYPE;
+
+    bool testing;
+    bool logTiming;
+    long startTime;
+    int testCycles;
+    double target;
+
+    long lastTime;
 };
 
 #endif

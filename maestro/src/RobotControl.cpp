@@ -104,6 +104,11 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
 	    	.arg("Name", "The name of the gesture to load.");
 
+    this->addOperation("testStarted", &RobotControl::testStarted, this, RTT::OwnThread);
+
+    this->addOperation("startTest", &RobotControl::startTest, this, RTT::OwnThread)
+    		.arg("Target", "Target for test.");
+
     this->written = 0;
     this->printNow = false;
     this->enableControl = false;
@@ -133,6 +138,14 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     }
 
     RUN_TYPE = getRunType(CONFIG_PATH);
+
+
+    lastTime = 0;
+    testing = false;
+	logTiming = false;
+	startTime = 0;
+	testCycles = 0;
+	target = 0;
 }
   
 RobotControl::~RobotControl(){}
@@ -154,6 +167,7 @@ vector<float> trajectoryValues(string path){
 }
 
 void RobotControl::updateHook(){
+	testCycles++;
 	hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
 	hubomsg::CanMessage canMessage = hubomsg::CanMessage();
 	//hubomsg::HuboState huboState = hubomsg::HuboState();
@@ -172,6 +186,15 @@ void RobotControl::updateHook(){
 	if (commHandler->isNew(3)){
 		//Received update from Hubo-Ach
 		updateState();
+		if (testing){
+			if (get("RHY","position") == target){
+				timespec finish;
+				clock_gettime(CLOCK_REALTIME, &finish);
+				testing = false;
+				tempOutput << (finish.tv_nsec - startTime) << '\t' << testCycles << std::endl;
+			}
+		}
+
 	}
 
 	if (huboOutputQueue->empty() && !this->state->getBoards().empty()) {
@@ -802,6 +825,20 @@ bool RobotControl::requiresMotion(string name){
 		return false;
 	}
 	return motors[name]->requiresMotion();
+}
+
+bool RobotControl::testStarted(){
+	return testing;
+}
+
+void RobotControl::startTest(double target){
+	timespec start;
+	this->target = target;
+	testCycles = 0;
+	this->testing = true;
+	set("RHY", "position", target);
+	clock_gettime(CLOCK_REALTIME, &start);
+	startTime = start.tv_nsec;
 }
 
 void RobotControl::runGesture(string name){
