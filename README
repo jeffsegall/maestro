@@ -424,6 +424,17 @@ RWT		Right Wrist Force Torque
 
 These names can be changed by aliasing them during runtime. See the Initialization section for details.
 
+****************************************************
+************  RESPONSE CHARACTERISTICS  ************
+****************************************************
+
+Maestro operates by default at an update cycle rate of 100 Hz. At these speeds, Maestro is able to push
+joint positions down and receive the updated position back with an average latency of 30 ms. Currently,
+it is questionable whether or not this response time is adequate for feedback loops. If the application
+merely requires joint references, rather than a feedback loop, the latency for commands sent to the 
+robot is less than 1 ms on average. Test statistics are located in /maestro/test/timing, though they
+may be slightly cryptic to decipher.
+
 
 ****************************************************
 *************          SUPPORT          ************
