@@ -134,8 +134,6 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     }
 
     RUN_TYPE = getRunType(CONFIG_PATH);
-
-    receipts = 0;
 }
   
 RobotControl::~RobotControl(){}
@@ -174,17 +172,6 @@ void RobotControl::updateHook(){
 	}
 	if (commHandler->isNew(3)){
 		//Received update from Hubo-Ach
-
-		timespec receipt;
-		clock_gettime(CLOCK_REALTIME, &receipt);
-		long time = receipt.tv_nsec;
-		hubomsg::HuboState huboState = commHandler->getState();
-		if (time - huboState.nsec > 0 && receipts < 10000){
-			tempOutput << time - huboState.nsec << std::endl;
-
-			receipts++;
-		}
-
 		updateState();
 	}
 
@@ -212,10 +199,6 @@ void RobotControl::updateHook(){
 		hubomsg::HuboCommand output = huboOutputQueue->front();
 		if (printNow)
 			tempOutput << "Writing message to " << output.num_joints << " motors." << std::endl;
-
-		timespec sent;
-		clock_gettime(CLOCK_REALTIME, &sent);
-		output.nsec = sent.tv_nsec;
 
 		this->huboDownPort->write(output);
 		huboOutputQueue->pop();
