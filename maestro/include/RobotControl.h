@@ -44,7 +44,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <hubomsg/typekit/CanMessage.h>
 #include <hubomsg/typekit/HuboState.h>
 #include <hubomsg/typekit/HuboJointState.h>
-#include <hubomsg/typekit/HuboCommand.h>
+#include <hubomsg/typekit/HuboRef.h>
 #include <hubomsg/typekit/HuboJointCommand.h>
 #include <hubomsg/typekit/AchCommand.h>
 #include <hubomsg/typekit/HuboIMU.h>
@@ -77,7 +77,7 @@ public:
 
     void updateHook(); 
     hubomsg::CanMessage buildCanMessage(canMsg* msg);
-    void buildHuboCommandMessage(hubomsg::HuboJointCommand& state, hubomsg::HuboCommand& message);
+    void buildHuboRefMessage(hubomsg::HuboJointCommand& state, hubomsg::HuboRef& message);
     void initRobot(string path);
 
     //JOINT MOVEMENT API
@@ -117,14 +117,14 @@ private:
     //PUBLISH
     OutputPort<hubomsg::CanMessage>* canDownPort;
     OutputPort<hubomsg::HuboCmd>* orInPort;
-    OutputPort<hubomsg::HuboCommand>* huboDownPort;
+    OutputPort<hubomsg::HuboRef>* huboDownPort;
     OutputPort<hubomsg::AchCommand>* achDownPort;
 
     HuboState* state;
 
     queue<hubomsg::CanMessage>* inputQueue;
     queue<hubomsg::HuboState>*	huboInputQueue;
-    queue<hubomsg::HuboCommand>* huboOutputQueue;
+    queue<hubomsg::HuboRef>* huboOutputQueue;
     queue<hubomsg::AchCommand>* achOutputQueue;
 
     map< string, vector<float> > gestures;
