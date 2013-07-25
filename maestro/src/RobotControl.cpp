@@ -134,7 +134,6 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     }
 
     RUN_TYPE = getRunType(CONFIG_PATH);
-
 }
   
 RobotControl::~RobotControl(){}
@@ -173,7 +172,6 @@ void RobotControl::updateHook(){
 	}
 	if (commHandler->isNew(3)){
 		//Received update from Hubo-Ach
-
 		updateState();
 	}
 

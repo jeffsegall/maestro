@@ -136,7 +136,6 @@ private:
     int delay;
     bool interpolation, override;
     bool RUN_TYPE;
-
 };
 
 #endif
