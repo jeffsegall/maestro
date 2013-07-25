@@ -137,7 +137,6 @@ private:
     bool interpolation, override;
     bool RUN_TYPE;
 
-    int receipts;
 };
 
 #endif
