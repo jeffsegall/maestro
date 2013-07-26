@@ -37,7 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <hubomsg/typekit/CanMessage.h>
 #include <hubomsg/typekit/HuboJointState.h>
 #include <hubomsg/typekit/HuboState.h>
-#include <hubomsg/typekit/HuboRef.h>
+#include <hubomsg/typekit/HuboCommand.h>
 #include <hubomsg/typekit/HuboJointCommand.h>
 #include <string>
 #include "huboCan.h"
@@ -63,18 +63,18 @@ class MotorBoard{// : public RTT::TaskContext {
         //PUBLISH
         //OutputPort<hubomsg::CanMessage>* canDownPort;
         OutputPort<hubomsg::HuboCmd>* orInPort;
-        OutputPort<hubomsg::HuboRef> HuboDownPort;
+        OutputPort<hubomsg::HuboCommand> HuboDownPort;
 
         //SUBSCRIBE
         InputPort<hubomsg::CanMessage>* canUpPort;
         InputPort<hubomsg::HuboCmd>* orOutPort;
 
-        queue<hubomsg::HuboRef>* outQueue;
+        queue<hubomsg::HuboCommand>* outQueue;
  
     public:
         
         MotorBoard();
-        MotorBoard(boardNum BNO, int channels, queue<hubomsg::HuboRef>* outQueue);
+        MotorBoard(boardNum BNO, int channels, queue<hubomsg::HuboCommand>* outQueue);
         MotorBoard(const MotorBoard& rhs);
 
         void addMotor(HuboMotor* motor, int channel);

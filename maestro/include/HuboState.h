@@ -76,7 +76,7 @@ class HuboState{
 
         HuboState(const HuboState& rhs);	
         void initHuboWithDefaults(string path, double frequency,
-				queue<hubomsg::HuboRef>* outQueue);
+				queue<hubomsg::HuboCommand>* outQueue);
 
         MotorBoard* getBoardByNumber(int number);
         MotorBoard* getBoardByNumber(boardNum number);
