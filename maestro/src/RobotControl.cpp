@@ -29,20 +29,25 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using namespace std;
 
 RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
+
+	std::cout << "Made it here." << std::endl;
     
     this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
     //this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
     this->huboUpPort = new InputPort<hubomsg::HuboState>("Hubo/HuboState");
-	this->huboDownPort = new OutputPort<hubomsg::HuboRef>("Hubo/HuboCommand");
+	this->huboDownPort = new OutputPort<hubomsg::HuboCommand>("Hubo/HuboCommand");
 	this->achDownPort = new OutputPort<hubomsg::AchCommand>("Hubo/AchCommand");
+
+    //PYTHON PORT
+    this->pythonPort = new InputPort<hubomsg::PythonMessage>("Hubo/PythonCommand");
 
     this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
     this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
-    this->commHandler = new CommHandler(canUpPort, orOutPort, huboUpPort);
+    this->commHandler = new CommHandler(canUpPort, orOutPort, huboUpPort, pythonPort);
 
     //CAN QUEUES
     this->inputQueue = new queue<hubomsg::CanMessage>();
-    this->huboOutputQueue = new queue<hubomsg::HuboRef>();
+    this->huboOutputQueue = new queue<hubomsg::HuboCommand>();
     this->achOutputQueue = new queue<hubomsg::AchCommand>();
     
     //CAN PORTS 
@@ -134,6 +139,7 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     }
 
     RUN_TYPE = getRunType(CONFIG_PATH);
+
 }
   
 RobotControl::~RobotControl(){}
@@ -172,11 +178,12 @@ void RobotControl::updateHook(){
 	}
 	if (commHandler->isNew(3)){
 		//Received update from Hubo-Ach
+
 		updateState();
 	}
 
 	if (huboOutputQueue->empty() && !this->state->getBoards().empty()) {
-		hubomsg::HuboRef message;
+		hubomsg::HuboCommand message;
 		for (int i = 0; i < this->state->getBoards().size(); i++){
 			MotorBoard* mb = this->state->getBoards()[i];
 			for (int j = 0; j < mb->getNumChannels(); j++){
@@ -185,7 +192,7 @@ void RobotControl::updateHook(){
 					hubomsg::HuboJointCommand state;
 					state.name = motor->getName();
 					state.position = interpolation ? motor->interpolate() : motor->getGoalPosition();
-					buildHuboRefMessage(state, message);
+					buildHuboCommandMessage(state, message);
 				}
 			}
 		}
@@ -196,7 +203,7 @@ void RobotControl::updateHook(){
 	//Write out a message if we have one
 
 	if (!huboOutputQueue->empty()){
-		hubomsg::HuboRef output = huboOutputQueue->front();
+		hubomsg::HuboCommand output = huboOutputQueue->front();
 		if (printNow)
 			tempOutput << "Writing message to " << output.num_joints << " motors." << std::endl;
 
@@ -233,8 +240,7 @@ hubomsg::CanMessage RobotControl::buildCanMessage(canMsg* msg){
 	return canMessage;
 }
 
-void RobotControl::buildHuboRefMessage(hubomsg::HuboJointCommand& state,
-		hubomsg::HuboRef& message){
+void RobotControl::buildHuboCommandMessage(hubomsg::HuboJointCommand& state, hubomsg::HuboCommand& message){
 	message.joints.push_back(state);
 	message.num_joints = message.joints.size();
 }

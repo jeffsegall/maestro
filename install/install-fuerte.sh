@@ -8,32 +8,45 @@
 #	--auto-yes	: See -y
 #
 # Dependencies:
+# 	<Maestro install dir>/maestro/utils.sh
+#	/etc/apt/sources.list    (If you're missing this, reinstall Ubuntu.)	
 #	
+# Blacklist:
+#	/opt/ros/fuerte/stacks/armnavigation	(Mercury complains)
+#	/opt/ros/fuerte/stacks/maestro		(No previous installs)
 #
-#
-#
-
-# Exit Error Codes
-WRONG_NUMBER_ARGUMENTS=1
-BAD_ARGUMENTS=2
-NOT_FOUND=3
-BLACKLIST_VIOLATED=4
+# Author: Solis Knight
+# Date: July 2013
 
 # Change directory to the script's directory.
-cd ${0%/*}
+if [[ `echo "$0" | grep "/" | wc -l` > 0 ]]; then
+	cd ${0%/*}
+fi
+
+# Source environment checking functions.
+source ../maestro/utils.sh
 
 # Stop execution on any significant error.
-set -e
+#set -e
 
 echo "ROS-Fuerte Maestro installation Script"
-echo "Version 1.0"
+echo "Version $VERSION"
 echo ""
 
 DEPENDENCY_DIRS="/etc /etc/apt /etc/apt/sources.list.d"
-DEPENDENCY_FILES="~/.bashrc"
-BLACKLISTED_DIRS="/opt/ros/fuerte/stacks/armnavigation"
+DEPENDENCY_FILES=""
+BLACKLISTED_DIRS="/opt/ros/fuerte/stacks/armnavigation
+/opt/ros/fuerte/stacks/maestro"
 BLACKLISTED_FILES=""
 
+check dependency dir "$DEPENDENCY_DIRS"
+if [[ $? != $SUCCESS ]]; then exit $NOT_FOUND; fi
+check dependency file "$DEPENDENCY_FILES"
+if [[ $? != $SUCCESS ]]; then exit $NOT_FOUND; fi
+check blacklist dir "$BLACKLISTED_DIRS"
+if [[ $? != $SUCCESS ]]; then exit $BLACKLIST_VIOLATED; fi
+check blacklist file "$BLACKLISTED_FILES"
+if [[ $? != $SUCCESS ]]; then exit $BLACKLIST_VIOLATED; fi
 
 installDir=`pwd`
 

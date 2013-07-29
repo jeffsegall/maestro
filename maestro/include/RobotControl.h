@@ -44,11 +44,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <hubomsg/typekit/CanMessage.h>
 #include <hubomsg/typekit/HuboState.h>
 #include <hubomsg/typekit/HuboJointState.h>
-#include <hubomsg/typekit/HuboRef.h>
+#include <hubomsg/typekit/HuboCommand.h>
 #include <hubomsg/typekit/HuboJointCommand.h>
 #include <hubomsg/typekit/AchCommand.h>
 #include <hubomsg/typekit/HuboIMU.h>
 #include <hubomsg/typekit/HuboFT.h>
+#include <hubomsg/typekit/PythonMessage.h>
 #include <vector>
 #include <queue>
 #include <map>
@@ -77,7 +78,7 @@ public:
 
     void updateHook(); 
     hubomsg::CanMessage buildCanMessage(canMsg* msg);
-    void buildHuboRefMessage(hubomsg::HuboJointCommand& state, hubomsg::HuboRef& message);
+    void buildHuboCommandMessage(hubomsg::HuboJointCommand& state, hubomsg::HuboCommand& message);
     void initRobot(string path);
 
     //JOINT MOVEMENT API
@@ -112,22 +113,24 @@ private:
     InputPort<hubomsg::CanMessage>* canUpPort;
     InputPort<hubomsg::HuboCmd>* orOutPort;
     InputPort<hubomsg::HuboState>* huboUpPort;
+    InputPort<hubomsg::PythonMessage>* pythonPort;
     CommHandler* commHandler;
 
     //PUBLISH
     OutputPort<hubomsg::CanMessage>* canDownPort;
     OutputPort<hubomsg::HuboCmd>* orInPort;
-    OutputPort<hubomsg::HuboRef>* huboDownPort;
+    OutputPort<hubomsg::HuboCommand>* huboDownPort;
     OutputPort<hubomsg::AchCommand>* achDownPort;
 
     HuboState* state;
 
     queue<hubomsg::CanMessage>* inputQueue;
     queue<hubomsg::HuboState>*	huboInputQueue;
-    queue<hubomsg::HuboRef>* huboOutputQueue;
+    queue<hubomsg::HuboCommand>* huboOutputQueue;
     queue<hubomsg::AchCommand>* achOutputQueue;
 
-    map< string, vector<float> > gestures;
+    mas->addEventPort(*orOutPort);
+p< string, vector<float> > gestures;
     map<string, COMMAND> commands;
     ofstream tempOutput;
 
@@ -136,6 +139,7 @@ private:
     int delay;
     bool interpolation, override;
     bool RUN_TYPE;
+
 };
 
 #endif
