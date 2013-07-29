@@ -1,4 +1,5 @@
 <launch>
     <machine name="maestro" address="localhost"/>
     <node name="maestro_api" pkg="ocl" type="deployer-gnulinux" launch-prefix="" args="-s $(find maestro)/launch/robot_control.xml --" output="screen"/>
+   <!-- <node name="message_writer" pkg="hubo_ros" type="MessageWriter.py" machine="maestro" /> -->
 </launch>
