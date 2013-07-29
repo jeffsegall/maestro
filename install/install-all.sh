@@ -5,6 +5,7 @@
 #
 # Options: None
 # Dependencies:
+#	<Maestro Install Dir>/maestro/utils.sh
 #	install-fuerte.sh
 #	install-hubo-ach.sh
 #	install-openHubo.sh
@@ -13,19 +14,16 @@
 # Date: July 2013
 #
 
-# Exit Error Codes
-WRONG_NUMBER_ARGUMENTS=1
-BAD_ARGUMENTS=2
-NOT_FOUND=3
-BLACKLIST_VIOLATED=4
+# Change directory to the script's directory
+if [[ `echo "$0" | grep "/" | wc -l` > 0 ]]; then
+    cd ${0%/*}
+fi
 
+source ../maestro/utils.sh
 
-# Change directory to the script's directory.
-cd ${0%/*}
-
-set -e
+#set -e
 echo "Comprehensive Install Script for Maestro"
-echo "Version 1.0"
+echo "Version $VERSION"
 echo ""
 
 DEPENDENCY_DIRS=""
@@ -33,69 +31,23 @@ DEPENDENCY_FILES="install-fuerte.sh install-hubo-ach.sh install-openHubo.sh"
 BLACKLISTED_DIRS=""
 BLACKLISTED_FILES=""
 
-function see() {
-        if [[ $# != 2 ]]; then
-                return $WRONG_NUMBER_ARGUMENTS
-        fi
-
-        if [[ "$1" == "file" ]]; then
-                if [[ ! -e "$2" || ! -f "$2" ]]; then
-                        return $NOT_FOUND
-                fi
-
-        elif [[ "$1" == "dir" ]]; then
-                if [[ ! -e "$2" || ! -d "$2" ]]; then
-                        return $NOT_FOUND
-                fi
-        else
-                return $BAD_ARGUMENTS
-        fi
-
-        return 0
-}
-
-for dir in $DEPENDENCY_DIRS; do
-        see "dir" "$dir"
-        retval=$?
-        if [[ "$retval" != 0 ]]; then
-                echo "Required dependency $dir was found."
-                exit $NOT_FOUND
-        fi
-done
-
-for file in $DEPENDENCY_FILES; do
-        see "file" "$file"
-        retval=$?
-        if [[ "$retval" != 0 ]]; then
-                echo "Required dependency $file was not found."
-                exit $NOT_FOUND
-        fi
-done
-
-for dir in $BLACKLISTED_DIRS; do
-        see "dir" "$dir"
-        retval=$?
-        if [[ "$retval" == 0 ]]; then
-                echo "Blacklisted directory $dir was found."
-                exit $BLACKLIST_VIOLATED
-        fi
-done
-
-for file in $BLACKLISTED_FILES; do
-        see "file" "$file"
-        retval=$?
-        if [[ "$retval" == 0 ]]; then
-                echo "Blacklisted file $file was found."
-                exit $BLACKLIST_VIOLATED
-        fi
-done
+check dependency dir "$DEPENDENCY_DIRS"
+if [[ $? != 0 ]]; then exit $NOT_FOUND; fi
+check dependency file "$DEPENDENCY_FILES"
+if [[ $? != 0 ]]; then exit $NOT_FOUND; fi
+check blacklist dir "$BLACKLISTED_DIRS"
+if [[ $? != 0 ]]; then exit $BLACKLIST_VIOLATED; fi
+check blacklist file "$BLACKLISTED_FILES"
+if [[ $? != 0 ]]; then exit $BLACKLIST_VIOLATED; fi
 
 echo "Dependencies satisfied."
 echo "Installing ROS-Orocos-Maestro..."
 sudo bash install-fuerte.sh -y
+if [[ $? != 0 ]]; then exit $?; fi
 echo "Installing Hubo-ACH..."
 sudo bash install-hubo-ach.sh
+if [[ $? != 0 ]]; then exit $?; fi
 echo "Installing OpenHUBO..."
 bash install-openHubo.sh
-
+if [[ $? != 0 ]]; then exit $?; fi
 echo "Install Complete. Exiting..."

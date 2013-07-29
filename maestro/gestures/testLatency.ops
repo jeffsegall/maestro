@@ -1,0 +1,20 @@
+program testLatency [
+	var double target = 0
+	var double stepSize = .00000000001
+	var int i = 0
+
+	while (i < 10000) {
+
+		do RobotControl.startTest(target + stepSize)
+
+		while (RobotControl.testStarted()){
+			do nothing
+		}
+
+		set i = i + 1
+
+		set target = target + stepSize
+
+	}
+
+}

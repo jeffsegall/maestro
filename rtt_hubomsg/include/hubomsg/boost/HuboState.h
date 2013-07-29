@@ -30,6 +30,7 @@ void serialize(Archive& a,  ::hubomsg::HuboState_<ContainerAllocator>  & m, unsi
     a & make_nvp("right_wrist",m.right_wrist);
     a & make_nvp("left_ankle",m.left_ankle);
     a & make_nvp("right_ankle",m.right_ankle);
+    a & make_nvp("nsec",m.nsec);
 }
 
 } // namespace serialization

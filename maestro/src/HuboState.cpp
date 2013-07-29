@@ -69,8 +69,7 @@ HuboState::HuboState(){
 *
 * @param	path		The file path of the XML representation
 ******************************************************************************/
-void HuboState::initHuboWithDefaults(string path, double frequency,
-		queue<hubomsg::HuboCommand>* outQueue){
+void HuboState::initHuboWithDefaults(string path, double frequency, queue<hubomsg::HuboCommand>* outQueue){
     pugi::xml_document doc;
     if (!doc.load_file(path.c_str())){
         std::cout << "No such file, " << path.c_str() << std::endl;
