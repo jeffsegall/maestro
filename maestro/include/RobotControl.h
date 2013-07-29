@@ -49,7 +49,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <hubomsg/typekit/AchCommand.h>
 #include <hubomsg/typekit/HuboIMU.h>
 #include <hubomsg/typekit/HuboFT.h>
-#include <hubomsg/typekit/PythonMessage.h>
 #include <vector>
 #include <queue>
 #include <map>
@@ -113,7 +112,6 @@ private:
     InputPort<hubomsg::CanMessage>* canUpPort;
     InputPort<hubomsg::HuboCmd>* orOutPort;
     InputPort<hubomsg::HuboState>* huboUpPort;
-    InputPort<hubomsg::PythonMessage>* pythonPort;
     CommHandler* commHandler;
 
     //PUBLISH
@@ -129,8 +127,7 @@ private:
     queue<hubomsg::HuboCommand>* huboOutputQueue;
     queue<hubomsg::AchCommand>* achOutputQueue;
 
-    mas->addEventPort(*orOutPort);
-p< string, vector<float> > gestures;
+    map< string, vector<float> > gestures;
     map<string, COMMAND> commands;
     ofstream tempOutput;
 

@@ -38,12 +38,9 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
 	this->huboDownPort = new OutputPort<hubomsg::HuboCommand>("Hubo/HuboCommand");
 	this->achDownPort = new OutputPort<hubomsg::AchCommand>("Hubo/AchCommand");
 
-    //PYTHON PORT
-    this->pythonPort = new InputPort<hubomsg::PythonMessage>("Hubo/PythonCommand");
-
     this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
     this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
-    this->commHandler = new CommHandler(canUpPort, orOutPort, huboUpPort, pythonPort);
+    this->commHandler = new CommHandler(canUpPort, orOutPort, huboUpPort);
 
     //CAN QUEUES
     this->inputQueue = new queue<hubomsg::CanMessage>();
