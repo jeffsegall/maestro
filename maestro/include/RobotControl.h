@@ -129,8 +129,7 @@ private:
     queue<hubomsg::HuboCommand>* huboOutputQueue;
     queue<hubomsg::AchCommand>* achOutputQueue;
 
-    mas->addEventPort(*orOutPort);
-p< string, vector<float> > gestures;
+    map< string, vector<float> > gestures;
     map<string, COMMAND> commands;
     ofstream tempOutput;
 

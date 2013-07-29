@@ -35,13 +35,12 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     this->huboUpPort = new InputPort<hubomsg::HuboState>("Hubo/HuboState");
 	this->huboDownPort = new OutputPort<hubomsg::HuboCommand>("Hubo/HuboCommand");
 	this->achDownPort = new OutputPort<hubomsg::AchCommand>("Hubo/AchCommand");
-
-    //PYTHON PORT
-    this->pythonPort = new InputPort<hubomsg::PythonMessage>("Hubo/PythonCommand");
+    this->pythonPort = new InputPort<hubomsg::PythonMessage>("Maestro/Control");
 
     this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
     this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
-    this->commHandler = new CommHandler(canUpPort, orOutPort, huboUpPort, pythonPort);
+    
+	this->commHandler = new CommHandler(canUpPort, orOutPort, huboUpPort, pythonPort);
 
     //CAN QUEUES
     this->inputQueue = new queue<hubomsg::CanMessage>();
@@ -51,6 +50,7 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     //CAN PORTS 
     this->addEventPort(*canUpPort);
     this->addEventPort(*huboUpPort);
+	this->addEventPort(*pythonPort);
     this->addPort(*huboDownPort);
     this->addPort(*achDownPort);
 
@@ -178,6 +178,9 @@ void RobotControl::updateHook(){
 		//Received update from Hubo-Ach
 
 		updateState();
+	}
+	if (commHandler->isNew(4)){
+		std::cout << "Command received on command channel!" << std::endl;
 	}
 
 	if (huboOutputQueue->empty() && !this->state->getBoards().empty()) {

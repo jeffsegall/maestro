@@ -46,32 +46,32 @@ class CommHandler {
 public:
 	CommHandler (InputPort<hubomsg::CanMessage>* port1,
 			InputPort<hubomsg::HuboCmd>* port2,
-			InputPort<hubomsg::HuboState>* port3
-                        InputPort<hubomsg::PythonMessage>* port4);
+			InputPort<hubomsg::HuboState>* port3,
+            InputPort<hubomsg::PythonMessage>* port4);
 	~CommHandler();
 
 	void update();
 	hubomsg::CanMessage getMessage();
 	hubomsg::HuboCmd getCmd();
 	hubomsg::HuboState getState();
-        hubomsg::PythonMessage getPyMessage();//
+    hubomsg::PythonMessage getPyMessage();
 	bool isNew(int port);
 private:
 	hubomsg::HuboCmd currCmd;
 	hubomsg::CanMessage currMessage;
 	hubomsg::HuboState currState;
-        hubomsg::PythonMessage currPyMessage;//
+	hubomsg::PythonMessage currPyMessage;
 
 	//Subscribe
 	InputPort<hubomsg::CanMessage>* canPort;
 	InputPort<hubomsg::HuboCmd>* orPort;
 	InputPort<hubomsg::HuboState>* achPort;
-        InputPort<hubomsg::PythonMessage>* pyPort;//
+	InputPort<hubomsg::PythonMessage>* pyPort;//
 
 	bool newCanData;
 	bool newORData;
 	bool newAchData;
-        bool newPyData;//
+	bool newPyData;
 };
 
 

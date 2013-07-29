@@ -39,12 +39,12 @@
   <simple name="transport" type="short"><value>3</value></simple><!--3 means ROS-->
   <simple name="name_id" type="string"><value>can_up</value></simple>
 </struct>
-<!--<struct name="PythonMessage" type="ConnPolicy">
+<struct name="PythonMessage" type="ConnPolicy">
   <simple name="type" type="short"><value>0</value></simple>
   <simple name="size" type="short"><value>1000</value></simple>
   <simple name="transport" type="short"><value>3</value></simple>
-  <simple name="name_id" type="string"><value>Hubo/PythonMessage</value></simple>
-</struct>-->
+  <simple name="name_id" type="string"><value>Maestro/Control</value></simple>
+</struct>
   
 
 <struct name="RobotControl" type="RobotControl">
@@ -62,6 +62,7 @@
     <simple name="Hubo/AchCommand" type="string"><value> ACHCommand </value></simple>
     <simple name="Hubo/HuboState" type="string"><value> HuboState </value></simple>
     <simple name="can_up" type="string"><value> CANUp </value></simple>
+    <simple name="Maestro/Control" type="string"><value> PythonMessage </value></simple>
   </struct>
   <simple name="Service" type="string"><value>rosparam</value></simple>
 </struct>

@@ -4,17 +4,19 @@
 #define __OROCOS_ROS_GENERATED_hubomsg_TYPES_HPP
 
 // includes Types.hpp headers for all messages:
-#include "HuboFT.h"
-#include "HuboState.h"
-#include "HuboHand.h"
-#include "HuboIMU.h"
-#include "AchCommand.h"
-#include "HuboJointCommand.h"
 #include "HuboHandCommand.h"
-#include "CanMessage.h"
-#include "HuboJointState.h"
+#include "HuboFT.h"
+#include "HuboJointCommand.h"
 #include "HuboCmd.h"
+#include "HuboJointState.h"
+#include "HuboHand.h"
+#include "HuboState.h"
+#include "CanMessage.h"
 #include "HuboCommand.h"
+#include "HuboRef.h"
+#include "AchCommand.h"
+#include "PythonMessage.h"
+#include "HuboIMU.h"
 
 
 #endif
