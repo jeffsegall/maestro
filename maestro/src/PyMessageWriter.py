@@ -3,12 +3,13 @@
 An object of this class should made by the user and then the user should be 
 able to talk to maestro programaticly 
 '''
-import roslib; roslib.load_manifest('hubo_ros')
+import roslib; roslib.load_manifest('maestro')
 import rospy
 import itertools
 from hubomsg.msg import *
 
 pyMessage = PythonMessage()
+#pub = rospy.Publisher('Maestro/Command', PythonMessage) 
 
 def sendJointCommand(name, position, velocity):
     commandList = []
@@ -28,29 +29,31 @@ def sendMultiJointCommand(names, positions, velocities):
     the_HuboCommand.joints = commandList
     the_HuboCommand.num_joints = len(commandList)
 
-def testMessage():
-   # rospy.init_node('message_writer', anonymous=True)
-    pub = rospy.Publisher('Hubo/PythonCommand', PythonMessage)
-   # while True:
+def testMessage():   
+    pub = rospy.Publisher('Maestro/Control', PythonMessage)
     the_HuboJointCommand = HuboJointCommand("RSP", 1.5, 2)
     jointList = []
     jointList.append(the_HuboJointCommand)
     myHuboComm = PythonMessage(jointList, 1)
     pub.publish(myHuboComm)
+    rospy.spin()
 
 def lookToPublish():
-    
-   
+    pub = rospy.Publisher('Maestro/Control', PythonMessage)
     while not rospy.is_shutdown():
-        if the_HuboCommand.num_joints >=0:
-            pub.publish(the_HuboCommand)  
+        rospy.sleep(10)
+        the_HuboJointCommand = HuboJointCommand("RSP", 1.5, 2)
+        jointList = []
+        jointList.append(the_HuboJointCommand)
+        myHuboComm = PythonMessage(jointList, 1)
+        pub.publish(myHuboComm)  
 
 if __name__ == '__main__':
     rospy.init_node('message_writer', disable_signals = False)
+    pub = rospy.Publisher('Maestro/Control', PythonMessage)
     try:
-       
-        rospy.spin()
-        
+        lookToPublish() 
+                
     except rospy.ROSInterruptException:
         pass
             

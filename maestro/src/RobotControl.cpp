@@ -180,6 +180,7 @@ void RobotControl::updateHook(){
 		updateState();
 	}
 	if (commHandler->isNew(4)){
+		commHandler->getPyMessage();
 		std::cout << "Command received on command channel!" << std::endl;
 	}
 
