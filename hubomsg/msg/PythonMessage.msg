@@ -1,2 +1,3 @@
-HuboJointCommand[] joints
-int32 num_joints
+string joint
+string command
+float64 value

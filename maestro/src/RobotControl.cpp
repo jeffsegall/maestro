@@ -162,8 +162,31 @@ void RobotControl::updateHook(){
 	hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
 	hubomsg::CanMessage canMessage = hubomsg::CanMessage();
 	//hubomsg::HuboState huboState = hubomsg::HuboState();
+	hubomsg::PythonMessage message = hubomsg::PythonMessage();
 
 	commHandler->update();
+
+	if (commHandler->isNew(4)){
+		message = commHandler->getPyMessage();
+		string joint = message.joint;
+		string command = message.command;
+		double value = message.value;
+		
+
+		if (command.compare("initRobot") == 0)
+			initRobot("");
+		else if (command.compare("HomeAll") == 0)
+			this->command("HomeAll","");
+		else if (command.compare("EnableAll") == 0)
+			this->command("EnableAll","");
+		else if (command.compare("position") == 0)
+			set(joint, command, value);
+		
+		std::cout << "Command received on command channel!" << std::endl;
+		std::cout << "joint: " << joint << " value: " << value << " command:" <<
+			command << std::endl;
+	}
+
 	if (state == NULL) return;
 
 	if (commHandler->isNew(1)){
@@ -179,11 +202,8 @@ void RobotControl::updateHook(){
 
 		updateState();
 	}
-	if (commHandler->isNew(4)){
-		commHandler->getPyMessage();
-		std::cout << "Command received on command channel!" << std::endl;
-	}
 
+	
 	if (huboOutputQueue->empty() && !this->state->getBoards().empty()) {
 		hubomsg::HuboCommand message;
 		for (int i = 0; i < this->state->getBoards().size(); i++){
