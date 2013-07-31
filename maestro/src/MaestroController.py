@@ -14,6 +14,12 @@ class MaestroController:
 		pyMessage = PythonMessage("RSP", "position", 1.5)
 		self.pub.publish(pyMessage)
 		print "Published a message"
+	def setJointPosition(joint, value)
+		pyMessage = PythonMessage(joint, "position", value)
+		self.pub.publish(pyMessage)
+	def setJointVelocity(joint, value)
+		pyMessage = PythonMessage(joint, "velocity", value)
+		self.pub.publish(pyMessage)
 	def enableAll(self):
 		pyMessage = PythonMessage("", "EnableAll", 0)
 		self.pub.publish(pyMessage)
