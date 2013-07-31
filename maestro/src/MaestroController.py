@@ -10,15 +10,16 @@ class MaestroController:
 		rospy.init_node("Maestro_Commands")
 		self.pub = rospy.Publisher('Maestro/Control', PythonMessage)
 		rospy.sleep(2)
-	#	rospy.spinOnce()
 	def test(self):
-		#rospy.init_node("Maestro_Commands")
-		#pub = rospy.Publisher('Maestro/Control', PythonMessage)
-		huboJoint = HuboJointCommand("RSP", 1.5, 2)
-		jointList = []
-		jointList.append(huboJoint)
-		pyMessage = PythonMessage(jointList, 1);
-	#	rospy.sleep(.2578125)
+		pyMessage = PythonMessage("RSP", "position", 1.5)
 		self.pub.publish(pyMessage)
 		print "Published a message"
-
+	def enableAll(self):
+		pyMessage = PythonMessage("", "EnableAll", 0)
+		self.pub.publish(pyMessage)
+	def homeAll(self):
+		pyMessage = PythonMessage("", "HomeAll", 0)
+		self.pub.publish(pyMessage)
+	def initRobot(self):
+		pyMessage = PythonMessage("", "initRobot", 0)
+		self.pub.publish(pyMessage)
