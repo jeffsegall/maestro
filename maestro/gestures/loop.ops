@@ -1,0 +1,24 @@
+program loop{
+	var double positionRSP = 0;
+	var double positionRSY = 0;
+	var double positionRSR = 0;
+	
+
+	while (true) {
+
+		set positionRSP = RobotControl.getProperty("RSP", "position")
+		set positionRSY = RobotControl.getProperty("RSY", "position")
+		set positionRSR = RobotControl.getProperty("RSR", "position")
+
+
+		set positionRSP = positionRSP
+		set positionRSY = positionRSY * -1
+		set positionRSR = positionRSR * -1
+		
+		do RobotControl.setProperty("LSP", "position", positionRSP)
+		do RobotControl.setProperty("LSY", "position", positionRSY)
+		do RobotControl.setProperty("LSR", "position", positionRSR)
+	
+		do nothing
+	}
+}

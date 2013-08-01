@@ -9,3 +9,4 @@ Scripts:
 /opt/ros/fuerte/stacks/maestro/maestro/gestures/dance.ops
 /opt/ros/fuerte/stacks/maestro/maestro/gestures/fold.ops
 /opt/ros/fuerte/stacks/maestro/maestro/gestures/testure.ops
+/opt/ros/fuerte/stacks/maestro/maestro/gestures/loop.ops
