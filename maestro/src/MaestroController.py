@@ -9,12 +9,18 @@ from hubomsg.msg import *
 class MaestroController:
 	def __init__(self):
 		print "Init"
+		self.newVal = False
+		self.value = 0.0
 		#self.startMaestro()
 		rospy.init_node("Maestro_Commands")
 		self.pub = rospy.Publisher('Maestro/Control', PythonMessage)
+		rospy.Subscriber("Maestro/Message", MaestroMessage, self.display)
 		rospy.sleep(2)
 	def startMaestro(self):
 		subprocess.call([""])
+	def display(self, message):
+		self.newVal = True
+		self.value = message.value
 	def test(self):
 		pyMessage = PythonMessage("RSP", "position", 1.5, "")
 		self.pub.publish(pyMessage)
@@ -65,3 +71,6 @@ class MaestroController:
 		pyMessage = PythonMessage(joint, "Get", 0, target)
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
+		if self.newVal:
+			self.newVal = False
+			return self.value
