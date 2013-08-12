@@ -15,7 +15,10 @@ class ControlWindow (Frame):
 		try:
 			joint=self.jointbox.get()
 			command=self.propertybox.get()
-			value=float(self.valueEntry.get())
+			value=self.valueEntry.get()
+			print (joint)
+			print (command)
+			print (value)
  			self.controller.publishMessage(joint, command, value, "")
 		except ValueError:
 			pass
@@ -50,7 +53,7 @@ class ControlWindow (Frame):
 		self.jointbox = Spinbox(self, values=jointTuple, text="Joint")
 		self.jointbox.grid(row=2, column=0)
 		
-		self.propertybox = Spinbox(self, values=("position", "velocity"), state="readonly", text="Property")
+		self.propertybox = Spinbox(self, values=("position", "velocity"), text="Property")
 		self.propertybox.grid(row=2, column=1)
 
 		#self.checkVar = IntVar()
@@ -83,7 +86,7 @@ class ControlWindow (Frame):
 		dividerFrame = Frame(self, height=3, bg="black", relief=RAISED, borderwidth=1)
 		dividerFrame.grid(row=3, columnspan=4, sticky=W+E)
 			
-		jointLabel2 = Label(self, text="Joint: ")
+		jointLabel2 = Label(self, text="Joint or sensor: ")
 		jointLabel2.grid(row=4, column=0)
 
 		propertyLabel2 = Label(self, text="Property: ")

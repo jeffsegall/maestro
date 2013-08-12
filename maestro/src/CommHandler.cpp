@@ -43,7 +43,7 @@ using namespace std;
 			InputPort<hubomsg::HuboState>* port3,
             InputPort<hubomsg::PythonMessage>* port4){
 	
-        canPort = port1;
+               	canPort = port1;
 		orPort = port2;
 		achPort = port3;
 		pyPort = port4;
@@ -77,7 +77,7 @@ using namespace std;
 			this->newAchData = true;
 			this->currState = achState;
 		}
-        if (NewData == this->pyPort->read(pyMessage)){
+	        if (NewData == this->pyPort->read(pyMessage)){
 			this->newPyData = true;
 			this->currPyMessage = pyMessage;
 		}
@@ -98,6 +98,7 @@ using namespace std;
 		return currState;
 	}
 	
+
 	hubomsg::PythonMessage CommHandler::getPyMessage(){
 		newPyData = false;
 		return currPyMessage;

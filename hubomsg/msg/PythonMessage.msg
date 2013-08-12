@@ -1,4 +1,4 @@
 string joint
 string command
-float64 value
+string value
 string target

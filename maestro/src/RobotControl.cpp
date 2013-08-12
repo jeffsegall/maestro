@@ -29,6 +29,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using namespace std;
 
 RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
+
+	std::cout << "Made it here." << std::endl;
     
     this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
     //this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
@@ -48,7 +50,7 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     this->inputQueue = new queue<hubomsg::CanMessage>();
     this->huboOutputQueue = new queue<hubomsg::HuboCommand>();
     this->achOutputQueue = new queue<hubomsg::AchCommand>();
-    this->messageOutputQueue = new queue<hubomsg::MaestroMessage>();    
+   // this->messageOutputQueue = new queue<hubomsg::MaestroMessage>();    
 
     //CAN PORTS 
     this->addEventPort(*canUpPort);
@@ -113,7 +115,7 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
 
 
     this->written = 0;
-    this->printNow = true;
+    this->printNow = false;
     this->enableControl = false;
     this->delay = 0;
     this->state = NULL;
@@ -338,7 +340,7 @@ void RobotControl::handleMessage(hubomsg::PythonMessage message)
 	string joint = message.joint;
 	string command = message.command;
 	string target = message.target;
-	double value = message.value;
+	string value = message.value;
 	if(command.compare("initRobot") == 0)
 	{
 		initRobot("");
@@ -361,7 +363,7 @@ void RobotControl::handleMessage(hubomsg::PythonMessage message)
 	}
 	else
 	{
-		set(joint, command, value);
+		setProperties(joint, command, value);
 	}
 }
 

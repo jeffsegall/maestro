@@ -35,19 +35,19 @@ class MaestroController:
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
 	def enableAll(self):
-		pyMessage = PythonMessage("", "EnableAll", 0, "")
+		pyMessage = PythonMessage("", "EnableAll"," 0", "")
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
 	def homeAll(self):
-		pyMessage = PythonMessage("", "HomeAll", 0, "")
+		pyMessage = PythonMessage("", "HomeAll", "0", "")
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
 	def initRobot(self):
-		pyMessage = PythonMessage("", "initRobot", 0, "")
+		pyMessage = PythonMessage("", "initRobot", "0", "")
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
 	def initSensors(self):
-		pyMessage = PythonMessage("", "InitializeSensors", 0, "")
+		pyMessage = PythonMessage("", "InitializeSensors", "0", "")
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
 	def publishMessage(self, joint, command, value, target):
@@ -60,15 +60,15 @@ class MaestroController:
 		self.enableAll()
 		self.initSensors()
 	def home(self, target):
-		pyMessage = PythonMessage("", "Home", 0, target)
+		pyMessage = PythonMessage("", "Home", "0", target)
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
 	def enable(self, target):
-		pyMessage = PythonMessage("", "Enable", 0, target)
+		pyMessage = PythonMessage("", "Enable", "0", target)
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
 	def get(self, joint, target):
-		pyMessage = PythonMessage(joint, "Get", 0, target)
+		pyMessage = PythonMessage(joint, "Get", "0", target)
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
 		if self.newVal:
