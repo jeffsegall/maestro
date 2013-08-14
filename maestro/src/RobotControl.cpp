@@ -361,6 +361,15 @@ void RobotControl::handleMessage(hubomsg::PythonMessage message)
 		newMessage.value = value;
 		this->messageDownPort->write(newMessage);	
 	}
+	else if(command.compare("Check") == 0)
+	{
+		bool value = requiresMotion(joint);
+		hubomsg::MaestroMessage newMessage;
+		newMessage.joint = joint;
+		newMessage.property = target;
+		newMessage.value = value;
+		this->messageDownPort->write(newMessage);	
+	}
 	else
 	{
 		setProperties(joint, command, value);

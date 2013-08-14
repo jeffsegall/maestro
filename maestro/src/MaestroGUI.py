@@ -8,6 +8,7 @@ class ControlWindow (Frame):
 		Frame.__init__(self, parent)
 		self.parent = parent
 		self.controller = MaestroController()
+		self.helpFlag = True
 		self.initUI()
 		
 
@@ -16,9 +17,6 @@ class ControlWindow (Frame):
 			joint=self.jointbox.get()
 			command=self.propertybox.get()
 			value=self.valueEntry.get()
-			print (joint)
-			print (command)
-			print (value)
  			self.controller.publishMessage(joint, command, value, "")
 		except ValueError:
 			pass
@@ -72,7 +70,10 @@ class ControlWindow (Frame):
 		commandButton.grid(row=2, column=3)
 		
 		getButton = Button(self, text="Get", command=self.getInfo)
-		getButton.grid(row=5, column=3)
+		getButton.grid(row=5, column=2)
+
+		helpButton = Button(self, text="Help", command= self.showHelp)
+		helpButton.grid(row=5, column=3)
 
 		jointLabel = Label(self, text="Joint: ")
 		jointLabel.grid(row=1, column=0)
@@ -86,7 +87,7 @@ class ControlWindow (Frame):
 		dividerFrame = Frame(self, height=3, bg="black", relief=RAISED, borderwidth=1)
 		dividerFrame.grid(row=3, columnspan=4, sticky=W+E)
 			
-		jointLabel2 = Label(self, text="Joint or sensor: ")
+		jointLabel2 = Label(self, text="Joint or Sensor: ")
 		jointLabel2.grid(row=4, column=0)
 
 		propertyLabel2 = Label(self, text="Property: ")
@@ -114,6 +115,16 @@ class ControlWindow (Frame):
 		initSensorsButton = Button(self, text="InitSensors", command=self.initSensors)
 		initSensorsButton.grid(row=7, column=3)
 
+	def showHelp(self):
+		if self.helpFlag:
+			self.helpWindow = Toplevel(self)
+			helpText = Message(self.helpWindow,text = "How To Use The Maestro GUI:\n The GUI is divided into 4 sections,\n -A label at the top to display information\n -A section to send joint commands to the robot\n -A section to get information from the joints or sensors\n -A section that has all of the commands as buttons\n\nTo send multiple joint commands at once:\n-Type every joint you would like to command in the joint box seperated by one(1) space.\n-Type the property for each joint each seperated by one(1) space\n-Type the values for each joint property each separated by one(1) space")
+			self.helpWindow.protocol("WM_DELETE_WINDOW", self.helpFlagSwitch)
+			helpText.pack()
+			self.helpFlag = False
+	def helpFlagSwitch(self):
+		self.helpWindow.destroy()
+		self.helpFlag = True
 	def initRobot(self):
 		self.controller.initRobot()
 

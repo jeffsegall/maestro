@@ -14,11 +14,11 @@ class MaestroController:
 		#self.startMaestro()
 		rospy.init_node("Maestro_Commands")
 		self.pub = rospy.Publisher('Maestro/Control', PythonMessage)
-		rospy.Subscriber("Maestro/Message", MaestroMessage, self.display)
+		rospy.Subscriber("Maestro/Message", MaestroMessage, self.update)
 		rospy.sleep(2)
 	def startMaestro(self):
 		subprocess.call([""])
-	def display(self, message):
+	def update(self, message):
 		self.newVal = True
 		self.value = message.value
 	def test(self):
@@ -67,6 +67,21 @@ class MaestroController:
 		pyMessage = PythonMessage("", "Enable", "0", target)
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
+	def waitForJoint(self, joint):
+		flag = True
+		while flag:
+			flag = self.checkJointRequiresMotion(joint)
+			time.sleep(.01)
+			if(flag == None):
+				flag = True
+			print(flag)
+	def checkJointRequiresMotion(self, joint):
+		pyMessage = PythonMessage(joint, "Check", "0", "")
+		self.pub.publish(pyMessage)
+		time.sleep(.01)
+		if self.newVal:
+			self.newVal = False
+			return self.value		
 	def get(self, joint, target):
 		pyMessage = PythonMessage(joint, "Get", "0", target)
 		self.pub.publish(pyMessage)
