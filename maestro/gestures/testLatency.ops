@@ -1,4 +1,4 @@
-program testLatency [
+program testLatency {
 	var double target = 0
 	var double stepSize = .00000000001
 	var int i = 0
