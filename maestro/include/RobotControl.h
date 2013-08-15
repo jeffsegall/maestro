@@ -50,6 +50,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <hubomsg/typekit/HuboIMU.h>
 #include <hubomsg/typekit/HuboFT.h>
 #include <hubomsg/typekit/PythonMessage.h>
+#include <hubomsg/typekit/MaestroMessage.h>
 #include <vector>
 #include <queue>
 #include <map>
@@ -90,7 +91,8 @@ public:
 	void setDelay(int us);
 	void runGesture(string name);
 	void command(string name, string target);
-
+	void handleMessage(hubomsg::PythonMessage);
+	
     // Feedback Commands
     bool requiresMotion(string name);
     double get(string name, string property);
@@ -121,6 +123,7 @@ private:
     OutputPort<hubomsg::HuboCmd>* orInPort;
     OutputPort<hubomsg::HuboCommand>* huboDownPort;
     OutputPort<hubomsg::AchCommand>* achDownPort;
+    OutputPort<hubomsg::MaestroMessage>* messageDownPort;
 
     HuboState* state;
 
