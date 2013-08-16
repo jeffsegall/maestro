@@ -48,7 +48,7 @@ class MaestroController:
 	def homeAll(self):
 		pyMessage = PythonMessage("", "HomeAll", "0", "")
 		self.pub.publish(pyMessage)
-		time.sleep(.01)
+		time.sleep(5)
 
 	def initRobot(self):
 		pyMessage = PythonMessage("", "initRobot", "0", "")
