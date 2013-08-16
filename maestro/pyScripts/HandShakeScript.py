@@ -6,7 +6,7 @@ from MaestroController import MaestroController
 controller = MaestroController()
 controller.executeCommonStartUp()
 print("Starting up")
-time.sleep(15)
+#time.sleep(15)
 print("Giving Command")
 controller.setJointPosition("REP", "-1.2")
 controller.waitForJoint("REP")

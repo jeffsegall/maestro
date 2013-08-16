@@ -56,9 +56,13 @@ class MaestroController:
 		time.sleep(.01)
 	def executeCommonStartUp(self):
 		self.initRobot()
+		time.sleep(.02)
 		self.homeAll()
+		time.sleep(5)
 		self.enableAll()
+		time.sleep(.02)
 		self.initSensors()
+		time.sleep(.02)
 	def home(self, target):
 		pyMessage = PythonMessage("", "Home", "0", target)
 		self.pub.publish(pyMessage)
