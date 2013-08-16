@@ -1,0 +1,10 @@
+How to control MAESTRO from the python interpreter:
+
+Type the command:
+	python -i PythonSetup.py
+
+When the interpreter comes up control MAESTRO with the same commands you would
+for an object called controller. eg.
+
+>>>controller.initRobot()
+
