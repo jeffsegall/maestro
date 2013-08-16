@@ -16,57 +16,71 @@ class MaestroController:
 		self.pub = rospy.Publisher('Maestro/Control', PythonMessage)
 		rospy.Subscriber("Maestro/Message", MaestroMessage, self.update)
 		rospy.sleep(2)
+
 	def startMaestro(self):
 		subprocess.call([""])
+
 	def update(self, message):
 		self.newVal = True
 		self.value = message.value
+
 	def test(self):
 		pyMessage = PythonMessage("RSP", "position", 1.5, "")
 		self.pub.publish(pyMessage)
 		print "Published a message"
 		time.sleep(.01)
+
 	def setJointPosition(self, joint, value):
 		pyMessage = PythonMessage(joint, "position", value, "")
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
+
 	def setJointVelocity(self, joint, value):
 		pyMessage = PythonMessage(joint, "velocity", value, "")
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
+
 	def enableAll(self):
 		pyMessage = PythonMessage("", "EnableAll"," 0", "")
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
+
 	def homeAll(self):
 		pyMessage = PythonMessage("", "HomeAll", "0", "")
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
+
 	def initRobot(self):
 		pyMessage = PythonMessage("", "initRobot", "0", "")
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
+
 	def initSensors(self):
 		pyMessage = PythonMessage("", "InitializeSensors", "0", "")
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
+
 	def publishMessage(self, joint, command, value, target):
 		pyMessage = PythonMessage(joint, command, value, target)
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
+
 	def executeCommonStartUp(self):
 		self.initRobot()
 		self.homeAll()
 		self.enableAll()
 		self.initSensors()
+
 	def home(self, target):
 		pyMessage = PythonMessage("", "Home", "0", target)
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
+
 	def enable(self, target):
 		pyMessage = PythonMessage("", "Enable", "0", target)
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
+
 	def waitForJoint(self, joint):
 		flag = True
 		while flag:
@@ -74,13 +88,18 @@ class MaestroController:
 			time.sleep(.01)
 			if(flag == None):
 				flag = True
+
 	def checkJointRequiresMotion(self, joint):
 		pyMessage = PythonMessage(joint, "Check", "0", "")
 		self.pub.publish(pyMessage)
 		time.sleep(.01)
 		if self.newVal:
 			self.newVal = False
-			return self.value		
+			if self.value == None:
+				return True
+			else:
+				return self.value		
+
 	def get(self, joint, target):
 		pyMessage = PythonMessage(joint, "Get", "0", target)
 		self.pub.publish(pyMessage)
