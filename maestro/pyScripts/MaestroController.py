@@ -3,6 +3,7 @@
 import roslib; roslib.load_manifest('maestro')
 import rospy
 import time
+import threading
 import subprocess
 from hubomsg.msg import *
 
@@ -107,3 +108,10 @@ class MaestroController:
 		if self.newVal:
 			self.newVal = False
 			return self.value
+
+	def doWhen(self, wait, joint, command, value, target):
+		try:
+			timer = threading.Timer(wait, self.publishMessage, (joint, command, value, target))
+			timer.start()
+		except Exception:
+			pass
