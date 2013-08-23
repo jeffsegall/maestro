@@ -34,7 +34,7 @@ case $1 in
 		;;
 	sim-real ) 
 		export PYTHONPATH="$PYTHONPATH:/usr/lib/python2.7/dist-packages" 
-		xterm -e "hubo-ach sim openhubo nodynamics" &
+		xterm -e "hubo-ach sim openhubo nophysics" &
 		;;
 	real ) 
 		NO_X=true
