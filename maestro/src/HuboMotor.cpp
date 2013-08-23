@@ -384,7 +384,11 @@ double HuboMotor::nextPosition(){
 	}
 	interStep = (*buffer)[i];
 	currGoal = (*buffer)[i];
-	return (*buffer)[i++];
+
+	double val = (*buffer)[i];
+	if (val != 0) std::cout << "Found sig val " << val << std::endl;
+	++i;
+	return val;
 }
 
 

@@ -584,7 +584,6 @@ void RobotControl::loadBuffers(){
 }
 
 void RobotControl::setBuffer(string joint, int i, double value){
-	if (value != 0) std::cout << "Setting joint to significant value!" << std::endl;
 	HuboMotor* motor = state->getMotorByName(joint);
 	if (motor == NULL){
 		std::cout << "Motor with name " << joint << " does not exist." << std::endl;
@@ -592,7 +591,6 @@ void RobotControl::setBuffer(string joint, int i, double value){
 	}
 
 	(*motor->getBuffer())[i] = value;
-	std::cout << "buffer at " << i << " set to " << (*motor->getBuffer())[i] << std::endl;
 }
 
 double RobotControl::getBuffer(string joint, int i){
