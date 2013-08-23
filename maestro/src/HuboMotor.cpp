@@ -379,7 +379,7 @@ double HuboMotor::nextPosition(){
 		return currGoal;
 	}
 	if (buffer->size() == 0 || i >= buffer->size()){
-		std::cout << "Error!" << std::endl;
+		std::cout << "Error! " << buffer->size() << std::endl;
 		return interStep;
 	}
 	interStep = (*buffer)[i];
