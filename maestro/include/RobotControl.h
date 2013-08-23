@@ -105,6 +105,8 @@ public:
     bool setAlias(string name, string alias);
     bool loadTrajectory(string path);
     void loadBuffers();
+    void setBuffer(string joint, int i, double value);
+    void getBuffer(string joint, int i);
     void startTrajectory();
     void stopTrajectory();
     vector<string> getGestureScripts(string path);
