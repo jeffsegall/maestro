@@ -438,7 +438,7 @@ void RobotControl::loadBuffers(){
 			if (scanned < 40 || scanned == EOF)
 				terminateTraj = true;
 			else {
-				vector<double>* temp = (*boardMap["RHY"]->getBuffer());
+				vector<double> *temp = (boardMap["RHY"]->getBuffer());
 				cout << "temp: " << temp << std::endl;
 				(*boardMap["RHY"]->getBuffer())[i] = RHY;
 				(*boardMap["RHR"]->getBuffer())[i] = RHR;
