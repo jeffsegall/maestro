@@ -323,11 +323,9 @@ bool RobotControl::loadTrajectory(string path){
 		return false;
 	}
 
-	ifstream is;
-	is.open(path.c_str());
+	trajInput.open(path.c_str());
 	string temp;
-	if (is.is_open()){
-		trajInput = is;
+	if (trajInput.is_open()){
 		loadBuffers();
 	} else
 	  std::cout << "Error. Trajectory file nonexistent. Aborting." << std::endl;
