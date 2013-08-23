@@ -446,7 +446,7 @@ void RobotControl::loadBuffers(){
 			tempOutput << "Trajectory in progress. Scanned " << scanned << " entries." << std::endl;
 			if (scanned < 40 || scanned == EOF){
 				std::cout << "Terminating trajectory." << std::endl;
-				if (scanned < 40) std::cout << "< 40 pos detected." << std::endl;
+				if (scanned < 40) std::cout << scanned << " pos detected." << std::endl;
 				if (scanned == EOF) std::cout << "EOF detected." << std::endl;
 				terminateTraj = true;
 			} else {
