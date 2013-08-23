@@ -573,19 +573,18 @@ void RobotControl::loadBuffers(){
 }
 
 void RobotControl::setBuffer(string joint, int i, double value){
-	map<string, HuboMotor*> motors = state->getBoardMap();
-	if (motors.count(joint) == 0)
+
+	HuboMotor* motor = state->getMotorByName(joint);
+	if (motor == NULL)
 		return;
-	HuboMotor* motor = motors[joint];
 
 	(*motor->getBuffer())[i] = value;
 }
 
 double RobotControl::getBuffer(string joint, int i){
-	map<string, HuboMotor*> motors = state->getBoardMap();
-	if (motors.count(joint) == 0)
+	HuboMotor* motor = state->getMotorByName(joint);
+	if (motor == NULL)
 		return 0;
-	HuboMotor* motor = motors[joint];
 
 	return (*motor->getBuffer())[i];
 }
