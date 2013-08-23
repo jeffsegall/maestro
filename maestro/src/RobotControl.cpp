@@ -438,10 +438,6 @@ void RobotControl::loadBuffers(){
 			if (scanned < 40 || scanned == EOF)
 				terminateTraj = true;
 			else {
-				vector<double> *temp = (boardMap["RHY"]->getBuffer());
-				cout << "temp: " << temp << std::endl;
-				(*temp)[i] = RHY;
-				cout << "temp: " << temp << std::endl;
 				setBuffer("RHY", i, RHY);
 				setBuffer("RHR", i, RHR);
 				setBuffer("RHP", i, RHP);
@@ -461,7 +457,6 @@ void RobotControl::loadBuffers(){
 				setBuffer("RWY",i ,RWY);
 				setBuffer("RWR",i ,RWR);
 				setBuffer("RWP",i ,RWP);
-				std::cout << "made it here" << std::endl;
 				setBuffer("LSP",i ,LSP);
 				setBuffer("LSR",i ,LSR);
 				setBuffer("LSY",i ,LSY);
@@ -575,9 +570,7 @@ void RobotControl::loadBuffers(){
 }
 
 void RobotControl::setBuffer(string joint, int i, double value){
-	std::cout << "before get motor" << std::endl;
 	HuboMotor* motor = state->getMotorByName(joint);
-	std::cout << "after get motor" << std::endl;
 	if (motor == NULL)
 		return;
 
