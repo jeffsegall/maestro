@@ -47,6 +47,7 @@ HuboMotor::HuboMotor(){
 
 	buffer = NULL;
 	i = 0;
+	buffer = new vector<double>(10);
 }
 
 HuboMotor::HuboMotor(long mpos1, long mpos2, long kp, long kd, long ki,
@@ -92,7 +93,7 @@ HuboMotor::HuboMotor(long mpos1, long mpos2, long kp, long kd, long ki,
 	zeroed = false;
 
 	i = 0;
-	buffer = NULL;
+	buffer = new vector<double>(10);
 }
 
 HuboMotor::HuboMotor(const HuboMotor& rhs){
@@ -340,10 +341,12 @@ long HuboMotor::interpolate(int MAX_STEP, int MIN_STEP){
 */
 
 vector<double> *HuboMotor::getBuffer(){
+	/*
 	if (buffer == NULL){
 		buffer = new vector<double>();
 		buffer->reserve(10);
 	}
+	*/
 	i = 0;
 	return buffer;
 }
