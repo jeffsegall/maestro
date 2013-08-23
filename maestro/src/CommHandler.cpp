@@ -40,13 +40,10 @@ using namespace std;
 
 	CommHandler::CommHandler (InputPort<hubomsg::CanMessage>* port1,
 			InputPort<hubomsg::HuboCmd>* port2,
-			InputPort<hubomsg::HuboState>* port3
-                        InputPort<hubomsg::PythonMessage>* port4){
-	
-        	canPort = port1;
+			InputPort<hubomsg::HuboState>* port3){
+		canPort = port1;
 		orPort = port2;
 		achPort = port3;
-                pyPort = port4;
 
 		newCanData = false;
 		newAchData = false;
@@ -54,14 +51,12 @@ using namespace std;
 		currCmd = hubomsg::HuboCmd();
 		currMessage = hubomsg::CanMessage();
 		currState = hubomsg::HuboState();
-		currPyMessage = hubomsg::PythonMessage();
 	}
 
 	void CommHandler::update(){
 		hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
 		hubomsg::CanMessage canMessage = hubomsg::CanMessage();
 		hubomsg::HuboState achState = hubomsg::HuboState();
-                hubomsg::PythonMessage pyMessage = hubomsg::PythonMessage();
 
 		if (NewData == this->canPort->read(canMessage)){
 			//Received update from CanGateway
@@ -76,10 +71,6 @@ using namespace std;
 		if (NewData == this->achPort->read(achState)){
 			this->newAchData = true;
 			this->currState = achState;
-		}
-                if (NewData == this->pyPort->read(pyMessage)){
-			this->newPyData = true;
-			this->currPyMessage = pyMessage;
 		}
 	}
 
@@ -97,11 +88,6 @@ using namespace std;
 		newAchData = false;
 		return currState;
 	}
-	
-	hubomsg::PythonMessage CommHandler::getPyMessage(){
-		newPyData = false;
-		return currPyMessage;
-	}
 
 	bool CommHandler::isNew(int port){
 		switch (port){
@@ -111,8 +97,6 @@ using namespace std;
 			return newORData;
 		case 3:
 			return newAchData;
-		case 4: 
-			return newPyData;
 		}
 		return false;
 	}

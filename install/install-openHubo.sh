@@ -1,26 +1,6 @@
-#!/bin/bash
-#
-# Comprehensive install script for Maestro, and all dependencies.
-# Installs Ros Fuerte, Orocos, OpenRAVE, Maestro, Hubo-Ach, OpenHubo.
-#
-# Options: 
-#	-y	Quiet install. Will not prompt for install dir.
-#
-# Dependencies:
-#	<Maestro Install Dir>/maestro/utils.sh
-#
-# Author: Solis Knight
-# Date: July 2013
-#
-
-# Change directory to the script's directory
-cd ${0%/*}
-
-source ../maestro/utils.sh
-
 set -e
 echo "OpenHUBO Maestro installation Script"
-echo "Version $VERSION"
+echo "Version 1.0"
 echo ""
 
 if [[ $# > 0 && $1 == "-y" ]]; then

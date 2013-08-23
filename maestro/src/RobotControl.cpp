@@ -36,12 +36,9 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
 	this->huboDownPort = new OutputPort<hubomsg::HuboCommand>("Hubo/HuboCommand");
 	this->achDownPort = new OutputPort<hubomsg::AchCommand>("Hubo/AchCommand");
 
-    //PYTHON PORT
-    this->pythonPort = new InputPort<hubomsg::PythonMessage>("Hubo/PythonCommand");
-
     this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
     this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
-    this->commHandler = new CommHandler(canUpPort, orOutPort, huboUpPort, pythonPort);
+    this->commHandler = new CommHandler(canUpPort, orOutPort, huboUpPort);
 
     //CAN QUEUES
     this->inputQueue = new queue<hubomsg::CanMessage>();
@@ -137,7 +134,6 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     }
 
     RUN_TYPE = getRunType(CONFIG_PATH);
-
 }
   
 RobotControl::~RobotControl(){}
@@ -176,7 +172,6 @@ void RobotControl::updateHook(){
 	}
 	if (commHandler->isNew(3)){
 		//Received update from Hubo-Ach
-
 		updateState();
 	}
 
@@ -238,7 +233,8 @@ hubomsg::CanMessage RobotControl::buildCanMessage(canMsg* msg){
 	return canMessage;
 }
 
-void RobotControl::buildHuboCommandMessage(hubomsg::HuboJointCommand& state, hubomsg::HuboCommand& message){
+void RobotControl::buildHuboCommandMessage(hubomsg::HuboJointCommand& state,
+		hubomsg::HuboCommand& message){
 	message.joints.push_back(state);
 	message.num_joints = message.joints.size();
 }
