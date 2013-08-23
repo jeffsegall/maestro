@@ -209,6 +209,7 @@ void RobotControl::updateHook(){
 								terminateTraj = false;
 							} else
 								loadBuffers();
+						}
 					} else {
 						state.position = motor->getGoalPosition();
 					}
