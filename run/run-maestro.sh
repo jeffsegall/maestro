@@ -29,11 +29,15 @@ case $1 in
 		xterm -e "hubo-ach virtual" &
 		;;	
 	sim ) 
-		export PYTHONPATH="$PYTHONPATH:/usr/lib/python2.7/dist-packages" 
+		export PYTHONPATH="$PYTHONPATH:/usr/lib/python2.7/dist-packages"
+		xterm -e "hubo-ach virtual" & 
+		sleep 3
 		xterm -e "hubo-ach sim openhubo physics" &
 		;;
 	sim-real ) 
 		export PYTHONPATH="$PYTHONPATH:/usr/lib/python2.7/dist-packages" 
+		xterm -e "hubo-ach virtual" &
+		sleep 3
 		xterm -e "hubo-ach sim openhubo nophysics" &
 		;;
 	real ) 
