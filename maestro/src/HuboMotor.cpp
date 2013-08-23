@@ -345,7 +345,7 @@ vector<double> *HuboMotor::getBuffer(){
 		buffer->reserve(10);
 	}
 	std::cout << "before write" << std::endl;
-	buffer[i] = 0;
+	(*buffer)[i] = 0;
 	std::cout << "after write" << std::endl;
 	i = 0;
 	return buffer;
