@@ -589,7 +589,7 @@ double RobotControl::getBuffer(string joint, int i){
 		return 0;
 	HuboMotor* motor = motors[joint];
 
-	(*motor->getBuffer())[i] = value;
+	return (*motor->getBuffer())[i];
 }
 
 void RobotControl::startTrajectory(){
