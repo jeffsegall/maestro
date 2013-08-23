@@ -374,10 +374,14 @@ double HuboMotor::interpolate(){
 }
 
 double HuboMotor::nextPosition(){
-	if (buffer == NULL)
+	if (buffer == NULL){
+		std::cout << "Error!" << std::endl;
 		return currGoal;
-	if (buffer->size() == 0 || i >= buffer->size())
+	}
+	if (buffer->size() == 0 || i >= buffer->size()){
+		std::cout << "Error!" << std::endl;
 		return interStep;
+	}
 	interStep = (*buffer)[i];
 	currGoal = (*buffer)[i];
 	return (*buffer)[i++];

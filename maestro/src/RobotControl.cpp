@@ -210,8 +210,10 @@ void RobotControl::updateHook(){
 								trajStarted = false;
 								trajInput.close();
 								terminateTraj = false;
-							} else
+							} else {
+								tempOutput << "reloading buffers after " << frames << " frames." << std::endl;
 								loadBuffers();
+							}
 						}
 					} else {
 						state.position = motor->getGoalPosition();
@@ -582,6 +584,7 @@ void RobotControl::loadBuffers(){
 }
 
 void RobotControl::setBuffer(string joint, int i, double value){
+	if (value != 0) std::cout << "Setting joint to significant value!" << std::endl;
 	HuboMotor* motor = state->getMotorByName(joint);
 	if (motor == NULL)
 		return;
