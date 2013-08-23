@@ -201,7 +201,6 @@ void RobotControl::updateHook(){
 						state.position = motor->interpolate();
 					else if (trajStarted){
 						double pos = motor->nextPosition();
-						if (pos != 0) std::cout << "Non zero pos detected!" << std::endl;
 						state.position = motor->nextPosition();
 						++frames;
 						if (frames % BUFFER_SIZE == 0){
@@ -519,7 +518,7 @@ void RobotControl::loadBuffers(){
 				setBuffer("LSP", i, getBuffer("LSP", BUFFER_SIZE - 1));
 				setBuffer("LSR", i, getBuffer("LSR", BUFFER_SIZE - 1));
 				setBuffer("LSY", i, getBuffer("LSY", BUFFER_SIZE - 1));
-				setBuffer("LEP", i, getBuffer("LEB", BUFFER_SIZE - 1));
+				setBuffer("LEP", i, getBuffer("LEP", BUFFER_SIZE - 1));
 				setBuffer("LWY", i, getBuffer("LWY", BUFFER_SIZE - 1));
 				setBuffer("LWR", i, getBuffer("LWR", BUFFER_SIZE - 1));
 				setBuffer("LWP", i, getBuffer("LWP", BUFFER_SIZE - 1));
@@ -547,20 +546,20 @@ void RobotControl::loadBuffers(){
 				setBuffer("LHY", i, getBuffer("LHY", i - 1));
 				setBuffer("LHR", i, getBuffer("LHR", i - 1));
 				setBuffer("LHP", i, getBuffer("LHP", i - 1));
-				setBuffer("LKN", i, getBuffer("LKN", i - 1));
+				setBuffer("LKP", i, getBuffer("LKP", i - 1));
 				setBuffer("LAP", i, getBuffer("LAP", i - 1));
 				setBuffer("LAR", i, getBuffer("LAR", i - 1));
 				setBuffer("RSP", i, getBuffer("RSP", i - 1));
 				setBuffer("RSR", i, getBuffer("RSR", i - 1));
 				setBuffer("RSY", i, getBuffer("RSY", i - 1));
-				setBuffer("REB", i, getBuffer("REB", i - 1));
+				setBuffer("REP", i, getBuffer("REP", i - 1));
 				setBuffer("RWY", i, getBuffer("RWY", i - 1));
 				setBuffer("RWR", i, getBuffer("RWR", i - 1));
 				setBuffer("RWP", i, getBuffer("RWP", i - 1));
 				setBuffer("LSP", i, getBuffer("LSP", i - 1));
 				setBuffer("LSR", i, getBuffer("LSR", i - 1));
 				setBuffer("LSY", i, getBuffer("LSY", i - 1));
-				setBuffer("LEB", i, getBuffer("LEB", i - 1));
+				setBuffer("LEP", i, getBuffer("LEP", i - 1));
 				setBuffer("LWY", i, getBuffer("LWY", i - 1));
 				setBuffer("LWR", i, getBuffer("LWR", i - 1));
 				setBuffer("LWP", i, getBuffer("LWP", i - 1));
