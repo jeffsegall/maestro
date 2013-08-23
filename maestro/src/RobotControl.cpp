@@ -452,9 +452,7 @@ void RobotControl::loadBuffers(){
 				setBuffer("LKN", i, LKN);
 				setBuffer("LAP", i, LAP);
 				setBuffer("LAR", i, LAR);
-
-				setBuffer("LAR",i ,LAR;
-				setBuffer("RSP",i ,RSP));
+				setBuffer("RSP",i ,RSP);
 				setBuffer("RSR",i ,RSR);
 				setBuffer("RSY",i ,RSY);
 				setBuffer("REB",i ,REB);
