@@ -575,8 +575,9 @@ void RobotControl::loadBuffers(){
 }
 
 void RobotControl::setBuffer(string joint, int i, double value){
-
+	std::cout << "before get motor" << std::endl;
 	HuboMotor* motor = state->getMotorByName(joint);
+	std::cout << "after get motor" << std::endl;
 	if (motor == NULL)
 		return;
 
