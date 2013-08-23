@@ -455,26 +455,26 @@ void RobotControl::loadBuffers(){
 				setBuffer("RHY", i, RHY);
 				setBuffer("RHR", i, RHR);
 				setBuffer("RHP", i, RHP);
-				setBuffer("RKN", i, RKN);
+				setBuffer("RKP", i, RKN);
 				setBuffer("RAP", i, RAP);
 				setBuffer("RAR", i, RAR);
 				setBuffer("LHY", i, LHY);
 				setBuffer("LHR", i, LHR);
 				setBuffer("LHP", i, LHP);
-				setBuffer("LKN", i, LKN);
+				setBuffer("LKP", i, LKN);
 				setBuffer("LAP", i, LAP);
 				setBuffer("LAR", i, LAR);
 				setBuffer("RSP",i ,RSP);
 				setBuffer("RSR",i ,RSR);
 				setBuffer("RSY",i ,RSY);
-				setBuffer("REB",i ,REB);
+				setBuffer("REP",i ,REB);
 				setBuffer("RWY",i ,RWY);
 				setBuffer("RWR",i ,RWR);
 				setBuffer("RWP",i ,RWP);
 				setBuffer("LSP",i ,LSP);
 				setBuffer("LSR",i ,LSR);
 				setBuffer("LSY",i ,LSY);
-				setBuffer("LEB",i ,LEB);
+				setBuffer("LEP",i ,LEB);
 				setBuffer("LWY",i ,LWY);
 				setBuffer("LWR",i ,LWR);
 				setBuffer("LWP",i ,LWP);
@@ -500,26 +500,26 @@ void RobotControl::loadBuffers(){
 				setBuffer("RHY", i, getBuffer("RHY", BUFFER_SIZE - 1));
 				setBuffer("RHR", i, getBuffer("RHR", BUFFER_SIZE - 1));
 				setBuffer("RHP", i, getBuffer("RHP", BUFFER_SIZE - 1));
-				setBuffer("RKN", i, getBuffer("RKN", BUFFER_SIZE - 1));
+				setBuffer("RKP", i, getBuffer("RKP", BUFFER_SIZE - 1));
 				setBuffer("RAP", i, getBuffer("RAP", BUFFER_SIZE - 1));
 				setBuffer("RAR", i, getBuffer("RAR", BUFFER_SIZE - 1));
 				setBuffer("LHY", i, getBuffer("LHY", BUFFER_SIZE - 1));
 				setBuffer("LHR", i, getBuffer("LHR", BUFFER_SIZE - 1));
 				setBuffer("LHP", i, getBuffer("LHP", BUFFER_SIZE - 1));
-				setBuffer("LKN", i, getBuffer("LKN", BUFFER_SIZE - 1));
+				setBuffer("LKP", i, getBuffer("LKP", BUFFER_SIZE - 1));
 				setBuffer("LAP", i, getBuffer("LAP", BUFFER_SIZE - 1));
 				setBuffer("LAR", i, getBuffer("LAR", BUFFER_SIZE - 1));
 				setBuffer("RSP", i, getBuffer("RSP", BUFFER_SIZE - 1));
 				setBuffer("RSR", i, getBuffer("RSR", BUFFER_SIZE - 1));
 				setBuffer("RSY", i, getBuffer("RSY", BUFFER_SIZE - 1));
-				setBuffer("REB", i, getBuffer("REB", BUFFER_SIZE - 1));
+				setBuffer("REP", i, getBuffer("REP", BUFFER_SIZE - 1));
 				setBuffer("RWY", i, getBuffer("RWY", BUFFER_SIZE - 1));
 				setBuffer("RWR", i, getBuffer("RWR", BUFFER_SIZE - 1));
 				setBuffer("RWP", i, getBuffer("RWP", BUFFER_SIZE - 1));
 				setBuffer("LSP", i, getBuffer("LSP", BUFFER_SIZE - 1));
 				setBuffer("LSR", i, getBuffer("LSR", BUFFER_SIZE - 1));
 				setBuffer("LSY", i, getBuffer("LSY", BUFFER_SIZE - 1));
-				setBuffer("LEB", i, getBuffer("LEB", BUFFER_SIZE - 1));
+				setBuffer("LEP", i, getBuffer("LEB", BUFFER_SIZE - 1));
 				setBuffer("LWY", i, getBuffer("LWY", BUFFER_SIZE - 1));
 				setBuffer("LWR", i, getBuffer("LWR", BUFFER_SIZE - 1));
 				setBuffer("LWP", i, getBuffer("LWP", BUFFER_SIZE - 1));
@@ -541,7 +541,7 @@ void RobotControl::loadBuffers(){
 				setBuffer("RHY", i, getBuffer("RHY", i - 1));
 				setBuffer("RHR", i, getBuffer("RHR", i - 1));
 				setBuffer("RHP", i, getBuffer("RHP", i - 1));
-				setBuffer("RKN", i, getBuffer("RKN", i - 1));
+				setBuffer("RKP", i, getBuffer("RKP", i - 1));
 				setBuffer("RAP", i, getBuffer("RAP", i - 1));
 				setBuffer("RAR", i, getBuffer("RAR", i - 1));
 				setBuffer("LHY", i, getBuffer("LHY", i - 1));
@@ -592,6 +592,7 @@ void RobotControl::setBuffer(string joint, int i, double value){
 	}
 
 	(*motor->getBuffer())[i] = value;
+	std::cout << "buffer at " << i << " set to " << (*motor->getBuffer())[i] << std::endl;
 }
 
 double RobotControl::getBuffer(string joint, int i){
