@@ -200,11 +200,13 @@ void RobotControl::updateHook(){
 					if (interpolation)
 						state.position = motor->interpolate();
 					else if (trajStarted){
-						std::cout << "Trajectory is in progress." << std::endl;
+						double pos = motor->nextPosition();
+						if (pos != 0) std::cout << "Non zero pos detected!" << std::endl;
 						state.position = motor->nextPosition();
 						++frames;
 						if (frames % BUFFER_SIZE == 0){
 							if (terminateTraj){
+								std::cout << "terminating trajectory" << std::endl;
 								trajStarted = false;
 								trajInput.close();
 								terminateTraj = false;
