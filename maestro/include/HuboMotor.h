@@ -30,6 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <math.h>
 #include <stdlib.h>
 #include <string>
+#include <vector>
 
 #include "Names.h"
 
@@ -81,7 +82,7 @@ class HuboMotor {
 	int errors;						//Collection of error flags
 
 	//Experimental Trajectory
-	vector<double> * buffer; // Buffer of positions
+	vector<double> *buffer; // Buffer of positions
 	int i; // Index of buffer
 
 	public:
