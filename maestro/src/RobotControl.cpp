@@ -335,7 +335,7 @@ bool RobotControl::loadTrajectory(string path){
 	return false;
 }
 
-bool RobotControl::loadBuffers(){
+void RobotControl::loadBuffers(){
 	//TODO: Fix this entire method. It's bad.
 	if (!trajInput.is_open())
 		return;

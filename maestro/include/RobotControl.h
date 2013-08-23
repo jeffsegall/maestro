@@ -104,7 +104,7 @@ public:
     bool getRunType(string path);
     bool setAlias(string name, string alias);
     bool loadTrajectory(string path);
-    bool loadBuffers();
+    void loadBuffers();
     void startTrajectory();
     void stopTrajectory();
     vector<string> getGestureScripts(string path);
