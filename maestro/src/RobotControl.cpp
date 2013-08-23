@@ -435,8 +435,8 @@ void RobotControl::loadBuffers(){
 				&LF5);
 
 			tempOutput << "Trajectory in progress. Scanned " << scanned << " entries." << std::endl;
-			if (scanned < 40 || scanned == EOF) terminateTraj = true;
-
+			if (scanned < 40 || scanned == EOF)
+				terminateTraj = true;
 			else {
 				(*boardMap["RHY"]->getBuffer())[i] = RHY;
 				(*boardMap["RHR"]->getBuffer())[i] = RHR;
@@ -457,6 +457,7 @@ void RobotControl::loadBuffers(){
 				(*boardMap["RWY"]->getBuffer())[i] = RWY;
 				(*boardMap["RWR"]->getBuffer())[i] = RWR;
 				(*boardMap["RWP"]->getBuffer())[i] = RWP;
+				std::cout << "made it here" << std::endl;
 				(*boardMap["LSP"]->getBuffer())[i] = LSP;
 				(*boardMap["LSR"]->getBuffer())[i] = LSR;
 				(*boardMap["LSY"]->getBuffer())[i] = LSY;
