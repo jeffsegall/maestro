@@ -137,7 +137,7 @@ private:
     map< string, vector<float> > gestures;
     map<string, COMMAND> commands;
     ofstream tempOutput;
-    ifstream* trajInput;
+    ifstream trajInput;
 
     int written;
     int frames;
