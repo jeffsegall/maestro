@@ -384,7 +384,7 @@ void RobotControl::loadBuffers(){
 	int scanned;
 	string temp;
 
-	for (int i = 0; i < 10; i++){
+	for (int i = 0; i < BUFFER_SIZE; i++){
 		temp = "";
 		scanned = 0;
 		std::cout << "loop iteration " << i << std::endl;
@@ -439,6 +439,8 @@ void RobotControl::loadBuffers(){
 				terminateTraj = true;
 			else {
 				vector<double> *temp = (boardMap["RHY"]->getBuffer());
+				cout << "temp: " << temp << std::endl;
+				(*temp)[i] = RHY;
 				cout << "temp: " << temp << std::endl;
 				setBuffer("RHY", i, RHY);
 				setBuffer("RHR", i, RHR);
