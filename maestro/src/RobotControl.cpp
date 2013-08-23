@@ -200,6 +200,7 @@ void RobotControl::updateHook(){
 					if (interpolation)
 						state.position = motor->interpolate();
 					else if (trajStarted){
+						std::cout << "Trajectory is in progress." << std::endl;
 						state.position = motor->nextPosition();
 						++frames;
 						if (frames % BUFFER_SIZE == 0){
@@ -323,10 +324,17 @@ bool RobotControl::loadTrajectory(string path){
 		return false;
 	}
 
+	if (trajStarted){
+		std::cout << "Error. A trajectory has already been loaded. Please unload it first." << std::endl;
+		return false;
+	}
+
+
 	trajInput.open(path.c_str());
 	string temp;
 	if (trajInput.is_open()){
 		loadBuffers();
+		return true;
 	} else
 	  std::cout << "Error. Trajectory file nonexistent. Aborting." << std::endl;
 
@@ -387,7 +395,6 @@ void RobotControl::loadBuffers(){
 	for (int i = 0; i < BUFFER_SIZE; i++){
 		temp = "";
 		scanned = 0;
-		std::cout << "loop iteration " << i << std::endl;
 
 		if (!terminateTraj) {
 			getline(trajInput, temp, '\n');
