@@ -387,6 +387,7 @@ void RobotControl::loadBuffers(){
 	for (int i = 0; i < 10; i++){
 		temp = "";
 		scanned = 0;
+		std::cout << "loop iteration " << i << std::endl;
 
 		if (!terminateTraj) {
 			getline(trajInput, temp, '\n');
