@@ -31,6 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define LOG_PATH "/opt/ros/fuerte/stacks/maestro/maestro/logs/"
 #define HARDWARE true
 #define SIMULATION false
+#define BUFFER_SIZE 10
 
 #include <rtt/TaskContext.hpp>
 #include <rtt/Port.hpp>
@@ -63,6 +64,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <fstream>
 #include <sstream>
 #include <sys/time.h>
+#include <stdio.h>
 
 
 using std::queue;
@@ -101,9 +103,14 @@ public:
     // Configuration Commands
     bool getRunType(string path);
     bool setAlias(string name, string alias);
+    bool loadTrajectory(string path);
+    bool loadBuffers();
+    void startTrajectory();
+    void stopTrajectory();
     vector<string> getGestureScripts(string path);
     vector<string> splitFields(string input);
     string getDefaultInitPath(string path);
+
 
 private:
 
@@ -130,8 +137,11 @@ private:
     map< string, vector<float> > gestures;
     map<string, COMMAND> commands;
     ofstream tempOutput;
+    ifstream trajInput;
 
     int written;
+    int frames;
+    bool trajStarted, terminateTraj;
     bool printNow, enableControl;
     int delay;
     bool interpolation, override;

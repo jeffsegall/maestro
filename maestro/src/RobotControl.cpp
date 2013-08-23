@@ -30,8 +30,6 @@ using namespace std;
 
 RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
 
-	std::cout << "Made it here." << std::endl;
-    
     this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
     //this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
     this->huboUpPort = new InputPort<hubomsg::HuboState>("Hubo/HuboState");
@@ -106,6 +104,13 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     this->addOperation("runGesture", &RobotControl::runGesture, this, RTT::OwnThread)
 	    	.arg("Name", "The name of the gesture to load.");
 
+    this->addOperation("loadTrajectory", &RobotControl::loadTrajectory, this, RTT::OwnThread)
+    	    	.arg("path", "Path to the trajectory to load.");
+
+    this->addOperation("startTrajectory", &RobotControl::startTrajectory, this, RTT::OwnThread);
+
+    this->addOperation("stopTrajectory", &RobotControl::stopTrajectory, this, RTT::OwnThread);
+
 
     this->written = 0;
     this->printNow = false;
@@ -136,6 +141,10 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     }
 
     RUN_TYPE = getRunType(CONFIG_PATH);
+
+    frames = 0;
+    trajStarted = false;
+    terminateTraj = false;
 
 }
   
@@ -188,7 +197,22 @@ void RobotControl::updateHook(){
 				if (motor->isEnabled()){
 					hubomsg::HuboJointCommand state;
 					state.name = motor->getName();
-					state.position = interpolation ? motor->interpolate() : motor->getGoalPosition();
+					if (interpolation)
+						state.position = motor->interpolate();
+					else if (trajStarted){
+						state.position = motor->nextPosition();
+						++frames;
+						if (frames % BUFFER_SIZE == 0){
+							if (terminateTraj){
+								trajStarted = false;
+								trajInput.close();
+								terminateTraj = false;
+							} else
+								loadBuffers();
+					} else {
+						state.position = motor->getGoalPosition();
+					}
+					//state.position = interpolation ? motor->interpolate() : motor->getGoalPosition();
 					buildHuboCommandMessage(state, message);
 				}
 			}
@@ -285,6 +309,275 @@ bool RobotControl::getRunType(string path){
 	  std::cout << "Error. Config file nonexistent. Aborting." << std::endl;
 
 	return SIMULATION;
+}
+
+bool RobotControl::loadTrajectory(string path){
+	if (state == NULL){
+		std::cout << "Error. No joints to load trajectories for. Is the robot initialized?" << std::endl;
+		return false;
+	}
+
+	if (interpolation){
+		std::cout << "Error. Trajectories may not be loaded in interpolation mode." << std::endl;
+		return false;
+	}
+
+	ifstream is;
+	is.open(path.c_str());
+	string temp;
+	if (is.is_open()){
+		trajInput = is;
+		loadBuffers();
+	} else
+	  std::cout << "Error. Trajectory file nonexistent. Aborting." << std::endl;
+
+	return false;
+}
+
+bool RobotControl::loadBuffers(){
+	//TODO: Fix this entire method. It's bad.
+	if (!trajInput.is_open())
+		return;
+
+	int RHY;
+	int RHR;
+	int RHP;
+	int RKN;
+	int RAP;
+	int RAR;
+	int LHY;
+	int LHR;
+	int LHP;
+	int LKN;
+	int LAP;
+	int LAR;
+	int RSP;
+	int RSR;
+	int RSY;
+	int REB;
+	int RWY;
+	int RWR;
+	int RWP;
+	int LSP;
+	int LSR;
+	int LSY;
+	int LEB;
+	int LWY;
+	int LWR;
+	int LWP;
+	int NKY;
+	int NK1;
+	int NK2;
+	int WST;
+	int RF1;
+	int RF2;
+	int RF3;
+	int RF4;
+	int RF5;
+	int LF1;
+	int LF2;
+	int LF3;
+	int LF4;
+	int LF5;
+
+	map<string, HuboMotor*> boardMap = state->getBoardMap();
+
+	int scanned;
+	string temp;
+
+	for (int i = 0; i < 10; i++){
+		temp = "";
+		scanned = 0;
+
+		if (!terminateTraj) {
+			getline(is, temp, '\n');
+			scanned = sscanf(temp.c_str(),
+				"%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
+				&RHY,
+				&RHR,
+				&RHP,
+				&RKN,
+				&RAP,
+				&RAR,
+				&LHY,
+				&LHR,
+				&LHP,
+				&LKN,
+				&LAP,
+				&LAR,
+				&RSP,
+				&RSR,
+				&RSY,
+				&REB,
+				&RWY,
+				&RWR,
+				&RWP,
+				&LSP,
+				&LSR,
+				&LSY,
+				&LEB,
+				&LWY,
+				&LWR,
+				&LWP,
+				&NKY,
+				&NK1,
+				&NK2,
+				&WST,
+				&RF1,
+				&RF2,
+				&RF3,
+				&RF4,
+				&RF5,
+				&LF1,
+				&LF2,
+				&LF3,
+				&LF4,
+				&LF5);
+
+			tempOutput << "Trajectory in progress. Scanned " << scanned << " entries." << std::endl;
+			if (scanned < 40 || scanned == EOF) terminateTraj = true;
+
+			else {
+				boardMap["RHY"]->getBuffer()[i] = RHY;
+				boardMap["RHR"]->getBuffer()[i] = RHR;
+				boardMap["RHP"]->getBuffer()[i] = RHP;
+				boardMap["RKN"]->getBuffer()[i] = RKN;
+				boardMap["RAP"]->getBuffer()[i] = RAP;
+				boardMap["RAR"]->getBuffer()[i] = RAR;
+				boardMap["LHY"]->getBuffer()[i] = LHY;
+				boardMap["LHR"]->getBuffer()[i] = LHR;
+				boardMap["LHP"]->getBuffer()[i] = LHP;
+				boardMap["LKN"]->getBuffer()[i] = LKN;
+				boardMap["LAP"]->getBuffer()[i] = LAP;
+				boardMap["LAR"]->getBuffer()[i] = LAR;
+				boardMap["RSP"]->getBuffer()[i] = RSP;
+				boardMap["RSR"]->getBuffer()[i] = RSR;
+				boardMap["RSY"]->getBuffer()[i] = RSY;
+				boardMap["REB"]->getBuffer()[i] = REB;
+				boardMap["RWY"]->getBuffer()[i] = RWY;
+				boardMap["RWR"]->getBuffer()[i] = RWR;
+				boardMap["RWP"]->getBuffer()[i] = RWP;
+				boardMap["LSP"]->getBuffer()[i] = LSP;
+				boardMap["LSR"]->getBuffer()[i] = LSR;
+				boardMap["LSY"]->getBuffer()[i] = LSY;
+				boardMap["LEB"]->getBuffer()[i] = LEB;
+				boardMap["LWY"]->getBuffer()[i] = LWY;
+				boardMap["LWR"]->getBuffer()[i] = LWR;
+				boardMap["LWP"]->getBuffer()[i] = LWP;
+				boardMap["NKY"]->getBuffer()[i] = NKY;
+				boardMap["NK1"]->getBuffer()[i] = NK1;
+				boardMap["NK2"]->getBuffer()[i] = NK2;
+				boardMap["WST"]->getBuffer()[i] = WST;
+				boardMap["RF1"]->getBuffer()[i] = RF1;
+				boardMap["RF2"]->getBuffer()[i] = RF2;
+				boardMap["RF3"]->getBuffer()[i] = RF3;
+				boardMap["RF4"]->getBuffer()[i] = RF4;
+				boardMap["RF5"]->getBuffer()[i] = RF5;
+				boardMap["LF1"]->getBuffer()[i] = LF1;
+				boardMap["LF2"]->getBuffer()[i] = LF2;
+				boardMap["LF3"]->getBuffer()[i] = LF3;
+				boardMap["LF4"]->getBuffer()[i] = LF4;
+				boardMap["LF5"]->getBuffer()[i] = LF5;
+			}
+		}
+
+		if (terminateTraj)
+			if (i == 0){
+				boardMap["RHY"]->getBuffer()[i] = boardMap["RHY"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["RHR"]->getBuffer()[i] = boardMap["RHR"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["RHP"]->getBuffer()[i] = boardMap["RHP"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["RKN"]->getBuffer()[i] = boardMap["RKN"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["RAP"]->getBuffer()[i] = boardMap["RAP"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["RAR"]->getBuffer()[i] = boardMap["RAR"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LHY"]->getBuffer()[i] = boardMap["LHY"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LHR"]->getBuffer()[i] = boardMap["LHR"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LHP"]->getBuffer()[i] = boardMap["LHP"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LKN"]->getBuffer()[i] = boardMap["LKN"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LAP"]->getBuffer()[i] = boardMap["LAP"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LAR"]->getBuffer()[i] = boardMap["LAR"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["RSP"]->getBuffer()[i] = boardMap["RSP"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["RSR"]->getBuffer()[i] = boardMap["RSR"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["RSY"]->getBuffer()[i] = boardMap["RSY"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["REB"]->getBuffer()[i] = boardMap["REB"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["RWY"]->getBuffer()[i] = boardMap["RWY"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["RWR"]->getBuffer()[i] = boardMap["RWR"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["RWP"]->getBuffer()[i] = boardMap["RWP"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LSP"]->getBuffer()[i] = boardMap["LSP"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LSR"]->getBuffer()[i] = boardMap["LSR"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LSY"]->getBuffer()[i] = boardMap["LSY"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LEB"]->getBuffer()[i] = boardMap["LEB"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LWY"]->getBuffer()[i] = boardMap["LWY"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LWR"]->getBuffer()[i] = boardMap["LWR"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LWP"]->getBuffer()[i] = boardMap["LWP"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["NKY"]->getBuffer()[i] = boardMap["NKY"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["NK1"]->getBuffer()[i] = boardMap["NK1"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["NK2"]->getBuffer()[i] = boardMap["NK2"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["WST"]->getBuffer()[i] = boardMap["WST"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["RF1"]->getBuffer()[i] = boardMap["RF1"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["RF2"]->getBuffer()[i] = boardMap["RF2"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["RF3"]->getBuffer()[i] = boardMap["RF3"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["RF4"]->getBuffer()[i] = boardMap["RF4"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["RF5"]->getBuffer()[i] = boardMap["RF5"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LF1"]->getBuffer()[i] = boardMap["LF1"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LF2"]->getBuffer()[i] = boardMap["LF2"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LF3"]->getBuffer()[i] = boardMap["LF3"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LF4"]->getBuffer()[i] = boardMap["LF4"]->getBuffer()[BUFFER_SIZE - 1];
+				boardMap["LF5"]->getBuffer()[i] = boardMap["LF5"]->getBuffer()[BUFFER_SIZE - 1];
+			} else {
+				boardMap["RHY"]->getBuffer()[i] = boardMap["RHY"]->getBuffer()[i - 1];
+				boardMap["RHR"]->getBuffer()[i] = boardMap["RHR"]->getBuffer()[i - 1];
+				boardMap["RHP"]->getBuffer()[i] = boardMap["RHP"]->getBuffer()[i - 1];
+				boardMap["RKN"]->getBuffer()[i] = boardMap["RKN"]->getBuffer()[i - 1];
+				boardMap["RAP"]->getBuffer()[i] = boardMap["RAP"]->getBuffer()[i - 1];
+				boardMap["RAR"]->getBuffer()[i] = boardMap["RAR"]->getBuffer()[i - 1];
+				boardMap["LHY"]->getBuffer()[i] = boardMap["LHY"]->getBuffer()[i - 1];
+				boardMap["LHR"]->getBuffer()[i] = boardMap["LHR"]->getBuffer()[i - 1];
+				boardMap["LHP"]->getBuffer()[i] = boardMap["LHP"]->getBuffer()[i - 1];
+				boardMap["LKN"]->getBuffer()[i] = boardMap["LKN"]->getBuffer()[i - 1];
+				boardMap["LAP"]->getBuffer()[i] = boardMap["LAP"]->getBuffer()[i - 1];
+				boardMap["LAR"]->getBuffer()[i] = boardMap["LAR"]->getBuffer()[i - 1];
+				boardMap["RSP"]->getBuffer()[i] = boardMap["RSP"]->getBuffer()[i - 1];
+				boardMap["RSR"]->getBuffer()[i] = boardMap["RSR"]->getBuffer()[i - 1];
+				boardMap["RSY"]->getBuffer()[i] = boardMap["RSY"]->getBuffer()[i - 1];
+				boardMap["REB"]->getBuffer()[i] = boardMap["REB"]->getBuffer()[i - 1];
+				boardMap["RWY"]->getBuffer()[i] = boardMap["RWY"]->getBuffer()[i - 1];
+				boardMap["RWR"]->getBuffer()[i] = boardMap["RWR"]->getBuffer()[i - 1];
+				boardMap["RWP"]->getBuffer()[i] = boardMap["RWP"]->getBuffer()[i - 1];
+				boardMap["LSP"]->getBuffer()[i] = boardMap["LSP"]->getBuffer()[i - 1];
+				boardMap["LSR"]->getBuffer()[i] = boardMap["LSR"]->getBuffer()[i - 1];
+				boardMap["LSY"]->getBuffer()[i] = boardMap["LSY"]->getBuffer()[i - 1];
+				boardMap["LEB"]->getBuffer()[i] = boardMap["LEB"]->getBuffer()[i - 1];
+				boardMap["LWY"]->getBuffer()[i] = boardMap["LWY"]->getBuffer()[i - 1];
+				boardMap["LWR"]->getBuffer()[i] = boardMap["LWR"]->getBuffer()[i - 1];
+				boardMap["LWP"]->getBuffer()[i] = boardMap["LWP"]->getBuffer()[i - 1];
+				boardMap["NKY"]->getBuffer()[i] = boardMap["NKY"]->getBuffer()[i - 1];
+				boardMap["NK1"]->getBuffer()[i] = boardMap["NK1"]->getBuffer()[i - 1];
+				boardMap["NK2"]->getBuffer()[i] = boardMap["NK2"]->getBuffer()[i - 1];
+				boardMap["WST"]->getBuffer()[i] = boardMap["WST"]->getBuffer()[i - 1];
+				boardMap["RF1"]->getBuffer()[i] = boardMap["RF1"]->getBuffer()[i - 1];
+				boardMap["RF2"]->getBuffer()[i] = boardMap["RF2"]->getBuffer()[i - 1];
+				boardMap["RF3"]->getBuffer()[i] = boardMap["RF3"]->getBuffer()[i - 1];
+				boardMap["RF4"]->getBuffer()[i] = boardMap["RF4"]->getBuffer()[i - 1];
+				boardMap["RF5"]->getBuffer()[i] = boardMap["RF5"]->getBuffer()[i - 1];
+				boardMap["LF1"]->getBuffer()[i] = boardMap["LF1"]->getBuffer()[i - 1];
+				boardMap["LF2"]->getBuffer()[i] = boardMap["LF2"]->getBuffer()[i - 1];
+				boardMap["LF3"]->getBuffer()[i] = boardMap["LF3"]->getBuffer()[i - 1];
+				boardMap["LF4"]->getBuffer()[i] = boardMap["LF4"]->getBuffer()[i - 1];
+				boardMap["LF5"]->getBuffer()[i] = boardMap["LF5"]->getBuffer()[i - 1];
+			}
+		}
+	}
+}
+
+void RobotControl::startTrajectory(){
+	if (trajStarted || !trajInput.is_open()) return;
+
+	trajStarted = true;
+}
+
+void RobotControl::stopTrajectory(){
+	terminateTraj = true;
+	trajInput.close();
 }
 
 string RobotControl::getDefaultInitPath(string path){

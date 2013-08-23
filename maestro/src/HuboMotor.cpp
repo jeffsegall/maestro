@@ -44,6 +44,9 @@ HuboMotor::HuboMotor(){
 	enabled = false;
 	homed = false;
 	zeroed = false;
+
+	buffer = NULL;
+	i = 0;
 }
 
 HuboMotor::HuboMotor(long mpos1, long mpos2, long kp, long kd, long ki,
@@ -87,6 +90,9 @@ HuboMotor::HuboMotor(long mpos1, long mpos2, long kp, long kd, long ki,
 	enabled = false;
 	homed = false;
 	zeroed = false;
+
+	i = 0;
+	buffer = NULL;
 }
 
 HuboMotor::HuboMotor(const HuboMotor& rhs){
@@ -128,6 +134,9 @@ HuboMotor::HuboMotor(const HuboMotor& rhs){
     this->enabled = rhs.enabled;
     this->homed = rhs.homed;
     this->zeroed = rhs.zeroed;
+
+    this->buffer = rhs.buffer; //SHALLOW COPY
+    this->i = rhs.i;
 }
 
 void HuboMotor::setUpperLimit(long limit){
@@ -330,6 +339,13 @@ long HuboMotor::interpolate(int MAX_STEP, int MIN_STEP){
 }
 */
 
+vector<double> *HuboMotor::getBuffer(){
+	if (buffer == NULL)
+		buffer = new vector<double>(10);
+	i = 0;
+	return buffer;
+}
+
 double HuboMotor::interpolate(){
 	if (frequency == 0) return interStep; //If the frequency is 0, no motion occurs.
 
@@ -353,6 +369,14 @@ double HuboMotor::interpolate(){
 	output += interStep;
 	interStep = output;
 	return interStep;
+}
+
+double HuboMotor::nextPosition(){
+	if (buffer.size() == 0 || i >= buffer.size())
+		return interStep;
+	interStep = buffer[i];
+	goalPosition = buffer[i];
+	return buffer[i++];
 }
 
 

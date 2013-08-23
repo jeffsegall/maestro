@@ -80,6 +80,10 @@ class HuboMotor {
 	bool zeroed;					//Whether the sensors have been zeroed or not
 	int errors;						//Collection of error flags
 
+	//Experimental Trajectory
+	vector<double> * buffer; // Buffer of positions
+	int i; // Index of buffer
+
 	public:
 
 	HuboMotor();
@@ -141,7 +145,9 @@ class HuboMotor {
 	void setEnabled(bool enabled);
 	void setHomed(bool homed);
 	void setZeroed(bool zeroed);
+	vector<double> *getBuffer();
 	double interpolate();
+	double nextPosition();
 
 	string getName();
 	double getGoalPosition();
@@ -155,6 +161,7 @@ class HuboMotor {
 	bool hasError();
 	bool hasError(PROPERTY error);
 	bool requiresMotion();
+
 
 	//******** OLD **********
 	//long interpolate(int MAX_STEP, int MIN_STEP); //DEPRECATED
