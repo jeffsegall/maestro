@@ -341,7 +341,7 @@ long HuboMotor::interpolate(int MAX_STEP, int MIN_STEP){
 
 vector<double> *HuboMotor::getBuffer(){
 	if (buffer == NULL)
-		buffer = new vector<double>(10);
+		buffer = new vector<double>();
 	i = 0;
 	return buffer;
 }
