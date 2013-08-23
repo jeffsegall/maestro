@@ -389,7 +389,7 @@ void RobotControl::loadBuffers(){
 		scanned = 0;
 
 		if (!terminateTraj) {
-			getline(is, temp, '\n');
+			getline(trajInput, temp, '\n');
 			scanned = sscanf(temp.c_str(),
 				"%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
 				&RHY,
@@ -480,7 +480,7 @@ void RobotControl::loadBuffers(){
 			}
 		}
 
-		if (terminateTraj)
+		if (terminateTraj) {
 			if (i == 0){
 				(*boardMap["RHY"]->getBuffer())[i] = (*boardMap["RHY"]->getBuffer())[BUFFER_SIZE - 1];
 				(*boardMap["RHR"]->getBuffer())[i] = (*boardMap["RHR"]->getBuffer())[BUFFER_SIZE - 1];
