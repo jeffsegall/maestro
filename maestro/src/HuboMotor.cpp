@@ -443,6 +443,10 @@ double HuboMotor::getPosition(){
 	return currPos;
 }
 
+double HuboMotor::getInterStep(){
+	return interStep;
+}
+
 double HuboMotor::getVelocity(){
 	return currVel;
 }

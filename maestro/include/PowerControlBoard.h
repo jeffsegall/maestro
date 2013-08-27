@@ -27,6 +27,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef POWERCONTROLBOARD_H
 #define POWERCONTROLBOARD_H
 
+#define LOOKUP_TABLE_PATH "/opt/ros/fuerte/stacks/maestro/maestro/config/power"
+
 #include "huboCan.h"
 #include <rtt/TaskContext.hpp>
 #include <rtt/Port.hpp>
@@ -36,6 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <hubomsg/typekit/HuboCmd.h>
 #include <hubomsg/typekit/CanMessage.h>
 #include <hubomsg/typekit/HuboState.h>
+#include <fstream>
 
 using namespace RTT;
 
@@ -49,6 +52,9 @@ class PowerControlBoard {
 
         //SUBSCRIBE
         InputPort<hubomsg::CanMessage>* canUpPort; 
+
+        ifstream powerLookup;
+        double powerUsed;
     public:
 
         PowerControlBoard();

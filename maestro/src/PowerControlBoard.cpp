@@ -33,6 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ******************************************************************************/
 PowerControlBoard::PowerControlBoard(){
     PowerControlBoard((boardNum)0);
+
 }
 
 /******************************************************************************

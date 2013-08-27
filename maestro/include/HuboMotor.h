@@ -153,6 +153,7 @@ class HuboMotor {
 	string getName();
 	double getGoalPosition();
 	double getPosition();
+	double getInterStep();
 	double getVelocity();
 	double getTemperature();
 	double getCurrent();
