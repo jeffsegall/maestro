@@ -153,7 +153,7 @@ bool PowerControlBoard::addMotionPower(string joint, double from, double to){
 		scanned = sscanf(line.c_str(), "%s %lf %lf %lf",
 			&dataJoint, &dataFrom, &dataTo, &delta);
 		std::cout << "Scanned " << scanned << "entries." << std::endl;
-		if (joint.compare(dataJoint) == 0 && from = dataFrom && to == dataTo){
+		if (joint.compare(dataJoint) == 0 && from == dataFrom && to == dataTo){
 			powerUsed += delta;
 			powerLookup.clear();
 			return true;
