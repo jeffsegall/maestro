@@ -140,7 +140,7 @@ double PowerControlBoard::getTotalPowerUsed(){
 bool PowerControlBoard::addMotionPower(string joint, double from, double to){
 
 	string line;
-	string dataJoint = "";
+	char dataJoint[10];
 	double dataFrom = 0;
 	double dataTo = 0;
 	double delta = 0;
@@ -154,7 +154,7 @@ bool PowerControlBoard::addMotionPower(string joint, double from, double to){
 			&dataJoint, &dataFrom, &dataTo, &delta);
 		std::cout << "Scanned " << scanned << "entries." << std::endl;
 		std::cout << dataJoint << " " << dataFrom << " " << dataTo << " " << delta << std::endl;
-		if (joint.compare(dataJoint) == 0 && from == dataFrom && to == dataTo){
+		if (strcmp(dataJoint, joint.c_str()) == 0 && from == dataFrom && to == dataTo){
 			powerUsed += delta;
 			powerLookup.clear();
 			return true;
