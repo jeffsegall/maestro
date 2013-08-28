@@ -39,6 +39,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <hubomsg/typekit/CanMessage.h>
 #include <hubomsg/typekit/HuboState.h>
 #include <fstream>
+#include <iostream>
 
 using namespace RTT;
 
