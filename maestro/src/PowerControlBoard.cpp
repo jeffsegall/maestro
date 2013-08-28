@@ -154,10 +154,12 @@ bool PowerControlBoard::addMotionPower(string joint, double from, double to){
 		if (strcmp(dataJoint, joint.c_str()) == 0 && from == dataFrom && to == dataTo){
 			std::cout << "Power found!" << std::endl;
 			powerUsed += delta;
-			powerLookup.seekg(0, powerLookup.beg);
+			inputFile.clear();
+			inputFile.seekg(0, ios::beg);
 			return true;
 		}
 	} while (scanned == 4);
-	powerLookup.seekg(0, powerLookup.beg);
+	inputFile.clear();
+	inputFile.seekg(0, ios::beg);
 	return false;
 }
