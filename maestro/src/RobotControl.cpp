@@ -139,6 +139,7 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
 		std::cout << "Adding gestures from path: " << paths[i] << std::endl;
 		this->getProvider<Scripting>("scripting")->loadPrograms(paths[i]);
     }
+    power = new PowerControlBoard(0);
 
     RUN_TYPE = getRunType(CONFIG_PATH);
 
@@ -719,6 +720,7 @@ void RobotControl::set(string name, string property, double value){
 	switch (properties[property]){
 	case POSITION:
 		if (printNow) std::cout << "Setting position of motor " << name << " to " << value << " ." << std::endl;
+		power->addMotionPower(name, motor->getGoalPosition(), value);
 		motor->setGoalPosition(value);
 		break;
 	case VELOCITY:
@@ -876,6 +878,8 @@ double RobotControl::get(string name, string property){
 			if (printNow) std::cout << "IMU with name " << name << " has no readable property named " << property << " ." << std::endl;
 			return 0;
 		}
+	} else if (name.compare("PWR") == 0){
+		return power->getTotalPowerUsed();
 	} else {
 		std::cout << "Error. Readable Object with name " << name << " is not on record. Aborting." << std::endl;
 		return 0;

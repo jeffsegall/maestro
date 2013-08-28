@@ -34,6 +34,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 PowerControlBoard::PowerControlBoard(){
     PowerControlBoard((boardNum)0);
 
+    powerLookup.open(LOOKUP_TABLE_PATH);
+    powerUsed = 0;
+
 }
 
 /******************************************************************************
@@ -47,6 +50,9 @@ PowerControlBoard::PowerControlBoard(boardNum BNO){
     this->BNO = BNO;
     this->huboDownPort = new OutputPort<hubomsg::HuboState>("Hubo/HuboState");
     this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
+
+    powerLookup.open(LOOKUP_TABLE_PATH);
+	powerUsed = 0;
 }
 
 /******************************************************************************
@@ -123,4 +129,34 @@ void PowerControlBoard::requestTimeAndStatus(){
     //this->canDownPort->write(buildCanMessage(out));
 }
 
+void PowerControlBoard::setInitialPower(double initialPower){
+	powerUsed = initialPower;
+}
 
+double PowerControlBoard::getTotalPowerUsed(){
+	return powerUsed;
+}
+
+bool PowerControlBoard::addMotionPower(string joint, double from, double to){
+
+	string line;
+	string dataJoint = "";
+	double dataFrom = 0;
+	double dataTo = 0;
+	double delta = 0;
+	int scanned = 0;
+	do {
+		getline(powerLookup, line, '\n');
+
+		scanned = sscanf(temp.c_str(), "%s %lf %lf %lf",
+			&dataJoint, &dataFrom, &dataTo, &delta);
+		if (joint.compare(dataJoint) == 0 && from = dataFrom && to == dataTo){
+			powerUsed += delta;
+			powerLookup.clear();
+			return true;
+		}
+
+	} while (scanned == 4);
+	powerLookup.clear();
+	return false;
+}

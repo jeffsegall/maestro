@@ -130,6 +130,7 @@ private:
     OutputPort<hubomsg::AchCommand>* achDownPort;
 
     HuboState* state;
+    PowerControlBoard* power;
 
     queue<hubomsg::CanMessage>* inputQueue;
     queue<hubomsg::HuboState>*	huboInputQueue;

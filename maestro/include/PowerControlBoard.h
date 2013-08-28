@@ -67,6 +67,10 @@ class PowerControlBoard {
         void requestVoltageAndCurrent();
         void requestTimeAndStatus();
 
+        void setInitialPower(double initialPower);
+        double getTotalPowerUsed();
+        bool addMotionPower(string joint, double from, double to);
+
 };
 
 #endif
