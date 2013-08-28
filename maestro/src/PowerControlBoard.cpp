@@ -152,10 +152,10 @@ bool PowerControlBoard::addMotionPower(string joint, double from, double to){
 			&dataJoint, &dataFrom, &dataTo, &delta);
 		if (strcmp(dataJoint, joint.c_str()) == 0 && from == dataFrom && to == dataTo){
 			powerUsed += delta;
-			powerLookup.clear();
+			powerLookup.seekg(0, powerLookup.beg);
 			return true;
 		}
 	} while (scanned == 4);
-	powerLookup.clear();
+	powerLookup.seekg(0, powerLookup.beg);
 	return false;
 }
