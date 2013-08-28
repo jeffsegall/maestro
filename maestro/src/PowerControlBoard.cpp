@@ -145,21 +145,16 @@ bool PowerControlBoard::addMotionPower(string joint, double from, double to){
 	double dataTo = 0;
 	double delta = 0;
 	int scanned = 0;
-	std::cout << "before do" << std::endl;
 	do {
 		getline(powerLookup, line, '\n');
-		std::cout << "after getline" << std::endl;
 
 		scanned = sscanf(line.c_str(), "%s %lf %lf %lf",
 			&dataJoint, &dataFrom, &dataTo, &delta);
-		std::cout << "Scanned " << scanned << "entries." << std::endl;
-		std::cout << dataJoint << " " << dataFrom << " " << dataTo << " " << delta << std::endl;
 		if (strcmp(dataJoint, joint.c_str()) == 0 && from == dataFrom && to == dataTo){
 			powerUsed += delta;
 			powerLookup.clear();
 			return true;
 		}
-		std::cout << "end of while" << std::endl;
 	} while (scanned == 4);
 	powerLookup.clear();
 	return false;
