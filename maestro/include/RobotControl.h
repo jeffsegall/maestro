@@ -60,6 +60,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "MotorBoard.h"
 #include "IMUBoard.h"
 #include "FTSensorBoard.h"
+#include "PowerControlBoard.h"
 #include "Names.h"
 #include <fstream>
 #include <sstream>
