@@ -139,7 +139,7 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
 		std::cout << "Adding gestures from path: " << paths[i] << std::endl;
 		this->getProvider<Scripting>("scripting")->loadPrograms(paths[i]);
     }
-    power = new PowerControlBoard(0);
+    power = new PowerControlBoard();
 
     RUN_TYPE = getRunType(CONFIG_PATH);
 

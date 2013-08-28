@@ -148,9 +148,9 @@ bool PowerControlBoard::addMotionPower(string joint, double from, double to){
 	do {
 		getline(powerLookup, line, '\n');
 
-		scanned = sscanf(temp.c_str(), "%s %lf %lf %lf",
+		scanned = sscanf(line.c_str(), "%s %lf %lf %lf",
 			&dataJoint, &dataFrom, &dataTo, &delta);
-		if (joint.compare(dataJoint) == 0 && from = dataFrom && to == dataTo){
+		if (joint.compare(dataJoint) == 0 && from == dataFrom && to == dataTo){
 			powerUsed += delta;
 			powerLookup.clear();
 			return true;
