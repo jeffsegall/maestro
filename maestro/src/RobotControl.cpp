@@ -698,7 +698,7 @@ void RobotControl::updateState(){
 													huboState.left_ankle.My,
 													huboState.left_ankle.Fz);
 
-		tempOutput << "LHP\t" << this->state->getMotorByName("LSP")->getInterStep() << "\t" << this->state->getMotorByName("LSP") << std::endl;
+		tempOutput << "REP\t" << this->state->getMotorByName("REP")->getInterStep() << "\t" << this->state->getMotorByName("REP")->getPosition() << std::endl;
 
 }
 
