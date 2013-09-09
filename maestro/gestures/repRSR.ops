@@ -1,0 +1,21 @@
+program repRSR{
+	var double speed = 1.5;
+
+	var int i = 0;
+
+	while (i < 100) {
+		do RobotControl.setProperties("RSR RSR", "velocity position", "1.5 -1.35");
+
+		while RobotControl.requiresMotion("RSR"){
+			do nothing
+		}
+	
+		do RobotControl.setProperties("RSR RSR", "velocity position", "1.5 0");
+
+		while RobotControl.requiresMotion("RSR"){
+			do nothing
+		}
+
+		set i = i + 1;
+	}	
+}

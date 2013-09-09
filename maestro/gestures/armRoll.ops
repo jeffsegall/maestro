@@ -1,0 +1,50 @@
+program armRoll {
+	var double speed = 1.5;
+	
+	do RobotControl.setProperty("RSR", "position", -1.57);
+	while RobotControl.requiresMotion("RSR"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSR", "position", 0);
+	while RobotControl.requiresMotion("RSR"){
+		do nothing
+	}
+	do RobotControl.setProperty("RSR", "position", -1.57);
+	while RobotControl.requiresMotion("RSR"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSR", "position", 0);
+	while RobotControl.requiresMotion("RSR"){
+		do nothing
+	}
+	do RobotControl.setProperty("RSR", "position", -1.57);
+	while RobotControl.requiresMotion("RSR"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSR", "position", 0);
+	while RobotControl.requiresMotion("RSR"){
+		do nothing
+	}
+	do RobotControl.setProperty("RSR", "position", -1.57);
+	while RobotControl.requiresMotion("RSR"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSR", "position", 0);
+	while RobotControl.requiresMotion("RSR"){
+		do nothing
+	}
+	do RobotControl.setProperty("RSR", "position", -1.57);
+	while RobotControl.requiresMotion("RSR"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSR", "position", 0);
+	while RobotControl.requiresMotion("RSR"){
+		do nothing
+	}
+
+}

@@ -1,0 +1,73 @@
+program armPitch {
+	var double speed = 1.5;
+	
+	do RobotControl.setProperty("RSP", "position", -1.57);
+	while RobotControl.requiresMotion("RSP"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSP", "position", 0);
+	while RobotControl.requiresMotion("RSP"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSP", "position", -1.57);
+	while RobotControl.requiresMotion("RSP"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSP", "position", 0);
+	while RobotControl.requiresMotion("RSP"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSP", "position", -1.57);
+	while RobotControl.requiresMotion("RSP"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSP", "position", 0);
+	while RobotControl.requiresMotion("RSP"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSP", "position", -1.57);
+	while RobotControl.requiresMotion("RSP"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSP", "position", 0);
+	while RobotControl.requiresMotion("RSP"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSP", "position", -1.57);
+	while RobotControl.requiresMotion("RSP"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSP", "position", 0);
+	while RobotControl.requiresMotion("RSP"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSP", "position", -1.57);
+	while RobotControl.requiresMotion("RSP"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSP", "position", 0);
+	while RobotControl.requiresMotion("RSP"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSP", "position", -1.57);
+	while RobotControl.requiresMotion("RSP"){
+		do nothing
+	}
+
+	do RobotControl.setProperty("RSP", "position", 0);
+	while RobotControl.requiresMotion("RSP"){
+		do nothing
+	}
+}

@@ -1,0 +1,123 @@
+program testureLeft{
+	var double speed = 1.5;
+	
+	do RobotControl.setProperties("LSR LSR", "velocity position", "1.5 1.35");	
+
+	while RobotControl.requiresMotion("LSR"){
+		do nothing
+	}
+
+	do RobotControl.setProperties("LSY LSY", "velocity position", "1.5 -1.57");
+
+        while RobotControl.requiresMotion("LSY"){
+                do nothing
+        }
+	
+	do RobotControl.setProperties("LEP LEP", "velocity position", "1.5 -1.7")
+
+	while (RobotControl.requiresMotion("LEP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("LEP", "position", "0")
+
+	while (RobotControl.requiresMotion("LEP")){
+		do nothing
+	}
+	
+	do RobotControl.setProperties("LEP", "position", "-1.7")
+
+	while (RobotControl.requiresMotion("LEP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("LEP", "position", "0")
+
+	while (RobotControl.requiresMotion("LEP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("LEP", "position", "-1.7")
+
+	while (RobotControl.requiresMotion("LEP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("LEP", "position", "0")
+
+	while (RobotControl.requiresMotion("LEP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("LEP", "position", "-1.7")
+
+	while (RobotControl.requiresMotion("LEP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("LEP", "position", "0")
+
+	while (RobotControl.requiresMotion("LEP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("LSY LSY", "velocity position", "1.5 1.57");
+
+	while RobotControl.requiresMotion("LSY"){
+		do nothing
+	}
+
+	do RobotControl.setProperties("LEP", "position", "-1.7")
+
+	while (RobotControl.requiresMotion("LEP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("LEP", "position", "0")
+
+	while (RobotControl.requiresMotion("LEP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("LEP", "position", "-1.7")
+
+	while (RobotControl.requiresMotion("LEP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("LEP", "position", "0")
+
+	while (RobotControl.requiresMotion("LEP")){
+		do nothing
+	}
+
+	
+	do RobotControl.setProperties("LEP", "position", "-1.7")
+
+	while (RobotControl.requiresMotion("LEP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("LEP", "position", "0")
+
+	while (RobotControl.requiresMotion("LEP")){
+		do nothing
+	}
+	
+	do RobotControl.setProperties("LEP", "position", "-1.7")
+
+	while (RobotControl.requiresMotion("LEP")){
+		do nothing
+	}
+
+	do RobotControl.setProperties("LEP", "position", "0")
+
+	while (RobotControl.requiresMotion("LEP")){
+		do nothing
+	}
+
+	
+	do RobotControl.setProperties("LSY LSR", "position position", "0 0");
+
+
+}

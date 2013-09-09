@@ -1,19 +1,19 @@
 program testure{
 	var double speed = 1.5;
 	
-	do RobotControl.setProperties("RSR RSR", "velocity position", "1.5 -1.35");	
+	do RobotControl.setProperties("RSR RSR", "velocity position", "1.0 -1.35");	
 
 	while RobotControl.requiresMotion("RSR"){
 		do nothing
 	}
 
-	do RobotControl.setProperties("RSY RSY", "velocity position", "1.5 1.57");
+	do RobotControl.setProperties("RSY RSY", "velocity position", "1.0 1.57");
 
         while RobotControl.requiresMotion("RSY"){
                 do nothing
         }
 	
-	do RobotControl.setProperties("REP REP", "velocity position", "1.5 -1.7")
+	do RobotControl.setProperties("REP REP", "velocity position", "1.0 -1.7")
 
 	while (RobotControl.requiresMotion("REP")){
 		do nothing
@@ -61,7 +61,7 @@ program testure{
 		do nothing
 	}
 
-	do RobotControl.setProperties("RSY RSY", "velocity position", "1.5 -1.57");
+	do RobotControl.setProperties("RSY RSY", "velocity position", "1.0 -1.57");
 
 	while RobotControl.requiresMotion("RSY"){
 		do nothing
