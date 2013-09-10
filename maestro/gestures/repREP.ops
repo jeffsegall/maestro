@@ -3,7 +3,7 @@ program repREP{
 
 	var int i = 0;
 
-	while (i < 100) {
+	while (i < 500) {
 		do RobotControl.setProperties("REP REP", "velocity position", "1.5 1.35");
 
 		while RobotControl.requiresMotion("REP"){
