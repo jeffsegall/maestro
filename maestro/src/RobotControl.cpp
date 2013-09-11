@@ -221,7 +221,6 @@ void RobotControl::updateHook(){
 						state.position = motor->getGoalPosition();
 					}
 					//state.position = interpolation ? motor->interpolate() : motor->getGoalPosition();
-					power->addMotionPower("IDLE", this->getPeriod());
 					buildHuboCommandMessage(state, message);
 				}
 			}
@@ -229,6 +228,7 @@ void RobotControl::updateHook(){
 		huboOutputQueue->push(message);
 
 	}
+	power->addMotionPower("IDLE", this->getPeriod());
 
 	//Write out a message if we have one
 
