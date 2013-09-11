@@ -37,11 +37,11 @@ PowerControlBoard::PowerControlBoard(){
     powerLookup.open(LOOKUP_TABLE_PATH);
     powerUsed = 0;
 
-    a_nought["IDLE"] = -.0088 / 60;
+    a_nought["IDLE"] = -.008779441 / 60;
 
-    a_nought["RSR"] = -0.0367 / 60;
-    a_nought["RSY"] = -0.0011 / 60;
-    a_nought["REB"] = -0.0139 / 60;
+    a_nought["RSR"] = -0.036720559 / 60;
+    a_nought["RSY"] = -0.001107553 / 60;
+    a_nought["REP"] = -0.013902377 / 60;
 
 }
 
