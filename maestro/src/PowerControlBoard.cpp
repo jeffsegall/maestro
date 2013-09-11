@@ -37,6 +37,12 @@ PowerControlBoard::PowerControlBoard(){
     powerLookup.open(LOOKUP_TABLE_PATH);
     powerUsed = 0;
 
+    a_nought["IDLE"] = -.0088 / 60;
+
+    a_nought["RSR"] = -0.0367 / 60;
+    a_nought["RSY"] = -0.0011 / 60;
+    a_nought["REB"] = -0.0139 / 60;
+
 }
 
 /******************************************************************************
@@ -160,4 +166,9 @@ bool PowerControlBoard::addMotionPower(string joint, double from, double to){
 	powerLookup.close();
 	powerLookup.open(LOOKUP_TABLE_PATH);
 	return false;
+}
+
+void PowerControlBoard::addMotionPower(string joint, double period){
+	if (a_nought.count(joint) == 1)
+		powerUsed += a_nought[joint] * period;
 }

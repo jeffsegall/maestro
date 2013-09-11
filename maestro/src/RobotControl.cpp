@@ -195,12 +195,14 @@ void RobotControl::updateHook(){
 			MotorBoard* mb = this->state->getBoards()[i];
 			for (int j = 0; j < mb->getNumChannels(); j++){
 				HuboMotor* motor = mb->getMotorByChannel(j);
-				if (motor->isEnabled()){
+				if (motor->isEnabled() && (motor->requiresMotion() || trajStarted)){
 					hubomsg::HuboJointCommand state;
 					state.name = motor->getName();
-					if (interpolation)
-						state.position = motor->interpolate();
-					else if (trajStarted){
+					if (interpolation){
+						double pos = motor->interpolate();
+						state.position = pos;
+						power->addMotionPower(motor->getName(), this->getPeriod());
+					} else if (trajStarted){
 						double pos = motor->nextPosition();
 						state.position = motor->nextPosition();
 						++frames;
@@ -219,6 +221,7 @@ void RobotControl::updateHook(){
 						state.position = motor->getGoalPosition();
 					}
 					//state.position = interpolation ? motor->interpolate() : motor->getGoalPosition();
+					power->addMotionPower("IDLE", this->getPeriod());
 					buildHuboCommandMessage(state, message);
 				}
 			}
@@ -720,7 +723,7 @@ void RobotControl::set(string name, string property, double value){
 	switch (properties[property]){
 	case POSITION:
 		if (printNow) std::cout << "Setting position of motor " << name << " to " << value << " ." << std::endl;
-		power->addMotionPower(name, motor->getGoalPosition(), value);
+		//power->addMotionPower(name, motor->getGoalPosition(), value);
 		motor->setGoalPosition(value);
 		break;
 	case VELOCITY:

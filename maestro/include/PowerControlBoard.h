@@ -40,6 +40,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <hubomsg/typekit/HuboState.h>
 #include <fstream>
 #include <iostream>
+#include <map>
+#include <string>
 
 using namespace RTT;
 
@@ -56,6 +58,8 @@ class PowerControlBoard {
 
         ifstream powerLookup;
         double powerUsed;
+
+        map <string, double> a_nought;
     public:
 
         PowerControlBoard();
@@ -71,6 +75,7 @@ class PowerControlBoard {
         void setInitialPower(double initialPower);
         double getTotalPowerUsed();
         bool addMotionPower(string joint, double from, double to);
+        void addMotionPower(string joint, double period);
 
 };
 
