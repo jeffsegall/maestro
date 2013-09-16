@@ -38,6 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <hubomsg/typekit/HuboCmd.h>
 #include <hubomsg/typekit/CanMessage.h>
 #include <hubomsg/typekit/HuboState.h>
+#include <hubomsg/typekit/PythonMessage.h>
 #include "HuboState.h"
 
 class CommHandler {
@@ -45,27 +46,32 @@ class CommHandler {
 public:
 	CommHandler (InputPort<hubomsg::CanMessage>* port1,
 			InputPort<hubomsg::HuboCmd>* port2,
-			InputPort<hubomsg::HuboState>* port3);
+			InputPort<hubomsg::HuboState>* port3,
+            InputPort<hubomsg::PythonMessage>* port4);
 	~CommHandler();
 
 	void update();
 	hubomsg::CanMessage getMessage();
 	hubomsg::HuboCmd getCmd();
 	hubomsg::HuboState getState();
+    hubomsg::PythonMessage getPyMessage();
 	bool isNew(int port);
 private:
 	hubomsg::HuboCmd currCmd;
 	hubomsg::CanMessage currMessage;
 	hubomsg::HuboState currState;
+	hubomsg::PythonMessage currPyMessage;
 
 	//Subscribe
 	InputPort<hubomsg::CanMessage>* canPort;
 	InputPort<hubomsg::HuboCmd>* orPort;
 	InputPort<hubomsg::HuboState>* achPort;
+	InputPort<hubomsg::PythonMessage>* pyPort;//
 
 	bool newCanData;
 	bool newORData;
 	bool newAchData;
+	bool newPyData;
 };
 
 

@@ -35,21 +35,28 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     this->huboUpPort = new InputPort<hubomsg::HuboState>("Hubo/HuboState");
 	this->huboDownPort = new OutputPort<hubomsg::HuboCommand>("Hubo/HuboCommand");
 	this->achDownPort = new OutputPort<hubomsg::AchCommand>("Hubo/AchCommand");
+    this->messageDownPort = new OutputPort<hubomsg::MaestroMessage>("Maestro/Message");   
+
+    this->pythonPort = new InputPort<hubomsg::PythonMessage>("Maestro/Control");
 
     this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
     this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
-    this->commHandler = new CommHandler(canUpPort, orOutPort, huboUpPort);
+    
+	this->commHandler = new CommHandler(canUpPort, orOutPort, huboUpPort, pythonPort);
 
     //CAN QUEUES
     this->inputQueue = new queue<hubomsg::CanMessage>();
     this->huboOutputQueue = new queue<hubomsg::HuboCommand>();
     this->achOutputQueue = new queue<hubomsg::AchCommand>();
-    
+   // this->messageOutputQueue = new queue<hubomsg::MaestroMessage>();    
+
     //CAN PORTS 
     this->addEventPort(*canUpPort);
     this->addEventPort(*huboUpPort);
+	this->addEventPort(*pythonPort);
     this->addPort(*huboDownPort);
     this->addPort(*achDownPort);
+    this->addPort(*messageDownPort);
 
     //OPENRAVE PORTS
     this->addEventPort(*orOutPort);
@@ -171,8 +178,21 @@ void RobotControl::updateHook(){
 	hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
 	hubomsg::CanMessage canMessage = hubomsg::CanMessage();
 	//hubomsg::HuboState huboState = hubomsg::HuboState();
+	hubomsg::PythonMessage message = hubomsg::PythonMessage();
 
 	commHandler->update();
+
+	if (commHandler->isNew(4)){
+		message = commHandler->getPyMessage();
+		string command = message.command;
+		if(command.compare("initRobot") == 0)
+		{
+			initRobot("");
+		}
+		if (state == NULL) return;
+		this->handleMessage(message);
+	}
+
 	if (state == NULL) return;
 
 	if (commHandler->isNew(1)){
@@ -189,6 +209,7 @@ void RobotControl::updateHook(){
 		updateState();
 	}
 
+	
 	if (huboOutputQueue->empty() && !this->state->getBoards().empty()) {
 		hubomsg::HuboCommand message;
 		for (int i = 0; i < this->state->getBoards().size(); i++){
@@ -639,6 +660,48 @@ void RobotControl::initRobot(string path){
 
 	//@TODO: Check for file existence before initializing.
 	this->state->initHuboWithDefaults(path, 1/this->getPeriod(), this->huboOutputQueue);
+}
+
+void RobotControl::handleMessage(hubomsg::PythonMessage message)
+{
+
+	string joint = message.joint;
+	string command = message.command;
+	string target = message.target;
+	string value = message.value;
+	if(command.compare("initRobot") == 0)
+	{
+		initRobot("");
+	}
+	if (joint.compare("") == 0)
+	{
+		if (command.compare("initRobot") == 0)
+			initRobot("");
+		else
+			this->command(command, target);
+	}
+	else if(command.compare("Get") == 0)
+	{
+		double value = get(joint, target);
+		hubomsg::MaestroMessage newMessage;
+		newMessage.joint = joint;
+		newMessage.property = target;
+		newMessage.value = value;
+		this->messageDownPort->write(newMessage);	
+	}
+	else if(command.compare("Check") == 0)
+	{
+		bool value = requiresMotion(joint);
+		hubomsg::MaestroMessage newMessage;
+		newMessage.joint = joint;
+		newMessage.property = target;
+		newMessage.value = value;
+		this->messageDownPort->write(newMessage);	
+	}
+	else
+	{
+		setProperties(joint, command, value);
+	}
 }
 
 void RobotControl::updateState(){

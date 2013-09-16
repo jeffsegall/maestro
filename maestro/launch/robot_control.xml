@@ -40,6 +40,22 @@
   <simple name="name_id" type="string"><value>can_up</value></simple>
 </struct>
 
+<struct name="PythonMessage" type="ConnPolicy">
+  <simple name="type" type="short"><value>0</value></simple>
+  <simple name="size" type="short"><value>1000</value></simple>
+  <simple name="transport" type="short"><value>3</value></simple>
+  <simple name="name_id" type="string"><value>Maestro/Control</value></simple>
+</struct>
+  
+<struct name="MaestroMessage" type="ConnPolicy">
+  <simple name="type" type="short"><value>0</value></simple>
+  <simple name="size" type="short"><value>1000</value></simple>
+  <simple name="transport" type="short"><value>3</value></simple>
+  <simple name="name_id" type="string"><value>Maestro/Message</value></simple>
+</struct>
+
+
+
 <struct name="RobotControl" type="RobotControl">
   <struct name="Activity" type="PeriodicActivity">
     <simple name="Period" type="double"><value>0.01</value></simple>
@@ -55,6 +71,8 @@
     <simple name="Hubo/AchCommand" type="string"><value> ACHCommand </value></simple>
     <simple name="Hubo/HuboState" type="string"><value> HuboState </value></simple>
     <simple name="can_up" type="string"><value> CANUp </value></simple>
+    <simple name="Maestro/Control" type="string"><value> PythonMessage </value></simple>
+    <simple name="Maestro/Message" type="string"><value> MaestroMessage </value></simple>
   </struct>
   <simple name="Service" type="string"><value>rosparam</value></simple>
 </struct>

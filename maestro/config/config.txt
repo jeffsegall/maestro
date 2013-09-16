@@ -15,3 +15,4 @@ Scripts:
 /opt/ros/fuerte/stacks/maestro/maestro/gestures/repREP.ops
 /opt/ros/fuerte/stacks/maestro/maestro/gestures/repRSY.ops
 /opt/ros/fuerte/stacks/maestro/maestro/gestures/repRSR.ops
+/opt/ros/fuerte/stacks/maestro/maestro/gestures/loop.ops
