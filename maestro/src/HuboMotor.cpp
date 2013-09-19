@@ -390,6 +390,12 @@ double HuboMotor::nextPosition(){
 	return (*buffer)[i++];
 }
 
+bool HuboMotor::reload(int bufferSize){
+	if (i >= bufferSize)
+		return true;
+	return false;
+}
+
 
 void HuboMotor::setName(string name){
 	this->name = name;

@@ -209,7 +209,7 @@ void RobotControl::updateHook(){
 		updateState();
 	}
 
-	
+	bool loadFrames = false;
 	if (huboOutputQueue->empty() && !this->state->getBoards().empty()) {
 		hubomsg::HuboCommand message;
 		for (int i = 0; i < this->state->getBoards().size(); i++){
@@ -226,18 +226,8 @@ void RobotControl::updateHook(){
 					} else if (trajStarted){
 						double pos = motor->nextPosition();
 						state.position = motor->nextPosition();
-						++frames;
-						if (frames % BUFFER_SIZE == 0){
-							if (terminateTraj){
-								std::cout << "terminating trajectory" << std::endl;
-								trajStarted = false;
-								trajInput.close();
-								terminateTraj = false;
-							} else {
-								tempOutput << "reloading buffers after " << frames << " frames." << std::endl;
-								loadBuffers();
-							}
-						}
+						if (motor->reload(BUFFER_SIZE))
+							loadFrames = true;
 					} else {
 						state.position = motor->getGoalPosition();
 					}
@@ -247,6 +237,18 @@ void RobotControl::updateHook(){
 			}
 		}
 		huboOutputQueue->push(message);
+
+		if (loadFrames){
+			if (terminateTraj){
+				std::cout << "terminating trajectory" << std::endl;
+				trajStarted = false;
+				trajInput.close();
+				terminateTraj = false;
+			} else {
+				tempOutput << "reloading buffers after " << BUFFER_SIZE << " frames." << std::endl;
+				loadBuffers();
+			}
+		}
 
 	}
 	power->addMotionPower("IDLE", this->getPeriod());
