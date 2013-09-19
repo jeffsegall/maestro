@@ -42,7 +42,7 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     //this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
     //this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
     
-	this->commHandler = new CommHandler(canUpPort, orOutPort, huboUpPort, pythonPort);
+	this->commHandler = new CommHandler(huboUpPort, pythonPort);
 
     //CAN QUEUES
     //this->inputQueue = new queue<hubomsg::CanMessage>();
@@ -100,10 +100,6 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
 
     this->addOperation("requiresMotion", &RobotControl::requiresMotion, this, RTT::OwnThread)
 			.arg("Name", "The name of the motor to check for necessary motion on.");
-
-    this->addOperation("debugControl", &RobotControl::debugControl, this, RTT::OwnThread)
-			.arg("Board", "The board to send commands to")
-			.arg("Operation", "Operation to perform. Use a value of 0 for a list of commands.");
 
     this->addOperation("setDelay", &RobotControl::setDelay, this, RTT::OwnThread)
 			.arg("Microseconds", "Delay amount in microseconds.");

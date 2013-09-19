@@ -33,8 +33,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <std_msgs/String.h>
 #include <rtt/Component.hpp>
 #include <hubomsg/typekit/HuboState.h>
+#include <string>
 
 using namespace RTT;
+using namespace std;
 
 class IMUBoard {
 

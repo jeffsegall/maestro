@@ -32,7 +32,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * Initializes a power control board with BNO = 0
 ******************************************************************************/
 PowerControlBoard::PowerControlBoard(){
-    PowerControlBoard((boardNum)0);
 
     powerLookup.open(LOOKUP_TABLE_PATH);
     powerUsed = 0;
@@ -43,22 +42,6 @@ PowerControlBoard::PowerControlBoard(){
     a_nought["RSY"] = -0.001107553 / 60;
     a_nought["REP"] = -0.013902377 / 60;
 
-}
-
-/******************************************************************************
-* PowerControlBoard (Default Constructor)
-*
-* Initializes a power control board with the given BNO.
-*
-* @param	BNO		The BNO of this power control board
-******************************************************************************/
-PowerControlBoard::PowerControlBoard(boardNum BNO){
-    this->BNO = BNO;
-    this->huboDownPort = new OutputPort<hubomsg::HuboState>("Hubo/HuboState");
-    this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
-
-    powerLookup.open(LOOKUP_TABLE_PATH);
-	powerUsed = 0;
 }
 
 /******************************************************************************

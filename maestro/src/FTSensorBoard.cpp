@@ -46,8 +46,8 @@ FTSensorBoard::FTSensorBoard(string name){
     this->name = name;
 
     //********* OLD *********
-    this->huboDownPort = new OutputPort<hubomsg::HuboState>("Hubo/HuboState");
-    this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
+    //this->huboDownPort = new OutputPort<hubomsg::HuboState>("Hubo/HuboState");
+    //this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
 
     mX = 0;
     mY = 0;

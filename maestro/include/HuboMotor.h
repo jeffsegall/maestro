@@ -59,10 +59,10 @@ class HuboMotor {
 	long i_err, b_err;              //Error limits
 	
 	long drive, driven, harm, enc; 	//gear ratios for conversion from radians to ticks
-
+*/
 	//Identification
 	string name;
-	*/
+	
 	//Output Data
 	double currGoal;				//Goal position in radians
 	double interStep;				//Current interpolated step in radians
