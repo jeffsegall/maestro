@@ -23,7 +23,7 @@ include(${OROCOS-RTT_USE_FILE_PATH}/UseOROCOS-RTT.cmake)
 
 
 #common commands for building c++ executables and libraries
-orocos_component(${PROJECT_NAME} src/RobotControl.cpp src/CommHandler.cpp src/HuboMotor.cpp src/huboCan.cpp src/MotorBoard.cpp src/IMUBoard.cpp src/FTSensorBoard.cpp src/PowerControlBoard.cpp src/HuboState.cpp src/pugixml.cpp)
+orocos_component(${PROJECT_NAME} src/RobotControl.cpp src/CommHandler.cpp src/HuboMotor.cpp src/MotorBoard.cpp src/IMUBoard.cpp src/FTSensorBoard.cpp src/PowerControlBoard.cpp src/HuboState.cpp src/pugixml.cpp)
 target_link_libraries(${PROJECT_NAME} ${OROCOS-RTT_RTT-SCRIPTING_LIBRARY})
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
