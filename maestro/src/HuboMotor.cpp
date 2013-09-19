@@ -50,6 +50,7 @@ HuboMotor::HuboMotor(){
 	buffer = new vector<double>(10);
 }
 
+/*
 HuboMotor::HuboMotor(long mpos1, long mpos2, long kp, long kd, long ki,
                      long dz, long off, long hlim, long hld, long hv1,
                      long hv2, long hma, long sm, long ers, long as, long md,
@@ -95,8 +96,10 @@ HuboMotor::HuboMotor(long mpos1, long mpos2, long kp, long kd, long ki,
 	i = 0;
 	buffer = new vector<double>(10);
 }
+*/
 
 HuboMotor::HuboMotor(const HuboMotor& rhs){
+	/*
     this->mpos1 = rhs.mpos1;
     this->mpos2 = rhs.mpos2;
     this->Kp = rhs.Kp;
@@ -120,6 +123,7 @@ HuboMotor::HuboMotor(const HuboMotor& rhs){
     this->pwm_lim = rhs.pwm_lim;
     this->i_err = rhs.i_err;
     this->b_err = rhs.b_err;
+    */
 
     //NEW_DATA
     this->name = rhs.name;
@@ -139,6 +143,8 @@ HuboMotor::HuboMotor(const HuboMotor& rhs){
     this->buffer = rhs.buffer; //SHALLOW COPY
     this->i = rhs.i;
 }
+
+/*
 
 void HuboMotor::setUpperLimit(long limit){
     this->mpos2 = limit;
@@ -309,6 +315,7 @@ long HuboMotor::getIerr(){
 long HuboMotor::getBerr(){
     return b_err;
 }
+*/
 
 bool HuboMotor::requiresMotion(){
 	return currGoal != interStep;

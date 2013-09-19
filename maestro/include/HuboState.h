@@ -27,15 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef HUBOSTATE_H
 #define HUBOSTATE_H
 
-/*Due to the nature of the HUBO+ CAN protocol, it is often necessary to keep track of the current state of some joints.
-  For example, if a user only wants to move one motor, but requires a transmitted packet that affects two motors, it is 
-  necessary to keep track of the position of the other motor to send along with the new position.
-  
-  The HuboState class is a collection of states that defines the current positions of the motors in the HUBO system.
-*/
-
 #include "HuboMotor.h"
-#include "huboCan.h"
 #include "MotorBoard.h"
 #include "FTSensorBoard.h"
 #include "IMUBoard.h"
@@ -58,7 +50,7 @@ enum MOTOR_NAME {
 	LH0, LH1, LH2, LH3, LH4, LH5
 } ;
 
-class HuboState{
+class HuboState {
 
     private:
     

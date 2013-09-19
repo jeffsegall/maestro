@@ -46,7 +46,7 @@ class HuboMotor {
 	
 	//This is an exhaustive list of parameters supported by the motors and may be overkill
 	//in the initial stages of the system.
-	
+	/*
 	long mpos1, mpos2;              //Limit positions
 	long Kp, Kd, Ki;                //Position Gain
 	long Kpt, Kdt, Kf;              //Current Gain
@@ -62,7 +62,7 @@ class HuboMotor {
 
 	//Identification
 	string name;
-
+	*/
 	//Output Data
 	double currGoal;				//Goal position in radians
 	double interStep;				//Current interpolated step in radians
@@ -88,14 +88,17 @@ class HuboMotor {
 	public:
 
 	HuboMotor();
+	/*
 	HuboMotor(long mpos1, long mpos2, long kp, long kd, long ki,
 			  long dz, long off, long hlim, long hld, long hv1,
 			  long hv2, long hma, long sm, long ers, long as, long md,
 			  long v_max, long a_max, long jam_lim, long jamd,
 			  long pwm_lim, long i_err, long b_err);
+			  */
 	HuboMotor(const HuboMotor& rhs);
 
 	// ***** OLD ****
+	/*
 	void setUpperLimit(long limit);
 	void setLowerLimit(long limit);
 	void setPositionGain(long kp, long kd, long ki);
@@ -108,8 +111,10 @@ class HuboMotor {
 	void setJamPowerLimit(long jam_lim, long jamd, long pwm_lim);
 	void setErrorLimit(long i_err, long b_err);
 	void setGearRatios(long drive, long driven, long harm, long enc);
+	*/
 
 	// ******* OLD ******
+	/*
 	long getUpperLimit();
 	long getLowerLimit();
 	long getKp();
@@ -136,6 +141,7 @@ class HuboMotor {
 	long getPwmLim();
 	long getIerr();
 	long getBerr();
+	*/
 
 	void setName(string name);
 	void setGoalPosition(double rads);

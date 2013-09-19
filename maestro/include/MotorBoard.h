@@ -11,6 +11,19 @@ modification, are permitted provided that the following conditions are met:
       documentation and/or other materials provided with the distribution.
     * Neither the name of the <organization> nor the
       names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior writte/*
+Copyright (c) 2013, Drexel University, iSchool, Applied Informatics Group
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the <organization> nor the
+      names of its contributors may be used to endorse or promote products
       derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -33,14 +46,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <std_msgs/Float64.h>
 #include <std_msgs/String.h>
 #include <rtt/Component.hpp>
-#include <hubomsg/typekit/HuboCmd.h>
-#include <hubomsg/typekit/CanMessage.h>
 #include <hubomsg/typekit/HuboJointState.h>
 #include <hubomsg/typekit/HuboState.h>
 #include <hubomsg/typekit/HuboCommand.h>
 #include <hubomsg/typekit/HuboJointCommand.h>
 #include <string>
-#include "huboCan.h"
 #include "ros/ros.h"
 #include <vector>
 #include <queue>
@@ -53,7 +63,7 @@ using std::queue;
 
 /* The MotorBoard class represents a single motor board in the HUBO+ */
 
-class MotorBoard{// : public RTT::TaskContext {
+class MotorBoard {
 
     private:
         boardNum BNO; 
@@ -62,12 +72,12 @@ class MotorBoard{// : public RTT::TaskContext {
 
         //PUBLISH
         //OutputPort<hubomsg::CanMessage>* canDownPort;
-        OutputPort<hubomsg::HuboCmd>* orInPort;
+        //OutputPort<hubomsg::HuboCmd>* orInPort;
         OutputPort<hubomsg::HuboCommand> HuboDownPort;
 
         //SUBSCRIBE
-        InputPort<hubomsg::CanMessage>* canUpPort;
-        InputPort<hubomsg::HuboCmd>* orOutPort;
+        //InputPort<hubomsg::CanMessage>* canUpPort;
+        //InputPort<hubomsg::HuboCmd>* orOutPort;
 
         queue<hubomsg::HuboCommand>* outQueue;
  
@@ -88,7 +98,7 @@ class MotorBoard{// : public RTT::TaskContext {
         bool requiresMotion(int channel);
 
         // PROTOCOL MOTOR COMMANDS
-
+        /*
         canMsg* setRequestBoardInfo(char CANR);
         canMsg* requestBoardStatus();
         canMsg* requestEncoderPosition(char FES);
@@ -123,14 +133,16 @@ class MotorBoard{// : public RTT::TaskContext {
 
         canMsg* sendPositionReference(vector<int> REF, int MAX_STEP = 75, int MIN_STEP = 5);
         vector<hubomsg::HuboJointCommand> sendPositionReference(int MAX_STEP = 0, int MIN_STEP = 5);
+        */
         /*
         canMsg* sendPositionReference(char REF0, char REF1, char REF2);
         canMsg* sendPositionReference(char REF0, char REF1, char REF2, char REF3, char REF4);
 		*/
+        /*
         canMsg* sendPositionReferenceRadians(double rad0, double rad1);
         canMsg* sendPositionReferenceRadians(double rad0, double rad1, double rad2);
         canMsg* sendPositionReferenceRadians(double rad0, double rad1, double rad2, double rad3, double rad4);
-         
+         */
 };
 
 

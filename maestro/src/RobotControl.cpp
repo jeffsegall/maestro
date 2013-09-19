@@ -30,7 +30,7 @@ using namespace std;
 
 RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
 
-    this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
+    //this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
     //this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
     this->huboUpPort = new InputPort<hubomsg::HuboState>("Hubo/HuboState");
 	this->huboDownPort = new OutputPort<hubomsg::HuboCommand>("Hubo/HuboCommand");
@@ -39,19 +39,19 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
 
     this->pythonPort = new InputPort<hubomsg::PythonMessage>("Maestro/Control");
 
-    this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
-    this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
+    //this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
+    //this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
     
 	this->commHandler = new CommHandler(canUpPort, orOutPort, huboUpPort, pythonPort);
 
     //CAN QUEUES
-    this->inputQueue = new queue<hubomsg::CanMessage>();
+    //this->inputQueue = new queue<hubomsg::CanMessage>();
     this->huboOutputQueue = new queue<hubomsg::HuboCommand>();
     this->achOutputQueue = new queue<hubomsg::AchCommand>();
-   // this->messageOutputQueue = new queue<hubomsg::MaestroMessage>();    
+    //this->messageOutputQueue = new queue<hubomsg::MaestroMessage>();
 
     //CAN PORTS 
-    this->addEventPort(*canUpPort);
+    //this->addEventPort(*canUpPort);
     this->addEventPort(*huboUpPort);
 	this->addEventPort(*pythonPort);
     this->addPort(*huboDownPort);
@@ -59,8 +59,8 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
     this->addPort(*messageDownPort);
 
     //OPENRAVE PORTS
-    this->addEventPort(*orOutPort);
-    this->addPort(*orInPort);
+    //this->addEventPort(*orOutPort);
+    //this->addPort(*orInPort);
 
     this->addOperation("initRobot", &RobotControl::initRobot, this, RTT::OwnThread)
             .doc("Initialize a robot")
@@ -158,6 +158,7 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
   
 RobotControl::~RobotControl(){}
 
+/*
 vector<float> trajectoryValues(string path){
 	vector<float> val;
 	float f;
@@ -173,10 +174,11 @@ vector<float> trajectoryValues(string path){
 
 	return val;
 }
+*/
 
 void RobotControl::updateHook(){
-	hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
-	hubomsg::CanMessage canMessage = hubomsg::CanMessage();
+	//hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
+	//hubomsg::CanMessage canMessage = hubomsg::CanMessage();
 	//hubomsg::HuboState huboState = hubomsg::HuboState();
 	hubomsg::PythonMessage message = hubomsg::PythonMessage();
 
@@ -195,17 +197,20 @@ void RobotControl::updateHook(){
 
 	if (state == NULL) return;
 
+	/*
 	if (commHandler->isNew(1)){
 		//Received update from CanGateway
 		canMessage = commHandler->getMessage(); //Deprecated - Soon to be phased out
 	}
+	*/
+	/*
 	if (commHandler->isNew(2)){
 		//Recieved update from openRAVE
 		huboCmd = commHandler->getCmd();
 	}
+	*/
 	if (commHandler->isNew(3)){
 		//Received update from Hubo-Ach
-
 		updateState();
 	}
 
@@ -263,7 +268,7 @@ void RobotControl::updateHook(){
 		this->huboDownPort->write(output);
 		huboOutputQueue->pop();
 	}
-
+	//Consider condensing ^ - v
 	if (!achOutputQueue->empty()){
 		hubomsg::AchCommand output = achOutputQueue->front();
 		if (printNow)
@@ -275,6 +280,7 @@ void RobotControl::updateHook(){
 	usleep(delay);
 }
 
+/*
 hubomsg::CanMessage RobotControl::buildCanMessage(canMsg* msg){
 	hubomsg::CanMessage canMessage;
 
@@ -292,12 +298,14 @@ hubomsg::CanMessage RobotControl::buildCanMessage(canMsg* msg){
 
 	return canMessage;
 }
+*/
 
 void RobotControl::buildHuboCommandMessage(hubomsg::HuboJointCommand& state, hubomsg::HuboCommand& message){
 	message.joints.push_back(state);
 	message.num_joints = message.joints.size();
 }
 
+//TODO: Scan directory for gestures, directory defined by config
 vector<string> RobotControl::getGestureScripts(string path){
 	vector<string> files;
 
@@ -1169,6 +1177,7 @@ vector<string> RobotControl::splitFields(string input){
 	return output;
 }
 
+/*
 void RobotControl::debugControl(int board, int operation){
 	switch (operation) {
 	case 1:
@@ -1193,6 +1202,7 @@ void RobotControl::debugControl(int board, int operation){
 		std::cout << "Operations: " << std::endl << "1: disable (step 1)    2: disable (step 2)    3: enable (step 1)    4: enable (step 2)    5: enable printing     6: disable printing";
 	}
 }
+*/
 
 void RobotControl::setDelay(int us){
 	this->delay = us;

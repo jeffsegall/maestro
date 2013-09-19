@@ -47,8 +47,8 @@ IMUBoard::IMUBoard(boardNum BNO, string name){
     this->name = name;
 
     //********** OLD **********
-    this->huboDownPort = new OutputPort<hubomsg::HuboState>("Hubo/HuboState");
-    this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
+    //this->huboDownPort = new OutputPort<hubomsg::HuboState>("Hubo/HuboState");
+    //this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
 
     xAcc = 0;
     yAcc = 0;
@@ -64,11 +64,13 @@ IMUBoard::IMUBoard(boardNum BNO, string name){
 *
 * @param	CANR		CAN rate
 ******************************************************************************/
+/*
 void IMUBoard::setRequestBoardInfo(char CANR){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_SETREQ_BOARD_INFO,
                              CANR, 0, 0, 0, 0, 0, 0, 0);
     //this->canDownPort->write(buildCanMessage(out));
 }
+*/
 
 /******************************************************************************
 * requestExecuteNULL
@@ -78,11 +80,13 @@ void IMUBoard::setRequestBoardInfo(char CANR){
 * sending a message which requests angle and rate.  IMU will not respond to the
 * request before NULL is finished.
 ******************************************************************************/
+/*
 void IMUBoard::requestExecuteNULL(){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_NULL,
                              0, 0, 0, 0, 0, 0, 0, 0);
     //this->canDownPort->write(buildCanMessage(out));
 }
+*/
 
 /******************************************************************************
 * requestExecuteCalib
@@ -90,11 +94,13 @@ void IMUBoard::requestExecuteNULL(){
 * Requests calibration to determine the scale and the bias of the
 * accelerometer.  See protocol for more information.
 ******************************************************************************/
+/*
 void IMUBoard::requestExecuteCalib(){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_CALIBRATE,
                              0, 0, 0, 0, 0, 0, 0, 0);
     //this->canDownPort->write(buildCanMessage(out));
 }
+*/
 
 /******************************************************************************
 * requestParameters
@@ -103,11 +109,13 @@ void IMUBoard::requestExecuteCalib(){
 *
 * @param	PRF		The parameter flag to return
 ******************************************************************************/
+/*
 void IMUBoard::requestParameters(char PRF){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_REQ_BOARD_PARAM,
                              PRF, 0, 0, 0, 0, 0, 0, 0);
     //this->canDownPort->write(buildCanMessage(out));
 }
+*/
 
 /******************************************************************************
 * setNewBoardNumber
@@ -116,11 +124,13 @@ void IMUBoard::requestParameters(char PRF){
 *
 * @param	NEW_BNO		The new board number
 ******************************************************************************/
+/*
 void IMUBoard::setNewBoardNumber(char NEW_BNO){
     canMsg* out = new canMsg(this->BNO, TX_MOTOR_CMD, CMD_SET_BNO_FREQ,
                              NEW_BNO, 0, 0, 0, 0, 0, 0, 0);
     //this->canDownPort->write(buildCanMessage(out));
 }
+*/
 
 string IMUBoard::getName(){
 	return name;

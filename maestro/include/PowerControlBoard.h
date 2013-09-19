@@ -35,8 +35,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <std_msgs/Float64.h>
 #include <std_msgs/String.h>
 #include <rtt/Component.hpp>
-#include <hubomsg/typekit/HuboCmd.h>
-#include <hubomsg/typekit/CanMessage.h>
 #include <hubomsg/typekit/HuboState.h>
 #include <fstream>
 #include <iostream>
@@ -51,10 +49,10 @@ class PowerControlBoard {
         boardNum BNO;
         
         //PUBLISH 
-        OutputPort<hubomsg::HuboState>* huboDownPort;
+        //OutputPort<hubomsg::HuboState>* huboDownPort;
 
         //SUBSCRIBE
-        InputPort<hubomsg::CanMessage>* canUpPort; 
+        //InputPort<hubomsg::CanMessage>* canUpPort;
 
         ifstream powerLookup;
         double powerUsed;
@@ -65,12 +63,14 @@ class PowerControlBoard {
         PowerControlBoard();
         PowerControlBoard(boardNum BNO);
 
+        /*
         void setRequestBoardInfo(char CANR);
         void setSwitchFunction(char SFUNC);
         void requestAlarm(char ALRM);
         void requestBeep(char BDUR);
         void requestVoltageAndCurrent();
         void requestTimeAndStatus();
+        */
 
         void setInitialPower(double initialPower);
         double getTotalPowerUsed();

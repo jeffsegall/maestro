@@ -33,8 +33,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <std_msgs/Float64.h>
 #include <std_msgs/String.h>
 #include <rtt/Component.hpp>
-#include <hubomsg/typekit/HuboCmd.h>
-#include <hubomsg/typekit/CanMessage.h>
 #include <hubomsg/typekit/HuboState.h>
 
 using namespace RTT;
@@ -49,10 +47,10 @@ class IMUBoard {
         double xRot, yRot;
         
         //PUBLISH 
-        OutputPort<hubomsg::HuboState>* huboDownPort;
+        //OutputPort<hubomsg::HuboState>* huboDownPort;
 
         //SUBSCRIBE
-        InputPort<hubomsg::CanMessage>* canUpPort; 
+        //InputPort<hubomsg::CanMessage>* canUpPort;
 
     public:
 
@@ -60,14 +58,14 @@ class IMUBoard {
         IMUBoard(boardNum BNO, string name);
    
         //PROTOCOL COMMAND MESSAGES
-        void setRequestBoardInfo(char CANR);
-        void requestExecuteNULL();
-        void requestExecuteCalib();
-        void requestParameters(char PRF);
-        void setNewBoardNumber(char NEW_BNO);
+        //void setRequestBoardInfo(char CANR);
+        //void requestExecuteNULL();
+        //void requestExecuteCalib();
+        //void requestParameters(char PRF);
+        //void setNewBoardNumber(char NEW_BNO);
 
         //PROTOCOL READ MESSAGES
-        void requestAngleAndRate();
+        //void requestAngleAndRate();
 
         //NEW DATA
 		string getName();

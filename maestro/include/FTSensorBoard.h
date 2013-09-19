@@ -33,8 +33,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <std_msgs/Float64.h>
 #include <std_msgs/String.h>
 #include <rtt/Component.hpp>
-#include <hubomsg/typekit/HuboCmd.h>
-#include <hubomsg/typekit/CanMessage.h>
 #include <hubomsg/typekit/HuboState.h>
 
 using namespace RTT;
@@ -48,10 +46,10 @@ class FTSensorBoard {
         double mX, mY, fZ;
 
         //PUBLISH 
-        OutputPort<hubomsg::HuboState>* huboDownPort;
+        //OutputPort<hubomsg::HuboState>* huboDownPort;
 
         //SUBSCRIBE
-        InputPort<hubomsg::CanMessage>* canUpPort; 
+        //InputPort<hubomsg::CanMessage>* canUpPort;
 
     public:
 
@@ -59,6 +57,7 @@ class FTSensorBoard {
         FTSensorBoard(boardNum BNO, string name);
    
         //PROTOCOL COMMAND MESSAGES
+        /*
         void setRequestBoardInfo(char CANR);
         void requestBoardParameters(char PARM);
         void requestExecuteNULL(char EFS);
@@ -79,6 +78,7 @@ class FTSensorBoard {
         void requestTiltDigit();
         void requestTildScale();
         void requestGyroTempData();
+        */
 
         //NEW DATA
         string getName();

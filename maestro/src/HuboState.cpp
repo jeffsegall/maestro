@@ -28,7 +28,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <iostream>
 #include "pugixml.hpp"
-#include "huboCan.h"
 #include <queue>
 
 using std::queue;
@@ -116,6 +115,7 @@ void HuboState::initHuboWithDefaults(string path, double frequency, queue<huboms
 
             // Remnants of Original CAN Communication. These do nothing now.
             // Due to be phased out.
+            /*
             mb->resetEncoderToZero(CH);
             mb->initBoard();
             mb->setLowerPosLimit(CH, 3, motor.attribute("mpos1").as_int());
@@ -155,6 +155,7 @@ void HuboState::initHuboWithDefaults(string path, double frequency, queue<huboms
 													 motor.attribute("driven").as_int(),
 													 motor.attribute("harm").as_int(),
 													 motor.attribute("enc").as_int()); //Set Gear Ratios for Radian <-> Tick conversions
+			 */
         }
         this->addBoard(mb);
     }
