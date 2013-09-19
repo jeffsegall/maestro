@@ -41,8 +41,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using namespace std;
 using namespace RTT;
 
-// Motor names from the HUBO+ protocol
-
 enum MOTOR_NAME {
     RHY, RHR, RHP, RHP1, RHP2, RKP, RKN1, RKN2, RAP, RAR, LHY, LHR, LHP, LHP1, LHP2,
 	LKP, LKN1, LKN2, LAP, LAR, RSP, RSR, RSY, REB, LSP, LSR, LSY, LEB, RWY,
@@ -69,8 +67,6 @@ class HuboState {
         HuboState(const HuboState& rhs);	
         void initHuboWithDefaults(string path, double frequency, queue<hubomsg::HuboCommand>* outQueue);
 
-        //MotorBoard* getBoardByNumber(int number);
-        //MotorBoard* getBoardByNumber(boardNum number);
         HuboMotor* getMotorByName(string name);
 
         void addBoard(MotorBoard* board);

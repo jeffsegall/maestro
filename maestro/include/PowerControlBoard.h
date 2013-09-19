@@ -46,13 +46,6 @@ using namespace std;
 class PowerControlBoard {
 
     private:
-        
-        //PUBLISH 
-        //OutputPort<hubomsg::HuboState>* huboDownPort;
-
-        //SUBSCRIBE
-        //InputPort<hubomsg::CanMessage>* canUpPort;
-
         ifstream powerLookup;
         double powerUsed;
 
@@ -60,15 +53,6 @@ class PowerControlBoard {
     public:
 
         PowerControlBoard();
-
-        /*
-        void setRequestBoardInfo(char CANR);
-        void setSwitchFunction(char SFUNC);
-        void requestAlarm(char ALRM);
-        void requestBeep(char BDUR);
-        void requestVoltageAndCurrent();
-        void requestTimeAndStatus();
-        */
 
         void setInitialPower(double initialPower);
         double getTotalPowerUsed();

@@ -45,29 +45,12 @@ class IMUBoard {
 
         double xAcc, yAcc, zAcc;
         double xRot, yRot;
-        
-        //PUBLISH 
-        //OutputPort<hubomsg::HuboState>* huboDownPort;
-
-        //SUBSCRIBE
-        //InputPort<hubomsg::CanMessage>* canUpPort;
 
     public:
 
         IMUBoard();
         IMUBoard(string name);
    
-        //PROTOCOL COMMAND MESSAGES
-        //void setRequestBoardInfo(char CANR);
-        //void requestExecuteNULL();
-        //void requestExecuteCalib();
-        //void requestParameters(char PRF);
-        //void setNewBoardNumber(char NEW_BNO);
-
-        //PROTOCOL READ MESSAGES
-        //void requestAngleAndRate();
-
-        //NEW DATA
 		string getName();
 		double getXAcc();
 		double getYAcc();

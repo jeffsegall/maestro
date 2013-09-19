@@ -41,8 +41,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <rtt/scripting/Scripting.hpp>
 #include <rtt/scripting/ProgramInterface.hpp>
 #include <rtt/scripting/ScriptingService.hpp>
-//#include <hubomsg/typekit/HuboCmd.h>
-//#include <hubomsg/typekit/CanMessage.h>
 #include <hubomsg/typekit/HuboState.h>
 #include <hubomsg/typekit/HuboJointState.h>
 #include <hubomsg/typekit/HuboCommand.h>
@@ -55,7 +53,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <queue>
 #include <map>
-//#include "huboCan.h"
 #include "CommHandler.h"
 #include "HuboState.h"
 #include "HuboMotor.h"
@@ -81,7 +78,6 @@ public:
     ~RobotControl();
 
     void updateHook(); 
-    //hubomsg::CanMessage buildCanMessage(canMsg* msg);
     void buildHuboCommandMessage(hubomsg::HuboJointCommand& state, hubomsg::HuboCommand& message);
     void initRobot(string path);
 
@@ -122,15 +118,11 @@ private:
 
 
     //SUBSCRIBE
-    //InputPort<hubomsg::CanMessage>* canUpPort;
-    //InputPort<hubomsg::HuboCmd>* orOutPort;
     InputPort<hubomsg::HuboState>* huboUpPort;
     InputPort<hubomsg::PythonMessage>* pythonPort;
     CommHandler* commHandler;
 
     //PUBLISH
-    //OutputPort<hubomsg::CanMessage>* canDownPort;
-    //OutputPort<hubomsg::HuboCmd>* orInPort;
     OutputPort<hubomsg::HuboCommand>* huboDownPort;
     OutputPort<hubomsg::AchCommand>* achDownPort;
     OutputPort<hubomsg::MaestroMessage>* messageDownPort;
@@ -138,7 +130,6 @@ private:
     HuboState* state;
     PowerControlBoard* power;
 
-    //queue<hubomsg::CanMessage>* inputQueue;
     queue<hubomsg::HuboState>*	huboInputQueue;
     queue<hubomsg::HuboCommand>* huboOutputQueue;
     queue<hubomsg::AchCommand>* achOutputQueue;

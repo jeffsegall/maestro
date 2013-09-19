@@ -61,13 +61,6 @@ HuboState::HuboState(){
 	propertyMap["f_z"] = F_Z;
 }
 
-/******************************************************************************
-* initHuboWithDefaults
-*
-* Reads in an XML representation of a HUBO and sets up initial data structures.
-*
-* @param	path		The file path of the XML representation
-******************************************************************************/
 void HuboState::initHuboWithDefaults(string path, double frequency, queue<hubomsg::HuboCommand>* outQueue){
     pugi::xml_document doc;
     if (!doc.load_file(path.c_str())){
@@ -111,49 +104,6 @@ void HuboState::initHuboWithDefaults(string path, double frequency, queue<huboms
             assert(motorMap.count(name) == 0); //Multiple motors should not have the same name.
             motorMap[name] = hm;
 
-            // Remnants of Original CAN Communication. These do nothing now.
-            // Due to be phased out.
-            /*
-            mb->resetEncoderToZero(CH);
-            mb->initBoard();
-            mb->setLowerPosLimit(CH, 3, motor.attribute("mpos1").as_int());
-            mb->setUpperPosLimit(CH, 3, motor.attribute("mpos2").as_int());
-            if (channels > 2)
-                mb->setPositionGain(0, motor.attribute("kp").as_int(),
-                                       motor.attribute("ki").as_int(),
-                                       motor.attribute("kd").as_int());
-            else
-                mb->setPositionGain(CH, motor.attribute("kp").as_int(),
-                                        motor.attribute("ki").as_int(),
-                                        motor.attribute("kd").as_int());
-            mb->setDeadZone(CH, motor.attribute("dz").as_int());
-            mb->setHomeSearchParams(CH, motor.attribute("hlim").as_int(),
-                                        motor.attribute("hld").as_int(),
-                                        motor.attribute("off").as_int());
-            mb->setHomeVelAcc(CH, motor.attribute("hma").as_int(),
-                                  motor.attribute("hv1").as_int(),
-                                  motor.attribute("hv2").as_int(),
-                                  motor.attribute("sm").as_int(),
-                                  motor.attribute("hld").as_int());
-            mb->setEncoderResolution(CH, motor.attribute("ers").as_int(),
-                                         motor.attribute("as").as_int(),
-                                         motor.attribute("md").as_int()); 
-            mb->setMaxAccVel(CH, motor.attribute("a_max").as_int(),
-                                 motor.attribute("v_max").as_int());
-            //Only do this on the last motor of each board.
-            if (CH == (channels - 1)){
-                mb->setJamPwmSatLim(motor.attribute("jam_lim").as_int(),
-                                    motor.attribute("pwm_lim").as_int(),
-                                    motor.attribute("hld").as_int(),
-                                    motor.attribute("jamd").as_int());
-                mb->setRequestBoardInfo(5);
-            }
-
-            mb->getMotorByChannel(CH)->setGearRatios(motor.attribute("drive").as_int(),
-													 motor.attribute("driven").as_int(),
-													 motor.attribute("harm").as_int(),
-													 motor.attribute("enc").as_int()); //Set Gear Ratios for Radian <-> Tick conversions
-			 */
         }
         this->addBoard(mb);
     }
@@ -176,41 +126,6 @@ void HuboState::initHuboWithDefaults(string path, double frequency, queue<huboms
     FTSensorMap["RWT"] = rightWrist;
 }
 
-/******************************************************************************
-* getBoardByNumber
-* 
-* Returns the motor board with the given number.
-*
-* @param	number		The motor board number
-* @return	The motor board with the given number.  NULL if a board does
-*		not exist with the given number.
-******************************************************************************/
-/*
-MotorBoard* HuboState::getBoardByNumber(int number){
-    return this->getBoardByNumber((boardNum)number);
-}
-*/
-
-/******************************************************************************
-* getBoardByNumber
-* 
-* Returns the motor board with the given number.
-*
-* @param	number		The motor board number
-* @return	The motor board with the given number.  NULL if a board does
-*		not exist with the given number.
-******************************************************************************/
-/*
-MotorBoard* HuboState::getBoardByNumber(boardNum number){
-	for (int i = 0; i < boards.size(); i++){
-		if (boards[i]->getBoardNumber() == number){
-			return boards[i];
-		}
-	}
-	return NULL;
-}
-*/
-
 HuboMotor* HuboState::getMotorByName(string name){
 	for (vector<MotorBoard*>::iterator it = boards.begin(); it != boards.end(); it++){
 		for (int i = 0; i < (*it)->getNumChannels(); i++){
@@ -221,14 +136,6 @@ HuboMotor* HuboState::getMotorByName(string name){
 	return NULL;
 }
 
-/******************************************************************************
-* addBoard
-* 
-* Adds a motor board to the robot with the given number.
-*
-* @param	num		The motor board number
-* @param	board		The motor board to add
-******************************************************************************/
 void HuboState::addBoard(MotorBoard* board){
     this->boards.push_back(board);
 }

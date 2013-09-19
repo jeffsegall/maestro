@@ -30,37 +30,24 @@ using namespace std;
 
 RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
 
-    //this->canUpPort = new InputPort<hubomsg::CanMessage>("can_up");
-    //this->canDownPort = new OutputPort<hubomsg::CanMessage>("can_down");
     this->huboUpPort = new InputPort<hubomsg::HuboState>("Hubo/HuboState");
 	this->huboDownPort = new OutputPort<hubomsg::HuboCommand>("Hubo/HuboCommand");
 	this->achDownPort = new OutputPort<hubomsg::AchCommand>("Hubo/AchCommand");
     this->messageDownPort = new OutputPort<hubomsg::MaestroMessage>("Maestro/Message");   
 
     this->pythonPort = new InputPort<hubomsg::PythonMessage>("Maestro/Control");
-
-    //this->orOutPort = new InputPort<hubomsg::HuboCmd>("or_out");
-    //this->orInPort = new OutputPort<hubomsg::HuboCmd>("or_in");
     
 	this->commHandler = new CommHandler(huboUpPort, pythonPort);
 
-    //CAN QUEUES
-    //this->inputQueue = new queue<hubomsg::CanMessage>();
     this->huboOutputQueue = new queue<hubomsg::HuboCommand>();
     this->achOutputQueue = new queue<hubomsg::AchCommand>();
-    //this->messageOutputQueue = new queue<hubomsg::MaestroMessage>();
 
     //CAN PORTS 
-    //this->addEventPort(*canUpPort);
     this->addEventPort(*huboUpPort);
 	this->addEventPort(*pythonPort);
     this->addPort(*huboDownPort);
     this->addPort(*achDownPort);
     this->addPort(*messageDownPort);
-
-    //OPENRAVE PORTS
-    //this->addEventPort(*orOutPort);
-    //this->addPort(*orInPort);
 
     this->addOperation("initRobot", &RobotControl::initRobot, this, RTT::OwnThread)
             .doc("Initialize a robot")
@@ -154,28 +141,7 @@ RobotControl::RobotControl(const std::string& name) : TaskContext(name) {
   
 RobotControl::~RobotControl(){}
 
-/*
-vector<float> trajectoryValues(string path){
-	vector<float> val;
-	float f;
-
-	ifstream is;
-	is.open(path.c_str());
-
-	while (!is.eof()){
-		is >> f;
-		val.push_back(f*5.0);
-	}
-	is.close();
-
-	return val;
-}
-*/
-
 void RobotControl::updateHook(){
-	//hubomsg::HuboCmd huboCmd = hubomsg::HuboCmd();
-	//hubomsg::CanMessage canMessage = hubomsg::CanMessage();
-	//hubomsg::HuboState huboState = hubomsg::HuboState();
 	hubomsg::PythonMessage message = hubomsg::PythonMessage();
 
 	commHandler->update();
@@ -193,18 +159,6 @@ void RobotControl::updateHook(){
 
 	if (state == NULL) return;
 
-	/*
-	if (commHandler->isNew(1)){
-		//Received update from CanGateway
-		canMessage = commHandler->getMessage(); //Deprecated - Soon to be phased out
-	}
-	*/
-	/*
-	if (commHandler->isNew(2)){
-		//Recieved update from openRAVE
-		huboCmd = commHandler->getCmd();
-	}
-	*/
 	if (commHandler->isNew(3)){
 		//Received update from Hubo-Ach
 		updateState();
@@ -275,26 +229,6 @@ void RobotControl::updateHook(){
 	}
 	usleep(delay);
 }
-
-/*
-hubomsg::CanMessage RobotControl::buildCanMessage(canMsg* msg){
-	hubomsg::CanMessage canMessage;
-
-	canMessage.bno = msg->getBNO();
-	canMessage.mType = msg->getType();
-	canMessage.cmdType = msg->getCmd();
-	canMessage.r1 = msg->getR1();
-	canMessage.r2 = msg->getR2();
-	canMessage.r3 = msg->getR3();
-	canMessage.r4 = msg->getR4();
-	canMessage.r5 = msg->getR5();
-	canMessage.r6 = msg->getR6();
-	canMessage.r7 = msg->getR7();
-	canMessage.r8 = msg->getR8();
-
-	return canMessage;
-}
-*/
 
 void RobotControl::buildHuboCommandMessage(hubomsg::HuboJointCommand& state, hubomsg::HuboCommand& message){
 	message.joints.push_back(state);
@@ -1172,33 +1106,6 @@ vector<string> RobotControl::splitFields(string input){
 	output.push_back(input);
 	return output;
 }
-
-/*
-void RobotControl::debugControl(int board, int operation){
-	switch (operation) {
-	case 1:
-		this->state->getBoardByNumber(board)->setHIP(0);
-		break;
-	case 2:
-		this->state->getBoardByNumber(board)->disableController();
-		break;
-	case 3:
-		this->state->getBoardByNumber(board)->setHIP(1);
-		break;
-	case 4:
-		this->state->getBoardByNumber(board)->enableController();
-		break;
-	case 5:
-		this->printNow = true;
-		break;
-	case 6:
-		this->printNow = false;
-		break;
-	default:
-		std::cout << "Operations: " << std::endl << "1: disable (step 1)    2: disable (step 2)    3: enable (step 1)    4: enable (step 2)    5: enable printing     6: disable printing";
-	}
-}
-*/
 
 void RobotControl::setDelay(int us){
 	this->delay = us;
