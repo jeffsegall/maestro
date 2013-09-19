@@ -66,7 +66,6 @@ using std::queue;
 class MotorBoard {
 
     private:
-        boardNum BNO; 
         int channels;
         vector<HuboMotor*> motors;
 
@@ -84,7 +83,7 @@ class MotorBoard {
     public:
         
         MotorBoard();
-        MotorBoard(boardNum BNO, int channels, queue<hubomsg::HuboCommand>* outQueue);
+        MotorBoard(int channels, queue<hubomsg::HuboCommand>* outQueue);
         MotorBoard(const MotorBoard& rhs);
 
         void addMotor(HuboMotor* motor, int channel);
@@ -92,7 +91,6 @@ class MotorBoard {
         void removeMotor(int channel);
         void setTicksPosition(vector<long> ticks);
         HuboMotor* getMotorByChannel(int channel);
-        boardNum getBoardNumber();
         int getNumChannels();
         bool requiresMotion();
         bool requiresMotion(int channel);

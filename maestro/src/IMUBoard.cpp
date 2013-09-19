@@ -32,7 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * Initializes a IMU board with BNO = 0
 ******************************************************************************/
 IMUBoard::IMUBoard(){
-    IMUBoard((boardNum)0, "imu");
+    IMUBoard("imu");
 }
 
 /******************************************************************************
@@ -42,8 +42,7 @@ IMUBoard::IMUBoard(){
 *
 * @param	BNO		The BNO of this IMU board
 ******************************************************************************/
-IMUBoard::IMUBoard(boardNum BNO, string name){
-    this->BNO = BNO;
+IMUBoard::IMUBoard(string name){
     this->name = name;
 
     //********** OLD **********

@@ -32,7 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * Initializes a FT sensor board with BNO = 0
 ******************************************************************************/
 FTSensorBoard::FTSensorBoard(){
-    FTSensorBoard((boardNum)0, "ft0");
+    FTSensorBoard("ft0");
 }
 
 /******************************************************************************
@@ -42,8 +42,7 @@ FTSensorBoard::FTSensorBoard(){
 *
 * @param	BNO		The BNO of this IMU board
 ******************************************************************************/
-FTSensorBoard::FTSensorBoard(boardNum BNO, string name){
-    this->BNO = BNO;
+FTSensorBoard::FTSensorBoard(string name){
     this->name = name;
 
     //********* OLD *********

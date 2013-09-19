@@ -46,7 +46,6 @@ using namespace RTT;
 class PowerControlBoard {
 
     private:
-        boardNum BNO;
         
         //PUBLISH 
         //OutputPort<hubomsg::HuboState>* huboDownPort;
@@ -61,7 +60,6 @@ class PowerControlBoard {
     public:
 
         PowerControlBoard();
-        PowerControlBoard(boardNum BNO);
 
         /*
         void setRequestBoardInfo(char CANR);

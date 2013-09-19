@@ -71,8 +71,8 @@ hubomsg::CanMessage buildCanMessage(canMsg* msg){
 *
 * Creates a new motor board with default BNO and number of channels. 
 ******************************************************************************/
-MotorBoard::MotorBoard(){// : TaskContext(name){
-    MotorBoard((boardNum)0, DEFAULT_CHANNELS, new queue<hubomsg::HuboCommand>());
+MotorBoard::MotorBoard(){
+    MotorBoard(DEFAULT_CHANNELS, new queue<hubomsg::HuboCommand>());
 }
 
 /******************************************************************************
@@ -85,9 +85,7 @@ MotorBoard::MotorBoard(){// : TaskContext(name){
 * @param	channels	The number of motors (channels) this motor board
 * 				controls.
 ******************************************************************************/
-MotorBoard::MotorBoard(boardNum BNO, int channels, queue<hubomsg::HuboCommand>* outQueue){// :
-            //  TaskContext(name){
-    this->BNO = BNO;
+MotorBoard::MotorBoard(int channels, queue<hubomsg::HuboCommand>* outQueue){
     this->motors = vector<HuboMotor*>(channels);
     this->channels = channels;
     this->outQueue = outQueue;
@@ -104,7 +102,6 @@ MotorBoard::MotorBoard(boardNum BNO, int channels, queue<hubomsg::HuboCommand>* 
 * @param	rhs		A motor board to copy.
 ******************************************************************************/
 MotorBoard::MotorBoard(const MotorBoard& rhs){
-    this->BNO = rhs.BNO;
     this->channels = rhs.channels;
     this->outQueue = rhs.outQueue;
     this->motors = rhs.motors;
@@ -160,10 +157,6 @@ void MotorBoard::removeMotor(int channel){
 ******************************************************************************/
 HuboMotor* MotorBoard::getMotorByChannel(int channel){
     return this->motors[channel];
-}
-
-boardNum MotorBoard::getBoardNumber(){
-	return BNO;
 }
 
 int MotorBoard::getNumChannels(){

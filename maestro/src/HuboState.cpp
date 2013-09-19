@@ -82,15 +82,13 @@ void HuboState::initHuboWithDefaults(string path, double frequency, queue<huboms
     {
         std::cout << "Board: ";
 
-        int BNO = board.attribute("number").as_int();
         int channels = board.attribute("channels").as_int();
  
-        std::cout << "Number " << BNO << std::endl;
         std::cout << "Channels " << channels << std::endl;
 
         std::cout << "Before new mb" << std::endl;
 
-        MotorBoard* mb = new MotorBoard((boardNum)BNO, channels, outQueue);
+        MotorBoard* mb = new MotorBoard(channels, outQueue);
 
         std::cout << "After new mb" << std::endl;
 
@@ -161,20 +159,20 @@ void HuboState::initHuboWithDefaults(string path, double frequency, queue<huboms
     }
 
 
-    IMU0 = new IMUBoard(BNO_IMU_0, "IMU");
+    IMU0 = new IMUBoard("IMU");
     IMUSensorMap["IMU"] = IMU0;
-    IMU1 = new IMUBoard(BNO_IMU_1, "LAI");
+    IMU1 = new IMUBoard("LAI");
     IMUSensorMap["LAI"] = IMU1;
-    IMU2 = new IMUBoard(BNO_IMU_2, "RAI");
+    IMU2 = new IMUBoard("RAI");
     IMUSensorMap["RAI"] = IMU2;
 
-    leftAnkle = new FTSensorBoard(BNO_L_FOOT_FT, "LAT");
+    leftAnkle = new FTSensorBoard("LAT");
     FTSensorMap["LAT"] = leftAnkle;
-    rightAnkle = new FTSensorBoard(BNO_R_FOOT_FT, "RAT");
+    rightAnkle = new FTSensorBoard("RAT");
     FTSensorMap["RAT"] = rightAnkle;
-    leftWrist = new FTSensorBoard(BNO_L_WRIST_FT, "LWT");
+    leftWrist = new FTSensorBoard("LWT");
     FTSensorMap["LWT"] = leftWrist;
-    rightWrist = new FTSensorBoard(BNO_R_WRIST_FT, "RWT");
+    rightWrist = new FTSensorBoard("RWT");
     FTSensorMap["RWT"] = rightWrist;
 }
 
@@ -187,9 +185,11 @@ void HuboState::initHuboWithDefaults(string path, double frequency, queue<huboms
 * @return	The motor board with the given number.  NULL if a board does
 *		not exist with the given number.
 ******************************************************************************/
+/*
 MotorBoard* HuboState::getBoardByNumber(int number){
     return this->getBoardByNumber((boardNum)number);
 }
+*/
 
 /******************************************************************************
 * getBoardByNumber
@@ -200,6 +200,7 @@ MotorBoard* HuboState::getBoardByNumber(int number){
 * @return	The motor board with the given number.  NULL if a board does
 *		not exist with the given number.
 ******************************************************************************/
+/*
 MotorBoard* HuboState::getBoardByNumber(boardNum number){
 	for (int i = 0; i < boards.size(); i++){
 		if (boards[i]->getBoardNumber() == number){
@@ -208,6 +209,7 @@ MotorBoard* HuboState::getBoardByNumber(boardNum number){
 	}
 	return NULL;
 }
+*/
 
 HuboMotor* HuboState::getMotorByName(string name){
 	for (vector<MotorBoard*>::iterator it = boards.begin(); it != boards.end(); it++){

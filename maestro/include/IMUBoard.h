@@ -40,7 +40,6 @@ using namespace RTT;
 class IMUBoard {
 
     private:
-        boardNum BNO;
         string name;
 
         double xAcc, yAcc, zAcc;
@@ -55,7 +54,7 @@ class IMUBoard {
     public:
 
         IMUBoard();
-        IMUBoard(boardNum BNO, string name);
+        IMUBoard(string name);
    
         //PROTOCOL COMMAND MESSAGES
         //void setRequestBoardInfo(char CANR);

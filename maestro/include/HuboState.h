@@ -69,8 +69,8 @@ class HuboState {
         HuboState(const HuboState& rhs);	
         void initHuboWithDefaults(string path, double frequency, queue<hubomsg::HuboCommand>* outQueue);
 
-        MotorBoard* getBoardByNumber(int number);
-        MotorBoard* getBoardByNumber(boardNum number);
+        //MotorBoard* getBoardByNumber(int number);
+        //MotorBoard* getBoardByNumber(boardNum number);
         HuboMotor* getMotorByName(string name);
 
         void addBoard(MotorBoard* board);

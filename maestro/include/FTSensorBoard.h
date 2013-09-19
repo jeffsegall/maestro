@@ -40,7 +40,6 @@ using namespace RTT;
 class FTSensorBoard {
 
     private:
-        boardNum BNO;
         string name;
         
         double mX, mY, fZ;
@@ -54,7 +53,7 @@ class FTSensorBoard {
     public:
 
         FTSensorBoard();
-        FTSensorBoard(boardNum BNO, string name);
+        FTSensorBoard(string name);
    
         //PROTOCOL COMMAND MESSAGES
         /*
