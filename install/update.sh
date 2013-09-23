@@ -40,8 +40,6 @@ check blacklist file "$BLACKLISTED_FILES"
 if [[ $? != $SUCCESS ]]; then exit $?; fi
 
 
-hubo-ach update
-
 #hubo-ach update
 
 
