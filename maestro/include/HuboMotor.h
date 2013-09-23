@@ -85,6 +85,7 @@ class HuboMotor {
 	double interpolate();
 	double nextPosition();
 	bool shouldReload(int bufferSize);
+	void reload();
 
 	string getName();
 	double getGoalPosition();
