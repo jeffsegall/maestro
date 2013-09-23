@@ -181,8 +181,10 @@ void RobotControl::updateHook(){
 					} else if (trajStarted){
 						double pos = motor->nextPosition();
 						state.position = motor->nextPosition();
-						if (motor->shouldReload(BUFFER_SIZE))
+						if (motor->shouldReload(BUFFER_SIZE)){
 							loadFrames = true;
+							motor->reload();
+						}
 					} else {
 						state.position = motor->getGoalPosition();
 					}
