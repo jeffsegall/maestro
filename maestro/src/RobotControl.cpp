@@ -180,7 +180,7 @@ void RobotControl::updateHook(){
 						power->addMotionPower(motor->getName(), this->getPeriod());
 					} else if (trajStarted){
 						double pos = motor->nextPosition();
-						state.position = motor->nextPosition();
+						state.position = pos;
 						if (motor->shouldReload(BUFFER_SIZE)){
 							loadFrames = true;
 							motor->reload();
