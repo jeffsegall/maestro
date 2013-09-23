@@ -75,7 +75,6 @@ bool HuboMotor::requiresMotion(){
 }
 
 vector<double> *HuboMotor::getBuffer(){
-	i = 0;
 	return buffer;
 }
 
@@ -118,10 +117,14 @@ double HuboMotor::nextPosition(){
 	return (*buffer)[i++];
 }
 
-bool HuboMotor::reload(int bufferSize){
-	if (i >= bufferSize)
+bool HuboMotor::shouldReload(int bufferSize){
+	if (i >= bufferSize - 1)
 		return true;
 	return false;
+}
+
+void HuboMotor::reload(){
+	i = 0;
 }
 
 

@@ -18,6 +18,7 @@ WRONG_NUMBER_ARGUMENTS=1
 BAD_ARGUMENTS=2
 NOT_FOUND=3
 BLACKLIST_VIOLATED=4
+FAILURE=5
 
 # Function see
 # Attempts to find an item, given a qualified name. (Including path)
@@ -179,3 +180,46 @@ function currentBranch() {
 	#eval "$1=`git branch | grep "^\*" | sed "s/..//"`"
 	#return $SUCCESS
 }
+
+# Function mkdirs
+# Attempts to create the directory structure implied by the given path. Will
+# create all intermediate directories required.
+#
+# Arguments: 1
+# $1: path - Absolute path to create directory structure for
+#
+# Returns: 1
+# $SUCCESS - Successful `git branch`
+# $WRONG_NUMBER_ARGUMENTS - there was not exactly 1 argument provided.
+# $? - If `mkdir` returns an error at any point, it will be passed to the
+# caller. Successful directory creation will remain in an event of an error.
+#
+# Author: Solis Knight
+# Date: July 2013
+function mkdirs() {
+	if [[ $# != 1 ]]; then
+		return $WRONG_NUMBER_ARGUMENTS
+    fi
+
+	if [[ -z $1 ]]; then
+		echo "Paramter 1 is of zero length!"
+		return;
+	else
+		mkdirs ${1%/*}
+		retval=$?
+		if [[ $retval == $FAILURE ]]; then
+			return $FAILURE
+		fi 
+		see dir "$1"
+		retval=$?
+		if [[ $retval == $NOT_FOUND ]]; then  
+			mkdir $1
+			retval=$?
+			if [[ $retval != 0 ]]; then
+				return $FAILURE
+			fi
+		fi
+	fi		
+
+}
+

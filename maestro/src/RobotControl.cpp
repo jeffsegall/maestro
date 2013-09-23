@@ -181,7 +181,7 @@ void RobotControl::updateHook(){
 					} else if (trajStarted){
 						double pos = motor->nextPosition();
 						state.position = motor->nextPosition();
-						if (motor->reload(BUFFER_SIZE))
+						if (motor->shouldReload(BUFFER_SIZE))
 							loadFrames = true;
 					} else {
 						state.position = motor->getGoalPosition();
@@ -428,34 +428,34 @@ void RobotControl::loadBuffers(){
 				setBuffer("LKP", i, LKN);
 				setBuffer("LAP", i, LAP);
 				setBuffer("LAR", i, LAR);
-				setBuffer("RSP",i ,RSP);
-				setBuffer("RSR",i ,RSR);
-				setBuffer("RSY",i ,RSY);
-				setBuffer("REP",i ,REB);
-				setBuffer("RWY",i ,RWY);
-				setBuffer("RWR",i ,RWR);
-				setBuffer("RWP",i ,RWP);
-				setBuffer("LSP",i ,LSP);
-				setBuffer("LSR",i ,LSR);
-				setBuffer("LSY",i ,LSY);
-				setBuffer("LEP",i ,LEB);
-				setBuffer("LWY",i ,LWY);
-				setBuffer("LWR",i ,LWR);
-				setBuffer("LWP",i ,LWP);
-				setBuffer("NKY",i ,NKY);
-				setBuffer("NK1",i ,NK1);
-				setBuffer("NK2",i ,NK2);
-				setBuffer("WST",i ,WST);
-				setBuffer("RF1",i ,RF1);
-				setBuffer("RF2",i ,RF2);
-				setBuffer("RF3",i ,RF3);
-				setBuffer("RF4",i ,RF4);
-				setBuffer("RF5",i ,RF5);
-				setBuffer("LF1",i ,LF1);
-				setBuffer("LF2",i ,LF2);
-				setBuffer("LF3",i ,LF3);
-				setBuffer("LF4",i ,LF4);
-				setBuffer("LF5",i ,LF5);
+				setBuffer("RSP", i, RSP);
+				setBuffer("RSR", i, RSR);
+				setBuffer("RSY", i, RSY);
+				setBuffer("REP", i, REB);
+				setBuffer("RWY", i, RWY);
+				setBuffer("RWR", i, RWR);
+				setBuffer("RWP", i, RWP);
+				setBuffer("LSP", i, LSP);
+				setBuffer("LSR", i, LSR);
+				setBuffer("LSY", i, LSY);
+				setBuffer("LEP", i, LEB);
+				setBuffer("LWY", i, LWY);
+				setBuffer("LWR", i, LWR);
+				setBuffer("LWP", i, LWP);
+				setBuffer("NKY", i, NKY);
+				setBuffer("NK1", i, NK1);
+				setBuffer("NK2", i, NK2);
+				setBuffer("WST", i, WST);
+				setBuffer("RF1", i, RF1);
+				setBuffer("RF2", i, RF2);
+				setBuffer("RF3", i, RF3);
+				setBuffer("RF4", i, RF4);
+				setBuffer("RF5", i, RF5);
+				setBuffer("LF1", i, LF1);
+				setBuffer("LF2", i, LF2);
+				setBuffer("LF3", i, LF3);
+				setBuffer("LF4", i, LF4);
+				setBuffer("LF5", i, LF5);
 			}
 		}
 
