@@ -4,6 +4,7 @@
      hubomsg
 
   </description>
+  <depend package="audio_common_msgs"/>
   <author>Jeff Segall</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
