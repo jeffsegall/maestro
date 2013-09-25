@@ -10,46 +10,46 @@
 Trajectory::Trajectory(int bufferSize){
 	col2name = new vector<string>(40);
 
-	col2name[0] = "RHY";
-	col2name[1] = "RHR";
-	col2name[2] = "RHP";
-	col2name[3] = "RKN";
-	col2name[4] = "RAP";
-	col2name[5] = "RAR";
-	col2name[6] = "LHY";
-	col2name[7] = "LHR";
-	col2name[8] = "LHP";
-	col2name[9] = "LKN";
-	col2name[10] = "LAP";
-	col2name[11] = "LAR";
-	col2name[12] = "RSP";
-	col2name[13] = "RSR";
-	col2name[14] = "RSY";
-	col2name[15] = "REB";
-	col2name[16] = "RWY";
-	col2name[17] = "RWR";
-	col2name[18] = "RWP";
-	col2name[19] = "LSP";
-	col2name[20] = "LSR";
-	col2name[21] = "LSY";
-	col2name[22] = "LEB";
-	col2name[23] = "LWY";
-	col2name[24] = "LWR";
-	col2name[25] = "LWP";
-	col2name[26] = "NKY";
-	col2name[27] = "NK1";
-	col2name[28] = "NK2";
-	col2name[29] = "WST";
-	col2name[30] = "RF1";
-	col2name[31] = "RF2";
-	col2name[32] = "RF3";
-	col2name[33] = "RF4";
-	col2name[34] = "RF5";
-	col2name[35] = "LF1";
-	col2name[36] = "LF2";
-	col2name[37] = "LF3";
-	col2name[38] = "LF4";
-	col2name[39] = "LF5";
+	(*col2name)[0] = "RHY";
+	(*col2name)[1] = "RHR";
+	(*col2name)[2] = "RHP";
+	(*col2name)[3] = "RKN";
+	(*col2name)[4] = "RAP";
+	(*col2name)[5] = "RAR";
+	(*col2name)[6] = "LHY";
+	(*col2name)[7] = "LHR";
+	(*col2name)[8] = "LHP";
+	(*col2name)[9] = "LKN";
+	(*col2name)[10] = "LAP";
+	(*col2name)[11] = "LAR";
+	(*col2name)[12] = "RSP";
+	(*col2name)[13] = "RSR";
+	(*col2name)[14] = "RSY";
+	(*col2name)[15] = "REB";
+	(*col2name)[16] = "RWY";
+	(*col2name)[17] = "RWR";
+	(*col2name)[18] = "RWP";
+	(*col2name)[19] = "LSP";
+	(*col2name)[20] = "LSR";
+	(*col2name)[21] = "LSY";
+	(*col2name)[22] = "LEB";
+	(*col2name)[23] = "LWY";
+	(*col2name)[24] = "LWR";
+	(*col2name)[25] = "LWP";
+	(*col2name)[26] = "NKY";
+	(*col2name)[27] = "NK1";
+	(*col2name)[28] = "NK2";
+	(*col2name)[29] = "WST";
+	(*col2name)[30] = "RF1";
+	(*col2name)[31] = "RF2";
+	(*col2name)[32] = "RF3";
+	(*col2name)[33] = "RF4";
+	(*col2name)[34] = "RF5";
+	(*col2name)[35] = "LF1";
+	(*col2name)[36] = "LF2";
+	(*col2name)[37] = "LF3";
+	(*col2name)[38] = "LF4";
+	(*col2name)[39] = "LF5";
 
 	DELIMITER = '\t';
 }
@@ -59,19 +59,20 @@ Trajectory::Trajectory() : Trajectory(10) { }
 Trajectory::~Trajectory(){
 	map<string, vector<double> >::iterator i;
 	for (i = buffers->begin(); i != buffers->end(); i++)
-		delete i->second;
+		delete &i->second;
 	delete buffers;
 }
 
 void Trajectory::open(string path){
 	trajInput.close();
-	trajInput.open(path);
-	if (!trajInput.open()) return; //TODO: Log error
+	trajInput.open(path.c_str());
+	if (!trajInput.is_open()) return; //TODO: Log error
 
-	for (i = buffers->begin(); i != buffers->end(); i++)
-		delete i->second;
+	map<string, vector<double> >::iterator it;
+	for (it = buffers->begin(); it != buffers->end(); it++)
+		delete &it->second;
 
-	for (int i = 0; i < col2name.size(); i++)
+	for (int i = 0; i < col2name->size(); i++)
 		buffers[col2name[i]] = new vector<double>(bufferSize);
 
 	frames = 0;
@@ -88,7 +89,7 @@ bool Trajectory::is_open(){
 
 double Trajectory::nextPosition(string entry, double currentPosition){
 
-	if (trajectoryEnded || buffers == NULL || buffers.count(entry) != 1 ||
+	if (trajectoryEnded || buffers == NULL || buffers->count(entry) != 1 ||
 				buffers[entry] == NULL || (*buffers[entry])->size() == 0) {
 
 		return currentPosition;
@@ -115,7 +116,6 @@ void Trajectory::reload(){
 	for (int i = 0; i < bufferSize; i++){
 		line = "";
 		entry = "";
-		scanned = 0;
 
 		// Grab one line of (hopefully) 40 columns of input positions
 		getline(trajInput, line, '\n');
@@ -124,7 +124,7 @@ void Trajectory::reload(){
 		// The newline was consumed by the getline operation, so we will replace it with the given delimiter
 		joints << DELIMITER;
 
-		for (int col = 0; col < col2name.size(); col++){
+		for (int col = 0; col < col2name->size(); col++){
 			// Grab an individual entry to parse, assuming entries are delimited by tabs
 			getline(joints, entry, DELIMITER);
 			// If we still think there's data to grab, store the value into the buffer vector mapped to the name of the joint of the current column.
