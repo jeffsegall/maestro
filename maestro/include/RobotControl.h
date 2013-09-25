@@ -61,6 +61,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "FTSensorBoard.h"
 #include "PowerControlBoard.h"
 #include "Names.h"
+#include "Trajectory.h"
 #include <fstream>
 #include <sstream>
 #include <sys/time.h>
@@ -138,6 +139,7 @@ private:
     map<string, COMMAND> commands;
     ofstream tempOutput;
     ifstream trajInput;
+    Trajectory *traj;
 
     int written;
     int frames;

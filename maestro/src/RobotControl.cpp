@@ -179,12 +179,17 @@ void RobotControl::updateHook(){
 						state.position = pos;
 						power->addMotionPower(motor->getName(), this->getPeriod());
 					} else if (trajStarted){
-						double pos = motor->nextPosition();
+						double pos = traj->nextPosition(motor->getName(), motor->getGoalPosition());
+						motor->setGoalPosition(pos);
+						motor->setInterStep(pos);
+						//double pos = motor->nextPosition();
 						state.position = pos;
+						/*
 						if (motor->shouldReload(BUFFER_SIZE)){
 							loadFrames = true;
 							motor->reload();
 						}
+						*/
 					} else {
 						state.position = motor->getGoalPosition();
 					}
@@ -300,10 +305,12 @@ bool RobotControl::loadTrajectory(string path){
 	}
 
 
-	trajInput.open(path.c_str());
-	string temp;
-	if (trajInput.is_open()){
-		loadBuffers();
+	//trajInput.open(path.c_str());
+
+	traj = new Trajectory(BUFFER_SIZE);
+	traj->open(path);
+	if (traj->is_open()){
+		//loadBuffers();
 		return true;
 	} else
 	  std::cout << "Error. Trajectory file nonexistent. Aborting." << std::endl;
@@ -568,14 +575,15 @@ double RobotControl::getBuffer(string joint, int i){
 }
 
 void RobotControl::startTrajectory(){
-	if (trajStarted || !trajInput.is_open()) return;
+	if (trajStarted || !traj->is_open()) return;
 
 	trajStarted = true;
 }
 
 void RobotControl::stopTrajectory(){
-	terminateTraj = true;
-	trajInput.close();
+	trajStarted = false;
+	//terminateTraj = true;
+	//trajInput.close();
 }
 
 string RobotControl::getDefaultInitPath(string path){
