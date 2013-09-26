@@ -66,10 +66,11 @@ Trajectory::~Trajectory(){
 void Trajectory::open(string path){
 	trajInput.close();
 	trajInput.open(path.c_str());
-	if (!trajInput.open()) return; //TODO: Log error
+	if (!trajInput.is_open()) return; //TODO: Log error
 
-	for (i = buffers->begin(); i != buffers->end(); i++)
-		delete &(i->second);
+	map<string, vector<double> >::iterator it;
+	for (it = buffers->begin(); it != buffers->end(); it++)
+		delete &it->second;
 
 	for (int i = 0; i < col2name->size(); i++)
 		buffers[col2name[i]] = new vector<double>(bufferSize);
@@ -88,7 +89,7 @@ bool Trajectory::is_open(){
 
 double Trajectory::nextPosition(string entry, double currentPosition){
 
-	if (trajectoryEnded || buffers == NULL || buffers.count(entry) != 1 ||
+	if (trajectoryEnded || buffers == NULL || buffers->count(entry) != 1 ||
 				buffers[entry] == NULL || (*buffers[entry])->size() == 0) {
 
 		return currentPosition;
@@ -115,7 +116,6 @@ void Trajectory::reload(){
 	for (int i = 0; i < bufferSize; i++){
 		line = "";
 		entry = "";
-		scanned = 0;
 
 		// Grab one line of (hopefully) 40 columns of input positions
 		getline(trajInput, line, '\n');

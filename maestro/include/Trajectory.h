@@ -26,7 +26,7 @@ public:
 
 	void open(string path);
 	bool is_open();
-	double nextPosition(string entry);
+	double nextPosition(string entry, double currentPosition);
 
 private:
 
