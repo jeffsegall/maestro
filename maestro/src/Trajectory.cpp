@@ -50,16 +50,14 @@ Trajectory::Trajectory(int bufferSize){
 	(*col2name)[37] = "LF3";
 	(*col2name)[38] = "LF4";
 	(*col2name)[39] = "LF5";
-
-	DELIMITER = '\t';
 }
 
-Trajectory::Trajectory() : Trajectory(10) { }
+Trajectory::Trajectory() : Trajectory::Trajectory(10) { }
 
 Trajectory::~Trajectory(){
-	map<string, vector<double> >::iterator i;
+	map<string, vector<double>* >::iterator i;
 	for (i = buffers->begin(); i != buffers->end(); i++)
-		delete &(i->second);
+		delete (i->second);
 	delete buffers;
 }
 

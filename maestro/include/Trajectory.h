@@ -36,7 +36,7 @@ private:
 private:
 
 	vector<string> *col2name;
-	const char DELIMITER;
+	const char DELIMITER = '\t';
 	ifstream trajInput;
 	map<string, vector<double>* > *buffers;
 
