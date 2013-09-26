@@ -7,7 +7,7 @@
 
 #include "Trajectory.h"
 
-const char Trajectory::DELIMITER = '\t'
+const char Trajectory::DELIMITER = '\t';
 
 Trajectory::Trajectory(int bufferSize){
 	col2name = new vector<string>(40);
@@ -93,7 +93,7 @@ double Trajectory::nextPosition(string entry, double currentPosition){
 		return currentPosition;
 	}
 
-	double pos = (*buffers[entry])[frames++];
+	double pos = (*(*buffers)[entry])[frames++];
 
 	if (frames == bufferSize)
 		reload();
@@ -118,15 +118,15 @@ void Trajectory::reload(){
 		// Grab one line of (hopefully) 40 columns of input positions
 		getline(trajInput, line, '\n');
 		// Convert that line into another stream for further parsing
-		joints(line);
+		joints.str(line + DELIMITER);
 		// The newline was consumed by the getline operation, so we will replace it with the given delimiter
-		joints << DELIMITER;
+		//joints << DELIMITER;
 
 		for (int col = 0; col < col2name->size(); col++){
 			// Grab an individual entry to parse, assuming entries are delimited by tabs
 			getline(joints, entry, DELIMITER);
 			// If we still think there's data to grab, store the value into the buffer vector mapped to the name of the joint of the current column.
-			if (!inputEnded && sscanf(entry.c_str(), "%lf", &(*buffers[(*col2name)[col]])[i]) != 1){
+			if (!inputEnded && sscanf(entry.c_str(), "%lf", &((*buffers)[(*col2name)[col]][i])) != 1){
 				// The line is garbage. What to do?
 				if (i == 0) {
 					trajectoryEnded = true; // There is no more valid output to be had. Trajectory is finished.
@@ -137,7 +137,7 @@ void Trajectory::reload(){
 
 			// If the buffer cannot be fully filled, pad the end of the buffer with the last valid data entry.
 			if (inputEnded)
-				(*buffers[(*col2name)[col]])[i] = (*buffers[(*col2name)[col]])[i - 1];
+				(*buffers)[(*col2name)[col]][i] = (*buffers)[(*col2name)[col]][i - 1];
 		}
 	}
 }
