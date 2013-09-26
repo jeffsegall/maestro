@@ -71,7 +71,7 @@ void Trajectory::open(string path){
 		delete it->second;
 
 	for (int i = 0; i < col2name->size(); i++)
-		buffers[(*col2name)[i]] = new vector<double>(bufferSize);
+		(*buffers)[(*col2name)[i]] = new vector<double>(bufferSize);
 
 	frames = 0;
 	this->bufferSize = bufferSize;
@@ -88,7 +88,7 @@ bool Trajectory::is_open(){
 double Trajectory::nextPosition(string entry, double currentPosition){
 
 	if (trajectoryEnded || buffers == NULL || buffers->count(entry) != 1 ||
-				buffers[entry] == NULL || (*buffers[entry])->size() == 0) {
+				(*buffers)[entry] == NULL || (*buffers)[entry]->size() == 0) {
 
 		return currentPosition;
 	}

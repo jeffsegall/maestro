@@ -20,7 +20,6 @@ using namespace std;
 class Trajectory {
 
 public:
-	Trajectory();
 	Trajectory(int bufferSize = 10);
 	~Trajectory();
 
@@ -36,7 +35,7 @@ private:
 private:
 
 	vector<string> *col2name;
-	const char DELIMITER;
+	static const char DELIMITER;
 	ifstream trajInput;
 	map<string, vector<double>* > *buffers;
 
