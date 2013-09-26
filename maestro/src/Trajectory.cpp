@@ -7,6 +7,8 @@
 
 #include "Trajectory.h"
 
+const char Trajectory::DELIMITER = '\t'
+
 Trajectory::Trajectory(int bufferSize){
 	col2name = new vector<string>(40);
 
@@ -52,8 +54,6 @@ Trajectory::Trajectory(int bufferSize){
 	(*col2name)[39] = "LF5";
 }
 
-Trajectory::Trajectory() : Trajectory::Trajectory(10) { }
-
 Trajectory::~Trajectory(){
 	map<string, vector<double>* >::iterator i;
 	for (i = buffers->begin(); i != buffers->end(); i++)
@@ -66,12 +66,12 @@ void Trajectory::open(string path){
 	trajInput.open(path.c_str());
 	if (!trajInput.is_open()) return; //TODO: Log error
 
-	map<string, vector<double> >::iterator it;
+	map<string, vector<double>* >::iterator it;
 	for (it = buffers->begin(); it != buffers->end(); it++)
-		delete &it->second;
+		delete it->second;
 
 	for (int i = 0; i < col2name->size(); i++)
-		buffers[col2name[i]] = new vector<double>(bufferSize);
+		buffers[(*col2name)[i]] = new vector<double>(bufferSize);
 
 	frames = 0;
 	this->bufferSize = bufferSize;
@@ -126,7 +126,7 @@ void Trajectory::reload(){
 			// Grab an individual entry to parse, assuming entries are delimited by tabs
 			getline(joints, entry, DELIMITER);
 			// If we still think there's data to grab, store the value into the buffer vector mapped to the name of the joint of the current column.
-			if (!inputEnded && sscanf(entry.c_str(), "%lf", &(*buffers[col2name[col]])[i]) != 1){
+			if (!inputEnded && sscanf(entry.c_str(), "%lf", &(*buffers[(*col2name)[col]])[i]) != 1){
 				// The line is garbage. What to do?
 				if (i == 0) {
 					trajectoryEnded = true; // There is no more valid output to be had. Trajectory is finished.
@@ -137,7 +137,7 @@ void Trajectory::reload(){
 
 			// If the buffer cannot be fully filled, pad the end of the buffer with the last valid data entry.
 			if (inputEnded)
-				(*buffers[col2name[col]])[i] = (*buffers[col2name[col]])[i - 1];
+				(*buffers[(*col2name)[col]])[i] = (*buffers[(*col2name)[col]])[i - 1];
 		}
 	}
 }

@@ -21,7 +21,7 @@ class Trajectory {
 
 public:
 	Trajectory();
-	Trajectory(int bufferSize);
+	Trajectory(int bufferSize = 10);
 	~Trajectory();
 
 	void open(string path);
@@ -36,7 +36,7 @@ private:
 private:
 
 	vector<string> *col2name;
-	const char DELIMITER = '\t';
+	const char DELIMITER;
 	ifstream trajInput;
 	map<string, vector<double>* > *buffers;
 
