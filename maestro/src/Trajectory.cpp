@@ -67,7 +67,9 @@ void Trajectory::open(string path){
 
 	std::cout << "Opening" << std::endl;
 	trajInput.close();
+	std::cout << "after close" << std::endl;
 	trajInput.open(path.c_str());
+	std::cout << "after open" << std::endl;
 	if (!trajInput.is_open()) return; //TODO: Log error
 	std::cout << "before delete" << std::endl;
 
