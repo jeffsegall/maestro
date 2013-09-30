@@ -53,7 +53,7 @@ Trajectory::Trajectory(int bufferSize){
 	(*col2name)[38] = "LF4";
 	(*col2name)[39] = "LF5";
 
-	buffers = new HashMap<string, vector<double>* >;
+	buffers = new map<string, vector<double>* >;
 }
 
 Trajectory::~Trajectory(){
