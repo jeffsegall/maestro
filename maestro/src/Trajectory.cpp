@@ -62,6 +62,8 @@ Trajectory::~Trajectory(){
 }
 
 void Trajectory::open(string path){
+
+	std::cout << "Opening" << std::endl;
 	trajInput.close();
 	trajInput.open(path.c_str());
 	if (!trajInput.is_open()) return; //TODO: Log error
@@ -69,7 +71,7 @@ void Trajectory::open(string path){
 	map<string, vector<double>* >::iterator it;
 	for (it = buffers->begin(); it != buffers->end(); it++)
 		delete it->second;
-
+	std::cout << "after delete" << std::endl;
 	for (int i = 0; i < col2name->size(); i++)
 		(*buffers)[(*col2name)[i]] = new vector<double>(bufferSize);
 
@@ -79,6 +81,7 @@ void Trajectory::open(string path){
 	trajectoryEnded = false;
 
 	reload();
+	std::cout << "after reload" << std::endl;
 }
 
 bool Trajectory::is_open(){
