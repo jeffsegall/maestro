@@ -69,6 +69,7 @@ void Trajectory::open(string path){
 	trajInput.close();
 	trajInput.open(path.c_str());
 	if (!trajInput.is_open()) return; //TODO: Log error
+	std::cout << "before delete" << std::endl;
 
 	map<string, vector<double>* >::iterator it;
 	for (it = buffers->begin(); it != buffers->end(); it++)
